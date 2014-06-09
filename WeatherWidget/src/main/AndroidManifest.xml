@@ -1,0 +1,83 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.voegtle.weatherwidget"
+          android:versionCode="1"
+          android:versionName="1.0">
+
+  <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="19"/>
+
+  <uses-permission android:name="android.permission.INTERNET"/>
+
+  <application
+          android:allowBackup="true"
+          android:icon="@drawable/wetterstation"
+          android:label="@string/app_name"
+          android:theme="@style/AppTheme">
+
+    <activity
+            android:name="WeatherActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
+
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+
+    <receiver
+            android:name="WeatherWidgetProvider"
+            android:icon="@drawable/wetterstation"
+            android:label="@string/app_name">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+
+      <meta-data
+              android:name="android.appwidget.provider"
+              android:resource="@xml/widget_info"/>
+    </receiver>
+
+    <receiver
+            android:name="WeatherWidgetFreiburgProvider"
+            android:icon="@drawable/wetterstation"
+            android:label="@string/app_name_freiburg">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+
+      <meta-data
+              android:name="android.appwidget.provider"
+              android:resource="@xml/widget_small_info"/>
+    </receiver>
+
+    <receiver
+            android:name="WeatherWidgetPaderbornProvider"
+            android:icon="@drawable/wetterstation"
+            android:label="@string/app_name_paderborn">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+
+      <meta-data
+              android:name="android.appwidget.provider"
+              android:resource="@xml/widget_small_info"/>
+    </receiver>
+
+    <receiver
+            android:name="WeatherWidgetBonnProvider"
+            android:icon="@drawable/wetterstation"
+            android:label="@string/app_name_bonn">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+      </intent-filter>
+
+      <meta-data
+              android:name="android.appwidget.provider"
+              android:resource="@xml/widget_small_info"/>
+    </receiver>
+
+  </application>
+
+</manifest>

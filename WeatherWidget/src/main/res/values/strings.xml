@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string name="app_name">Vögtle Wetter</string>
+  <string name="app_name_freiburg">Freiburger Temperatur</string>
+  <string name="app_name_paderborn">Paderborner Temperatur</string>
+  <string name="app_name_bonn">Bonner Temperatur</string>
+  <string name="city_paderborn">PB</string>
+  <string name="city_freiburg">FR</string>
+  <string name="city_bonn">BN</string>
+  <string name="city_paderborn_full">Paderborn</string>
+  <string name="city_freiburg_full">Freiburg</string>
+  <string name="city_bonn_full">Bonn</string>
+  <string name="temperature">Temperatur: </string>
+  <string name="humidity">Luftfeuchtigkeit: </string>
+  <string name="rain_last_hour">Regen 1h:</string>
+  <string name="rain_today">Regen heute:</string>
+  <string name="liter">l</string>
+  <string name="degree_centigrade">°C</string>
+  <string name="freiburg_paderborn_bonn">Vergleich FR - PB - BN</string>
+  <string name="data_mining">Auswertung in Google Tabellen</string>
+  <string name="refresh">neu laden</string>
+  <string name="forecast">Vorhersage</string>
+</resources>

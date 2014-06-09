@@ -1,0 +1,107 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/activity_background"
+             tools:context=".WeatherActivity">
+
+  <!-- The primary full-screen view. This can be replaced with whatever view
+       is needed to present your content, e.g. VideoView, SurfaceView,
+       TextureView, etc. -->
+  <LinearLayout android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="5dp">
+    <TextView android:id="@+id/caption_paderborn"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="16sp"
+              android:gravity="left"
+              android:text="@string/city_paderborn_full"/>
+    <TextView android:id="@+id/weather_paderborn"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="14sp"
+              android:gravity="left"
+              android:paddingLeft="5dp"/>
+    <TextView android:id="@+id/caption_bonn"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="16sp"
+              android:gravity="left"
+              android:text="@string/city_bonn_full"/>
+    <TextView android:id="@+id/weather_bonn"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="14sp"
+              android:gravity="left"
+                android:paddingLeft="5dp"/>
+    <TextView android:id="@+id/caption_freiburg"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="16sp"
+              android:gravity="left"
+              android:text="@string/city_freiburg_full"/>
+    <TextView android:id="@+id/weather_freiburg"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="14sp"
+              android:gravity="left"
+              android:paddingLeft="5dp"/>
+
+    <TextView android:id="@+id/caption_forecast"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="16sp"
+              android:gravity="left"
+              android:text="@string/forecast"/>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+      <Button android:id="@+id/button_forecast_paderborn"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:text="@string/city_paderborn_full"/>
+      <Button android:id="@+id/button_forecast_bonn"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:text="@string/city_bonn_full"/>
+      <Button android:id="@+id/button_forecast_freiburg"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:text="@string/city_freiburg_full"/>
+    </LinearLayout>
+
+    <Button android:id="@+id/button_compare_freiburg_paderborn"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:text="@string/freiburg_paderborn_bonn"/>
+    <Button android:id="@+id/button_google_docs"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:textColor="#ffffff"
+            android:text="@string/data_mining"/>
+
+  </LinearLayout>
+</FrameLayout>
