@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+  <ListPreference
+          android:key="update_interval"
+          android:title="@string/update_intervall"
+          android:summary="@string/update_summary"
+          android:defaultValue="180"
+          android:entries="@array/updateInterval"
+          android:entryValues="@array/updateIntervalValues"
+          />
+
+  <PreferenceCategory
+          android:title="@string/station_paderborn"
+          android:key="settings_paderborn">
+    <CheckBoxPreference
+            android:key="app_show_paderborn"
+            android:title="@string/in_app"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="widget_show_paderborn"
+            android:title="@string/in_widget"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="alert_paderborn"
+            android:title="@string/alert"
+            android:defaultValue="false"
+            />
+  </PreferenceCategory>
+
+  <PreferenceCategory
+          android:title="@string/station_bonn"
+          android:key="settings_bonn">
+    <CheckBoxPreference
+            android:key="app_show_bonn"
+            android:title="@string/in_app"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="widget_show_bonn"
+            android:title="@string/in_widget"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="alert_bonn"
+            android:title="@string/alert"
+            android:defaultValue="false"
+            />
+  </PreferenceCategory>
+
+  <PreferenceCategory
+          android:title="@string/station_freiburg"
+          android:key="settings_freiburg">
+    <CheckBoxPreference
+            android:key="app_show_freiburg"
+            android:title="@string/in_app"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="widget_show_freiburg"
+            android:title="@string/in_widget"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="alert_freiburg"
+            android:title="@string/alert"
+            android:defaultValue="false"
+            />
+  </PreferenceCategory>
+
+</PreferenceScreen>

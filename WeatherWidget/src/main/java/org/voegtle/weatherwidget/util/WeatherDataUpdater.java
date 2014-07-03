@@ -1,10 +1,10 @@
 package org.voegtle.weatherwidget.util;
 
-import android.app.Activity;
 import android.content.res.Resources;
 import android.util.Log;
 import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
 
 import java.text.DecimalFormat;
@@ -17,14 +17,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class WeatherDataUpdater {
-  private Activity activity;
+  private WeatherActivity activity;
   private final Resources res;
   private final WeatherDataFetcher weatherDataFetcher;
   private DecimalFormat numberFormat;
 
-  public WeatherDataUpdater(Activity activity, Resources res) {
+  public WeatherDataUpdater(WeatherActivity activity) {
     this.activity = activity;
-    this.res = res;
+    this.res = activity.getResources();
     this.weatherDataFetcher = new WeatherDataFetcher();
     numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
     numberFormat.applyPattern("###.#");
@@ -64,7 +64,6 @@ public class WeatherDataUpdater {
     TextView frCaption = (TextView) activity.findViewById(R.id.caption_freiburg);
     final String caption = getCaption(R.string.city_freiburg_full, data);
     updateView(frCaption, caption);
-
 
     TextView frView = (TextView) activity.findViewById(R.id.weather_freiburg);
     final String text = formatWeatherData(data);

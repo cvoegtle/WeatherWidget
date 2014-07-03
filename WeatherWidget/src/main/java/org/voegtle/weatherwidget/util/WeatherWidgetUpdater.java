@@ -50,12 +50,9 @@ public class WeatherWidgetUpdater {
           HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
 
 
-          remoteViews.setTextViewText(R.id.weather_paderborn, res.getString(R.string.city_paderborn) + " "
-                  + retrieveFormattedTemperature(data.get("Paderborn")));
-          remoteViews.setTextViewText(R.id.weather_freiburg, res.getString(R.string.city_freiburg) + " "
-                  + retrieveFormattedTemperature(data.get("Freiburg")));
-          remoteViews.setTextViewText(R.id.weather_bonn, res.getString(R.string.city_bonn) + " "
-              + retrieveFormattedTemperature(data.get("Bonn")));
+          visualizeData(R.id.weather_paderborn, R.string.city_paderborn, data.get("Paderborn"));
+          visualizeData(R.id.weather_freiburg, R.string.city_freiburg, data.get("Freiburg"));
+          visualizeData(R.id.weather_bonn, R.string.city_bonn, data.get("Bonn"));
         } catch (Throwable th) {
           Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
         } finally {
@@ -66,6 +63,12 @@ public class WeatherWidgetUpdater {
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     scheduler.schedule(updater, 1, TimeUnit.MILLISECONDS);
+  }
+
+  private void visualizeData(int widgetId, int locationId, WeatherData data) {
+    remoteViews.setTextColor(widgetId, ColorUtil.byAge(data.getTimestamp()));
+    remoteViews.setTextViewText(widgetId, res.getString(locationId) + " "
+        + retrieveFormattedTemperature(data));
   }
 
   public void startSmallWeatherScheduler(final String weatherServerUrl) {
