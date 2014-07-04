@@ -50,35 +50,27 @@ public class WeatherDataUpdater {
   }
 
   private void updatePaderbornWeather(WeatherData data) {
-
-    TextView pbCaption = (TextView) activity.findViewById(R.id.caption_paderborn);
-    final String caption = getCaption(R.string.city_paderborn_full, data);
-    updateView(pbCaption, caption);
-
-    TextView pbView = (TextView) activity.findViewById(R.id.weather_paderborn);
-    String text = formatWeatherData(data);
-    updateView(pbView, text);
+    updateWeatherLocation(R.id.caption_paderborn, R.id.weather_paderborn, R.string.city_paderborn_full, data);
   }
 
   private void updateFreiburgWeather(WeatherData data) {
-    TextView frCaption = (TextView) activity.findViewById(R.id.caption_freiburg);
-    final String caption = getCaption(R.string.city_freiburg_full, data);
-    updateView(frCaption, caption);
-
-    TextView frView = (TextView) activity.findViewById(R.id.weather_freiburg);
-    final String text = formatWeatherData(data);
-    updateView(frView, text);
+    updateWeatherLocation(R.id.caption_freiburg, R.id.weather_freiburg, R.string.city_freiburg_full, data);
   }
 
   private void updateBonnWeather(WeatherData data) {
-    TextView frCaption = (TextView) activity.findViewById(R.id.caption_bonn);
-    final String caption = getCaption(R.string.city_bonn_full, data);
-    updateView(frCaption, caption);
+    updateWeatherLocation(R.id.caption_bonn, R.id.weather_bonn, R.string.city_bonn_full, data);
+  }
+
+  private void updateWeatherLocation(int captionId, int contentId, int locationName, WeatherData data) {
+    final TextView captionView = (TextView) activity.findViewById(captionId);
+    final String caption = getCaption(locationName, data);
+    final int color = ColorUtil.byAge(data.getTimestamp());
+    updateView(captionView, caption, color);
 
 
-    TextView frView = (TextView) activity.findViewById(R.id.weather_bonn);
+    final TextView contentView = (TextView) activity.findViewById(contentId);
     final String text = formatWeatherData(data);
-    updateView(frView, text);
+    updateView(contentView, text, color);
   }
 
   private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -102,11 +94,12 @@ public class WeatherDataUpdater {
     return builder.toString();
   }
 
-  private void updateView(final TextView view, final String text) {
+  private void updateView(final TextView view, final String text, final int color) {
     view.post(new Runnable() {
       @Override
       public void run() {
         view.setText(text);
+        view.setTextColor(color);
       }
     });
   }
