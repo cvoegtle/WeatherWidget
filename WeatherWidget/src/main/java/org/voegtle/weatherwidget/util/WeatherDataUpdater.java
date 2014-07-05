@@ -44,7 +44,7 @@ public class WeatherDataUpdater {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
-        updateWeatherLocations();
+        updateWeatherLocations(false);
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -55,7 +55,7 @@ public class WeatherDataUpdater {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
-        updateWeatherLocations();
+        updateWeatherLocations(true);
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -64,7 +64,7 @@ public class WeatherDataUpdater {
 
   private boolean updateInProgress;
 
-  private void updateWeatherLocations() {
+  private void updateWeatherLocations(boolean showToast) {
     if (updateInProgress) {
       return;
     }
@@ -75,7 +75,9 @@ public class WeatherDataUpdater {
       updatePaderbornWeather(data.get("Paderborn"));
       updateBonnWeather(data.get("Bonn"));
       updateFreiburgWeather(data.get("Freiburg"));
+      new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
     } catch (Throwable th) {
+      new UserFeedback(activity).showMessage(R.string.message_data_update_failed, showToast);
       Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
     } finally {
       updateInProgress = false;

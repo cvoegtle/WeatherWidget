@@ -80,6 +80,7 @@ public class WeatherWidgetUpdater {
           WeatherData data = weatherDataFetcher.fetchWeatherDataFromUrl(weatherServerUrl);
 
           remoteViews.setTextViewText(R.id.weather_small, retrieveFormattedTemperature(data));
+          remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.getTimestamp()));
         } catch (Throwable th) {
           Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
         } finally {

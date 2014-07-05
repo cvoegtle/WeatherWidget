@@ -40,7 +40,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   }
 
   private void setupWeatherUpdater(SharedPreferences preferences) {
-    int intervall = Integer.valueOf(preferences.getString("update_interval", "-1"));
+    int intervall = Integer.valueOf(preferences.getString("update_interval", "180"));
     if (intervall > 0) {
       updater.startWeatherScheduler(intervall);
     } else {
