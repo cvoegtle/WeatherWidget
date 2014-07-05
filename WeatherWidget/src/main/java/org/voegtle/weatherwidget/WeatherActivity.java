@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import org.voegtle.weatherwidget.preferences.WeatherSettings;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
 public class WeatherActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
+  private WeatherDataUpdater updater;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +35,17 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     initButton(R.id.button_forecast_bonn, "http://wetterstationen.meteomedia.de/?station=105170&wahl=vorhersage");
     initButton(R.id.button_forecast_paderborn, "http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage");
 
-    WeatherDataUpdater updater = new WeatherDataUpdater(this);
-    updater.startWeatherScheduler();
+    updater = new WeatherDataUpdater(this);
+    setupWeatherUpdater(preferences);
+  }
+
+  private void setupWeatherUpdater(SharedPreferences preferences) {
+    int intervall = Integer.valueOf(preferences.getString("update_interval", "-1"));
+    if (intervall > 0) {
+      updater.startWeatherScheduler(intervall);
+    } else {
+      updater.stopWeatherScheduler();
+    }
   }
 
   private void setupUserInterface(SharedPreferences preferences) {
@@ -77,14 +88,19 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
-    menu.add(Menu.NONE, 0, 0, R.string.preferences);
+    MenuInflater inflater = getMenuInflater();
+    inflater.inflate(R.menu.main_menu, menu);
     return super.onCreateOptionsMenu(menu);
+
   }
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case 0:
+      case R.id.action_reload:
+        updater.updateWeatherOnce();
+        break;
+      case R.id.action_perferences:
         startActivity(new Intent(this, WeatherPreferences.class));
         return true;
     }
@@ -95,5 +111,6 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
     setupUserInterface(preferences);
+    setupWeatherUpdater(preferences);
   }
 }

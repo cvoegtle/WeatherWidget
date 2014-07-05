@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string-array name="updateInterval">
-    <item name="180000">3 Minuten</item>
-    <item name="600000">10 Minuten</item>
-    <item name="1800000">30 Minuten</item>
+    <item name="180">3 Minuten</item>
+    <item name="600">10 Minuten</item>
+    <item name="1800">30 Minuten</item>
+    <item name="-1">Nie</item>
   </string-array>
 
   <string-array name="updateIntervalValues">
-    <item name="180000">180000</item>
-    <item name="600000">600000</item>
-    <item name="1800000">1800000</item>
+    <item name="180">180</item>
+    <item name="600">600</item>
+    <item name="1800">1800</item>
+    <item name="-1">-1</item>
   </string-array>
 </resources>

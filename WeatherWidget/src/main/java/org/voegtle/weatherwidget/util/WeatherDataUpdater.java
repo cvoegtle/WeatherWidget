@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class WeatherDataUpdater {
@@ -21,6 +22,7 @@ public class WeatherDataUpdater {
   private final Resources res;
   private final WeatherDataFetcher weatherDataFetcher;
   private DecimalFormat numberFormat;
+  private ScheduledFuture<?> backgroundProcess;
 
   public WeatherDataUpdater(WeatherActivity activity) {
     this.activity = activity;
@@ -30,24 +32,56 @@ public class WeatherDataUpdater {
     numberFormat.applyPattern("###.#");
   }
 
-  public void startWeatherScheduler() {
+  public void stopWeatherScheduler() {
+    if (backgroundProcess != null) {
+      backgroundProcess.cancel(true);
+    }
+  }
+
+  public void startWeatherScheduler(int intervall) {
+    stopWeatherScheduler();
+
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
-        try {
-          HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
-          updatePaderbornWeather(data.get("Paderborn"));
-          updateBonnWeather(data.get("Bonn"));
-          updateFreiburgWeather(data.get("Freiburg"));
-        } catch (Throwable th) {
-          Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
-        }
+        updateWeatherLocations();
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    scheduler.scheduleAtFixedRate(updater, 0, 3 * 60, TimeUnit.SECONDS);
-
+    backgroundProcess = scheduler.scheduleAtFixedRate(updater, 0, intervall, TimeUnit.SECONDS);
   }
+
+  public void updateWeatherOnce() {
+    final Runnable updater = new Runnable() {
+      @Override
+      public void run() {
+        updateWeatherLocations();
+      }
+    };
+    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+    scheduler.schedule(updater, 0, TimeUnit.SECONDS);
+  }
+
+  private boolean updateInProgress;
+
+  private void updateWeatherLocations() {
+    if (updateInProgress) {
+      return;
+    }
+
+    try {
+      updateInProgress = true;
+      HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
+      updatePaderbornWeather(data.get("Paderborn"));
+      updateBonnWeather(data.get("Bonn"));
+      updateFreiburgWeather(data.get("Freiburg"));
+    } catch (Throwable th) {
+      Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
+    } finally {
+      updateInProgress = false;
+    }
+  }
+
 
   private void updatePaderbornWeather(WeatherData data) {
     updateWeatherLocation(R.id.caption_paderborn, R.id.weather_paderborn, R.string.city_paderborn_full, data);
