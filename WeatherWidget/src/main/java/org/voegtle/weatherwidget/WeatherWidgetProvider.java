@@ -48,11 +48,11 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     for (int widgetId : allWidgetIds) {
 
-      new WeatherWidgetUpdater(appWidgetManager, widgetId, remoteViews, res)
+      new WeatherWidgetUpdater(context, appWidgetManager, widgetId, remoteViews, res)
           .startWeatherScheduler();
 
       Intent intentOpenApp = new Intent(context, WeatherActivity.class);
-      PendingIntent pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, 0);
+      PendingIntent pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT);
 
       remoteViews.setOnClickPendingIntent(R.id.weather_freiburg, pendingOpenApp);
       remoteViews.setOnClickPendingIntent(R.id.weather_paderborn, pendingOpenApp);
@@ -66,7 +66,6 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
       remoteViews.setOnClickPendingIntent(R.id.refresh_button, pendingRefresh);
 
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
-
     }
 
     super.onUpdate(context, appWidgetManager, appWidgetIds);

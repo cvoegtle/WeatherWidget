@@ -1,12 +1,14 @@
 package org.voegtle.weatherwidget.util;
 
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -17,6 +19,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class WeatherWidgetUpdater {
+  private Context context;
   final AppWidgetManager appWidgetManager;
   final int widgetId;
   final RemoteViews remoteViews;
@@ -24,15 +27,16 @@ public class WeatherWidgetUpdater {
   private final WeatherDataFetcher weatherDataFetcher;
   private DecimalFormat numberFormat;
 
-  public WeatherWidgetUpdater(AppWidgetManager appWidgetManager, int widgetId, RemoteViews remoteViews, Resources res) {
+  public WeatherWidgetUpdater(Context context, AppWidgetManager appWidgetManager, int widgetId, RemoteViews remoteViews, Resources res) {
+    this.context = context;
     this.appWidgetManager = appWidgetManager;
     this.widgetId = widgetId;
     this.remoteViews = remoteViews;
     this.res = res;
     this.weatherDataFetcher = new WeatherDataFetcher();
 
-    numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
-    numberFormat.applyPattern("###.#");
+    this.numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
+    this.numberFormat.applyPattern("###.#");
 
   }
 
@@ -42,17 +46,21 @@ public class WeatherWidgetUpdater {
       @Override
       public void run() {
         remoteViews.setViewVisibility(R.id.refresh_button, View.INVISIBLE);
-        try {
-          remoteViews.setTextViewText(R.id.weather_paderborn, res.getString(R.string.city_paderborn) + " " + "-");
-          remoteViews.setTextViewText(R.id.weather_freiburg, res.getString(R.string.city_freiburg) + " " + "-");
-          remoteViews.setTextViewText(R.id.weather_bonn, res.getString(R.string.city_bonn) + "  -");
+        remoteViews.setTextViewText(R.id.weather_paderborn, res.getString(R.string.city_paderborn) + " " + "-");
+        remoteViews.setTextViewText(R.id.weather_freiburg, res.getString(R.string.city_freiburg) + " " + "-");
+        remoteViews.setTextViewText(R.id.weather_bonn, res.getString(R.string.city_bonn) + " -");
 
+        try {
           HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
 
+          Thread.sleep(250, 0);
 
           visualizeData(R.id.weather_paderborn, R.string.city_paderborn, data.get("Paderborn"));
           visualizeData(R.id.weather_freiburg, R.string.city_freiburg, data.get("Freiburg"));
           visualizeData(R.id.weather_bonn, R.string.city_bonn, data.get("Bonn"));
+
+          NotificationSystemManager notificationManager = new NotificationSystemManager(context);
+          notificationManager.checkDataForAlert(data);
         } catch (Throwable th) {
           Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
         } finally {
@@ -81,6 +89,7 @@ public class WeatherWidgetUpdater {
 
           remoteViews.setTextViewText(R.id.weather_small, retrieveFormattedTemperature(data));
           remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.getTimestamp()));
+          new UserFeedbackWidget(context, res).showMessage(R.string.message_data_updated);
         } catch (Throwable th) {
           Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
         } finally {

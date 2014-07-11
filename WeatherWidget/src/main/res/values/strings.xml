@@ -34,4 +34,10 @@
   <string name="action_reload">Neu laden</string>
   <string name="message_data_updated">Wetterdaten aktualisiert</string>
   <string name="message_data_update_failed">\"Fehler beim Abruf der Wetterdaten</string>
+  <string name="data_overdue">Wetterdaten überfällig</string>
+  <string name="since">seit</string>
+  <string name="overdue">überfällig</string>
+  <string name="minutes">Minuten</string>
+  <string name="hours">Stunden</string>
+  <string name="days">Tagen</string>
 </resources>

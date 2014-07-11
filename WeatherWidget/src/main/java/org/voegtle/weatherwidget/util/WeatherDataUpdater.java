@@ -6,6 +6,7 @@ import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -28,8 +29,9 @@ public class WeatherDataUpdater {
     this.activity = activity;
     this.res = activity.getResources();
     this.weatherDataFetcher = new WeatherDataFetcher();
-    numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
-    numberFormat.applyPattern("###.#");
+
+    this.numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
+    this.numberFormat.applyPattern("###.#");
   }
 
   public void stopWeatherScheduler() {
@@ -76,6 +78,9 @@ public class WeatherDataUpdater {
       updateBonnWeather(data.get("Bonn"));
       updateFreiburgWeather(data.get("Freiburg"));
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
+
+      NotificationSystemManager notificationManager = new NotificationSystemManager(activity);
+      notificationManager.checkDataForAlert(data);
     } catch (Throwable th) {
       new UserFeedback(activity).showMessage(R.string.message_data_update_failed, showToast);
       Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
