@@ -53,7 +53,7 @@ public class WeatherWidgetUpdater {
         try {
           HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
 
-          Thread.sleep(250, 0);
+          Thread.sleep(500, 0);
 
           visualizeData(R.id.weather_paderborn, R.string.city_paderborn, data.get("Paderborn"));
           visualizeData(R.id.weather_freiburg, R.string.city_freiburg, data.get("Freiburg"));

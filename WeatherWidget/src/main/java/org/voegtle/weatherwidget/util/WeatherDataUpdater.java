@@ -50,14 +50,14 @@ public class WeatherDataUpdater {
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    backgroundProcess = scheduler.scheduleAtFixedRate(updater, 0, intervall, TimeUnit.SECONDS);
+    backgroundProcess = scheduler.scheduleAtFixedRate(updater, intervall, intervall, TimeUnit.SECONDS);
   }
 
-  public void updateWeatherOnce() {
+  public void updateWeatherOnce(final boolean showToast) {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
-        updateWeatherLocations(true);
+        updateWeatherLocations(showToast);
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
