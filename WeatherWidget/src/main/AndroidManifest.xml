@@ -11,13 +11,12 @@
           android:allowBackup="true"
           android:icon="@drawable/wetterstation"
           android:label="@string/app_name"
-          android:theme="@style/AppTheme">
+          android:theme="@style/AppThemeLight">
 
     <activity
             android:name="WeatherActivity"
             android:label="@string/app_name"
             android:logo="@drawable/wetterlogo"
-            android:theme="@style/AppTheme"
             android:screenOrientation="portrait">
 
       <intent-filter>
