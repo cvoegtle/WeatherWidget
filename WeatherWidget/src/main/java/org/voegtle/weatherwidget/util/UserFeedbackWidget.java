@@ -9,9 +9,9 @@ public class UserFeedbackWidget {
   private final Context context;
   private final Resources res;
 
-  public UserFeedbackWidget(Context context, Resources res) {
+  public UserFeedbackWidget(Context context) {
     this.context = context;
-    this.res = res;
+    this.res = context.getResources();
   }
 
   public void showMessage(int messageId) {

@@ -6,12 +6,14 @@ import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -20,13 +22,15 @@ import java.util.concurrent.TimeUnit;
 
 public class WeatherDataUpdater {
   private WeatherActivity activity;
+  private List<WeatherLocation> locations;
   private final Resources res;
   private final WeatherDataFetcher weatherDataFetcher;
   private DecimalFormat numberFormat;
   private ScheduledFuture<?> backgroundProcess;
 
-  public WeatherDataUpdater(WeatherActivity activity) {
+  public WeatherDataUpdater(WeatherActivity activity, List<WeatherLocation> locations) {
     this.activity = activity;
+    this.locations = locations;
     this.res = activity.getResources();
     this.weatherDataFetcher = new WeatherDataFetcher();
 
@@ -74,9 +78,13 @@ public class WeatherDataUpdater {
     try {
       updateInProgress = true;
       HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
-      updatePaderbornWeather(data.get("Paderborn"));
-      updateBonnWeather(data.get("Bonn"));
-      updateFreiburgWeather(data.get("Freiburg"));
+      for (WeatherLocation location : locations) {
+        updateWeatherLocation(location.getWeatherCaptionId(),
+            location.getWeatherViewId(),
+            location.getName(),
+            data.get(location.getKey().toString()));
+      }
+
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
 
       NotificationSystemManager notificationManager = new NotificationSystemManager(activity);
@@ -90,19 +98,7 @@ public class WeatherDataUpdater {
   }
 
 
-  private void updatePaderbornWeather(WeatherData data) {
-    updateWeatherLocation(R.id.caption_paderborn, R.id.weather_paderborn, R.string.city_paderborn_full, data);
-  }
-
-  private void updateFreiburgWeather(WeatherData data) {
-    updateWeatherLocation(R.id.caption_freiburg, R.id.weather_freiburg, R.string.city_freiburg_full, data);
-  }
-
-  private void updateBonnWeather(WeatherData data) {
-    updateWeatherLocation(R.id.caption_bonn, R.id.weather_bonn, R.string.city_bonn_full, data);
-  }
-
-  private void updateWeatherLocation(int captionId, int contentId, int locationName, WeatherData data) {
+  private void updateWeatherLocation(int captionId, int contentId, String locationName, WeatherData data) {
     final TextView captionView = (TextView) activity.findViewById(captionId);
     final String caption = getCaption(locationName, data);
     final int color = ColorUtil.byAge(data.getTimestamp());
@@ -116,15 +112,15 @@ public class WeatherDataUpdater {
 
   private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
-  private String getCaption(int resourceKey, WeatherData data) {
-    return res.getString(resourceKey) + " - " + sdf.format(data.getTimestamp());
+  private String getCaption(String locationName, WeatherData data) {
+    return locationName + " - " + sdf.format(data.getTimestamp());
   }
 
 
   private String formatWeatherData(WeatherData data) {
     StringBuilder builder = new StringBuilder();
     builder.append(res.getString(R.string.temperature)).append(" ");
-    builder.append(numberFormat.format(data.getTemperature())).append(res.getString(R.string.degree_centigrade)).append("\n");
+    builder.append(numberFormat.format(data.getTemperature())).append("°C").append("\n");
     builder.append(res.getString(R.string.humidity)).append(" ").append(numberFormat.format(data.getHumidity())).append("%\n");
     if (data.getRain() != null) {
       builder.append(res.getString(R.string.rain_last_hour)).append(" ").append(numberFormat.format(data.getRain())).append(res.getString(R.string.liter)).append("\n");

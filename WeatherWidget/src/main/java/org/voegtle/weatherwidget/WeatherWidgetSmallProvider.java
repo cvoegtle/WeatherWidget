@@ -29,7 +29,7 @@ class WeatherWidgetSmallProvider extends AppWidgetProvider {
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     for (int widgetId : allWidgetIds) {
 
-      new WeatherWidgetUpdater(context, appWidgetManager, widgetId, remoteViews, res)
+      new WeatherWidgetUpdater(context, appWidgetManager, widgetId, remoteViews)
           .startSmallWeatherScheduler(weatherDataUrl);
 
       Intent intentRefresh = new Intent(context, this.getClass());

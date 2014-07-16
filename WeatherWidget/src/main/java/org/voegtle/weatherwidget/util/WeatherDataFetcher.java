@@ -15,7 +15,6 @@ import org.voegtle.weatherwidget.data.WeatherData;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -99,10 +98,10 @@ public class WeatherDataFetcher {
           builder.append(line);
         }
       } else {
-        Log.e(WeatherDataFetcher.class.toString(), "Failed to download file");
+        Log.e(WeatherDataFetcher.class.toString(), "Failed to download weather data with statuscode=" + statusCode);
       }
     } catch (Exception e) {
-      Log.d(WeatherDataFetcher.class.toString(), "Failed to download file", e);
+      Log.d(WeatherDataFetcher.class.toString(), "Failed to download weather data", e);
     }
     return builder.toString();
   }

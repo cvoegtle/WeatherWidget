@@ -11,12 +11,18 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.RemoteViews;
-import org.voegtle.weatherwidget.preferences.WeatherSettings;
+import org.voegtle.weatherwidget.location.LocationFactory;
+import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.util.WeatherWidgetUpdater;
 
+import java.util.List;
+
 public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPreferences.OnSharedPreferenceChangeListener {
-  Resources res;
-  RemoteViews remoteViews;
+  private Resources res;
+  private RemoteViews remoteViews;
+  private List<WeatherLocation> locations;
+
 
   public WeatherWidgetProvider() {
 
@@ -35,6 +41,8 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
       remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
       preferences.registerOnSharedPreferenceChangeListener(this);
+
+      locations = LocationFactory.buildWeatherLocations(res);
     }
   }
 
@@ -48,21 +56,15 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     for (int widgetId : allWidgetIds) {
 
-      new WeatherWidgetUpdater(context, appWidgetManager, widgetId, remoteViews, res)
+      new WeatherWidgetUpdater(context, appWidgetManager, widgetId, remoteViews, locations)
           .startWeatherScheduler();
 
-      Intent intentOpenApp = new Intent(context, WeatherActivity.class);
-      PendingIntent pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT);
+      PendingIntent pendingOpenApp = createOpenAppIntent(context);
+      for (WeatherLocation location : locations) {
+        remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
+      }
 
-      remoteViews.setOnClickPendingIntent(R.id.weather_freiburg, pendingOpenApp);
-      remoteViews.setOnClickPendingIntent(R.id.weather_paderborn, pendingOpenApp);
-      remoteViews.setOnClickPendingIntent(R.id.weather_bonn, pendingOpenApp);
-
-      Intent intentRefresh = new Intent(context, WeatherWidgetProvider.class);
-      intentRefresh.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-      intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
-      PendingIntent pendingRefresh = PendingIntent.getBroadcast(context, 0, intentRefresh, PendingIntent.FLAG_UPDATE_CURRENT);
-
+      PendingIntent pendingRefresh = createRefreshIntent(context, appWidgetIds);
       remoteViews.setOnClickPendingIntent(R.id.refresh_button, pendingRefresh);
 
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
@@ -71,22 +73,31 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
     super.onUpdate(context, appWidgetManager, appWidgetIds);
   }
 
+  private PendingIntent createOpenAppIntent(Context context) {
+    Intent intentOpenApp = new Intent(context, WeatherActivity.class);
+    return PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
+  private PendingIntent createRefreshIntent(Context context, int[] appWidgetIds) {
+    Intent intentRefresh = new Intent(context, WeatherWidgetProvider.class);
+    intentRefresh.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+    intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
+    return PendingIntent.getBroadcast(context, 0, intentRefresh, PendingIntent.FLAG_UPDATE_CURRENT);
+  }
+
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
     setupUserInterface(preferences);
   }
 
   private void setupUserInterface(SharedPreferences preferences) {
-    WeatherSettings weatherSettings = new WeatherSettings(preferences);
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
+    weatherSettingsReader.read(preferences, locations);
 
-    boolean showPaderborn = weatherSettings.getPaderborn().isShowInWidget();
-    updateVisibility(R.id.weather_paderborn, showPaderborn);
-
-    boolean showFreiburg = weatherSettings.getFreiburg().isShowInWidget();
-    updateVisibility(R.id.weather_freiburg, showFreiburg);
-
-    boolean showBonn = weatherSettings.getBonn().isShowInWidget();
-    updateVisibility(R.id.weather_bonn, showBonn);
+    for (WeatherLocation location : locations) {
+      boolean show = location.getPreferences().isShowInWidget();
+      updateVisibility(location.getWeatherViewId(), show);
+    }
   }
 
   private void updateVisibility(int id, boolean isVisible) {
