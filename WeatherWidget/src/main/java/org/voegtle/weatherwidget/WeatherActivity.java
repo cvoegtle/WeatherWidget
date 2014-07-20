@@ -104,7 +104,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.main_menu, menu);
+    inflater.inflate(R.menu.weather_activity_menu, menu);
     return super.onCreateOptionsMenu(menu);
 
   }
@@ -114,7 +114,10 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     switch (item.getItemId()) {
       case R.id.action_reload:
         updater.updateWeatherOnce(true);
-        break;
+        return true;
+      case R.id.action_diagrams:
+        startActivity(new Intent(this, DiagramActivity.class));
+        return true;
       case R.id.action_perferences:
         startActivity(new Intent(this, WeatherPreferences.class));
         return true;

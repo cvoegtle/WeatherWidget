@@ -14,17 +14,21 @@ public class UserFeedback {
 
   public void showMessage(int messageId, boolean notifyUser) {
     if (notifyUser) {
-      final String message = activity.getResources().getString(messageId);
-      final Context context = activity.getApplicationContext();
-
-      activity.runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          int duration = Toast.LENGTH_SHORT;
-          Toast toast = Toast.makeText(context, message, duration);
-          toast.show();
-        }
-      });
+      showMessage(messageId);
     }
+  }
+
+  public void showMessage(int messageId) {
+    final String message = activity.getResources().getString(messageId);
+    final Context context = activity.getApplicationContext();
+
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
+      }
+    });
   }
 }

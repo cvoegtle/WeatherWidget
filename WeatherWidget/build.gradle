@@ -38,7 +38,7 @@ android {
             debuggable true
             jniDebugBuild true
             signingConfig signingConfigs.cvoegtle
-            runProguard true
+            runProguard false
             versionNameSuffix '1'
             zipAlign true
         }
@@ -46,7 +46,7 @@ android {
             debuggable false
             jniDebugBuild false
             signingConfig signingConfigs.cvoegtle
-            runProguard true
+            runProguard false
             versionNameSuffix '1'
             zipAlign true
         }

@@ -91,6 +91,19 @@
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
     </activity>
+    <activity android:name=".DiagramActivity"
+              android:label="@string/app_name"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".WeatherActivity"/>
+
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
 
 
   </application>

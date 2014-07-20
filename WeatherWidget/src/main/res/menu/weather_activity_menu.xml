@@ -5,6 +5,9 @@
         android:icon="@drawable/reload"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
+  <item android:id="@+id/action_diagrams"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_diagrams"/>
   <item android:id="@+id/action_perferences"
         android:showAsAction="never"
         android:title="@string/action_preferences"/>

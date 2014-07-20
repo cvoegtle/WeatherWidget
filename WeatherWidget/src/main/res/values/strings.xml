@@ -39,4 +39,10 @@
   <string name="minutes">Minuten</string>
   <string name="hours">Stunden</string>
   <string name="days">Tagen</string>
+  <string name="action_7_days">7 Tage</string>
+  <string name="action_summer_days">Sommertage</string>
+  <string name="action_7_days_average">7 Tage ⌀</string>
+  <string name="action_average_condensed">⌀</string>
+  <string name="message_diagram_update_failed">Diagram Abruf fehlgeschlagen</string>
+  <string name="action_diagrams">Diagramme</string>
 </resources>
