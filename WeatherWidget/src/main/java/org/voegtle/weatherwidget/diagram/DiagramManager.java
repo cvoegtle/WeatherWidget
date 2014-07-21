@@ -31,10 +31,14 @@ public class DiagramManager {
   }
 
   public void updateDiagram(final DiagramEnum diagramId) {
+    updateDiagram(diagramId, false);
+  }
+
+  public void updateDiagram(final DiagramEnum diagramId, final boolean force) {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
-        updateWeatherDiagram(diagramId);
+        updateWeatherDiagram(diagramId, force);
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -48,9 +52,15 @@ public class DiagramManager {
     }
   }
 
+  public void reloadDiagram() {
+    if (currentDiagram != null) {
+      updateDiagram(currentDiagram, true);
+    }
+  }
+
   private boolean inProgress;
 
-  private void updateWeatherDiagram(DiagramEnum diagramId) {
+  private void updateWeatherDiagram(DiagramEnum diagramId, boolean force) {
     if (inProgress) {
       return;
     }
@@ -59,7 +69,7 @@ public class DiagramManager {
 
       currentDiagram = diagramId;
       Diagram diagram = diagrams.get(diagramId);
-      if (diagram == null || isOld(diagram)) {
+      if (diagram == null || isOld(diagram) || force) {
         Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());
         if (image == null) {
           Log.e(DiagramManager.class.getName(), "Fetching Image " + diagramId + " failed");

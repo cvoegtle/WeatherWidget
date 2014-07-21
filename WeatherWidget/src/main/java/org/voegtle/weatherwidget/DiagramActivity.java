@@ -37,6 +37,7 @@ public class DiagramActivity extends Activity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_reload:
+        diagramManager.reloadDiagram();
         return true;
       case R.id.action_7_days:
         diagramManager.updateDiagram(DiagramEnum.temperature7days);
