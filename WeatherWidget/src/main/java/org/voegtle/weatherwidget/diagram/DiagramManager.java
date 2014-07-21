@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import org.voegtle.weatherwidget.DiagramActivity;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.persistence.DiagramCache;
 import org.voegtle.weatherwidget.util.UserFeedback;
 
 import java.util.Date;
@@ -17,10 +18,16 @@ public class DiagramManager {
   private DiagramActivity activity;
   private DiagramMap diagrams = new DiagramMap();
   private DiagramEnum currentDiagram;
+  private DiagramCache diagramCache;
 
   public DiagramManager(DiagramActivity activity) {
 
     this.activity = activity;
+    this.diagramCache = new DiagramCache(activity);
+  }
+
+  public void onCreate() {
+    diagramCache.readAll(diagrams);
   }
 
   public void updateDiagram(final DiagramEnum diagramId) {
@@ -49,6 +56,8 @@ public class DiagramManager {
     }
     try {
       inProgress = true;
+
+      currentDiagram = diagramId;
       Diagram diagram = diagrams.get(diagramId);
       if (diagram == null || isOld(diagram)) {
         Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());
@@ -59,12 +68,23 @@ public class DiagramManager {
         }
         diagram = new Diagram(diagramId, image);
         diagrams.put(diagramId, diagram);
+        diagramCache.write(diagram);
       }
-      ImageView imageView = (ImageView) activity.findViewById(R.id.diagram_view);
-      imageView.setImageDrawable(diagram.getImage());
+      showDiagram(diagram);
     } finally {
       inProgress = false;
     }
+  }
+
+  private void showDiagram(Diagram diagram) {
+    final Drawable newImage = diagram.getImage();
+    activity.runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        ImageView imageView = (ImageView) activity.findViewById(R.id.diagram_view);
+        imageView.setImageDrawable(newImage);
+      }
+    });
   }
 
   private boolean isOld(Diagram diagram) {

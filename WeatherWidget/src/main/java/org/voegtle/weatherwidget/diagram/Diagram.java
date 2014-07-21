@@ -9,6 +9,12 @@ public class Diagram {
   private Drawable image;
   private Date updateTimestamp;
 
+  public Diagram(DiagramEnum id, Drawable image, Date updateTimestamp) {
+    this.id = id;
+    this.image = image;
+    this.updateTimestamp = updateTimestamp;
+  }
+
   public Diagram(DiagramEnum id, Drawable image) {
     this.id = id;
     setImage(image);
