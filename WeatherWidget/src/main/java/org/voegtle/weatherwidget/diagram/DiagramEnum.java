@@ -14,4 +14,13 @@ public enum DiagramEnum {
   public String getUrl() {
     return url;
   }
+
+  public static DiagramEnum byName(String diagramName) {
+    for (DiagramEnum diagramEnum : values()) {
+      if (diagramEnum.toString().equals(diagramName)) {
+        return diagramEnum;
+      }
+    }
+    return null;
+  }
 }

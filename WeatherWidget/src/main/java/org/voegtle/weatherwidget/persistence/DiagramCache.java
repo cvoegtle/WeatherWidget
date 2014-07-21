@@ -18,12 +18,24 @@ import java.util.Date;
 public class DiagramCache {
   private static String DIAGRAM_CACHE = "DIAGRAM_CACHE";
   private static String DIAGRAM_AGE = "_AGE";
+  private static String CURRENT_DIAGRAM = "CURRENT_DIAGRAM";
   SharedPreferences diagramPreferences;
   private Context context;
 
   public DiagramCache(Context context) {
     this.context = context;
     diagramPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0);
+  }
+
+  public void saveCurrentDiagram(DiagramEnum currentDiagramId) {
+    SharedPreferences.Editor editor = diagramPreferences.edit();
+    editor.putString(CURRENT_DIAGRAM, currentDiagramId.toString());
+    editor.commit();
+  }
+
+  public DiagramEnum readCurrentDiagram() {
+    String diagramName = diagramPreferences.getString(CURRENT_DIAGRAM, null);
+    return DiagramEnum.byName(diagramName);
   }
 
   public void readAll(DiagramMap diagrams) {
@@ -58,7 +70,7 @@ public class DiagramCache {
 
     try {
       OutputStream outputStream = context.openFileOutput(getFilename(diagram.getId()), Context.MODE_PRIVATE);
-      convertDrawable2Png(diagram.getImage(), outputStream);
+      saveDrawableAsPng(diagram.getImage(), outputStream);
       outputStream.close();
     } catch (IOException ex) {
       Log.e(DiagramCache.class.getName(), "failed to write Diagram " + diagram.getId());
@@ -66,7 +78,7 @@ public class DiagramCache {
 
   }
 
-  private void convertDrawable2Png(Drawable image, OutputStream outputStream) {
+  private void saveDrawableAsPng(Drawable image, OutputStream outputStream) {
     Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
   }

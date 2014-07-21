@@ -28,6 +28,7 @@ public class DiagramManager {
 
   public void onCreate() {
     diagramCache.readAll(diagrams);
+    currentDiagram = diagramCache.readCurrentDiagram();
   }
 
   public void updateDiagram(final DiagramEnum diagramId) {
@@ -47,9 +48,10 @@ public class DiagramManager {
   }
 
   public void updateDiagram() {
-    if (currentDiagram != null) {
-      updateDiagram(currentDiagram);
+    if (currentDiagram == null) {
+      currentDiagram = DiagramEnum.temperature7days;
     }
+    updateDiagram(currentDiagram);
   }
 
   public void reloadDiagram() {
@@ -68,6 +70,7 @@ public class DiagramManager {
       inProgress = true;
 
       currentDiagram = diagramId;
+      diagramCache.saveCurrentDiagram(diagramId);
       Diagram diagram = diagrams.get(diagramId);
       if (diagram == null || isOld(diagram) || force) {
         Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());

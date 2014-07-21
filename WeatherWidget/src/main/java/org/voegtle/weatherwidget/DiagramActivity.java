@@ -17,7 +17,7 @@ public class DiagramActivity extends Activity {
     setContentView(R.layout.activity_digrams);
     this.diagramManager = new DiagramManager(this);
     this.diagramManager.onCreate();
-    diagramManager.updateDiagram(DiagramEnum.temperature7days);
+    diagramManager.updateDiagram();
   }
 
   @Override
@@ -53,6 +53,4 @@ public class DiagramActivity extends Activity {
     }
     return false;
   }
-
-
 }
