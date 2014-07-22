@@ -73,12 +73,8 @@ public class DiagramManager {
       diagramCache.saveCurrentDiagram(diagramId);
       Diagram diagram = diagrams.get(diagramId);
       if (diagram == null || isOld(diagram) || force) {
-        Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());
-        if (image == null) {
-          Log.e(DiagramManager.class.getName(), "Fetching Image " + diagramId + " failed");
-          new UserFeedback(activity).showMessage(R.string.message_diagram_update_failed);
-          return;
-        }
+        showDrawable(activity.getResources().getDrawable(R.drawable.ic_action_picture));
+        Drawable image = fetchDrawable(diagramId);
         diagram = new Diagram(diagramId, image);
         diagrams.put(diagramId, diagram);
         diagramCache.write(diagram);
@@ -89,8 +85,23 @@ public class DiagramManager {
     }
   }
 
+  private Drawable fetchDrawable(DiagramEnum diagramId) {
+    Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());
+    if (image == null) {
+      new UserFeedback(activity).showMessage(R.string.message_diagram_update_failed);
+      String message = "Fetching Image " + diagramId + " failed";
+      Log.e(DiagramManager.class.getName(), message);
+      throw new RuntimeException(message);
+    }
+    return image;
+  }
+
   private void showDiagram(Diagram diagram) {
     final Drawable newImage = diagram.getImage();
+    showDrawable(newImage);
+  }
+
+  private void showDrawable(final Drawable newImage) {
     activity.runOnUiThread(new Runnable() {
       @Override
       public void run() {
