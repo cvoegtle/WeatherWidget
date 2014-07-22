@@ -1,29 +1,49 @@
 package org.voegtle.weatherwidget;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import org.voegtle.weatherwidget.diagram.DiagramEnum;
-import org.voegtle.weatherwidget.diagram.DiagramManager;
+import org.voegtle.weatherwidget.persistence.DiagramCache;
 
-public class DiagramActivity extends Activity {
-  private DiagramManager diagramManager;
+public class DiagramActivity extends FragmentActivity {
+  private ViewPager viewPager;
+  private DiagramCache diagramCache;
+  private DiagramFragmentPagerAdapter pagerAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    this.diagramCache = new DiagramCache(this);
+
     setContentView(R.layout.activity_digrams);
-    this.diagramManager = new DiagramManager(this);
-    this.diagramManager.onCreate();
-    diagramManager.updateDiagram();
+    this.viewPager = (ViewPager) findViewById(R.id.pager);
+    this.pagerAdapter = getPageAdapter();
+    this.viewPager.setAdapter(pagerAdapter);
   }
 
   @Override
-  protected void onResume() {
-    super.onResume();
-    diagramManager.updateDiagram();
+  protected void onStart() {
+    super.onStart();
+    int currentItem = diagramCache.readCurrentDiagram();
+    viewPager.setCurrentItem(currentItem);
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
+    diagramCache.saveCurrentDiagram(viewPager.getCurrentItem());
+  }
+
+  private DiagramFragmentPagerAdapter getPageAdapter() {
+    DiagramFragmentPagerAdapter pagerAdapter = new DiagramFragmentPagerAdapter(getSupportFragmentManager());
+    for (DiagramEnum diagramId : DiagramEnum.values()) {
+      pagerAdapter.add(new DiagramFragment(diagramCache, diagramId));
+    }
+    return pagerAdapter;
   }
 
   @Override
@@ -37,18 +57,20 @@ public class DiagramActivity extends Activity {
   public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.action_reload:
-        diagramManager.reloadDiagram();
+        int index = viewPager.getCurrentItem();
+        DiagramFragment fragment = pagerAdapter.getItem(index);
+        fragment.reload();
         return true;
       case R.id.action_7_days:
-        diagramManager.updateDiagram(DiagramEnum.temperature7days);
+        viewPager.setCurrentItem(0, true);
         return true;
 
       case R.id.action_7_days_average:
-        diagramManager.updateDiagram(DiagramEnum.average7days);
+        viewPager.setCurrentItem(1, true);
         return true;
 
       case R.id.action_summerdays:
-        diagramManager.updateDiagram(DiagramEnum.summerdays);
+        viewPager.setCurrentItem(2, true);
         return true;
     }
     return false;

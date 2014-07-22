@@ -27,15 +27,15 @@ public class DiagramCache {
     diagramPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0);
   }
 
-  public void saveCurrentDiagram(DiagramEnum currentDiagramId) {
+  public void saveCurrentDiagram(int currentIndex) {
     SharedPreferences.Editor editor = diagramPreferences.edit();
-    editor.putString(CURRENT_DIAGRAM, currentDiagramId.toString());
+    editor.putInt(CURRENT_DIAGRAM, currentIndex);
     editor.commit();
   }
 
-  public DiagramEnum readCurrentDiagram() {
-    String diagramName = diagramPreferences.getString(CURRENT_DIAGRAM, null);
-    return DiagramEnum.byName(diagramName);
+  public int readCurrentDiagram() {
+    int diagramIndex = diagramPreferences.getInt(CURRENT_DIAGRAM, -1);
+    return diagramIndex > 0 ? diagramIndex : 0;
   }
 
   public void readAll(DiagramMap diagrams) {

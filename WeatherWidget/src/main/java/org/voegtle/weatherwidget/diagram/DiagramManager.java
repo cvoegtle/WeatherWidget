@@ -3,7 +3,7 @@ package org.voegtle.weatherwidget.diagram;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
-import org.voegtle.weatherwidget.DiagramActivity;
+import org.voegtle.weatherwidget.DiagramFragment;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.persistence.DiagramCache;
 import org.voegtle.weatherwidget.util.UserFeedback;
@@ -15,20 +15,18 @@ import java.util.concurrent.TimeUnit;
 
 public class DiagramManager {
 
-  private DiagramActivity activity;
+  private DiagramFragment fragment;
   private DiagramMap diagrams = new DiagramMap();
-  private DiagramEnum currentDiagram;
   private DiagramCache diagramCache;
 
-  public DiagramManager(DiagramActivity activity) {
+  public DiagramManager(DiagramFragment diagramFragment, DiagramCache diagramCache) {
 
-    this.activity = activity;
-    this.diagramCache = new DiagramCache(activity);
+    this.fragment = diagramFragment;
+    this.diagramCache = diagramCache;
   }
 
   public void onCreate() {
     diagramCache.readAll(diagrams);
-    currentDiagram = diagramCache.readCurrentDiagram();
   }
 
   public void updateDiagram(final DiagramEnum diagramId) {
@@ -47,19 +45,6 @@ public class DiagramManager {
 
   }
 
-  public void updateDiagram() {
-    if (currentDiagram == null) {
-      currentDiagram = DiagramEnum.temperature7days;
-    }
-    updateDiagram(currentDiagram);
-  }
-
-  public void reloadDiagram() {
-    if (currentDiagram != null) {
-      updateDiagram(currentDiagram, true);
-    }
-  }
-
   private boolean inProgress;
 
   private void updateWeatherDiagram(DiagramEnum diagramId, boolean force) {
@@ -69,16 +54,15 @@ public class DiagramManager {
     try {
       inProgress = true;
 
-      currentDiagram = diagramId;
-      diagramCache.saveCurrentDiagram(diagramId);
       Diagram diagram = diagrams.get(diagramId);
       if (diagram == null || isOld(diagram) || force) {
-        showDrawable(activity.getResources().getDrawable(R.drawable.ic_action_picture));
+        showDrawable(fragment.getResources().getDrawable(R.drawable.ic_action_picture));
         Drawable image = fetchDrawable(diagramId);
         diagram = new Diagram(diagramId, image);
         diagrams.put(diagramId, diagram);
         diagramCache.write(diagram);
       }
+
       showDiagram(diagram);
     } finally {
       inProgress = false;
@@ -88,7 +72,7 @@ public class DiagramManager {
   private Drawable fetchDrawable(DiagramEnum diagramId) {
     Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());
     if (image == null) {
-      new UserFeedback(activity).showMessage(R.string.message_diagram_update_failed);
+      new UserFeedback(fragment.getActivity()).showMessage(R.string.message_diagram_update_failed);
       String message = "Fetching Image " + diagramId + " failed";
       Log.e(DiagramManager.class.getName(), message);
       throw new RuntimeException(message);
@@ -102,10 +86,10 @@ public class DiagramManager {
   }
 
   private void showDrawable(final Drawable newImage) {
-    activity.runOnUiThread(new Runnable() {
+    fragment.getActivity().runOnUiThread(new Runnable() {
       @Override
       public void run() {
-        ImageView imageView = (ImageView) activity.findViewById(R.id.diagram_view);
+        ImageView imageView = (ImageView) fragment.getView().findViewById(R.id.diagram_view);
         imageView.setImageDrawable(newImage);
       }
     });
