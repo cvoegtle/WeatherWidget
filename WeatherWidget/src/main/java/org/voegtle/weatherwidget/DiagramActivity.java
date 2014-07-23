@@ -1,7 +1,9 @@
 package org.voegtle.weatherwidget;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,7 +11,7 @@ import android.view.MenuItem;
 import org.voegtle.weatherwidget.diagram.DiagramEnum;
 import org.voegtle.weatherwidget.persistence.DiagramCache;
 
-public class DiagramActivity extends FragmentActivity {
+public class DiagramActivity extends Activity {
   private ViewPager viewPager;
   private DiagramCache diagramCache;
   private DiagramFragmentPagerAdapter pagerAdapter;
@@ -17,29 +19,42 @@ public class DiagramActivity extends FragmentActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.diagramCache = new DiagramCache(this);
 
     setContentView(R.layout.activity_digrams);
     this.viewPager = (ViewPager) findViewById(R.id.pager);
-    this.pagerAdapter = getPageAdapter();
-    this.viewPager.setAdapter(pagerAdapter);
   }
 
   @Override
-  protected void onStart() {
-    super.onStart();
+  protected void onResume() {
+    super.onResume();
+    this.diagramCache = new DiagramCache(this);
+
+    this.pagerAdapter = getPageAdapter();
+    this.viewPager.setAdapter(pagerAdapter);
+
     int currentItem = diagramCache.readCurrentDiagram();
     viewPager.setCurrentItem(currentItem);
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
+  protected void onPause() {
     diagramCache.saveCurrentDiagram(viewPager.getCurrentItem());
+    viewPager.removeAllViews();
+    cleanupFragments();
+    super.onPause();
+  }
+
+  private void cleanupFragments() {
+    FragmentManager fm = getFragmentManager();
+    FragmentTransaction fragmentTransaction = fm.beginTransaction();
+    for (int i = 0; i < pagerAdapter.getCount(); i++) {
+      fragmentTransaction.remove(pagerAdapter.getItem(i));
+    }
+    fragmentTransaction.commit();
   }
 
   private DiagramFragmentPagerAdapter getPageAdapter() {
-    DiagramFragmentPagerAdapter pagerAdapter = new DiagramFragmentPagerAdapter(getSupportFragmentManager());
+    DiagramFragmentPagerAdapter pagerAdapter = new DiagramFragmentPagerAdapter(getFragmentManager());
     for (DiagramEnum diagramId : DiagramEnum.values()) {
       pagerAdapter.add(new DiagramFragment(diagramCache, diagramId));
     }
