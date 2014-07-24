@@ -56,7 +56,7 @@ public class DiagramManager {
 
       Diagram diagram = diagrams.get(diagramId);
       if (diagram == null || isOld(diagram) || force) {
-        showDrawable(fragment.getResources().getDrawable(R.drawable.ic_action_picture));
+        showDrawable(fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark));
         Drawable image = fetchDrawable(diagramId);
         diagram = new Diagram(diagramId, image);
         diagrams.put(diagramId, diagram);
