@@ -29,6 +29,12 @@ public class DiagramFragment extends Fragment {
     diagramManager.updateDiagram(diagramId);
   }
 
+  @Override
+  public void onPause() {
+    diagramManager.onPause();
+    super.onPause();
+  }
+
   public void reload() {
     diagramManager.updateDiagram(diagramId, true);
   }

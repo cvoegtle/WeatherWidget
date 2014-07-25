@@ -16,6 +16,7 @@ public class DiagramManager {
   private DiagramMap diagrams = new DiagramMap();
   private DiagramCache diagramCache;
   private Drawable placeholderImage;
+  private boolean active = false;
 
   public DiagramManager(DiagramFragment diagramFragment, DiagramCache diagramCache) {
     this.fragment = diagramFragment;
@@ -23,8 +24,13 @@ public class DiagramManager {
   }
 
   public void onResume() {
+    active = true;
     placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark);
     diagramCache.readAll(diagrams);
+  }
+
+  public void onPause() {
+    active = false;
   }
 
   public void updateDiagram(final DiagramEnum diagramId) {
@@ -84,13 +90,15 @@ public class DiagramManager {
   }
 
   private void showDrawable(final Drawable newImage) {
-    fragment.getActivity().runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        ImageView imageView = (ImageView) fragment.getView().findViewById(R.id.diagram_view);
-        imageView.setImageDrawable(newImage);
-      }
-    });
+    if (active) {
+      fragment.getActivity().runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+          ImageView imageView = (ImageView) fragment.getView().findViewById(R.id.diagram_view);
+          imageView.setImageDrawable(newImage);
+        }
+      });
+    }
   }
 
 }
