@@ -69,5 +69,12 @@
             android:defaultValue="false"
             />
   </PreferenceCategory>
+  <PreferenceCategory
+          android:title="@string/version_info"
+          android:key="settings_version">
+    <Preference android:key="version"
+                android:title="@string/app_name"
+                android:summary="@string/version"/>
+  </PreferenceCategory>
 
 </PreferenceScreen>

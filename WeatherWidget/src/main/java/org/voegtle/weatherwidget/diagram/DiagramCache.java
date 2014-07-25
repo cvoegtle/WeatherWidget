@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget.persistence;
+package org.voegtle.weatherwidget.diagram;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,9 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import org.voegtle.weatherwidget.diagram.Diagram;
-import org.voegtle.weatherwidget.diagram.DiagramEnum;
-import org.voegtle.weatherwidget.diagram.DiagramMap;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +36,7 @@ public class DiagramCache {
   }
 
   public void readAll(DiagramMap diagrams) {
+    diagrams.clear();
     for (DiagramEnum diagramId : DiagramEnum.values()) {
       Diagram diagram = read(diagramId);
       if (diagram != null) {
@@ -68,6 +66,10 @@ public class DiagramCache {
     editor.putLong(getAgeKey(diagram.getId()), diagram.getUpdateTimestamp().getTime());
     editor.commit();
 
+    saveAsPngFile(diagram);
+  }
+
+  private void saveAsPngFile(Diagram diagram) {
     try {
       OutputStream outputStream = context.openFileOutput(getFilename(diagram.getId()), Context.MODE_PRIVATE);
       saveDrawableAsPng(diagram.getImage(), outputStream);
@@ -75,7 +77,6 @@ public class DiagramCache {
     } catch (IOException ex) {
       Log.e(DiagramCache.class.getName(), "failed to write Diagram " + diagram.getId());
     }
-
   }
 
   private void saveDrawableAsPng(Drawable image, OutputStream outputStream) {

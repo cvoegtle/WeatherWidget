@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget;
+package org.voegtle.weatherwidget.diagram;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -8,8 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import org.voegtle.weatherwidget.diagram.DiagramEnum;
-import org.voegtle.weatherwidget.persistence.DiagramCache;
+import org.voegtle.weatherwidget.R;
 
 public class DiagramActivity extends Activity {
   private ViewPager viewPager;

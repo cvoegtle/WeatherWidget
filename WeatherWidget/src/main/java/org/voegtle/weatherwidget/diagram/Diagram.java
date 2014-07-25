@@ -15,6 +15,11 @@ public class Diagram {
     this.updateTimestamp = updateTimestamp;
   }
 
+  public boolean isOld() {
+    return (new Date().getTime() - updateTimestamp.getTime()) > 60 * 60 * 1000;
+  }
+
+
   public Diagram(DiagramEnum id, Drawable image) {
     this.id = id;
     setImage(image);

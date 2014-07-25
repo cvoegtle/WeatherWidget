@@ -3,12 +3,9 @@ package org.voegtle.weatherwidget.diagram;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
-import org.voegtle.weatherwidget.DiagramFragment;
 import org.voegtle.weatherwidget.R;
-import org.voegtle.weatherwidget.persistence.DiagramCache;
 import org.voegtle.weatherwidget.util.UserFeedback;
 
-import java.util.Date;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,14 +15,15 @@ public class DiagramManager {
   private DiagramFragment fragment;
   private DiagramMap diagrams = new DiagramMap();
   private DiagramCache diagramCache;
+  private Drawable placeholderImage;
 
   public DiagramManager(DiagramFragment diagramFragment, DiagramCache diagramCache) {
-
     this.fragment = diagramFragment;
     this.diagramCache = diagramCache;
   }
 
-  public void onCreate() {
+  public void onResume() {
+    placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark);
     diagramCache.readAll(diagrams);
   }
 
@@ -42,7 +40,6 @@ public class DiagramManager {
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     scheduler.schedule(updater, 0, TimeUnit.SECONDS);
-
   }
 
   private boolean inProgress;
@@ -55,10 +52,11 @@ public class DiagramManager {
       inProgress = true;
 
       Diagram diagram = diagrams.get(diagramId);
-      if (diagram == null || isOld(diagram) || force) {
-        showDrawable(fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark));
+      if (diagram == null || diagram.isOld() || force) {
+        showDrawable(placeholderImage);
         Drawable image = fetchDrawable(diagramId);
         diagram = new Diagram(diagramId, image);
+
         diagrams.put(diagramId, diagram);
         diagramCache.write(diagram);
       }
@@ -70,7 +68,7 @@ public class DiagramManager {
   }
 
   private Drawable fetchDrawable(DiagramEnum diagramId) {
-    Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId.getUrl());
+    Drawable image = new DiagramFetcher().fetchImageFromUrl(diagramId);
     if (image == null) {
       new UserFeedback(fragment.getActivity()).showMessage(R.string.message_diagram_update_failed);
       String message = "Fetching Image " + diagramId + " failed";
@@ -93,10 +91,6 @@ public class DiagramManager {
         imageView.setImageDrawable(newImage);
       }
     });
-  }
-
-  private boolean isOld(Diagram diagram) {
-    return (new Date().getTime() - diagram.getUpdateTimestamp().getTime()) > 60 * 60 * 1000;
   }
 
 }

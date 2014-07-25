@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget;
+package org.voegtle.weatherwidget.diagram;
 
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
