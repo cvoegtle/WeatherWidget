@@ -19,8 +19,6 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 19
-        versionCode 1
-        versionName '1.0'
     }
 
     signingConfigs {
@@ -43,7 +41,6 @@ android {
             jniDebugBuild true
             signingConfig signingConfigs.cvoegtle
             runProguard false
-            versionNameSuffix '1'
             zipAlign true
         }
         release {
@@ -51,7 +48,6 @@ android {
             jniDebugBuild false
             signingConfig signingConfigs.cvoegtle
             runProguard false
-            versionNameSuffix '1'
             zipAlign true
         }
     }
@@ -59,4 +55,23 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v13:+'
+}
+
+import java.util.regex.Pattern
+
+task('increaseVersionCode') << {
+    def manifestFile = file("src/main/AndroidManifest.xml")
+    def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
+    def manifestText = manifestFile.getText()
+    def matcher = pattern.matcher(manifestText)
+    matcher.find()
+    def versionCode = Integer.parseInt(matcher.group(1))
+    def manifestContent = matcher.replaceAll("versionCode=\"" + ++versionCode + "\"")
+    manifestFile.write(manifestContent)
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'generateReleaseBuildConfig' || task.name == 'generateDebugBuildConfig') {
+        task.dependsOn 'increaseVersionCode'
+    }
 }

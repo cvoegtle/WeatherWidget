@@ -45,6 +45,6 @@
   <string name="message_diagram_update_failed">Diagram Abruf fehlgeschlagen</string>
   <string name="action_diagrams">Diagramme</string>
   <string name="settings">Einstellungen</string>
-  <string name="version">Version 0.9 Build 2</string>
+  <string name="version">Version {v} Build {b}</string>
   <string name="version_info">Versionshinweis</string>
 </resources>
