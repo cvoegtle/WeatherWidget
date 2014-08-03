@@ -8,7 +8,6 @@ public class WeatherLocation {
   private String name;
   private String shortName;
   private Uri forecastUrl;
-  private int weatherCaptionId;
   private int weatherViewId;
   private int forecastButtonId;
   private String prefShowInWidget;
@@ -46,14 +45,6 @@ public class WeatherLocation {
 
   public void setForecastUrl(Uri forecastUrl) {
     this.forecastUrl = forecastUrl;
-  }
-
-  public int getWeatherCaptionId() {
-    return weatherCaptionId;
-  }
-
-  public void setWeatherCaptionId(int weatherCaptionId) {
-    this.weatherCaptionId = weatherCaptionId;
   }
 
   public int getWeatherViewId() {

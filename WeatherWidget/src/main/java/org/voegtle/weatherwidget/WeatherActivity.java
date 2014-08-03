@@ -66,7 +66,6 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
 
   private void updateVisibility(WeatherLocation location) {
     boolean show = location.getPreferences().isShowInApp();
-    updateVisibility(location.getWeatherCaptionId(), show);
     updateVisibility(location.getWeatherViewId(), show);
     updateVisibility(location.getForecastButtonId(), show);
   }

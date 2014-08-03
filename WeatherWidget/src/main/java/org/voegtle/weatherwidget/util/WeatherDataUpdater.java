@@ -2,10 +2,10 @@ package org.voegtle.weatherwidget.util;
 
 import android.content.res.Resources;
 import android.util.Log;
-import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 
@@ -79,8 +79,7 @@ public class WeatherDataUpdater {
       updateInProgress = true;
       HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
       for (WeatherLocation location : locations) {
-        updateWeatherLocation(location.getWeatherCaptionId(),
-            location.getWeatherViewId(),
+        updateWeatherLocation(location.getWeatherViewId(),
             location.getName(),
             data.get(location.getKey().toString()));
       }
@@ -98,16 +97,14 @@ public class WeatherDataUpdater {
   }
 
 
-  private void updateWeatherLocation(int captionId, int contentId, String locationName, WeatherData data) {
-    final TextView captionView = (TextView) activity.findViewById(captionId);
-    final String caption = getCaption(locationName, data);
+  private void updateWeatherLocation(int locationId, String locationName, WeatherData data) {
+    final LocationView contentView = (LocationView) activity.findViewById(locationId);
+
     final int color = ColorUtil.byAge(data.getTimestamp());
-    updateView(captionView, caption, color);
-
-
-    final TextView contentView = (TextView) activity.findViewById(contentId);
+    final String caption = getCaption(locationName, data);
     final String text = formatWeatherData(data);
-    updateView(contentView, text, color);
+
+    updateView(contentView, caption, text, color);
   }
 
   private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -131,11 +128,12 @@ public class WeatherDataUpdater {
     return builder.toString();
   }
 
-  private void updateView(final TextView view, final String text, final int color) {
+  private void updateView(final LocationView view, final String caption, final String text, final int color) {
     view.post(new Runnable() {
       @Override
       public void run() {
-        view.setText(text);
+        view.setCaption(caption);
+        view.setData(text);
         view.setTextColor(color);
       }
     });
