@@ -16,17 +16,17 @@
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_paderborn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
-                                                       android:paddingBottom="7dp"
+                                                       android:paddingBottom="9dp"
                                                        weather:caption="@string/city_paderborn_full"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bonn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
-                                                       android:paddingBottom="7dp"
+                                                       android:paddingBottom="9dp"
                                                        weather:caption="@string/city_bonn_full"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_freiburg"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
-                                                       android:paddingBottom="7dp"
+                                                       android:paddingBottom="9dp"
                                                        weather:caption="@string/city_freiburg_full"/>
 
       <TextView android:id="@+id/caption_forecast"

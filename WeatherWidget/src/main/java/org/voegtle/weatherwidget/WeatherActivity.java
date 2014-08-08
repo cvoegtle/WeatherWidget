@@ -37,6 +37,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
     preferences.registerOnSharedPreferenceChangeListener(this);
 
+    rainUpdater = new RainUpdater(this);
     setupUserInterface(preferences);
 
     initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
@@ -44,7 +45,6 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     initForecastButtons();
 
     updater = new WeatherDataUpdater(this, locations);
-    rainUpdater = new RainUpdater(this);
     setupWeatherUpdater(preferences);
   }
 
@@ -66,6 +66,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     for (WeatherLocation location : locations) {
       addClickHandler(location);
       updateVisibility(location);
+      updateState(location);
     }
   }
 
@@ -76,6 +77,8 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
       public void onClick(View view) {
         if (locationView.isExpanded()) {
           rainUpdater.updateRain(locationView, location.getRainDetailsUrl());
+        } else {
+          rainUpdater.clearState(locationView);
         }
       }
     });
@@ -86,6 +89,12 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     updateVisibility(location.getWeatherViewId(), show);
     updateVisibility(location.getForecastButtonId(), show);
   }
+
+  private void updateState(WeatherLocation location) {
+    final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
+    rainUpdater.setupRain(locationView, location.getRainDetailsUrl());
+  }
+
 
   private void updateVisibility(int viewId, boolean isVisible) {
     View view = findViewById(viewId);
