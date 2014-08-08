@@ -1,10 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             xmlns:weather="http://schemas.android.com/apk/res-auto"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@drawable/activity_background"
-             tools:context=".WeatherActivity">
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:weather="http://schemas.android.com/apk/res-auto"
+              android:background="@drawable/activity_background"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
   <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout android:layout_width="match_parent"
@@ -14,14 +16,17 @@
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_paderborn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
+                                                       android:paddingBottom="7dp"
                                                        weather:caption="@string/city_paderborn_full"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bonn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
+                                                       android:paddingBottom="7dp"
                                                        weather:caption="@string/city_bonn_full"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_freiburg"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
+                                                       android:paddingBottom="7dp"
                                                        weather:caption="@string/city_freiburg_full"/>
 
       <TextView android:id="@+id/caption_forecast"
@@ -68,4 +73,4 @@
 
     </LinearLayout>
   </ScrollView>
-</FrameLayout>
+</LinearLayout>

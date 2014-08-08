@@ -47,4 +47,7 @@
   <string name="settings">Einstellungen</string>
   <string name="version">Version {v} Build {b}</string>
   <string name="version_info">Versionshinweis</string>
+  <string name="rain_yesterday">Regen gestern:</string>
+  <string name="rain_last_week">Regen letzte Woche:</string>
+  <string name="rain_30_days">Regen letzte 30 Tage:</string>
 </resources>

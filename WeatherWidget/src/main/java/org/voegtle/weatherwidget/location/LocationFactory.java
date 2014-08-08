@@ -15,6 +15,7 @@ public class LocationFactory {
     paderborn.setName(res.getString(R.string.city_paderborn_full));
     paderborn.setShortName(res.getString(R.string.city_paderborn));
     paderborn.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"));
+    paderborn.setRainDetailsUrl(Uri.parse("http://tegelwetter.appspot.com/weatherstation/query?type=rain"));
     paderborn.setWeatherViewId(R.id.weather_paderborn);
     paderborn.setForecastButtonId(R.id.button_forecast_paderborn);
     paderborn.setPrefShowInApp("app_show_paderborn");
@@ -26,6 +27,7 @@ public class LocationFactory {
     bonn.setName(res.getString(R.string.city_bonn_full));
     bonn.setShortName(res.getString(R.string.city_bonn));
     bonn.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=105170&wahl=vorhersage"));
+    bonn.setRainDetailsUrl(Uri.parse("http://forstwetter.appspot.com/weatherstation/query?type=rain"));
     bonn.setWeatherViewId(R.id.weather_bonn);
     bonn.setForecastButtonId(R.id.button_forecast_bonn);
     bonn.setPrefShowInApp("app_show_bonn");
@@ -37,6 +39,7 @@ public class LocationFactory {
     freiburg.setName(res.getString(R.string.city_freiburg_full));
     freiburg.setShortName(res.getString(R.string.city_freiburg));
     freiburg.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=108030&wahl=vorhersage"));
+    freiburg.setRainDetailsUrl(Uri.parse("http://oxenwetter.appspot.com/weatherstation/query?type=rain"));
     freiburg.setWeatherViewId(R.id.weather_freiburg);
     freiburg.setForecastButtonId(R.id.button_forecast_freiburg);
     freiburg.setPrefShowInApp("app_show_freiburg");

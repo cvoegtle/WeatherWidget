@@ -118,12 +118,14 @@ public class WeatherDataUpdater {
     StringBuilder builder = new StringBuilder();
     builder.append(res.getString(R.string.temperature)).append(" ");
     builder.append(numberFormat.format(data.getTemperature())).append("°C").append("\n");
-    builder.append(res.getString(R.string.humidity)).append(" ").append(numberFormat.format(data.getHumidity())).append("%\n");
+    builder.append(res.getString(R.string.humidity)).append(" ").append(numberFormat.format(data.getHumidity())).append("%");
     if (data.getRain() != null) {
-      builder.append(res.getString(R.string.rain_last_hour)).append(" ").append(numberFormat.format(data.getRain())).append(res.getString(R.string.liter)).append("\n");
+      builder.append("\n");
+      builder.append(res.getString(R.string.rain_last_hour)).append(" ").append(numberFormat.format(data.getRain())).append(res.getString(R.string.liter));
     }
     if (data.getRainToday() != null) {
-      builder.append(res.getString(R.string.rain_today)).append(" ").append(numberFormat.format(data.getRainToday())).append(res.getString(R.string.liter)).append("\n");
+      builder.append("\n");
+      builder.append(res.getString(R.string.rain_today)).append(" ").append(numberFormat.format(data.getRainToday())).append(res.getString(R.string.liter));
     }
     return builder.toString();
   }

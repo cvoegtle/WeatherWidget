@@ -8,6 +8,7 @@ public class WeatherLocation {
   private String name;
   private String shortName;
   private Uri forecastUrl;
+  private Uri rainDetailsUrl;
   private int weatherViewId;
   private int forecastButtonId;
   private String prefShowInWidget;
@@ -93,5 +94,13 @@ public class WeatherLocation {
 
   public void setPreferences(LocationPreferences preferences) {
     this.preferences = preferences;
+  }
+
+  public Uri getRainDetailsUrl() {
+    return rainDetailsUrl;
+  }
+
+  public void setRainDetailsUrl(Uri rainDetailsUrl) {
+    this.rainDetailsUrl = rainDetailsUrl;
   }
 }

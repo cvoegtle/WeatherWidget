@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-  <TextView android:id="@+id/caption"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ffffff"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:gravity="left"/>
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_horizontal"
+              android:orientation="vertical">
+  <RelativeLayout android:id="@+id/caption_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="#15000000">
+    <TextView android:id="@+id/caption"
+              android:layout_alignParentLeft="true"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="16sp"
+              android:paddingLeft="5dp"/>
+    <ImageButton android:id="@+id/resize_button"
+                 android:layout_alignParentRight="true"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:background="#08000000"
+                 android:src="@drawable/ic_action_expand"/>
+  </RelativeLayout>
+
   <TextView android:id="@+id/data"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:textStyle="bold"
             android:textSize="14sp"
-            android:gravity="left"
             android:paddingLeft="5dp"/>
+  <TextView android:id="@+id/more_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:paddingLeft="5dp"
+            android:paddingTop="2dp"
+            android:visibility="gone"/>
 </LinearLayout>

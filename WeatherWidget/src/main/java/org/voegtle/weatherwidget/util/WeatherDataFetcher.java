@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.util;
 
+import android.net.Uri;
 import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -10,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.voegtle.weatherwidget.data.RainData;
 import org.voegtle.weatherwidget.data.WeatherData;
 
 import java.io.BufferedReader;
@@ -80,6 +82,49 @@ public class WeatherDataFetcher {
     }
     return data;
   }
+
+  public RainData fetchRainDataFromUrl(Uri uri) {
+    String jsonWeather = getStringFromUrl(uri.toString());
+    try {
+      JSONObject rain = new JSONObject(jsonWeather);
+      return getRainData(rain);
+    } catch (Throwable e) {
+      Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
+    }
+    return new RainData();
+  }
+
+  private RainData getRainData(JSONObject rain) throws JSONException {
+    RainData rainData = new RainData();
+
+    Object today = rain.get("today");
+    if (today instanceof Number) {
+      rainData.setRainToday(((Number) today).floatValue());
+    }
+
+    Object lastHour = rain.get("lastHour");
+    if (lastHour instanceof Number) {
+      rainData.setRainLastHour(((Number) lastHour).floatValue());
+    }
+
+    Object yesterday = rain.get("yesterday");
+    if (yesterday instanceof Number) {
+      rainData.setRainYeasterday(((Number) yesterday).floatValue());
+    }
+
+    Object lastWeek = rain.get("lastWeek");
+    if (lastWeek instanceof Number) {
+      rainData.setRainLastWeek(((Number) lastWeek).floatValue());
+    }
+
+    Object last30days = rain.get("last30days");
+    if (last30days instanceof Number) {
+      rainData.setRain30Days(((Number) last30days).floatValue());
+    }
+
+    return rainData;
+  }
+
 
   private String getStringFromUrl(String uri) {
     StringBuilder builder = new StringBuilder();

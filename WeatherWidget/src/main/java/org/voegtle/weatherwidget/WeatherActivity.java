@@ -13,15 +13,18 @@ import android.view.View;
 import android.widget.Button;
 import org.voegtle.weatherwidget.diagram.DiagramActivity;
 import org.voegtle.weatherwidget.location.LocationFactory;
+import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.WeatherPreferences;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
+import org.voegtle.weatherwidget.util.RainUpdater;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
 import java.util.List;
 
 public class WeatherActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
+  private RainUpdater rainUpdater;
   private List<WeatherLocation> locations;
 
   @Override
@@ -41,6 +44,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     initForecastButtons();
 
     updater = new WeatherDataUpdater(this, locations);
+    rainUpdater = new RainUpdater(this);
     setupWeatherUpdater(preferences);
   }
 
@@ -60,8 +64,21 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     weatherSettings.read(preferences, locations);
 
     for (WeatherLocation location : locations) {
+      addClickHandler(location);
       updateVisibility(location);
     }
+  }
+
+  private void addClickHandler(final WeatherLocation location) {
+    final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
+    locationView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (locationView.isExpanded()) {
+          rainUpdater.updateRain(locationView, location.getRainDetailsUrl());
+        }
+      }
+    });
   }
 
   private void updateVisibility(WeatherLocation location) {
