@@ -12,6 +12,7 @@ public class FreiburgDiagramActivity extends DiagramActivity {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.freiburg_2days);
     addDiagram(DiagramEnum.freiburg_year);
+    addDiagram(DiagramEnum.freiburg_lastyear);
   }
 
 
@@ -34,9 +35,9 @@ public class FreiburgDiagramActivity extends DiagramActivity {
         viewPager.setCurrentItem(1, true);
         return true;
 
-//      case R.id.action_last_year:
-//        viewPager.setCurrentItem(2, true);
-//        return true;
+      case R.id.action_last_year:
+        viewPager.setCurrentItem(2, true);
+        return true;
     }
     return false;
   }

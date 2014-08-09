@@ -10,7 +10,8 @@ public enum DiagramEnum {
   paderborn_lastyear("https://docs.google.com/spreadsheet/oimg?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc&oid=21&zx=bju20lesmatj"),
 
   freiburg_2days("https://docs.google.com/spreadsheet/oimg?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc&oid=7&zx=1geb1qiwcx3b"),
-  freiburg_year("https://docs.google.com/spreadsheet/oimg?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc&oid=16&zx=v9yov3sfksqb");
+  freiburg_year("https://docs.google.com/spreadsheet/oimg?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc&oid=16&zx=v9yov3sfksqb"),
+  freiburg_lastyear("https://docs.google.com/spreadsheet/oimg?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc&oid=25&zx=poa3vq4juvf1");
   private String url;
 
   private DiagramEnum(String url) {
