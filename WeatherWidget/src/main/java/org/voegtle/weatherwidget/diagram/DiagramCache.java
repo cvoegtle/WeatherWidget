@@ -24,14 +24,14 @@ public class DiagramCache {
     diagramPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0);
   }
 
-  public void saveCurrentDiagram(int currentIndex) {
+  public void saveCurrentDiagram(String identifer, int currentIndex) {
     SharedPreferences.Editor editor = diagramPreferences.edit();
-    editor.putInt(CURRENT_DIAGRAM, currentIndex);
+    editor.putInt(CURRENT_DIAGRAM + identifer, currentIndex);
     editor.commit();
   }
 
-  public int readCurrentDiagram() {
-    int diagramIndex = diagramPreferences.getInt(CURRENT_DIAGRAM, -1);
+  public int readCurrentDiagram(String identifier) {
+    int diagramIndex = diagramPreferences.getInt(CURRENT_DIAGRAM + identifier, -1);
     return diagramIndex > 0 ? diagramIndex : 0;
   }
 

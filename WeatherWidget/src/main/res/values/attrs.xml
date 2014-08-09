@@ -13,6 +13,7 @@
     <attr name="caption" format="string"/>
     <attr name="data" format="string"/>
     <attr name="expanded" format="boolean"/>
+    <attr name="diagrams" format="boolean"/>
   </declare-styleable>
 
 </resources>

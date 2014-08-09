@@ -5,15 +5,17 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import org.voegtle.weatherwidget.R;
 
-public class DiagramActivity extends Activity {
-  private ViewPager viewPager;
+import java.util.ArrayList;
+
+public abstract class DiagramActivity extends Activity {
+  protected ArrayList<DiagramEnum> diagramIdList = new ArrayList<DiagramEnum>();
+
+  protected ViewPager viewPager;
   private DiagramCache diagramCache;
-  private DiagramFragmentPagerAdapter pagerAdapter;
+  protected DiagramFragmentPagerAdapter pagerAdapter;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +33,13 @@ public class DiagramActivity extends Activity {
     this.pagerAdapter = getPageAdapter();
     this.viewPager.setAdapter(pagerAdapter);
 
-    int currentItem = diagramCache.readCurrentDiagram();
+    int currentItem = diagramCache.readCurrentDiagram(this.getClass().getName());
     viewPager.setCurrentItem(currentItem);
   }
 
   @Override
   protected void onPause() {
-    diagramCache.saveCurrentDiagram(viewPager.getCurrentItem());
+    diagramCache.saveCurrentDiagram(this.getClass().getName(), viewPager.getCurrentItem());
     viewPager.removeAllViews();
     cleanupFragments();
     super.onPause();
@@ -54,17 +56,14 @@ public class DiagramActivity extends Activity {
 
   private DiagramFragmentPagerAdapter getPageAdapter() {
     DiagramFragmentPagerAdapter pagerAdapter = new DiagramFragmentPagerAdapter(getFragmentManager());
-    for (DiagramEnum diagramId : DiagramEnum.values()) {
+    for (DiagramEnum diagramId : diagramIdList) {
       pagerAdapter.add(new DiagramFragment(diagramCache, diagramId));
     }
     return pagerAdapter;
   }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    MenuInflater inflater = getMenuInflater();
-    inflater.inflate(R.menu.diagram_activity_menu, menu);
-    return super.onCreateOptionsMenu(menu);
+  protected void addDiagram(DiagramEnum diagramId) {
+    diagramIdList.add(diagramId);
   }
 
   @Override
@@ -75,18 +74,12 @@ public class DiagramActivity extends Activity {
         DiagramFragment fragment = pagerAdapter.getItem(index);
         fragment.reload();
         return true;
-      case R.id.action_7_days:
-        viewPager.setCurrentItem(0, true);
-        return true;
 
-      case R.id.action_7_days_average:
-        viewPager.setCurrentItem(1, true);
-        return true;
-
-      case R.id.action_summerdays:
-        viewPager.setCurrentItem(2, true);
-        return true;
+      default:
+        return onCustomItemSelected(item);
     }
-    return false;
   }
+
+  abstract protected boolean onCustomItemSelected(MenuItem item);
+
 }

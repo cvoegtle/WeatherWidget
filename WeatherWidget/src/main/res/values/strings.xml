@@ -50,4 +50,7 @@
   <string name="rain_yesterday">Regen gestern:</string>
   <string name="rain_last_week">Regen letzte Woche:</string>
   <string name="rain_30_days">Regen letzte 30 Tage:</string>
+  <string name="action_2_days">2 Tage</string>
+  <string name="action_year">Jahresverlauf</string>
+  <string name="action_last_year">Letztes Jahr</string>
 </resources>

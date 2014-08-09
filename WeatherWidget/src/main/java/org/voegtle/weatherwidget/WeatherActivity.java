@@ -11,7 +11,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import org.voegtle.weatherwidget.diagram.DiagramActivity;
+import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity;
+import org.voegtle.weatherwidget.diagram.MainDiagramActivity;
+import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity;
 import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
@@ -82,6 +84,21 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
         }
       }
     });
+
+    locationView.setDiagramsOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        switch (view.getId()) {
+          case R.id.weather_paderborn:
+            startActivity(new Intent(WeatherActivity.this, PaderbornDiagramActivity.class));
+            break;
+          case R.id.weather_freiburg:
+            startActivity(new Intent(WeatherActivity.this, FreiburgDiagramActivity.class));
+            break;
+        }
+      }
+    });
+
   }
 
   private void updateVisibility(WeatherLocation location) {
@@ -142,7 +159,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
         updater.updateWeatherOnce(true);
         return true;
       case R.id.action_diagrams:
-        startActivity(new Intent(this, DiagramActivity.class));
+        startActivity(new Intent(this, MainDiagramActivity.class));
         return true;
       case R.id.action_perferences:
         startActivity(new Intent(this, WeatherPreferences.class));

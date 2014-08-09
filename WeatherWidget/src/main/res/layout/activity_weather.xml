@@ -17,7 +17,8 @@
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
                                                        android:paddingBottom="9dp"
-                                                       weather:caption="@string/city_paderborn_full"/>
+                                                       weather:caption="@string/city_paderborn_full"
+                                                       weather:diagrams="true"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bonn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
                                                        android:paddingBottom="9dp"
+                                                       weather:diagrams="true"
                                                        weather:caption="@string/city_freiburg_full"/>
 
       <TextView android:id="@+id/caption_forecast"

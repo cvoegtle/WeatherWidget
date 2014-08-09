@@ -16,10 +16,12 @@ public class LocationView extends LinearLayout {
   private TextView dataView;
   private TextView moreDataView;
   private ImageButton resizeButton;
+  private ImageButton diagramButton;
   private boolean expanded;
   private Drawable imageExpand;
   private Drawable imageCollapse;
   private OnClickListener externalClickListener;
+  private OnClickListener diagramListener;
 
   public LocationView(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -57,12 +59,27 @@ public class LocationView extends LinearLayout {
       }
     });
 
-
     setExpanded(attributes.getBoolean(R.styleable.LocationView_expanded, false));
+
+    boolean diagrams = attributes.getBoolean(R.styleable.LocationView_diagrams, false);
+    diagramButton = (ImageButton) findViewById(R.id.diagram_button);
+    diagramButton.setVisibility(diagrams ? View.VISIBLE : View.GONE);
+    diagramButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (diagramListener != null) {
+          diagramListener.onClick(LocationView.this);
+        }
+      }
+    });
   }
 
   public void setOnClickListener(OnClickListener listener) {
     externalClickListener = listener;
+  }
+
+  public void setDiagramsOnClickListener(OnClickListener listener) {
+    diagramListener = listener;
   }
 
   private void initializeTextViews(TypedArray attributes) {
@@ -70,6 +87,7 @@ public class LocationView extends LinearLayout {
     captionView.setText(caption);
     String data = attributes.getString(R.styleable.LocationView_data);
     dataView.setText(data);
+
   }
 
   public void setCaption(String caption) {
