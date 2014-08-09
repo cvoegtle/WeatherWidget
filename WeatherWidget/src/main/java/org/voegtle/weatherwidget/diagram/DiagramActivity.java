@@ -30,7 +30,7 @@ public abstract class DiagramActivity extends Activity {
     super.onResume();
     this.diagramCache = new DiagramCache(this);
 
-    this.pagerAdapter = getPageAdapter();
+    this.pagerAdapter = createPageAdapter();
     this.viewPager.setAdapter(pagerAdapter);
 
     int currentItem = diagramCache.readCurrentDiagram(this.getClass().getName());
@@ -54,7 +54,7 @@ public abstract class DiagramActivity extends Activity {
     fragmentTransaction.commit();
   }
 
-  private DiagramFragmentPagerAdapter getPageAdapter() {
+  private DiagramFragmentPagerAdapter createPageAdapter() {
     DiagramFragmentPagerAdapter pagerAdapter = new DiagramFragmentPagerAdapter(getFragmentManager());
     for (DiagramEnum diagramId : diagramIdList) {
       pagerAdapter.add(new DiagramFragment(diagramCache, diagramId));

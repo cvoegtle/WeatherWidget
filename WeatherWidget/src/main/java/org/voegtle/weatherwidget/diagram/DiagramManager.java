@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.diagram;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.util.UserFeedback;
@@ -94,8 +95,13 @@ public class DiagramManager {
       fragment.getActivity().runOnUiThread(new Runnable() {
         @Override
         public void run() {
-          ImageView imageView = (ImageView) fragment.getView().findViewById(R.id.diagram_view);
-          imageView.setImageDrawable(newImage);
+          View view = fragment.getView();
+          if (view != null) {
+            ImageView imageView = (ImageView) view.findViewById(R.id.diagram_view);
+            imageView.setImageDrawable(newImage);
+          } else {
+            Log.e("DiagramManager", "View is null");
+          }
         }
       });
     }
