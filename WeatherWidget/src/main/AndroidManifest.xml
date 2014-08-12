@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="21"
+          android:versionCode="23"
           android:versionName="1.0">
 
   <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19"/>
@@ -9,7 +9,7 @@
 
   <application
           android:allowBackup="true"
-          android:icon="@drawable/wetterstation"
+          android:icon="@drawable/wetterstation1"
           android:label="@string/app_name"
           android:theme="@style/AppThemeLight">
 
