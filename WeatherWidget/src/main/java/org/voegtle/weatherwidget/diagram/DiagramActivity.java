@@ -57,7 +57,7 @@ public abstract class DiagramActivity extends Activity {
   private DiagramFragmentPagerAdapter createPageAdapter() {
     DiagramFragmentPagerAdapter pagerAdapter = new DiagramFragmentPagerAdapter(getFragmentManager());
     for (DiagramEnum diagramId : diagramIdList) {
-      pagerAdapter.add(new DiagramFragment(diagramCache, diagramId));
+      pagerAdapter.add(DiagramFragment.newInstance(diagramId));
     }
     return pagerAdapter;
   }

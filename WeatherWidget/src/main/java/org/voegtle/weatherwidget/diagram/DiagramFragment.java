@@ -9,12 +9,27 @@ import org.voegtle.weatherwidget.R;
 
 public class DiagramFragment extends Fragment {
 
-  private DiagramManager diagramManager;
-  private DiagramEnum diagramId;
+  private DiagramManager diagramManager = null;
+  private DiagramEnum diagramId = null;
 
-  public DiagramFragment(DiagramCache diagramCache, DiagramEnum diagramId) {
-    this.diagramManager = new DiagramManager(this, diagramCache);
-    this.diagramId = diagramId;
+  public static DiagramFragment newInstance(DiagramEnum diagramId) {
+    DiagramFragment newFragment = new DiagramFragment();
+
+    Bundle bundle = new Bundle();
+    bundle.putInt(DiagramEnum.class.getName(), diagramId.getId());
+    newFragment.setArguments(bundle);
+
+    return newFragment;
+  }
+
+  public DiagramFragment() {
+  }
+
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    this.diagramManager = new DiagramManager(this);
+    diagramId = DiagramEnum.byId(getArguments().getInt(DiagramEnum.class.getName(), -1));
   }
 
   @Override

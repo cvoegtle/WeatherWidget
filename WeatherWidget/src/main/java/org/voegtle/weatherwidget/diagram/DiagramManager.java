@@ -19,9 +19,9 @@ public class DiagramManager {
   private Drawable placeholderImage;
   private boolean active = false;
 
-  public DiagramManager(DiagramFragment diagramFragment, DiagramCache diagramCache) {
+  public DiagramManager(DiagramFragment diagramFragment) {
     this.fragment = diagramFragment;
-    this.diagramCache = diagramCache;
+    this.diagramCache = new DiagramCache(fragment.getActivity());
   }
 
   public void onResume() {
