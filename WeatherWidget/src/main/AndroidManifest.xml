@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="25"
+          android:versionCode="29"
           android:versionName="1.0">
 
   <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19"/>
@@ -23,6 +23,40 @@
 
         <category android:name="android.intent.category.LAUNCHER"/>
       </intent-filter>
+    </activity>
+
+    <activity android:name=".preferences.WeatherPreferences"
+              android:label="@string/settings"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".WeatherActivity"/>
+    </activity>
+    <activity android:name=".diagram.MainDiagramActivity"
+              android:label="@string/action_diagrams"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".WeatherActivity"/>
+    </activity>
+    <activity android:name=".diagram.PaderbornDiagramActivity"
+              android:label="@string/city_paderborn_full"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".WeatherActivity"/>
+    </activity>
+
+    <activity android:name=".diagram.FreiburgDiagramActivity"
+              android:label="@string/city_freiburg_full"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+      <meta-data
+              android:name="android.support.PARENT_ACTIVITY"
+              android:value=".WeatherActivity"/>
     </activity>
 
     <receiver
@@ -76,56 +110,6 @@
               android:name="android.appwidget.provider"
               android:resource="@xml/widget_small_info"/>
     </receiver>
-
-    <activity android:name=".preferences.WeatherPreferences"
-              android:label="@string/settings"
-              android:logo="@drawable/wetterlogo"
-              android:parentActivityName=".WeatherActivity">
-      <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".WeatherActivity"/>
-
-      <intent-filter>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".diagram.MainDiagramActivity"
-              android:label="@string/action_diagrams"
-              android:logo="@drawable/wetterlogo"
-              android:parentActivityName=".WeatherActivity">
-      <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".WeatherActivity"/>
-
-      <intent-filter>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-    <activity android:name=".diagram.PaderbornDiagramActivity"
-              android:label="@string/city_paderborn_full"
-              android:logo="@drawable/wetterlogo"
-              android:parentActivityName=".WeatherActivity">
-      <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".WeatherActivity"/>
-
-      <intent-filter>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
-
-    <activity android:name=".diagram.FreiburgDiagramActivity"
-              android:label="@string/city_freiburg_full"
-              android:logo="@drawable/wetterlogo"
-              android:parentActivityName=".WeatherActivity">
-      <meta-data
-              android:name="android.support.PARENT_ACTIVITY"
-              android:value=".WeatherActivity"/>
-
-      <intent-filter>
-        <category android:name="android.intent.category.LAUNCHER"/>
-      </intent-filter>
-    </activity>
 
   </application>
 

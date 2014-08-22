@@ -32,9 +32,8 @@ android {
     }
 
     lintOptions {
-        checkReleaseBuilds false
+        checkReleaseBuilds true
     }
-
     buildTypes {
         debug {
             debuggable true
