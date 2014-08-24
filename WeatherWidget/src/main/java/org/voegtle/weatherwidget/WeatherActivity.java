@@ -51,14 +51,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   }
 
   private void setupWeatherUpdater(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
-
-    int intervall = weatherSettingsReader.readIntervall(preferences);
-    if (intervall > 0) {
-      updater.startWeatherScheduler(intervall);
-    } else {
-      updater.stopWeatherScheduler();
-    }
+    updater.startWeatherScheduler(180);
   }
 
   private void setupUserInterface(SharedPreferences preferences) {
