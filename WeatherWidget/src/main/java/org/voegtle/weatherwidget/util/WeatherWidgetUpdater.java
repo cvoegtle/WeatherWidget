@@ -49,7 +49,7 @@ public class WeatherWidgetUpdater {
 
   }
 
-  public void startWeatherScheduler() {
+  public void startWeatherUpdateThread() {
 
     final Runnable updater = new Runnable() {
       @Override
@@ -59,7 +59,7 @@ public class WeatherWidgetUpdater {
         try {
           HashMap<String, WeatherData> data = weatherDataFetcher.fetchAllWeatherDataFromServer();
 
-          Thread.sleep(500, 0);
+          Thread.sleep(250, 0);
 
           for (WeatherLocation location : locations) {
             visualizeData(location.getWeatherViewId(), location.getShortName(), data.get(location.getKey().toString()));
@@ -85,6 +85,7 @@ public class WeatherWidgetUpdater {
     for (WeatherLocation location : locations) {
       remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " " + "-");
     }
+    appWidgetManager.updateAppWidget(widgetId, remoteViews);
   }
 
   private void visualizeData(int widgetId, String locationName, WeatherData data) {
