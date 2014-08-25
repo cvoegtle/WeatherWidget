@@ -5,7 +5,7 @@
           android:key="update_interval"
           android:title="@string/update_intervall"
           android:summary="@string/update_summary"
-          android:defaultValue="180"
+          android:defaultValue="30"
           android:entries="@array/updateInterval"
           android:entryValues="@array/updateIntervalValues"
           />

@@ -22,7 +22,7 @@
   <string name="forecast">Vorhersage</string>
 
   <string name="update_intervall">Aktualisierungsintervall</string>
-  <string name="update_summary">Frequenz mit der die Wetterdaten abgerufen werden</string>
+  <string name="update_summary">Frequenz mit der die Daten im Widget aktualisiert werden</string>
   <string name="action_preferences">Einstellungen</string>
   <string name="station_freiburg">Wetterstation in Freiburg</string>
   <string name="in_app">in der App anzeigen</string>

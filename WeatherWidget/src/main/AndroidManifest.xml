@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="29"
-          android:versionName="1.0">
+          android:versionCode="35"
+          android:versionName="1.1">
 
   <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19"/>
 
@@ -58,6 +58,11 @@
               android:name="android.support.PARENT_ACTIVITY"
               android:value=".WeatherActivity"/>
     </activity>
+
+    <service android:enabled="true"
+             android:exported="false"
+             android:isolatedProcess="false"
+             android:name=".WidgetRefreshService"/>
 
     <receiver
             android:name="WeatherWidgetProvider"
