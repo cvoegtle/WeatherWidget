@@ -13,7 +13,7 @@ import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
-import org.voegtle.weatherwidget.util.WeatherWidgetUpdater;
+import org.voegtle.weatherwidget.util.WidgetUpdateTask;
 
 import java.util.List;
 
@@ -36,7 +36,8 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     updateWidget();
-    return super.onStartCommand(intent, flags, startId);
+    stopSelf(startId);
+    return START_NOT_STICKY;
   }
 
   private void ensureResources() {
@@ -54,11 +55,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     ComponentName thisWidget = new ComponentName(this, WeatherWidgetProvider.class);
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-    for (int widgetId : allWidgetIds) {
-
-      new WeatherWidgetUpdater(getApplicationContext(), appWidgetManager, widgetId, remoteViews, locations)
-          .startWeatherUpdateThread();
-    }
+    new WidgetUpdateTask(getApplicationContext(), appWidgetManager, allWidgetIds, remoteViews, locations).execute();
   }
 
   @Override
@@ -85,6 +82,4 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   public IBinder onBind(Intent intent) {
     return null;
   }
-
-
 }

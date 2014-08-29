@@ -43,7 +43,8 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    restartService();
+    rescheduleService();
+    runServiceNow();
   }
 
   private void ensureResources(Context context) {
@@ -51,8 +52,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
       res = context.getResources();
       alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-      final Intent refreshIntent = new Intent(context, WidgetRefreshService.class);
-      refreshService = PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+      refreshService = createRefreshIntent(context);
 
       remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
       locations = LocationFactory.buildWeatherLocations(res);
@@ -65,19 +65,22 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
 
   @Override
   public void onDisabled(Context context) {
+    // aus Gründen, die ich nicht verstehe sind alarmManager und refreshService hier null
+    // --> neu anlegen. canceln ist wichtig.
+    refreshService = createRefreshIntent(context);
+    alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     cancelAlarmService();
   }
 
-  private void restartService() {
+  private void rescheduleService() {
     cancelAlarmService();
-    runServiceOnce();
 
     if (intervall > 0) {
       alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), intervall * 60 * 1000, refreshService);
     }
   }
 
-  private void runServiceOnce() {
+  private void runServiceNow() {
     alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10, refreshService);
   }
 
@@ -87,23 +90,35 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
     }
   }
 
+  @Override
+  public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
+    boolean preferencesChanged = processPreferences(preferences);
+    if (preferencesChanged) {
+      rescheduleService();
+    }
+  }
+
+  /**
+   * @return true if preferences changed
+   */
+  private boolean processPreferences(SharedPreferences preferences) {
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
+    weatherSettingsReader.read(preferences, locations);
+
+    int oldIntervall = intervall;
+    intervall = weatherSettingsReader.readIntervall(preferences);
+
+    return oldIntervall != intervall;
+  }
 
   private PendingIntent createOpenAppIntent(Context context) {
     Intent intentOpenApp = new Intent(context, WeatherActivity.class);
     return PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
-  @Override
-  public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
-    processPreferences(preferences);
-    restartService();
-  }
-
-  private void processPreferences(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
-    weatherSettingsReader.read(preferences, locations);
-
-    intervall = weatherSettingsReader.readIntervall(preferences);
+  private PendingIntent createRefreshIntent(Context context) {
+    final Intent refreshIntent = new Intent(context, WidgetRefreshService.class);
+    return PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
 

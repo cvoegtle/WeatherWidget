@@ -3,12 +3,11 @@ package org.voegtle.weatherwidget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.RemoteViews;
-import org.voegtle.weatherwidget.util.WeatherWidgetUpdater;
+import org.voegtle.weatherwidget.util.SmallWidgetUpdateTask;
 
 class WeatherWidgetSmallProvider extends AppWidgetProvider {
   private final int resourceKeyCity;
@@ -25,13 +24,9 @@ class WeatherWidgetSmallProvider extends AppWidgetProvider {
     final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_small_weather);
     remoteViews.setTextViewText(R.id.weather_location, res.getString(resourceKeyCity));
 
-    ComponentName thisWidget = new ComponentName(context, this.getClass());
-    int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-    for (int widgetId : allWidgetIds) {
+    new SmallWidgetUpdateTask(context, appWidgetManager, appWidgetIds, remoteViews).execute(weatherDataUrl);
 
-      new WeatherWidgetUpdater(context, appWidgetManager, widgetId, remoteViews)
-          .startSmallWeatherScheduler(weatherDataUrl);
-
+    for (int widgetId : appWidgetIds) {
       Intent intentRefresh = new Intent(context, this.getClass());
       intentRefresh.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
       intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);

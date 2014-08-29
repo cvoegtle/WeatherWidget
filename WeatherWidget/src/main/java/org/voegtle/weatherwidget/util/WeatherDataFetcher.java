@@ -28,7 +28,7 @@ public class WeatherDataFetcher {
   @SuppressWarnings("deprecation")
   public HashMap<String, WeatherData> fetchAllWeatherDataFromServer() {
     HashMap<String, WeatherData> resultList = new HashMap<String, WeatherData>();
-    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all");
+    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&test=true");
     try {
       JSONArray weatherList = new JSONArray(jsonWeather);
       for (int i = 0; i < weatherList.length(); i++) {
