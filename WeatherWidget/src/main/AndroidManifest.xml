@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="40"
+          android:versionCode="41"
           android:versionName="1.1">
 
   <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19"/>
@@ -66,7 +66,7 @@
 
     <receiver
             android:name="WeatherWidgetProvider"
-            android:icon="@drawable/wetterstation1"
+            android:icon="@drawable/large_widget"
             android:label="@string/app_name">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -79,7 +79,7 @@
 
     <receiver
             android:name="WeatherWidgetFreiburgProvider"
-            android:icon="@drawable/wetterstation1"
+            android:icon="@drawable/fr_widget"
             android:label="@string/app_name_freiburg">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -92,7 +92,7 @@
 
     <receiver
             android:name="WeatherWidgetPaderbornProvider"
-            android:icon="@drawable/wetterstation1"
+            android:icon="@drawable/pb_widget"
             android:label="@string/app_name_paderborn">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
@@ -105,7 +105,7 @@
 
     <receiver
             android:name="WeatherWidgetBonnProvider"
-            android:icon="@drawable/wetterstation1"
+            android:icon="@drawable/bn_widget"
             android:label="@string/app_name_bonn">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
