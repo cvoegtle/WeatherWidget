@@ -1,5 +1,3 @@
-project.archivesBaseName = "ww2"
-
 buildscript {
     repositories {
         mavenCentral()
@@ -49,11 +47,13 @@ android {
             signingConfig signingConfigs.cvoegtle
             runProguard false
             zipAlign true
-            applicationVariants.all { variant ->
-                def file = variant.outputFile
-                variant.outputFile = new File(file.parent, file.name.replace("2-release.apk", "2.apk"))
-            }
         }
+
+        applicationVariants.all { variant ->
+            def file = variant.outputFile
+            variant.outputFile = new File(file.parent, "ww2.apk")
+        }
+
     }
 }
 
