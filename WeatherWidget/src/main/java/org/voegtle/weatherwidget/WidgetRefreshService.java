@@ -36,8 +36,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     updateWidget();
-    stopSelf(startId);
-    return START_NOT_STICKY;
+    return super.onStartCommand(intent, flags, startId);
   }
 
   private void ensureResources() {

@@ -43,8 +43,8 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    rescheduleService();
     runServiceNow();
+    rescheduleService();
   }
 
   private void ensureResources(Context context) {
@@ -65,11 +65,11 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
 
   @Override
   public void onDisabled(Context context) {
-    // aus Gründen, die ich nicht verstehe sind alarmManager und refreshService hier null
-    // --> neu anlegen. canceln ist wichtig.
-    refreshService = createRefreshIntent(context);
-    alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     cancelAlarmService();
+  }
+
+  private void runServiceNow() {
+    alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10, refreshService);
   }
 
   private void rescheduleService() {
@@ -78,10 +78,6 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
     if (intervall > 0) {
       alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), intervall * 60 * 1000, refreshService);
     }
-  }
-
-  private void runServiceNow() {
-    alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10, refreshService);
   }
 
   private void cancelAlarmService() {

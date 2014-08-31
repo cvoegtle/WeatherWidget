@@ -47,10 +47,9 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     initForecastButtons();
 
     updater = new WeatherDataUpdater(this, locations);
-    setupWeatherUpdater(preferences);
   }
 
-  private void setupWeatherUpdater(SharedPreferences preferences) {
+  private void startWeatherUpdater() {
     updater.startWeatherScheduler(180);
   }
 
@@ -135,6 +134,13 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   protected void onResume() {
     super.onResume();
     updater.updateWeatherOnce(false);
+    startWeatherUpdater();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    updater.stopWeatherScheduler();
   }
 
   @Override
@@ -164,6 +170,5 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
     setupUserInterface(preferences);
-    setupWeatherUpdater(preferences);
   }
 }

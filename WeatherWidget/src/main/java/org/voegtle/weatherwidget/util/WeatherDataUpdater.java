@@ -41,6 +41,7 @@ public class WeatherDataUpdater {
   public void stopWeatherScheduler() {
     if (backgroundProcess != null) {
       backgroundProcess.cancel(true);
+      backgroundProcess = null;
     }
   }
 
