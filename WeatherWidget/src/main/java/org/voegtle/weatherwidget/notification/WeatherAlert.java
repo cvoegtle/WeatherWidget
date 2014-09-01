@@ -1,18 +1,20 @@
 package org.voegtle.weatherwidget.notification;
 
 
+import org.voegtle.weatherwidget.location.LocationIdentifier;
+
 import java.util.Date;
 
 public class WeatherAlert {
-  String location;
+  LocationIdentifier location;
   Date lastUpdate;
 
-  public WeatherAlert(String location, Date lastUpdate) {
+  public WeatherAlert(LocationIdentifier location, Date lastUpdate) {
     this.location = location;
     this.lastUpdate = lastUpdate;
   }
 
-  public String getLocation() {
+  public LocationIdentifier getLocation() {
     return location;
   }
 

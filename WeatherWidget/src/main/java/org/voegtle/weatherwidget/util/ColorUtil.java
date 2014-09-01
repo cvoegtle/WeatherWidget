@@ -10,4 +10,8 @@ public class ColorUtil {
     int notRed = Math.min(255, Math.max(255 - (age - 180) / 10, 0));
     return Color.rgb(255, notRed, notRed);
   }
+
+  public static int byRain(boolean isRaining) {
+    return isRaining ? Color.rgb(77, 140, 255) : Color.WHITE;
+  }
 }

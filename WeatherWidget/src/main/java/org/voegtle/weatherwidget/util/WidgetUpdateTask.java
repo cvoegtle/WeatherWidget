@@ -7,12 +7,13 @@ import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashMap<String, WeatherData>> {
+public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
   private final List<WeatherLocation> locations;
   private final RemoteViews remoteViews;
 
@@ -24,15 +25,15 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
 
 
   @Override
-  protected HashMap<String, WeatherData> doInBackground(Void... voids) {
+  protected HashMap<LocationIdentifier, WeatherData> doInBackground(Void... voids) {
     return fetchAllWeatherData();
   }
 
   @Override
-  protected void onPostExecute(HashMap<String, WeatherData> data) {
+  protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       for (WeatherLocation location : locations) {
-        visualizeData(location.getWeatherViewId(), location.getShortName(), data.get(location.getKey().toString()));
+        visualizeData(location, data.get(location.getKey()));
       }
       checkDataForAlert(data);
     } catch (Throwable th) {
@@ -43,12 +44,14 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
     }
   }
 
-  private void visualizeData(int widgetId, String locationName, WeatherData data) {
-    remoteViews.setTextColor(widgetId, ColorUtil.byAge(data.getTimestamp()));
-    remoteViews.setTextViewText(widgetId, locationName + " "
+  private void visualizeData(WeatherLocation location, WeatherData data) {
+    remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(data.getTimestamp()));
+    remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " "
         + retrieveFormattedTemperature(data));
-  }
 
+    boolean isRaining = data.getRain() != null;
+    remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining));
+  }
 
   @Override
   protected void showDataIsInvalid() {

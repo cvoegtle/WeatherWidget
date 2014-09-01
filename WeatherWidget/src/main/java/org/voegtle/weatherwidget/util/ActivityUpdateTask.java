@@ -6,6 +6,7 @@ import android.util.Log;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<String, WeatherData>> {
+public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
   private WeatherActivity activity;
   private List<WeatherLocation> locations;
   private final Resources res;
@@ -39,17 +40,17 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<String, We
   }
 
   @Override
-  protected HashMap<String, WeatherData> doInBackground(Void... voids) {
+  protected HashMap<LocationIdentifier, WeatherData> doInBackground(Void... voids) {
     return weatherDataFetcher.fetchAllWeatherDataFromServer();
   }
 
   @Override
-  protected void onPostExecute(HashMap<String, WeatherData> data) {
+  protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       for (WeatherLocation location : locations) {
         updateWeatherLocation(location.getWeatherViewId(),
             location.getName(),
-            data.get(location.getKey().toString()));
+            data.get(location.getKey()));
       }
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);

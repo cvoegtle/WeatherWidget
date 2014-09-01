@@ -28,6 +28,12 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
   }
 
   @Override
+  public void onEnabled(Context context) {
+    ensureResources(context);
+    super.onEnabled(context);
+  }
+
+  @Override
   public void onUpdate(Context context, final AppWidgetManager appWidgetManager, int[] appWidgetIds) {
     ensureResources(context);
 
@@ -43,8 +49,8 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
 
-    runServiceNow();
     rescheduleService();
+    runServiceNow();
   }
 
   private void ensureResources(Context context) {
@@ -56,11 +62,10 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
 
       remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
       locations = LocationFactory.buildWeatherLocations(res);
-
-      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-      preferences.registerOnSharedPreferenceChangeListener(this);
-      processPreferences(preferences);
     }
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    preferences.registerOnSharedPreferenceChangeListener(this);
+    processPreferences(preferences);
   }
 
   @Override
@@ -76,7 +81,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider implements SharedPr
     cancelAlarmService();
 
     if (intervall > 0) {
-      alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), intervall * 60 * 1000, refreshService);
+      alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), intervall * 60 * 1000, refreshService);
     }
   }
 

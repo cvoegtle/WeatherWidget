@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.voegtle.weatherwidget.data.RainData;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -26,16 +27,17 @@ public class WeatherDataFetcher {
   }
 
   @SuppressWarnings("deprecation")
-  public HashMap<String, WeatherData> fetchAllWeatherDataFromServer() {
-    HashMap<String, WeatherData> resultList = new HashMap<String, WeatherData>();
+  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer() {
+    HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<LocationIdentifier, WeatherData>();
     String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&v=1.1");
     try {
       JSONArray weatherList = new JSONArray(jsonWeather);
       for (int i = 0; i < weatherList.length(); i++) {
         JSONObject weather = weatherList.getJSONObject(i);
         WeatherData data = getWeatherData(weather);
-
-        resultList.put(data.getLocation(), data);
+        if (data != null) {
+          resultList.put(data.getLocation(), data);
+        }
       }
     } catch (Throwable e) {
       Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
@@ -58,9 +60,17 @@ public class WeatherDataFetcher {
   }
 
   private WeatherData getWeatherData(JSONObject weather) throws JSONException {
-    WeatherData data = new WeatherData();
+    LocationIdentifier locationIdentifier = LocationIdentifier.getByString(weather.optString("location"));
 
-    data.setLocation(weather.optString("location"));
+    if (locationIdentifier == null) {
+      return null;
+    } else {
+      return parseWeatherData(locationIdentifier, weather);
+    }
+  }
+
+  private WeatherData parseWeatherData(LocationIdentifier locationIdentifier, JSONObject weather) throws JSONException {
+    WeatherData data = new WeatherData(locationIdentifier);
 
     String timestamp = weather.getString("timestamp");
     data.setTimestamp(new Date(timestamp));

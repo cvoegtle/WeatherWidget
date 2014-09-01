@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class NotificationSystemManager {
     this.notificationBuilder = new NotificationBuilder(PreferenceManager.getDefaultSharedPreferences(context));
   }
 
-  public void checkDataForAlert(HashMap<String, WeatherData> data) {
+  public void checkDataForAlert(HashMap<LocationIdentifier, WeatherData> data) {
 
     showNotification(notificationBuilder.buildAlerts(data));
 

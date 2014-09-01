@@ -10,6 +10,7 @@ public class WeatherLocation {
   private Uri forecastUrl;
   private Uri rainDetailsUrl;
   private int weatherViewId;
+  private int rainIndicatorId;
   private int forecastButtonId;
   private String prefShowInWidget;
   private String prefShowInApp;
@@ -102,5 +103,13 @@ public class WeatherLocation {
 
   public void setRainDetailsUrl(Uri rainDetailsUrl) {
     this.rainDetailsUrl = rainDetailsUrl;
+  }
+
+  public int getRainIndicatorId() {
+    return rainIndicatorId;
+  }
+
+  public void setRainIndicatorId(int rainIndicatorId) {
+    this.rainIndicatorId = rainIndicatorId;
   }
 }

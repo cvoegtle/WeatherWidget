@@ -1,12 +1,11 @@
 package org.voegtle.weatherwidget.data;
 
+import org.voegtle.weatherwidget.location.LocationIdentifier;
+
 import java.util.Date;
 
-/**
- * Created by cv on 28.05.13.
- */
 public class WeatherData {
-  private String location;
+  private LocationIdentifier location;
   private Date timestamp;
   private Float temperature;
   private Float humidity;
@@ -15,15 +14,17 @@ public class WeatherData {
   private boolean raining;
 
 
+  public WeatherData(LocationIdentifier location) {
+    this.location = location;
+  }
+
+
   public Float getRainToday() {
     return rainToday;
   }
 
   public void setRainToday(Float rainToday) {
     this.rainToday = rainToday;
-  }
-
-  public WeatherData() {
   }
 
   public Date getTimestamp() {
@@ -67,14 +68,9 @@ public class WeatherData {
     this.raining = raining;
   }
 
-  public String getLocation() {
+  public LocationIdentifier getLocation() {
     return location;
   }
-
-  public void setLocation(String location) {
-    this.location = location;
-  }
-
 
 
 }

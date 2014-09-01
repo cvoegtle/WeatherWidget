@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.notification;
 
 import android.content.SharedPreferences;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,17 +23,17 @@ public class NotificationBuilder {
     alertBonn = preferences.getBoolean("alert_bonn", false);
   }
 
-  public List<WeatherAlert> buildAlerts(HashMap<String, WeatherData> data) {
+  public List<WeatherAlert> buildAlerts(HashMap<LocationIdentifier, WeatherData> data) {
     alerts.clear();
     if (alertPaderborn) {
-      buildAlert(data.get("Paderborn"));
+      buildAlert(data.get(LocationIdentifier.Paderborn));
     }
 
     if (alertFreiburg) {
-      buildAlert(data.get("Freiburg"));
+      buildAlert(data.get(LocationIdentifier.Freiburg));
     }
     if (alertBonn) {
-      buildAlert(data.get("Bonn"));
+      buildAlert(data.get(LocationIdentifier.Bonn));
     }
 
     return alerts;

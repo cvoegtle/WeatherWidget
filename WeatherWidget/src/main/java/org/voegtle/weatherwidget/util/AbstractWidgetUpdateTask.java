@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 
 import java.text.DecimalFormat;
@@ -44,7 +45,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
   protected abstract void showDataIsInvalid();
 
 
-  protected HashMap<String, WeatherData> fetchAllWeatherData() {
+  protected HashMap<LocationIdentifier, WeatherData> fetchAllWeatherData() {
     return weatherDataFetcher.fetchAllWeatherDataFromServer();
   }
 
@@ -52,7 +53,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
     return weatherDataFetcher.fetchWeatherDataFromUrl(weatherServerUrl);
   }
 
-  protected void checkDataForAlert(HashMap<String, WeatherData> data) {
+  protected void checkDataForAlert(HashMap<LocationIdentifier, WeatherData> data) {
     NotificationSystemManager notificationManager = new NotificationSystemManager(context);
     notificationManager.checkDataForAlert(data);
   }
