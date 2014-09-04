@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.RemoteViews;
-import org.voegtle.weatherwidget.util.SmallWidgetUpdateTask;
+import org.voegtle.weatherwidget.widget.SmallWidgetUpdateTask;
 
 class WeatherWidgetSmallProvider extends AppWidgetProvider {
   private final int resourceKeyCity;

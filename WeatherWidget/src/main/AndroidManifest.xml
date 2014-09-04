@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="48"
+          android:versionCode="60"
           android:versionName="1.1">
 
   <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19"/>
@@ -62,7 +62,7 @@
     <service android:enabled="true"
              android:exported="false"
              android:isolatedProcess="false"
-             android:name=".WidgetRefreshService"/>
+             android:name=".widget.WidgetRefreshService"/>
 
     <receiver
             android:name="WeatherWidgetProvider"

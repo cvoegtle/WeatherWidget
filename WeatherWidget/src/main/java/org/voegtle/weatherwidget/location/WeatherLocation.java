@@ -16,6 +16,7 @@ public class WeatherLocation {
   private String prefShowInApp;
   private String prefAlert;
   private LocationPreferences preferences;
+  private int weatherLineId;
 
   public WeatherLocation(LocationIdentifier key) {
     this.key = key;
@@ -111,5 +112,13 @@ public class WeatherLocation {
 
   public void setRainIndicatorId(int rainIndicatorId) {
     this.rainIndicatorId = rainIndicatorId;
+  }
+
+  public void setWeatherLineId(int weatherLineId) {
+    this.weatherLineId = weatherLineId;
+  }
+
+  public int getWeatherLineId() {
+    return weatherLineId;
   }
 }

@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget.util;
+package org.voegtle.weatherwidget.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.util.ColorUtil;
+import org.voegtle.weatherwidget.util.UserFeedbackWidget;
 
 public class SmallWidgetUpdateTask extends AbstractWidgetUpdateTask<String, Void, WeatherData> {
   private final RemoteViews remoteViews;

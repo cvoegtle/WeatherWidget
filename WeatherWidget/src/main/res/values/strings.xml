@@ -20,7 +20,6 @@
   <string name="data_mining">Auswertung in Google Tabellen</string>
   <string name="refresh">neu laden</string>
   <string name="forecast">Vorhersage</string>
-
   <string name="update_intervall">Aktualisierungsintervall</string>
   <string name="update_summary">Frequenz mit der die Daten im Widget aktualisiert werden</string>
   <string name="action_preferences">Einstellungen</string>
@@ -32,7 +31,7 @@
   <string name="station_bonn">Wetterstation in Bonn</string>
   <string name="action_reload">Neu laden</string>
   <string name="message_data_updated">Wetterdaten aktualisiert</string>
-  <string name="message_data_update_failed">\"Fehler beim Abruf der Wetterdaten</string>
+  <string name="message_data_update_failed">Fehler beim Abruf der Wetterdaten</string>
   <string name="data_overdue">Wetterdaten überfällig</string>
   <string name="since">seit</string>
   <string name="overdue">überfällig</string>
@@ -54,4 +53,6 @@
   <string name="action_year">Jahresverlauf</string>
   <string name="action_last_year">Letztes Jahr</string>
   <string name="big_dot">●</string>
+  <string name="intervall_changed">Update-Intervall:</string>
+  <string name="update_deaktiviert">Widget wird nicht automatisch aktualisiert</string>
 </resources>

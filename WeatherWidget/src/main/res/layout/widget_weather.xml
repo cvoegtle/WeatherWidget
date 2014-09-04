@@ -73,6 +73,13 @@
               android:layout_alignParentLeft="true"
               android:text="@string/city_freiburg"/>
   </LinearLayout>
+  <TextView android:id="@+id/update_time"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="11sp"/>
   <ImageButton android:id="@+id/refresh_button"
                android:layout_alignParentRight="true"
                android:layout_alignParentBottom="true"

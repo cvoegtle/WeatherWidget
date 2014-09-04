@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget.util;
+package org.voegtle.weatherwidget.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -7,6 +7,7 @@ import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
+import org.voegtle.weatherwidget.util.WeatherDataFetcher;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

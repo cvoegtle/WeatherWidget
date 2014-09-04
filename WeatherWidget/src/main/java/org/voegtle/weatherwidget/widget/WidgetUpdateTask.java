@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget.util;
+package org.voegtle.weatherwidget.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -9,7 +9,11 @@ import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.util.ColorUtil;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,8 +37,12 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       for (WeatherLocation location : locations) {
-        visualizeData(location, data.get(location.getKey()));
+        WeatherData weatherData = data.get(location.getKey());
+        if (weatherData != null) {
+          visualizeData(location, weatherData);
+        }
       }
+      updateUpdateTime();
       checkDataForAlert(data);
     } catch (Throwable th) {
       Log.e(WidgetUpdateTask.class.toString(), "Failed to update View", th);
@@ -44,13 +52,19 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
     }
   }
 
+  private void updateUpdateTime() {
+    DateFormat df = new SimpleDateFormat("HH:mm");
+
+    remoteViews.setTextViewText(R.id.update_time, df.format(new Date()));
+  }
+
   private void visualizeData(WeatherLocation location, WeatherData data) {
     remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(data.getTimestamp()));
     remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " "
         + retrieveFormattedTemperature(data));
 
     boolean isRaining = data.getRain() != null;
-    remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining));
+    remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining, data.getTimestamp()));
   }
 
   @Override

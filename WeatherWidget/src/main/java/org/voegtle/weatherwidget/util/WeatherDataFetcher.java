@@ -29,18 +29,22 @@ public class WeatherDataFetcher {
   @SuppressWarnings("deprecation")
   public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer() {
     HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<LocationIdentifier, WeatherData>();
-    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&v=1.1");
-    try {
-      JSONArray weatherList = new JSONArray(jsonWeather);
-      for (int i = 0; i < weatherList.length(); i++) {
-        JSONObject weather = weatherList.getJSONObject(i);
-        WeatherData data = getWeatherData(weather);
-        if (data != null) {
-          resultList.put(data.getLocation(), data);
+
+    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all");
+
+    if (StringUtil.isNotEmpty(jsonWeather)) {
+      try {
+        JSONArray weatherList = new JSONArray(jsonWeather);
+        for (int i = 0; i < weatherList.length(); i++) {
+          JSONObject weather = weatherList.getJSONObject(i);
+          WeatherData data = getWeatherData(weather);
+          if (data != null) {
+            resultList.put(data.getLocation(), data);
+          }
         }
+      } catch (Throwable e) {
+        Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
       }
-    } catch (Throwable e) {
-      Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
     }
     return resultList;
   }
@@ -49,11 +53,14 @@ public class WeatherDataFetcher {
   public WeatherData fetchWeatherDataFromUrl(String baseUrl) {
     WeatherData data = null;
     String jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current");
-    try {
-      JSONObject weather = new JSONObject(jsonWeather);
-      data = getWeatherData(weather);
-    } catch (Throwable e) {
-      Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
+
+    if (StringUtil.isNotEmpty(jsonWeather)) {
+      try {
+        JSONObject weather = new JSONObject(jsonWeather);
+        data = getWeatherData(weather);
+      } catch (Throwable e) {
+        Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
+      }
     }
 
     return data;
