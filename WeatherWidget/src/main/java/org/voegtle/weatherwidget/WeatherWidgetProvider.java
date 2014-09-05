@@ -52,6 +52,7 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 
   @Override
   public void onDisabled(Context context) {
+    ensureResources(context);
     updateManager.cancelAlarmService();
   }
 
