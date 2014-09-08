@@ -16,6 +16,7 @@ import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.WidgetUpdateManager;
+import org.voegtle.weatherwidget.util.NotificationTask;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   private Resources res;
   private RemoteViews remoteViews;
   private List<WeatherLocation> locations;
-  private int intervall = -1;
+  private Integer interval;
 
   @Override
   public void onCreate() {
@@ -67,10 +68,21 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
     weatherSettingsReader.read(preferences, locations);
 
-    int oldIntervall = intervall;
-    intervall = weatherSettingsReader.readIntervall(preferences);
-    if (oldIntervall != intervall) {
+    Integer oldInterval = interval;
+    interval = weatherSettingsReader.readIntervall(preferences);
+
+    if (oldInterval != interval) {
       new WidgetUpdateManager(getApplicationContext()).rescheduleService();
+    }
+
+    if (oldInterval != null && oldInterval != interval) {
+      String message;
+      if (interval > 0) {
+        message = getApplicationContext().getString(R.string.intervall_changed) + " " + interval + "min";
+      } else {
+        message = getApplicationContext().getString(R.string.update_deaktiviert);
+      }
+      new NotificationTask(getApplicationContext(), message).execute();
     }
 
     for (WeatherLocation location : locations) {

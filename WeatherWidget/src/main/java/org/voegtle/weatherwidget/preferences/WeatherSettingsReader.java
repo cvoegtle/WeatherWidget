@@ -22,7 +22,7 @@ public class WeatherSettingsReader {
   }
 
 
-  private int getInteger(SharedPreferences preferences, String key) {
+  private Integer getInteger(SharedPreferences preferences, String key) {
     String value = preferences.getString(key, "-1");
     return new Integer(value);
   }
