@@ -25,17 +25,18 @@ public class NotificationBuilder {
 
   public List<WeatherAlert> buildAlerts(HashMap<LocationIdentifier, WeatherData> data) {
     alerts.clear();
-    if (alertPaderborn) {
-      buildAlert(data.get(LocationIdentifier.Paderborn));
-    }
+    if (data.size() > 0) {
+      if (alertPaderborn) {
+        buildAlert(data.get(LocationIdentifier.Paderborn));
+      }
 
-    if (alertFreiburg) {
-      buildAlert(data.get(LocationIdentifier.Freiburg));
+      if (alertFreiburg) {
+        buildAlert(data.get(LocationIdentifier.Freiburg));
+      }
+      if (alertBonn) {
+        buildAlert(data.get(LocationIdentifier.Bonn));
+      }
     }
-    if (alertBonn) {
-      buildAlert(data.get(LocationIdentifier.Bonn));
-    }
-
     return alerts;
   }
 

@@ -38,12 +38,12 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
     ensureResources(context);
 
     for (int widgetId : appWidgetIds) {
-      PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(context);
+      PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(context.getApplicationContext());
       for (WeatherLocation location : locations) {
         remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
       }
 
-      remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(context));
+      remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(context.getApplicationContext()));
 
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
@@ -58,14 +58,15 @@ public class WeatherWidgetProvider extends AppWidgetProvider {
 
   private void ensureResources(Context context) {
     if (res == null) {
-      this.res = context.getResources();
+      Context appContext = context.getApplicationContext();
+      this.res = appContext.getResources();
 
-      this.remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_weather);
+      this.remoteViews = new RemoteViews(appContext.getPackageName(), R.layout.widget_weather);
       this.locations = LocationFactory.buildWeatherLocations(res);
 
-      this.updateManager = new WidgetUpdateManager(context);
+      this.updateManager = new WidgetUpdateManager(appContext);
 
-      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
       processPreferences(preferences);
     }
   }

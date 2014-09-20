@@ -11,7 +11,6 @@ public class WeatherLocation {
   private Uri rainDetailsUrl;
   private int weatherViewId;
   private int rainIndicatorId;
-  private int forecastButtonId;
   private String prefShowInWidget;
   private String prefShowInApp;
   private String prefAlert;
@@ -56,14 +55,6 @@ public class WeatherLocation {
 
   public void setWeatherViewId(int weatherViewId) {
     this.weatherViewId = weatherViewId;
-  }
-
-  public int getForecastButtonId() {
-    return forecastButtonId;
-  }
-
-  public void setForecastButtonId(int forecastButtonId) {
-    this.forecastButtonId = forecastButtonId;
   }
 
   public LocationPreferences getPreferences() {

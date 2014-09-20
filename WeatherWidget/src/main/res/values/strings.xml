@@ -19,7 +19,6 @@
   <string name="freiburg_paderborn_bonn">Vergleich FR - PB - BN</string>
   <string name="data_mining">Auswertung in Google Tabellen</string>
   <string name="refresh">neu laden</string>
-  <string name="forecast">Vorhersage</string>
   <string name="update_intervall">Aktualisierungsintervall</string>
   <string name="update_summary">Frequenz mit der die Daten im Widget aktualisiert werden</string>
   <string name="action_preferences">Einstellungen</string>

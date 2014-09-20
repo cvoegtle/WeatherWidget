@@ -17,11 +17,14 @@ public class LocationView extends LinearLayout {
   private TextView moreDataView;
   private ImageButton resizeButton;
   private ImageButton diagramButton;
+  private ImageButton forecastButton;
+
   private boolean expanded;
   private Drawable imageExpand;
   private Drawable imageCollapse;
   private OnClickListener externalClickListener;
   private OnClickListener diagramListener;
+  private OnClickListener forecastListener;
 
   public LocationView(Context context, AttributeSet attrs) {
     super(context, attrs);
@@ -59,8 +62,6 @@ public class LocationView extends LinearLayout {
       }
     });
 
-    setExpanded(attributes.getBoolean(R.styleable.LocationView_expanded, false));
-
     boolean diagrams = attributes.getBoolean(R.styleable.LocationView_diagrams, false);
     diagramButton = (ImageButton) findViewById(R.id.diagram_button);
     diagramButton.setVisibility(diagrams ? View.VISIBLE : View.GONE);
@@ -72,6 +73,18 @@ public class LocationView extends LinearLayout {
         }
       }
     });
+
+    boolean forecast = attributes.getBoolean(R.styleable.LocationView_forecast, true);
+    forecastButton = (ImageButton) findViewById(R.id.forecast_button);
+    forecastButton.setVisibility(forecast ? View.VISIBLE : View.GONE);
+    forecastButton.setOnClickListener(new OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if (forecastListener != null)
+          forecastListener.onClick(LocationView.this);
+      }
+    });
+
   }
 
   public void setOnClickListener(OnClickListener listener) {
@@ -80,6 +93,10 @@ public class LocationView extends LinearLayout {
 
   public void setDiagramsOnClickListener(OnClickListener listener) {
     diagramListener = listener;
+  }
+
+  public void setForecastOnClickListener(OnClickListener listener) {
+    forecastListener = listener;
   }
 
   private void initializeTextViews(TypedArray attributes) {

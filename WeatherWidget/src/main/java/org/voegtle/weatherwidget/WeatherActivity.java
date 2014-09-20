@@ -44,7 +44,6 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
 
     initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
     initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheet/ccc?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc#gid=11"));
-    initForecastButtons();
 
     updater = new WeatherDataUpdater(this, locations);
   }
@@ -91,12 +90,19 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
       }
     });
 
+    locationView.setForecastOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, location.getForecastUrl());
+        startActivity(browserIntent);
+      }
+    });
+
   }
 
   private void updateVisibility(WeatherLocation location) {
     boolean show = location.getPreferences().isShowInApp();
     updateVisibility(location.getWeatherViewId(), show);
-    updateVisibility(location.getForecastButtonId(), show);
   }
 
   private void updateState(WeatherLocation location) {
@@ -122,12 +128,6 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
       }
 
     });
-  }
-
-  private void initForecastButtons() {
-    for (WeatherLocation location : locations) {
-      initButton(location.getForecastButtonId(), location.getForecastUrl());
-    }
   }
 
   @Override

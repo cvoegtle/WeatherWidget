@@ -162,7 +162,7 @@ public class WeatherDataFetcher {
       } else {
         Log.e(WeatherDataFetcher.class.toString(), "Failed to download weather data with statuscode=" + statusCode);
       }
-    } catch (Exception e) {
+    } catch (Throwable e) {
       Log.d(WeatherDataFetcher.class.toString(), "Failed to download weather data", e);
     }
     return builder.toString();

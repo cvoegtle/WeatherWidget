@@ -19,7 +19,6 @@ public class LocationFactory {
     paderborn.setWeatherLineId(R.id.line_paderborn);
     paderborn.setWeatherViewId(R.id.weather_paderborn);
     paderborn.setRainIndicatorId(R.id.rain_indicator_paderborn);
-    paderborn.setForecastButtonId(R.id.button_forecast_paderborn);
     paderborn.setPrefShowInApp("app_show_paderborn");
     paderborn.setPrefShowInWidget("widget_show_paderborn");
     paderborn.setPrefAlert("alert_paderborn");
@@ -33,7 +32,6 @@ public class LocationFactory {
     bonn.setWeatherLineId(R.id.line_bonn);
     bonn.setWeatherViewId(R.id.weather_bonn);
     bonn.setRainIndicatorId(R.id.rain_indicator_bonn);
-    bonn.setForecastButtonId(R.id.button_forecast_bonn);
     bonn.setPrefShowInApp("app_show_bonn");
     bonn.setPrefShowInWidget("widget_show_bonn");
     bonn.setPrefAlert("alert_bonn");
@@ -47,7 +45,6 @@ public class LocationFactory {
     freiburg.setWeatherLineId(R.id.line_freiburg);
     freiburg.setWeatherViewId(R.id.weather_freiburg);
     freiburg.setRainIndicatorId(R.id.rain_indicator_freiburg);
-    freiburg.setForecastButtonId(R.id.button_forecast_freiburg);
     freiburg.setPrefShowInApp("app_show_freiburg");
     freiburg.setPrefShowInWidget("widget_show_freiburg");
     freiburg.setPrefAlert("alert_freiburg");

@@ -47,11 +47,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   @Override
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
-      for (WeatherLocation location : locations) {
-        updateWeatherLocation(location.getWeatherViewId(),
-            location.getName(),
-            data.get(location.getKey()));
-      }
+      updateViewData(data);
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
 
@@ -59,7 +55,17 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
       notificationManager.checkDataForAlert(data);
     } catch (Throwable th) {
       new UserFeedback(activity).showMessage(R.string.message_data_update_failed, showToast);
-      Log.e(WeatherDataUpdater.class.toString(), "Failed to update View");
+      Log.e(ActivityUpdateTask.class.toString(), "Failed to update View", th);
+    }
+  }
+
+  private void updateViewData(HashMap<LocationIdentifier, WeatherData> data) {
+    for (WeatherLocation location : locations) {
+      WeatherData locationData = data.get(location.getKey());
+      if (locationData != null) {
+        updateWeatherLocation(location.getWeatherViewId(),
+            location.getName(), locationData);
+      }
     }
   }
 

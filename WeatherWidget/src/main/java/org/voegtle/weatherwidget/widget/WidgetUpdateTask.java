@@ -36,19 +36,21 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
   @Override
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
-      for (WeatherLocation location : locations) {
-        WeatherData weatherData = data.get(location.getKey());
-        if (weatherData != null) {
-          visualizeData(location, weatherData);
-        }
-      }
-      updateUpdateTime();
+      updateWidgetData(data);
       checkDataForAlert(data);
+      updateUpdateTime();
     } catch (Throwable th) {
       Log.e(WidgetUpdateTask.class.toString(), "Failed to update View", th);
     } finally {
       remoteViews.setViewVisibility(R.id.refresh_button, View.VISIBLE);
       updateAllWidgets();
+    }
+  }
+
+  private void updateWidgetData(HashMap<LocationIdentifier, WeatherData> data) {
+    for (WeatherLocation location : locations) {
+      WeatherData weatherData = data.get(location.getKey());
+      visualizeData(location, weatherData);
     }
   }
 
@@ -59,12 +61,16 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
   }
 
   private void visualizeData(WeatherLocation location, WeatherData data) {
-    remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(data.getTimestamp()));
-    remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " "
-        + retrieveFormattedTemperature(data));
+    if (data == null) {
+      remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName());
+    } else {
+      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(data.getTimestamp()));
+      remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " "
+          + retrieveFormattedTemperature(data));
 
-    boolean isRaining = data.getRain() != null;
-    remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining, data.getTimestamp()));
+      boolean isRaining = data.getRain() != null;
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining, data.getTimestamp()));
+    }
   }
 
   @Override
