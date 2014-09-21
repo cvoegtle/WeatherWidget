@@ -1,10 +1,12 @@
 package org.voegtle.weatherwidget.widget;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -15,6 +17,7 @@ import org.voegtle.weatherwidget.WeatherWidgetProvider;
 import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
+import org.voegtle.weatherwidget.system.IntentFactory;
 import org.voegtle.weatherwidget.system.WidgetUpdateManager;
 import org.voegtle.weatherwidget.util.NotificationTask;
 
@@ -35,10 +38,12 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     preferences.registerOnSharedPreferenceChangeListener(this);
 
     processPreferences(preferences);
+    setWidgetIntents();
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
+    setWidgetIntents();
     updateWidget();
     return super.onStartCommand(intent, flags, startId);
   }
@@ -62,6 +67,12 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     preferences.unregisterOnSharedPreferenceChangeListener(this);
     super.onDestroy();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    setWidgetIntents();
   }
 
   private void processPreferences(SharedPreferences preferences) {
@@ -104,6 +115,16 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     for (int widgetId : widgetIds) {
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
+  }
+
+  private void setWidgetIntents() {
+    PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(getApplicationContext());
+    for (WeatherLocation location : locations) {
+      remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
+    }
+
+    remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext()));
+    updateAllWidgets();
   }
 
   private void ensureResources() {

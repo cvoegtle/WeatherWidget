@@ -42,7 +42,6 @@ public class WidgetUpdateManager {
   public void processPreferences(SharedPreferences preferences) {
     WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
 
-    Integer oldInterval = interval;
     interval = weatherSettingsReader.readIntervall(preferences);
   }
 
