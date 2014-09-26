@@ -15,6 +15,7 @@ public class MainDiagramActivity extends DiagramActivity {
     addDiagram(DiagramEnum.temperature7days);
     addDiagram(DiagramEnum.average7days);
     addDiagram(DiagramEnum.summerdays);
+    addDiagram(DiagramEnum.winterdays);
   }
 
 
@@ -38,6 +39,10 @@ public class MainDiagramActivity extends DiagramActivity {
 
       case R.id.action_summerdays:
         viewPager.setCurrentItem(2, true);
+        return true;
+
+      case R.id.action_winterdays:
+        viewPager.setCurrentItem(3, true);
         return true;
     }
     return false;

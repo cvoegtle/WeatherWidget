@@ -54,4 +54,5 @@
   <string name="big_dot">●</string>
   <string name="intervall_changed">Update-Intervall:</string>
   <string name="update_deaktiviert">Widget wird nicht automatisch aktualisiert</string>
+  <string name="action_winter_days">Wintertage</string>
 </resources>
