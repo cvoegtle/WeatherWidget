@@ -54,7 +54,8 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     ComponentName thisWidget = new ComponentName(this, WeatherWidgetProvider.class);
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-    new WidgetUpdateTask(getApplicationContext(), appWidgetManager, allWidgetIds, remoteViews, locations).execute();
+    WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, locations);
+    new WidgetUpdateTask(getApplicationContext(), screenPainter).execute();
   }
 
   @Override

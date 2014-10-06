@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.RemoteViews;
+import org.voegtle.weatherwidget.widget.SmallWidgetScreenPainter;
 import org.voegtle.weatherwidget.widget.SmallWidgetUpdateTask;
 
 class WeatherWidgetSmallProvider extends AppWidgetProvider {
@@ -24,7 +25,8 @@ class WeatherWidgetSmallProvider extends AppWidgetProvider {
     final RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_small_weather);
     remoteViews.setTextViewText(R.id.weather_location, res.getString(resourceKeyCity));
 
-    new SmallWidgetUpdateTask(context, appWidgetManager, appWidgetIds, remoteViews).execute(weatherDataUrl);
+    SmallWidgetScreenPainter screenPainter = new SmallWidgetScreenPainter(appWidgetManager, appWidgetIds, remoteViews);
+    new SmallWidgetUpdateTask(context, screenPainter).execute(weatherDataUrl);
 
     for (int widgetId : appWidgetIds) {
       Intent intentRefresh = new Intent(context, this.getClass());
