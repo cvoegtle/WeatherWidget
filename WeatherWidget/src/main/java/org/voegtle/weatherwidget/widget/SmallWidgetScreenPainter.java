@@ -16,7 +16,7 @@ public class SmallWidgetScreenPainter extends AbstractWidgetScreenPainter {
 
   @Override
   public void showDataIsInvalid() {
-    remoteViews.setTextViewText(R.id.weather_small, "-");
+    remoteViews.setTextColor(R.id.weather_small, ColorUtil.updateColor());
   }
 
   @Override
@@ -25,7 +25,11 @@ public class SmallWidgetScreenPainter extends AbstractWidgetScreenPainter {
   }
 
   public void updateData(WeatherData data) {
-    remoteViews.setTextViewText(R.id.weather_small, retrieveFormattedTemperature(data));
-    remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.getTimestamp()));
+    if (data != null) {
+      remoteViews.setTextViewText(R.id.weather_small, retrieveFormattedTemperature(data));
+      remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.getTimestamp()));
+    } else {
+      remoteViews.setTextColor(R.id.weather_small, ColorUtil.outdatedColor());
+    }
   }
 }

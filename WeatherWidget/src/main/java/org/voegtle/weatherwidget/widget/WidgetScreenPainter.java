@@ -31,7 +31,8 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
     remoteViews.setViewVisibility(R.id.refresh_button, View.INVISIBLE);
 
     for (WeatherLocation location : locations) {
-      remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " " + "-");
+      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.updateColor());
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.updateColor());
     }
     updateAllWidgets();
   }
@@ -43,11 +44,14 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
   }
 
   public void updateWidgetData(HashMap<LocationIdentifier, WeatherData> data) {
+    boolean updated = false;
     for (WeatherLocation location : locations) {
       WeatherData weatherData = data.get(location.getKey());
-      visualizeData(location, weatherData);
+      updated |= visualizeData(location, weatherData);
     }
-    updateUpdateTime();
+    if (updated) {
+      updateUpdateTime();
+    }
   }
 
   private void updateUpdateTime() {
@@ -55,9 +59,12 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
     remoteViews.setTextViewText(R.id.update_time, df.format(new Date()));
   }
 
-  private void visualizeData(WeatherLocation location, WeatherData data) {
+  private boolean visualizeData(WeatherLocation location, WeatherData data) {
+    boolean updated;
     if (data == null) {
-      remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName());
+      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.outdatedColor());
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.outdatedColor());
+      updated = false;
     } else {
       remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(data.getTimestamp()));
       remoteViews.setTextViewText(location.getWeatherViewId(), location.getShortName() + " "
@@ -65,7 +72,9 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
 
       boolean isRaining = data.getRain() != null;
       remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining, data.getTimestamp()));
+      updated = true;
     }
+    return updated;
   }
 
 }

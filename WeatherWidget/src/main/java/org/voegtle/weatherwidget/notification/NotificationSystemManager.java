@@ -34,9 +34,9 @@ public class NotificationSystemManager {
   }
 
   public void checkDataForAlert(HashMap<LocationIdentifier, WeatherData> data) {
-
-    showNotification(notificationBuilder.buildAlerts(data));
-
+    if (data.size() > 0) {
+      showNotification(notificationBuilder.buildAlerts(data));
+    }
   }
 
   private void showNotification(List<WeatherAlert> alerts) {

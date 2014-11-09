@@ -26,4 +26,11 @@ public class ColorUtil {
   }
 
 
+  public static int updateColor() {
+    return Color.DKGRAY;
+  }
+
+  public static int outdatedColor() {
+    return Color.GRAY;
+  }
 }
