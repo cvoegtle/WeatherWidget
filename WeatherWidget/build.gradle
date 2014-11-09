@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.10.+'
+        classpath 'com.android.tools.build:gradle:0.13.0'
     }
 }
 apply plugin: 'android'
@@ -12,7 +12,7 @@ repositories {
 }
 android {
     buildToolsVersion '20.0.0'
-    compileSdkVersion 20
+    compileSdkVersion 19
 
     defaultConfig {
         minSdkVersion 16
@@ -54,6 +54,10 @@ android {
             variant.outputFile = new File(file.parent, "ww2.apk")
         }
 
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
