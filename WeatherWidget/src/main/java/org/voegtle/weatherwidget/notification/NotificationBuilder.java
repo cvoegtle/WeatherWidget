@@ -15,7 +15,7 @@ public class NotificationBuilder {
   boolean alertFreiburg;
   boolean alertBonn;
 
-  List<WeatherAlert> alerts = new ArrayList<WeatherAlert>();
+  List<WeatherAlert> alerts = new ArrayList<>();
 
   public NotificationBuilder(SharedPreferences preferences) {
     alertPaderborn = preferences.getBoolean("alert_paderborn", false);

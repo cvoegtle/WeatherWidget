@@ -69,6 +69,15 @@
             android:defaultValue="false"
             />
   </PreferenceCategory>
+
+  <PreferenceCategory
+          android:title="@string/privileges"
+          android:key="settings_privileges">
+    <EditTextPreference
+            android:key="secret"
+            android:title="@string/secret"/>
+  </PreferenceCategory>
+
   <PreferenceCategory
           android:title="@string/version_info"
           android:key="settings_version">

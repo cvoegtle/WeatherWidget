@@ -35,6 +35,10 @@ public class WeatherSettingsReader {
     return preferences.getBoolean(key, defaultValue);
   }
 
+  public String getString(SharedPreferences preferences, String key) {
+    return preferences.getString(key, "");
+  }
+
   public int readIntervall(SharedPreferences preferences) {
     return getInteger(preferences, "update_interval", 30);
   }

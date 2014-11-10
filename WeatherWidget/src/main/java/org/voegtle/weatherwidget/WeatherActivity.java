@@ -17,46 +17,46 @@ import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity;
 import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 import org.voegtle.weatherwidget.preferences.WeatherPreferences;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.util.RainUpdater;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
-import java.util.List;
-
 public class WeatherActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
   private RainUpdater rainUpdater;
-  private List<WeatherLocation> locations;
+  private WeatherActivityConfiguration configuration = new WeatherActivityConfiguration();
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_weather);
-    locations = LocationFactory.buildWeatherLocations(this.getResources());
+    configuration.setLocations(LocationFactory.buildWeatherLocations(this.getResources()));
 
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
     preferences.registerOnSharedPreferenceChangeListener(this);
 
     rainUpdater = new RainUpdater(this);
-    setupUserInterface(preferences);
+    configure(preferences);
 
     initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
     initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheet/ccc?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc#gid=11"));
 
-    updater = new WeatherDataUpdater(this, locations);
+    updater = new WeatherDataUpdater(this, configuration);
   }
 
   private void startWeatherUpdater() {
     updater.startWeatherScheduler(180);
   }
 
-  private void setupUserInterface(SharedPreferences preferences) {
+  private void configure(SharedPreferences preferences) {
     WeatherSettingsReader weatherSettings = new WeatherSettingsReader();
-    weatherSettings.read(preferences, locations);
+    weatherSettings.read(preferences, configuration.getLocations());
+    configuration.setSecret(weatherSettings.getString(preferences, "secret"));
 
-    for (WeatherLocation location : locations) {
+    for (WeatherLocation location : configuration.getLocations()) {
       addClickHandler(location);
       updateVisibility(location);
       updateState(location);
@@ -169,6 +169,6 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
 
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
-    setupUserInterface(preferences);
+    configure(preferences);
   }
 }

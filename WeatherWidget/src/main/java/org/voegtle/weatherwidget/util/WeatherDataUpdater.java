@@ -1,9 +1,8 @@
 package org.voegtle.weatherwidget.util;
 
 import org.voegtle.weatherwidget.WeatherActivity;
-import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 
-import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -13,11 +12,11 @@ public class WeatherDataUpdater {
   private ScheduledFuture<?> backgroundProcess;
 
   private WeatherActivity activity;
-  private List<WeatherLocation> locations;
+  private WeatherActivityConfiguration configuration;
 
-  public WeatherDataUpdater(WeatherActivity activity, List<WeatherLocation> locations) {
+  public WeatherDataUpdater(WeatherActivity activity, WeatherActivityConfiguration configuration) {
     this.activity = activity;
-    this.locations = locations;
+    this.configuration = configuration;
   }
 
   public void stopWeatherScheduler() {
@@ -33,7 +32,7 @@ public class WeatherDataUpdater {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
-        new ActivityUpdateTask(activity, locations, false).execute();
+        new ActivityUpdateTask(activity, configuration, false).execute();
       }
     };
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -41,7 +40,7 @@ public class WeatherDataUpdater {
   }
 
   public void updateWeatherOnce(final boolean showToast) {
-    new ActivityUpdateTask(activity, locations, showToast).execute();
+    new ActivityUpdateTask(activity, configuration, showToast).execute();
   }
 
 }

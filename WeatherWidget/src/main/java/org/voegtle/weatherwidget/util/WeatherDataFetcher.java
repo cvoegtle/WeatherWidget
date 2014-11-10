@@ -26,11 +26,16 @@ public class WeatherDataFetcher {
   public WeatherDataFetcher() {
   }
 
-  @SuppressWarnings("deprecation")
-  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer() {
-    HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<LocationIdentifier, WeatherData>();
 
-    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all");
+  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer() {
+    return fetchAllWeatherDataFromServer("");
+  }
+
+  @SuppressWarnings("deprecation")
+  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer(String secret) {
+    HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<>();
+
+    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&secret=" + secret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -84,6 +89,12 @@ public class WeatherDataFetcher {
 
     Number temperature = (Number) weather.get("temperature");
     data.setTemperature(temperature.floatValue());
+
+    if (weather.has("inside_temperature")) {
+      Number insideTemperature = (Number) weather.get("inside_temperature");
+      data.setInsideTemperature(insideTemperature.floatValue());
+    }
+
 
     Number humidity = (Number) weather.get("humidity");
     data.setHumidity(humidity.floatValue());

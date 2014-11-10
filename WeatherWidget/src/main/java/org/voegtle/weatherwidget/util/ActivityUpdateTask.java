@@ -15,31 +15,31 @@ import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 import org.voegtle.weatherwidget.widget.WidgetScreenPainter;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
   private final WidgetScreenPainter screenPainter;
   private WeatherActivity activity;
-  private List<WeatherLocation> locations;
   private final Resources res;
   private DecimalFormat numberFormat;
 
   private final WeatherDataFetcher weatherDataFetcher;
 
   private boolean showToast;
+  private WeatherActivityConfiguration configuration;
 
-  public ActivityUpdateTask(WeatherActivity activity, List<WeatherLocation> locations, boolean showToast) {
-    this.screenPainter = createScreenPainter(activity, locations);
-
+  public ActivityUpdateTask(WeatherActivity activity, WeatherActivityConfiguration configuration, boolean showToast) {
+    this.configuration = configuration;
     this.activity = activity;
-    this.locations = locations;
+    this.screenPainter = createScreenPainter();
+
     this.showToast = showToast;
     this.res = activity.getResources();
     this.weatherDataFetcher = new WeatherDataFetcher();
@@ -48,7 +48,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     this.numberFormat.applyPattern("###.#");
   }
 
-  private WidgetScreenPainter createScreenPainter(WeatherActivity activity, List<WeatherLocation> locations) {
+  private WidgetScreenPainter createScreenPainter() {
     Context applicationContext = activity.getApplicationContext();
     ComponentName thisWidget = new ComponentName(applicationContext, WeatherWidgetProvider.class);
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(applicationContext);
@@ -56,12 +56,12 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, locations);
+    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration.getLocations());
   }
 
   @Override
   protected HashMap<LocationIdentifier, WeatherData> doInBackground(Void... voids) {
-    return weatherDataFetcher.fetchAllWeatherDataFromServer();
+    return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getSecret());
   }
 
   @Override
@@ -82,7 +82,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   }
 
   private void updateViewData(HashMap<LocationIdentifier, WeatherData> data) {
-    for (WeatherLocation location : locations) {
+    for (WeatherLocation location : configuration.getLocations()) {
       WeatherData locationData = data.get(location.getKey());
       if (locationData != null) {
         updateWeatherLocation(location.getWeatherViewId(),
@@ -111,7 +111,13 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   private String formatWeatherData(WeatherData data) {
     StringBuilder builder = new StringBuilder();
     builder.append(res.getString(R.string.temperature)).append(" ");
-    builder.append(numberFormat.format(data.getTemperature())).append("°C").append("\n");
+    builder.append(numberFormat.format(data.getTemperature())).append("°C");
+    if (data.getInsideTemperature() != null) {
+      builder.append(" / ");
+      builder.append(numberFormat.format(data.getInsideTemperature())).append("°C");
+    }
+    builder.append("\n");
+
     builder.append(res.getString(R.string.humidity)).append(" ").append(numberFormat.format(data.getHumidity())).append("%");
     if (data.getRain() != null) {
       builder.append("\n");

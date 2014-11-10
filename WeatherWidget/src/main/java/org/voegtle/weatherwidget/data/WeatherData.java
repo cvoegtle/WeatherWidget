@@ -8,6 +8,7 @@ public class WeatherData {
   private LocationIdentifier location;
   private Date timestamp;
   private Float temperature;
+  private Float insideTemperature;
   private Float humidity;
   private Float rain;
   private Float rainToday;
@@ -73,4 +74,11 @@ public class WeatherData {
   }
 
 
+  public void setInsideTemperature(Float insideTemperature) {
+    this.insideTemperature = insideTemperature;
+  }
+
+  public Float getInsideTemperature() {
+    return insideTemperature;
+  }
 }
