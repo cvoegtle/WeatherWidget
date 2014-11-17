@@ -5,7 +5,12 @@ import org.voegtle.weatherwidget.WeatherWidgetProviderLarge;
 public class WidgetRefreshServiceLarge extends AbstractWidgetRefreshService {
 
   @Override
-  Class<?> getWidgetProviderClass() {
+  protected Class<?> getWidgetProviderClass() {
     return WeatherWidgetProviderLarge.class;
+  }
+
+  @Override
+  protected boolean isDetailed() {
+    return true;
   }
 }

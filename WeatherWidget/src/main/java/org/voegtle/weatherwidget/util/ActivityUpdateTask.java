@@ -56,7 +56,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration.getLocations());
+    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration.getLocations(), false);
   }
 
   @Override

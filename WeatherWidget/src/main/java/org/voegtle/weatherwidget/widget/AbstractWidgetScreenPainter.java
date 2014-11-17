@@ -12,7 +12,7 @@ public abstract class AbstractWidgetScreenPainter {
   private final AppWidgetManager appWidgetManager;
   private final int[] widgetIds;
   private final RemoteViews remoteViews;
-  private final DecimalFormat numberFormat;
+  protected final DecimalFormat numberFormat;
 
   protected AbstractWidgetScreenPainter(AppWidgetManager appWidgetManager, int[] widgetIds, RemoteViews remoteViews) {
     this.appWidgetManager = appWidgetManager;

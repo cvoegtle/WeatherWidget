@@ -28,7 +28,8 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
   private List<WeatherLocation> locations;
   private Integer interval;
 
-  abstract Class<?> getWidgetProviderClass();
+  protected abstract Class<?> getWidgetProviderClass();
+  protected abstract boolean isDetailed();
 
   @Override
   public void onCreate() {
@@ -55,7 +56,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
     ComponentName thisWidget = new ComponentName(this, getWidgetProviderClass());
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-    WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, locations);
+    WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, locations, isDetailed());
     new WidgetUpdateTask(getApplicationContext(), screenPainter).execute();
   }
 
