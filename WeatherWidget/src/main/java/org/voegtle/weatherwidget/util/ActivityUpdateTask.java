@@ -119,6 +119,9 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     builder.append("\n");
 
     builder.append(res.getString(R.string.humidity)).append(" ").append(numberFormat.format(data.getHumidity())).append("%");
+    if (data.getInsideHumidity() != null) {
+      builder.append(" / ").append(numberFormat.format(data.getInsideHumidity())).append("%");
+    }
     if (data.getRain() != null) {
       builder.append("\n");
       builder.append(res.getString(R.string.rain_last_hour)).append(" ").append(numberFormat.format(data.getRain())).append(res.getString(R.string.liter));

@@ -58,4 +58,5 @@
   <string name="privileges">Berechtigung</string>
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
+  <string name="app_name_large">Vögtle Wetter XL</string>
 </resources>

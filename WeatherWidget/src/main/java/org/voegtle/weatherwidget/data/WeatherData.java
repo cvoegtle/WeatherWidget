@@ -10,6 +10,7 @@ public class WeatherData {
   private Float temperature;
   private Float insideTemperature;
   private Float humidity;
+  private Float insideHumidity;
   private Float rain;
   private Float rainToday;
   private boolean raining;
@@ -80,5 +81,13 @@ public class WeatherData {
 
   public Float getInsideTemperature() {
     return insideTemperature;
+  }
+
+  public Float getInsideHumidity() {
+    return insideHumidity;
+  }
+
+  public void setInsideHumidity(Float insideHumidity) {
+    this.insideHumidity = insideHumidity;
   }
 }

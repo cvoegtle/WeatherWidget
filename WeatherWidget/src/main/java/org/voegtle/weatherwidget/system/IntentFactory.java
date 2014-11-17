@@ -7,8 +7,8 @@ import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.widget.WidgetRefreshService;
 
 public class IntentFactory {
-  public static PendingIntent createRefreshIntent(Context context) {
-    final Intent refreshIntent = new Intent(context, WidgetRefreshService.class);
+  public static PendingIntent createRefreshIntent(Context context, Class<?> cls) {
+    final Intent refreshIntent = new Intent(context, cls);
     return PendingIntent.getService(context, 0, refreshIntent, PendingIntent.FLAG_UPDATE_CURRENT);
   }
 
