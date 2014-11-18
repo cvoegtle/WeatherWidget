@@ -82,11 +82,11 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
     StringBuilder weatherData = new StringBuilder(location.getShortName() + " "
         + retrieveFormattedTemperature(data));
     if (detailed) {
-      weatherData.append(" / ");
+      weatherData.append(" | ");
       weatherData.append(numberFormat.format(data.getHumidity()));
       weatherData.append("%");
       if (data.getRainToday() != null) {
-        weatherData.append(" / ");
+        weatherData.append(" | ");
         weatherData.append(numberFormat.format(data.getRainToday()));
         weatherData.append("l");
       }

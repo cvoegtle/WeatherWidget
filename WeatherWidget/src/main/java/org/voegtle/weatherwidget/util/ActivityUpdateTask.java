@@ -7,9 +7,7 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
-import org.voegtle.weatherwidget.R;
-import org.voegtle.weatherwidget.WeatherActivity;
-import org.voegtle.weatherwidget.WeatherWidgetProvider;
+import org.voegtle.weatherwidget.*;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
@@ -26,6 +24,7 @@ import java.util.Locale;
 
 public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
   private final WidgetScreenPainter screenPainter;
+  private final WidgetScreenPainter screenPainterLarge;
   private WeatherActivity activity;
   private final Resources res;
   private DecimalFormat numberFormat;
@@ -38,7 +37,8 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   public ActivityUpdateTask(WeatherActivity activity, WeatherActivityConfiguration configuration, boolean showToast) {
     this.configuration = configuration;
     this.activity = activity;
-    this.screenPainter = createScreenPainter();
+    this.screenPainter = createScreenPainter(false, WeatherWidgetProvider.class);
+    this.screenPainterLarge = createScreenPainter(true, WeatherWidgetProviderLarge.class);
 
     this.showToast = showToast;
     this.res = activity.getResources();
@@ -48,15 +48,15 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     this.numberFormat.applyPattern("###.#");
   }
 
-  private WidgetScreenPainter createScreenPainter() {
+  private WidgetScreenPainter createScreenPainter(boolean large, Class<? extends AbstractWidgetProvider> providerClass) {
     Context applicationContext = activity.getApplicationContext();
-    ComponentName thisWidget = new ComponentName(applicationContext, WeatherWidgetProvider.class);
+    ComponentName thisWidget = new ComponentName(applicationContext, providerClass);
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(applicationContext);
     RemoteViews remoteViews = new RemoteViews(applicationContext.getPackageName(), R.layout.widget_weather);
 
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration.getLocations(), false);
+    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration.getLocations(), large);
   }
 
   @Override
@@ -68,8 +68,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       updateViewData(data);
-      screenPainter.updateWidgetData(data);
-      screenPainter.showDataIsValid();
+      updateWidgets(data);
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
 
@@ -89,6 +88,13 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
             location.getName(), locationData);
       }
     }
+  }
+
+  private void updateWidgets(HashMap<LocationIdentifier, WeatherData> data) {
+    screenPainter.updateWidgetData(data);
+    screenPainter.showDataIsValid();
+    screenPainterLarge.updateWidgetData(data);
+    screenPainterLarge.showDataIsValid();
   }
 
   private void updateWeatherLocation(int locationId, String locationName, WeatherData data) {
