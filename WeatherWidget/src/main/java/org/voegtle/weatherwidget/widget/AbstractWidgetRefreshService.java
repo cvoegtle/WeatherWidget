@@ -23,7 +23,7 @@ import org.voegtle.weatherwidget.util.NotificationTask;
 public abstract class AbstractWidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
   private RemoteViews remoteViews;
-  private WeatherActivityConfiguration configuration = new WeatherActivityConfiguration();
+  private WeatherActivityConfiguration configuration;
 
   protected abstract Class<?> getWidgetProviderClass();
   protected abstract boolean isDetailed();
@@ -132,6 +132,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
   private void ensureResources() {
     if (res == null) {
       res = getResources();
+      configuration = new WeatherActivityConfiguration();
       remoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
     }
   }

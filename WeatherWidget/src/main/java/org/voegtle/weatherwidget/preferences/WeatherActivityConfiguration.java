@@ -7,7 +7,7 @@ import java.util.List;
 public class WeatherActivityConfiguration {
   private List<WeatherLocation> locations;
   private String secret;
-  private int updateIntervall;
+  private Integer updateIntervall;
   private boolean showInfoNotification;
 
   public WeatherActivityConfiguration() {
@@ -29,11 +29,11 @@ public class WeatherActivityConfiguration {
     return secret;
   }
 
-  public int getUpdateIntervall() {
+  public Integer getUpdateIntervall() {
     return updateIntervall;
   }
 
-  public void setUpdateIntervall(int updateIntervall) {
+  public void setUpdateIntervall(Integer updateIntervall) {
     this.updateIntervall = updateIntervall;
   }
 
