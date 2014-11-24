@@ -4,14 +4,15 @@ import android.content.Context;
 import android.util.Log;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 
 import java.util.HashMap;
 
 public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
   private final WidgetScreenPainter screenPainter;
 
-  public WidgetUpdateTask(Context context, WidgetScreenPainter screenPainter) {
-    super(context, screenPainter);
+  public WidgetUpdateTask(Context context, WeatherActivityConfiguration configuration, WidgetScreenPainter screenPainter) {
+    super(context, configuration, screenPainter);
     this.screenPainter = screenPainter;
   }
 

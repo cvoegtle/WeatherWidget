@@ -8,17 +8,15 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
-import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.AbstractWidgetUpdateManager;
 import org.voegtle.weatherwidget.system.IntentFactory;
 
-import java.util.List;
-
 public abstract class AbstractWidgetProvider extends AppWidgetProvider {
 
-  private List<WeatherLocation> locations;
+  private WeatherActivityConfiguration configuration;
   private Resources res;
   private RemoteViews remoteViews;
   private AbstractWidgetUpdateManager updateManager;
@@ -41,7 +39,7 @@ public abstract class AbstractWidgetProvider extends AppWidgetProvider {
 
     for (int widgetId : appWidgetIds) {
       PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(context.getApplicationContext());
-      for (WeatherLocation location : locations) {
+      for (WeatherLocation location : configuration.getLocations()) {
         remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
       }
 
@@ -65,18 +63,17 @@ public abstract class AbstractWidgetProvider extends AppWidgetProvider {
       this.res = appContext.getResources();
 
       this.remoteViews = new RemoteViews(appContext.getPackageName(), R.layout.widget_weather);
-      this.locations = LocationFactory.buildWeatherLocations(res);
 
       this.updateManager = getUpdateManager(appContext);
 
       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
-      processPreferences(preferences);
+      processPreferences(preferences, appContext);
     }
   }
 
-  private void processPreferences(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
-    weatherSettingsReader.read(preferences, locations);
+  private void processPreferences(SharedPreferences preferences, Context context) {
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(context);
+    configuration = weatherSettingsReader.read(preferences);
   }
 
 }

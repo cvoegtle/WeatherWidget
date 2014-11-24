@@ -14,7 +14,6 @@ import android.widget.Button;
 import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity;
 import org.voegtle.weatherwidget.diagram.MainDiagramActivity;
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity;
-import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
@@ -26,14 +25,13 @@ import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 public class WeatherActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
   private RainUpdater rainUpdater;
-  private WeatherActivityConfiguration configuration = new WeatherActivityConfiguration();
+  private WeatherActivityConfiguration configuration;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_weather);
-    configuration.setLocations(LocationFactory.buildWeatherLocations(this.getResources()));
 
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
     preferences.registerOnSharedPreferenceChangeListener(this);
@@ -52,9 +50,8 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   }
 
   private void configure(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettings = new WeatherSettingsReader();
-    weatherSettings.read(preferences, configuration.getLocations());
-    configuration.setSecret(weatherSettings.getString(preferences, "secret"));
+    WeatherSettingsReader weatherSettings = new WeatherSettingsReader(this.getApplicationContext());
+    configuration = weatherSettings.read(preferences);
 
     for (WeatherLocation location : configuration.getLocations()) {
       addClickHandler(location);

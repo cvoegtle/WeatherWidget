@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class NotificationBuilder {
+public class WeatherStationCheck {
   private static int THRESHOLD = 20 * 60 * 1000; // 20 min
   boolean alertPaderborn;
   boolean alertFreiburg;
@@ -17,13 +17,13 @@ public class NotificationBuilder {
 
   List<WeatherAlert> alerts = new ArrayList<>();
 
-  public NotificationBuilder(SharedPreferences preferences) {
+  public WeatherStationCheck(SharedPreferences preferences) {
     alertPaderborn = preferences.getBoolean("alert_paderborn", false);
     alertFreiburg = preferences.getBoolean("alert_freiburg", false);
     alertBonn = preferences.getBoolean("alert_bonn", false);
   }
 
-  public List<WeatherAlert> buildAlerts(HashMap<LocationIdentifier, WeatherData> data) {
+  public List<WeatherAlert> checkForOverdueStations(HashMap<LocationIdentifier, WeatherData> data) {
     alerts.clear();
     if (alertPaderborn) {
       buildAlert(data.get(LocationIdentifier.Paderborn));

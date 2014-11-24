@@ -13,20 +13,17 @@ import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
-import org.voegtle.weatherwidget.location.LocationFactory;
 import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.IntentFactory;
 import org.voegtle.weatherwidget.system.WidgetUpdateManager;
 import org.voegtle.weatherwidget.util.NotificationTask;
 
-import java.util.List;
-
 public abstract class AbstractWidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
   private RemoteViews remoteViews;
-  private List<WeatherLocation> locations;
-  private Integer interval;
+  private WeatherActivityConfiguration configuration = new WeatherActivityConfiguration();
 
   protected abstract Class<?> getWidgetProviderClass();
   protected abstract boolean isDetailed();
@@ -56,8 +53,9 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
     ComponentName thisWidget = new ComponentName(this, getWidgetProviderClass());
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-    WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, locations, isDetailed());
-    new WidgetUpdateTask(getApplicationContext(), screenPainter).execute();
+    WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews,
+        configuration.getLocations(), isDetailed());
+    new WidgetUpdateTask(getApplicationContext(), configuration, screenPainter).execute();
   }
 
   @Override
@@ -79,11 +77,12 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
   }
 
   private void processPreferences(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
-    weatherSettingsReader.read(preferences, locations);
+    Integer oldInterval = configuration.getUpdateIntervall();
 
-    Integer oldInterval = interval;
-    interval = weatherSettingsReader.readIntervall(preferences);
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(res);
+    configuration = weatherSettingsReader.read(preferences);
+
+    Integer interval = configuration.getUpdateIntervall();
 
     if (oldInterval != interval) {
       new WidgetUpdateManager(getApplicationContext()).rescheduleService();
@@ -99,7 +98,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
       new NotificationTask(getApplicationContext(), message).execute();
     }
 
-    for (WeatherLocation location : locations) {
+    for (WeatherLocation location : configuration.getLocations()) {
       boolean show = location.getPreferences().isShowInWidget();
       updateVisibility(location.getWeatherLineId(), show);
     }
@@ -122,7 +121,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
 
   private void setWidgetIntents() {
     PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(getApplicationContext());
-    for (WeatherLocation location : locations) {
+    for (WeatherLocation location : configuration.getLocations()) {
       remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
     }
 
@@ -134,7 +133,6 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
     if (res == null) {
       res = getResources();
       remoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
-      locations = LocationFactory.buildWeatherLocations(res);
     }
   }
 

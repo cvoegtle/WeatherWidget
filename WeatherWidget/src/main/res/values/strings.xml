@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">Vögtle Wetter</string>
+  <string name="app_name">Wetter Wolke</string>
+  <string name="app_name_large">Wetter Wolke XL</string>
   <string name="app_name_freiburg">Freiburger Temperatur</string>
   <string name="app_name_paderborn">Paderborner Temperatur</string>
   <string name="app_name_bonn">Bonner Temperatur</string>
@@ -58,5 +59,5 @@
   <string name="privileges">Berechtigung</string>
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
-  <string name="app_name_large">Vögtle Wetter XL</string>
+  <string name="weather_as_notification">Wetter Notification</string>
 </resources>

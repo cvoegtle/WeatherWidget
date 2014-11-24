@@ -72,7 +72,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
 
-      NotificationSystemManager notificationManager = new NotificationSystemManager(activity);
+      NotificationSystemManager notificationManager = new NotificationSystemManager(activity, configuration);
       notificationManager.checkDataForAlert(data);
     } catch (Throwable th) {
       new UserFeedback(activity).showMessage(R.string.message_data_update_failed, showToast);

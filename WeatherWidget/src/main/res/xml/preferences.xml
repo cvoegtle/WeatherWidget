@@ -9,6 +9,11 @@
           android:entries="@array/updateInterval"
           android:entryValues="@array/updateIntervalValues"
           />
+  <CheckBoxPreference
+          android:key="info_notification"
+          android:title="@string/weather_as_notification"
+          android:defaultValue="false"
+          />
 
   <PreferenceCategory
           android:title="@string/station_paderborn"

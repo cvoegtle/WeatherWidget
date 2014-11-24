@@ -5,14 +5,19 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.widget.SmallWidgetScreenPainter;
 import org.voegtle.weatherwidget.widget.SmallWidgetUpdateTask;
 
 class WeatherWidgetSmallProvider extends AppWidgetProvider {
   private final int resourceKeyCity;
   private final String weatherDataUrl;
+
 
   WeatherWidgetSmallProvider(final String weatherDataUrl, final int resourceKeyCity) {
     this.resourceKeyCity = resourceKeyCity;
@@ -26,7 +31,13 @@ class WeatherWidgetSmallProvider extends AppWidgetProvider {
     remoteViews.setTextViewText(R.id.weather_location, res.getString(resourceKeyCity));
 
     SmallWidgetScreenPainter screenPainter = new SmallWidgetScreenPainter(appWidgetManager, appWidgetIds, remoteViews);
-    new SmallWidgetUpdateTask(context, screenPainter).execute(weatherDataUrl);
+
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(res);
+    WeatherActivityConfiguration configuration = weatherSettingsReader.read(preferences);
+
+
+    new SmallWidgetUpdateTask(context, configuration, screenPainter).execute(weatherDataUrl);
 
     for (int widgetId : appWidgetIds) {
       Intent intentRefresh = new Intent(context, this.getClass());

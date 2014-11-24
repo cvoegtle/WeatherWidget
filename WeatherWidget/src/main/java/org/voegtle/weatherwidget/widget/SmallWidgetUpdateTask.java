@@ -2,17 +2,16 @@ package org.voegtle.weatherwidget.widget;
 
 import android.content.Context;
 import android.util.Log;
-import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
-import org.voegtle.weatherwidget.util.ColorUtil;
-import org.voegtle.weatherwidget.util.UserFeedbackWidget;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 
 public class SmallWidgetUpdateTask extends AbstractWidgetUpdateTask<String, Void, WeatherData> {
 
   private final SmallWidgetScreenPainter screenPainter;
 
-  public SmallWidgetUpdateTask(Context context, SmallWidgetScreenPainter screenPainter) {
-    super(context, screenPainter);
+  public SmallWidgetUpdateTask(Context context, WeatherActivityConfiguration configuration,
+                               SmallWidgetScreenPainter screenPainter) {
+    super(context, configuration, screenPainter);
     this.screenPainter = screenPainter;
   }
 

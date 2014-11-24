@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 
 public abstract class AbstractWidgetUpdateManager {
@@ -18,8 +19,8 @@ public abstract class AbstractWidgetUpdateManager {
     alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     refreshService = IntentFactory.createRefreshIntent(context, cls);
 
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    processPreferences(preferences);
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
+    processPreferences(preferences, context);
   }
 
   public void runServiceNow() {
@@ -39,10 +40,10 @@ public abstract class AbstractWidgetUpdateManager {
   }
 
 
-  public void processPreferences(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader();
-
-    interval = weatherSettingsReader.readIntervall(preferences);
+  public void processPreferences(SharedPreferences preferences, Context context) {
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(context);
+    WeatherActivityConfiguration configuration = weatherSettingsReader.read(preferences);
+    interval = configuration.getUpdateIntervall();
   }
 
 

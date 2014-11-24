@@ -5,23 +5,24 @@ import android.os.AsyncTask;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
+import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
 import org.voegtle.weatherwidget.util.WeatherDataFetcher;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.Locale;
 
 abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
   private final Context context;
+  private WeatherActivityConfiguration configuration;
   private AbstractWidgetScreenPainter screenPainter;
   private final WeatherDataFetcher weatherDataFetcher;
 
-  public AbstractWidgetUpdateTask(Context context, AbstractWidgetScreenPainter screenPainter) {
+  public AbstractWidgetUpdateTask(Context context, WeatherActivityConfiguration configuration,
+                                  AbstractWidgetScreenPainter screenPainter) {
     super();
 
     this.context = context;
+    this.configuration = configuration;
     this.screenPainter = screenPainter;
     this.weatherDataFetcher = new WeatherDataFetcher();
   }
@@ -41,7 +42,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
   }
 
   protected void checkDataForAlert(HashMap<LocationIdentifier, WeatherData> data) {
-    NotificationSystemManager notificationManager = new NotificationSystemManager(context);
+    NotificationSystemManager notificationManager = new NotificationSystemManager(context, configuration);
     notificationManager.checkDataForAlert(data);
   }
 
