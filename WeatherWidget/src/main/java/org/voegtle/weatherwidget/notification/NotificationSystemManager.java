@@ -113,6 +113,10 @@ public class NotificationSystemManager {
     } else {
       Notification.Builder notificationBuilder = new Notification.Builder(context);
       notificationBuilder.setSmallIcon(R.drawable.wetterlogo);
+
+      Bitmap bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo);
+      notificationBuilder.setLargeIcon(bm);
+
       notificationBuilder.setContentTitle(res.getString(R.string.app_name));
 
       String contentText = buildCurrentWeather(data);
@@ -125,6 +129,7 @@ public class NotificationSystemManager {
       Notification notification = notificationBuilder.build();
       notification.flags |= Notification.FLAG_ONLY_ALERT_ONCE;
       notification.flags |= Notification.FLAG_ONGOING_EVENT;
+      notification.priority = Notification.PRIORITY_HIGH;
       notificationManager.notify(INFO_ID, notification);
     }
   }

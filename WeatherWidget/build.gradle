@@ -11,12 +11,12 @@ repositories {
     mavenCentral()
 }
 android {
-    buildToolsVersion '20.0.0'
-    compileSdkVersion 19
+    buildToolsVersion '21.1.1'
+    compileSdkVersion 21
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 19
+        targetSdkVersion 21
     }
 
     signingConfigs {
@@ -62,7 +62,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:19.1.0'
+    compile 'com.android.support:support-v13:21.0.2'
 }
 
 import java.util.regex.Pattern
