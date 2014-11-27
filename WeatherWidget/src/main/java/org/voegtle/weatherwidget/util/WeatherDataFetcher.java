@@ -18,6 +18,8 @@ import org.voegtle.weatherwidget.location.LocationIdentifier;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -34,8 +36,13 @@ public class WeatherDataFetcher {
   @SuppressWarnings("deprecation")
   public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer(String secret) {
     HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<>();
+    String urlEncodedSecret = null;
+    try {
+      urlEncodedSecret = URLEncoder.encode(secret, "UTF-8");
+    } catch (UnsupportedEncodingException ignore) {
+    }
 
-    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&secret=" + secret);
+    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
