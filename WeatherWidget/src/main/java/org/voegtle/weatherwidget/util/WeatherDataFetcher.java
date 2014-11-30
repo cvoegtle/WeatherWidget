@@ -29,10 +29,6 @@ public class WeatherDataFetcher {
   }
 
 
-  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer() {
-    return fetchAllWeatherDataFromServer("");
-  }
-
   @SuppressWarnings("deprecation")
   public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer(String secret) {
     HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<>();

@@ -143,7 +143,11 @@ public class NotificationSystemManager {
         weatherText.append(location.getShortName());
         weatherText.append(": ");
         weatherText.append(numberFormat.format(weatherData.getTemperature()) + "°C, ");
-        weatherText.append(numberFormat.format(weatherData.getHumidity()) + "%");
+        if (weatherData.getInsideTemperature() != null) {
+          weatherText.append(numberFormat.format(weatherData.getInsideTemperature()) + "°C");
+        } else {
+          weatherText.append(numberFormat.format(weatherData.getHumidity()) + "%");
+        }
         weatherText.append(" | ");
       }
     }

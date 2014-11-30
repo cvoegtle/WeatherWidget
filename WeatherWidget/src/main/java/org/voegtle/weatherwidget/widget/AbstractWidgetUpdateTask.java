@@ -34,7 +34,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
 
 
   protected HashMap<LocationIdentifier, WeatherData> fetchAllWeatherData() {
-    return weatherDataFetcher.fetchAllWeatherDataFromServer();
+    return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getSecret());
   }
 
   protected WeatherData fetchWeatherData(String weatherServerUrl) {
