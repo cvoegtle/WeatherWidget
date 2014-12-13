@@ -9,11 +9,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/WeatherWidget" />
+            <option value="$PROJECT_DIR$/WeatherApp" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
   </component>
 </project>
-
