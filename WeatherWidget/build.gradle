@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:0.13.0'
+        classpath 'com.android.tools.build:gradle:0.14.2'
     }
 }
 apply plugin: 'android'
@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
 }
 android {
-    buildToolsVersion '21.1.1'
+    buildToolsVersion '21.1.2'
     compileSdkVersion 21
 
     defaultConfig {
@@ -32,6 +32,7 @@ android {
     lintOptions {
         checkReleaseBuilds true
     }
+
     buildTypes {
         debug {
             debuggable true
@@ -62,7 +63,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.android.support:support-v13:21.0.3'
 }
 
 import java.util.regex.Pattern
