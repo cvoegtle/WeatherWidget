@@ -50,8 +50,8 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   }
 
   private void configure(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettings = new WeatherSettingsReader(this.getApplicationContext());
-    configuration = weatherSettings.read(preferences);
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(this.getApplicationContext());
+    configuration = weatherSettingsReader.read(preferences);
 
     for (WeatherLocation location : configuration.getLocations()) {
       addClickHandler(location);
