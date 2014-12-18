@@ -167,5 +167,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
     configure(preferences);
+    updater.stopWeatherScheduler();
+    updater = new WeatherDataUpdater(this, configuration);
   }
 }
