@@ -30,6 +30,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
   @Override
   protected void onPreExecute() {
     screenPainter.showDataIsInvalid();
+    screenPainter.updateAllWidgets();
   }
 
 
