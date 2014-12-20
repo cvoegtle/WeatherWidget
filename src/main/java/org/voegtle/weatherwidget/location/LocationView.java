@@ -121,8 +121,8 @@ public class LocationView extends LinearLayout {
 
   public void setTextColor(int color) {
     captionView.setTextColor(color);
-    dataView.setTextColor(color);
-    moreDataView.setTextColor(color);
+//    dataView.setTextColor(color);
+//    moreDataView.setTextColor(color);
   }
 
   public boolean isExpanded() {

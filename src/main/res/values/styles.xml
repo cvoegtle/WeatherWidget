@@ -19,12 +19,12 @@
   <!-- Application theme. -->
   <style
           name="AppTheme"
-          parent="android:Theme.Holo">
+          parent="android:Theme.Material">
 
   </style>
   <style
           name="AppThemeLight"
-          parent="android:Theme.Holo.Light.DarkActionBar">
+          parent="android:Theme.Material.Light">
 
   </style>
 
