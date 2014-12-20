@@ -20,12 +20,12 @@
   <style
           name="AppTheme"
           parent="android:Theme.Material">
-
+    <item name="android:statusBarColor">@color/primary_blue</item>
+    <item name="android:colorPrimaryDark">@color/primary_dark_blue</item>
   </style>
   <style
           name="AppThemeLight"
           parent="android:Theme.Material.Light">
-
   </style>
 
 </resources>

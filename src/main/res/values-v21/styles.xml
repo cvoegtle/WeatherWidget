@@ -3,11 +3,13 @@
   <style
           name="AppTheme"
           parent="android:Theme.Material">
-
+    <item name="android:colorPrimaryDark">@color/primary_dark_blue</item>
+    <item name="android:colorPrimary">@color/primary_blue</item>
+    <item name="android:windowBackground">@color/background_blue</item>
+    <item name="android:colorButtonNormal">@color/button_blue</item>
   </style>
   <style
           name="AppThemeLight"
           parent="android:Theme.Material.Light.DarkActionBar">
-
   </style>
 </resources>
