@@ -100,7 +100,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   private void updateWeatherLocation(int locationId, String locationName, WeatherData data) {
     final LocationView contentView = (LocationView) activity.findViewById(locationId);
 
-    final int color = ColorUtil.byAge(data.getTimestamp());
+    final int color = ColorUtil.byAgeDark(data.getTimestamp());
     final String caption = getCaption(locationName, data);
     final String text = formatWeatherData(data);
 

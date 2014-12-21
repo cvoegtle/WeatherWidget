@@ -11,5 +11,7 @@
   <style
           name="AppThemeLight"
           parent="android:Theme.Material.Light.DarkActionBar">
+    <item name="android:colorPrimaryDark">@color/primary_dark_blue</item>
+    <item name="android:colorPrimary">@color/primary_blue</item>
   </style>
 </resources>

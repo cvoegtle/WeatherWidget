@@ -35,8 +35,8 @@ public class LocationView extends LinearLayout {
     dataView = (TextView) findViewById(R.id.data);
     moreDataView = (TextView) findViewById(R.id.more_data);
 
-    imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse);
-    imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand);
+    imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse_dark);
+    imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand_dark);
 
     TypedArray attributes = context.getTheme().obtainStyledAttributes(
         attrs, R.styleable.LocationView, 0, 0);
