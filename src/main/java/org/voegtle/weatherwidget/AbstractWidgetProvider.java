@@ -9,14 +9,14 @@ import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.location.WeatherLocation;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.AbstractWidgetUpdateManager;
 import org.voegtle.weatherwidget.system.IntentFactory;
 
 public abstract class AbstractWidgetProvider extends AppWidgetProvider {
 
-  private WeatherActivityConfiguration configuration;
+  private ApplicationSettings configuration;
   private Resources res;
   private RemoteViews remoteViews;
   private AbstractWidgetUpdateManager updateManager;

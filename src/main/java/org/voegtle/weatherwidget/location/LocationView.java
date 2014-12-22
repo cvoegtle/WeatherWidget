@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
 
 public class LocationView extends LinearLayout {
+  private final Context context;
   private TextView captionView;
   private TextView dataView;
   private TextView moreDataView;
@@ -28,6 +29,8 @@ public class LocationView extends LinearLayout {
 
   public LocationView(Context context, AttributeSet attrs) {
     super(context, attrs);
+    this.context = context;
+
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     li.inflate(R.layout.view_location, this, true);
 
@@ -35,8 +38,8 @@ public class LocationView extends LinearLayout {
     dataView = (TextView) findViewById(R.id.data);
     moreDataView = (TextView) findViewById(R.id.more_data);
 
-    imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse_dark);
-    imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand_dark);
+    imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse);
+    imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand);
 
     TypedArray attributes = context.getTheme().obtainStyledAttributes(
         attrs, R.styleable.LocationView, 0, 0);
@@ -117,6 +120,19 @@ public class LocationView extends LinearLayout {
 
   public void setMoreData(String moreData) {
     moreDataView.setText(moreData);
+  }
+
+  public void configureSymbols(boolean useDarkSymbols) {
+    if (useDarkSymbols) {
+      imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse_dark);
+      imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand_dark);
+
+      Drawable imageForecastDark = context.getResources().getDrawable(R.drawable.ic_action_forecast_dark);
+      forecastButton.setImageDrawable(imageForecastDark);
+      Drawable imageDiagramDark = context.getResources().getDrawable(R.drawable.ic_action_picture_dark);
+      diagramButton.setImageDrawable(imageDiagramDark);
+
+    }
   }
 
   public void setTextColor(int color) {

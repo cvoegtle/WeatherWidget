@@ -1,10 +1,10 @@
 package org.voegtle.weatherwidget.preferences;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Bundle;
+import org.voegtle.weatherwidget.base.ThemedActivity;
 
-public class WeatherPreferences extends Activity {
+public class WeatherPreferences extends ThemedActivity {
 
   @Override
   public void onCreate(Bundle savedInstanceState) {

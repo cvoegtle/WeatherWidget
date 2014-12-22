@@ -8,6 +8,8 @@ import org.voegtle.weatherwidget.location.WeatherLocation;
 
 import java.util.List;
 
+import static org.voegtle.weatherwidget.preferences.ColorScheme.byKey;
+
 public class WeatherSettingsReader {
 
   private Resources resources;
@@ -20,15 +22,25 @@ public class WeatherSettingsReader {
     this.resources = resources;
   }
 
-  public WeatherActivityConfiguration read(SharedPreferences preferences) {
-    WeatherActivityConfiguration configuration = new WeatherActivityConfiguration();
+  public ApplicationSettings read(SharedPreferences preferences) {
+    ApplicationSettings configuration = new ApplicationSettings();
     List<WeatherLocation> locations = readLocations(preferences);
     configuration.setLocations(locations);
     configuration.setSecret(getString(preferences, "secret"));
     configuration.setShowInfoNotification(getBoolean(preferences, "info_notification", false));
     configuration.setUpdateIntervall(getInteger(preferences, "update_interval", 30));
+    configuration.setColorScheme(getColorScheme(preferences, "color_scheme", ColorScheme.dark));
 
     return configuration;
+  }
+
+  private ColorScheme getColorScheme(SharedPreferences preferences, String key, ColorScheme defaultScheme) {
+    String value = getString(preferences, key);
+    ColorScheme scheme = byKey(value);
+    if (scheme == null) {
+      scheme = defaultScheme;
+    }
+    return scheme;
   }
 
   private List<WeatherLocation> readLocations(SharedPreferences preferences) {

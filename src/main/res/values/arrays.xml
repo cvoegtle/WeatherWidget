@@ -15,4 +15,12 @@
     <item name="120">120</item>
     <item name="-1">-1</item>
   </string-array>
+  <string-array name="colorScheme">
+    <item name="dark">Mitternachts Schwarz</item>
+    <item name="light">Hell und Blau</item>
+  </string-array>
+  <string-array name="colorSchemeValues">
+    <item name="dark">dark</item>
+    <item name="light">light</item>
+  </string-array>
 </resources>

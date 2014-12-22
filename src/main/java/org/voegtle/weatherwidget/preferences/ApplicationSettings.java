@@ -4,13 +4,14 @@ import org.voegtle.weatherwidget.location.WeatherLocation;
 
 import java.util.List;
 
-public class WeatherActivityConfiguration {
+public class ApplicationSettings {
   private List<WeatherLocation> locations;
   private String secret;
   private Integer updateIntervall;
   private boolean showInfoNotification;
+  private ColorScheme colorScheme;
 
-  public WeatherActivityConfiguration() {
+  public ApplicationSettings() {
   }
 
   public void setLocations(List<WeatherLocation> locations) {
@@ -45,4 +46,11 @@ public class WeatherActivityConfiguration {
     this.showInfoNotification = showInfoNotification;
   }
 
+  public ColorScheme getColorScheme() {
+    return colorScheme;
+  }
+
+  public void setColorScheme(ColorScheme colorScheme) {
+    this.colorScheme = colorScheme;
+  }
 }

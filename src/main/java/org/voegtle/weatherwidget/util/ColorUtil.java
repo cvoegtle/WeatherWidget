@@ -1,6 +1,7 @@
 package org.voegtle.weatherwidget.util;
 
 import android.graphics.Color;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
 
 import java.util.Date;
 
@@ -9,6 +10,10 @@ public class ColorUtil {
   private static int MAX_RGB_VALUE = 230;
   private static int MIN_RGB_VALUE = 20;
   private static int MIN_RGB_VALUE_DARK = 80;
+
+  public static int byAge(ColorScheme colorScheme, Date lastUpdate) {
+    return colorScheme == ColorScheme.light ? byAgeDark(lastUpdate) : byAge(lastUpdate);
+  }
 
   public static int byAge(Date lastUpdate) {
     int age = getAge(lastUpdate);

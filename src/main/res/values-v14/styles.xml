@@ -6,6 +6,11 @@
       res/values-v11/styles.xml on API 14+ devices.
   -->
   <style
+          name="AppTheme"
+          parent="android:Theme.Holo">
+  </style>
+
+  <style
           name="AppThemeLight"
           parent="android:Theme.Holo.Light.DarkActionBar">
   </style>

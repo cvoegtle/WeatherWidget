@@ -3,13 +3,13 @@ package org.voegtle.weatherwidget.widget;
 import android.content.Context;
 import android.util.Log;
 import org.voegtle.weatherwidget.data.WeatherData;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 
 public class SmallWidgetUpdateTask extends AbstractWidgetUpdateTask<String, Void, WeatherData> {
 
   private final SmallWidgetScreenPainter screenPainter;
 
-  public SmallWidgetUpdateTask(Context context, WeatherActivityConfiguration configuration,
+  public SmallWidgetUpdateTask(Context context, ApplicationSettings configuration,
                                SmallWidgetScreenPainter screenPainter) {
     super(context, configuration, screenPainter);
     this.screenPainter = screenPainter;

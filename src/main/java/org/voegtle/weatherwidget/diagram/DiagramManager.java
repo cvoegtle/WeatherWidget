@@ -1,10 +1,16 @@
 package org.voegtle.weatherwidget.diagram;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
+import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.util.UserFeedback;
 
 import java.util.concurrent.Executors;
@@ -25,9 +31,22 @@ public class DiagramManager {
   }
 
   public void onResume() {
+    configureTheme();
+
     active = true;
-    placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark);
     diagramCache.readAll(diagrams);
+  }
+
+  private void configureTheme() {
+    Context context = fragment.getActivity().getApplicationContext();
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(context);
+    ApplicationSettings configuration = weatherSettingsReader.read(preferences);
+    if (configuration.getColorScheme() == ColorScheme.dark) {
+      placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture);
+    } else {
+      placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark);
+    }
   }
 
   public void onPause() {

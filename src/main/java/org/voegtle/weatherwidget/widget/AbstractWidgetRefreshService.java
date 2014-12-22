@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.location.WeatherLocation;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.IntentFactory;
 import org.voegtle.weatherwidget.system.WidgetUpdateManager;
@@ -23,7 +23,7 @@ import org.voegtle.weatherwidget.util.NotificationTask;
 public abstract class AbstractWidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
   private RemoteViews remoteViews;
-  private WeatherActivityConfiguration configuration;
+  private ApplicationSettings configuration;
 
   protected abstract Class<?> getWidgetProviderClass();
   protected abstract boolean isDetailed();
@@ -132,7 +132,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
   private void ensureResources() {
     if (res == null) {
       res = getResources();
-      configuration = new WeatherActivityConfiguration();
+      configuration = new ApplicationSettings();
       remoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
     }
   }

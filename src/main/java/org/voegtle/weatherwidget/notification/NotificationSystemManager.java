@@ -18,7 +18,7 @@ import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -33,13 +33,13 @@ public class NotificationSystemManager {
 
   private final Resources res;
   private final Context context;
-  private WeatherActivityConfiguration configuration;
+  private ApplicationSettings configuration;
   private NotificationManager notificationManager;
   private WeatherStationCheck stationCheck;
   private final DecimalFormat numberFormat;
 
 
-  public NotificationSystemManager(Context context, WeatherActivityConfiguration configuration) {
+  public NotificationSystemManager(Context context, ApplicationSettings configuration) {
     this.context = context;
     this.configuration = configuration;
     this.res = context.getResources();
@@ -142,11 +142,11 @@ public class NotificationSystemManager {
       if (weatherData != null) {
         weatherText.append(location.getShortName());
         weatherText.append(": ");
-        weatherText.append(numberFormat.format(weatherData.getTemperature()) + "°C, ");
+        weatherText.append(numberFormat.format(weatherData.getTemperature())).append("°C, ");
         if (weatherData.getInsideTemperature() != null) {
-          weatherText.append(numberFormat.format(weatherData.getInsideTemperature()) + "°C");
+          weatherText.append(numberFormat.format(weatherData.getInsideTemperature())).append("°C");
         } else {
-          weatherText.append(numberFormat.format(weatherData.getHumidity()) + "%");
+          weatherText.append(numberFormat.format(weatherData.getHumidity())).append("%");
         }
         weatherText.append(" | ");
       }

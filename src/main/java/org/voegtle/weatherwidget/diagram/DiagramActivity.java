@@ -1,17 +1,17 @@
 package org.voegtle.weatherwidget.diagram;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.MenuItem;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.base.ThemedActivity;
 
 import java.util.ArrayList;
 
-public abstract class DiagramActivity extends Activity {
-  protected ArrayList<DiagramEnum> diagramIdList = new ArrayList<DiagramEnum>();
+public abstract class DiagramActivity extends ThemedActivity {
+  protected ArrayList<DiagramEnum> diagramIdList = new ArrayList<>();
 
   protected ViewPager viewPager;
   private DiagramCache diagramCache;

@@ -24,7 +24,7 @@
                  android:background="#00000000"
                  android:visibility="gone"
                  android:paddingRight="7dp"
-                 android:src="@drawable/ic_action_picture_dark"/>
+                 android:src="@drawable/ic_action_picture"/>
     <ImageButton android:id="@+id/forecast_button"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
@@ -32,13 +32,13 @@
                  android:background="#00000000"
                  android:visibility="gone"
                  android:paddingRight="7dp"
-                 android:src="@drawable/ic_action_forecast_dark"/>
+                 android:src="@drawable/ic_action_forecast"/>
     <ImageButton android:id="@+id/resize_button"
                  android:layout_alignParentRight="true"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
                  android:background="#00000000"
-                 android:src="@drawable/ic_action_expand_dark"/>
+                 android:src="@drawable/ic_action_expand"/>
   </RelativeLayout>
 
   <TextView android:id="@+id/data"

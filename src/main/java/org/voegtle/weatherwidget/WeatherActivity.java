@@ -1,6 +1,5 @@
 package org.voegtle.weatherwidget;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,36 +10,41 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import org.voegtle.weatherwidget.base.ThemedActivity;
 import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity;
 import org.voegtle.weatherwidget.diagram.MainDiagramActivity;
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.preferences.WeatherPreferences;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.util.RainUpdater;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
-public class WeatherActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class WeatherActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
   private RainUpdater rainUpdater;
-  private WeatherActivityConfiguration configuration;
+  private ApplicationSettings configuration;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_weather);
+    initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
+    initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheet/ccc?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc#gid=11"));
+
 
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+    readConfiguration(preferences);
     preferences.registerOnSharedPreferenceChangeListener(this);
 
     rainUpdater = new RainUpdater(this);
-    configure(preferences);
 
-    initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
-    initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheet/ccc?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc#gid=11"));
+    configure(preferences);
+    configureLocationSymbolColor();
 
     updater = new WeatherDataUpdater(this, configuration);
   }
@@ -50,14 +54,16 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
   }
 
   private void configure(SharedPreferences preferences) {
-    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(this.getApplicationContext());
-    configuration = weatherSettingsReader.read(preferences);
-
     for (WeatherLocation location : configuration.getLocations()) {
       addClickHandler(location);
       updateVisibility(location);
       updateState(location);
     }
+  }
+
+  private void readConfiguration(SharedPreferences preferences) {
+    WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(this.getApplicationContext());
+    configuration = weatherSettingsReader.read(preferences);
   }
 
   private void addClickHandler(final WeatherLocation location) {
@@ -102,16 +108,26 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
     updateVisibility(location.getWeatherViewId(), show);
   }
 
+  private void updateVisibility(int viewId, boolean isVisible) {
+    View view = findViewById(viewId);
+    view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+  }
+
+  private void configureLocationSymbolColor() {
+    // Dunkle Symbole wenn der Hintergrund hell ist
+    boolean darkSymbols = getColorScheme() == ColorScheme.light;
+    for (WeatherLocation location : configuration.getLocations()) {
+      final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
+      locationView.configureSymbols(darkSymbols);
+    }
+
+  }
+
   private void updateState(WeatherLocation location) {
     final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
     rainUpdater.setupRain(locationView, location.getRainDetailsUrl());
   }
 
-
-  private void updateVisibility(int viewId, boolean isVisible) {
-    View view = findViewById(viewId);
-    view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-  }
 
   private void initButton(int buttonId, final Uri uri) {
     Button button = (Button) findViewById(buttonId);
@@ -166,6 +182,7 @@ public class WeatherActivity extends Activity implements SharedPreferences.OnSha
 
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
+    readConfiguration(preferences);
     configure(preferences);
     updater.stopWeatherScheduler();
     updater = new WeatherDataUpdater(this, configuration);

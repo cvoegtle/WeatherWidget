@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.widget.SmallWidgetScreenPainter;
 import org.voegtle.weatherwidget.widget.SmallWidgetUpdateTask;
@@ -34,7 +34,7 @@ class WeatherWidgetSmallProvider extends AppWidgetProvider {
 
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(res);
-    WeatherActivityConfiguration configuration = weatherSettingsReader.read(preferences);
+    ApplicationSettings configuration = weatherSettingsReader.read(preferences);
 
 
     new SmallWidgetUpdateTask(context, configuration, screenPainter).execute(weatherDataUrl);

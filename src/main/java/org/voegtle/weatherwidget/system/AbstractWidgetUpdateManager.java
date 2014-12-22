@@ -6,7 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 
 public abstract class AbstractWidgetUpdateManager {
@@ -42,7 +42,7 @@ public abstract class AbstractWidgetUpdateManager {
 
   private void processPreferences(SharedPreferences preferences, Context context) {
     WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(context);
-    WeatherActivityConfiguration configuration = weatherSettingsReader.read(preferences);
+    ApplicationSettings configuration = weatherSettingsReader.read(preferences);
     interval = configuration.getUpdateIntervall();
   }
 

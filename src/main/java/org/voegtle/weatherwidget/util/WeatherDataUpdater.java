@@ -1,7 +1,7 @@
 package org.voegtle.weatherwidget.util;
 
 import org.voegtle.weatherwidget.WeatherActivity;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -12,9 +12,9 @@ public class WeatherDataUpdater {
   private ScheduledFuture<?> backgroundProcess;
 
   private WeatherActivity activity;
-  private WeatherActivityConfiguration configuration;
+  private ApplicationSettings configuration;
 
-  public WeatherDataUpdater(WeatherActivity activity, WeatherActivityConfiguration configuration) {
+  public WeatherDataUpdater(WeatherActivity activity, ApplicationSettings configuration) {
     this.activity = activity;
     this.configuration = configuration;
   }

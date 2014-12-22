@@ -13,7 +13,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
-import org.voegtle.weatherwidget.preferences.WeatherActivityConfiguration;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.widget.WidgetScreenPainter;
 
 import java.text.DecimalFormat;
@@ -32,9 +32,9 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   private final WeatherDataFetcher weatherDataFetcher;
 
   private boolean showToast;
-  private WeatherActivityConfiguration configuration;
+  private ApplicationSettings configuration;
 
-  public ActivityUpdateTask(WeatherActivity activity, WeatherActivityConfiguration configuration, boolean showToast) {
+  public ActivityUpdateTask(WeatherActivity activity, ApplicationSettings configuration, boolean showToast) {
     this.configuration = configuration;
     this.activity = activity;
     this.screenPainter = createScreenPainter(false, WeatherWidgetProvider.class);
@@ -100,7 +100,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   private void updateWeatherLocation(int locationId, String locationName, WeatherData data) {
     final LocationView contentView = (LocationView) activity.findViewById(locationId);
 
-    final int color = ColorUtil.byAgeDark(data.getTimestamp());
+    final int color = ColorUtil.byAge(configuration.getColorScheme(), data.getTimestamp());
     final String caption = getCaption(locationName, data);
     final String text = formatWeatherData(data);
 

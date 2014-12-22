@@ -21,7 +21,7 @@
   <string name="data_mining">Auswertung in Google Tabellen</string>
   <string name="refresh">neu laden</string>
   <string name="update_intervall">Aktualisierungsintervall</string>
-  <string name="update_summary">Frequenz mit der die Daten im Widget aktualisiert werden</string>
+  <string name="update_summary">Frequenz mit der das Widget aktualisiert wird</string>
   <string name="action_preferences">Einstellungen</string>
   <string name="station_freiburg">Wetterstation in Freiburg</string>
   <string name="in_app">in der App anzeigen</string>
@@ -60,4 +60,9 @@
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
   <string name="weather_as_notification">Wetter Notification</string>
+  <string name="stations">Stationen</string>
+  <string name="theme">Farbschema</string>
+  <string name="theme_summary">App wirklich beenden, damit das neue Schema wirksam wird</string>
+  <string name="weather_as_notification_summary">Wetterdaten als Notification anzeigen</string>
+  <string name="secret_summary">damit sieht man mehr</string>
 </resources>

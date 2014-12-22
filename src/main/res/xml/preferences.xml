@@ -9,70 +9,80 @@
           android:entries="@array/updateInterval"
           android:entryValues="@array/updateIntervalValues"
           />
+  <ListPreference
+          android:key="color_scheme"
+          android:title="@string/theme"
+          android:summary="@string/theme_summary"
+          android:defaultValue="dark"
+          android:entries="@array/colorScheme"
+          android:entryValues="@array/colorSchemeValues"/>
   <CheckBoxPreference
           android:key="info_notification"
           android:title="@string/weather_as_notification"
+          android:summary="@string/weather_as_notification_summary"
           android:defaultValue="false"
           />
-
   <PreferenceCategory
-          android:title="@string/station_paderborn"
-          android:key="settings_paderborn">
-    <CheckBoxPreference
-            android:key="app_show_paderborn"
-            android:title="@string/in_app"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
-            android:key="widget_show_paderborn"
-            android:title="@string/in_widget"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
-            android:key="alert_paderborn"
-            android:title="@string/alert"
-            android:defaultValue="false"
-            />
-  </PreferenceCategory>
+          android:title="@string/stations"
+          android:key="stationen">
 
-  <PreferenceCategory
-          android:title="@string/station_bonn"
-          android:key="settings_bonn">
-    <CheckBoxPreference
-            android:key="app_show_bonn"
-            android:title="@string/in_app"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
-            android:key="widget_show_bonn"
-            android:title="@string/in_widget"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
-            android:key="alert_bonn"
-            android:title="@string/alert"
-            android:defaultValue="false"
-            />
-  </PreferenceCategory>
+    <PreferenceScreen android:title="@string/station_paderborn"
+                      android:key="screen_paderborn">
+      <CheckBoxPreference
+              android:key="app_show_paderborn"
+              android:title="@string/in_app"
+              android:defaultValue="true"
+              />
+      <CheckBoxPreference
+              android:key="widget_show_paderborn"
+              android:title="@string/in_widget"
+              android:defaultValue="true"
+              />
+      <CheckBoxPreference
+              android:key="alert_paderborn"
+              android:title="@string/alert"
+              android:defaultValue="false"
+              />
+    </PreferenceScreen>
+    <PreferenceScreen
+            android:title="@string/station_bonn"
+            android:key="settings_bonn">
+      <CheckBoxPreference
+              android:key="app_show_bonn"
+              android:title="@string/in_app"
+              android:defaultValue="true"
+              />
+      <CheckBoxPreference
+              android:key="widget_show_bonn"
+              android:title="@string/in_widget"
+              android:defaultValue="true"
+              />
+      <CheckBoxPreference
+              android:key="alert_bonn"
+              android:title="@string/alert"
+              android:defaultValue="false"
+              />
+    </PreferenceScreen>
 
-  <PreferenceCategory
-          android:title="@string/station_freiburg"
-          android:key="settings_freiburg">
-    <CheckBoxPreference
-            android:key="app_show_freiburg"
-            android:title="@string/in_app"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
-            android:key="widget_show_freiburg"
-            android:title="@string/in_widget"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
-            android:key="alert_freiburg"
-            android:title="@string/alert"
-            android:defaultValue="false"
-            />
+    <PreferenceScreen
+            android:title="@string/station_freiburg"
+            android:key="settings_freiburg">
+      <CheckBoxPreference
+              android:key="app_show_freiburg"
+              android:title="@string/in_app"
+              android:defaultValue="true"
+              />
+      <CheckBoxPreference
+              android:key="widget_show_freiburg"
+              android:title="@string/in_widget"
+              android:defaultValue="true"
+              />
+      <CheckBoxPreference
+              android:key="alert_freiburg"
+              android:title="@string/alert"
+              android:defaultValue="false"
+              />
+    </PreferenceScreen>
   </PreferenceCategory>
 
   <PreferenceCategory
@@ -80,7 +90,8 @@
           android:key="settings_privileges">
     <EditTextPreference
             android:key="secret"
-            android:title="@string/secret"/>
+            android:title="@string/secret"
+            android:summary="@string/secret_summary"/>
   </PreferenceCategory>
 
   <PreferenceCategory
