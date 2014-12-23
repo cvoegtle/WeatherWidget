@@ -131,8 +131,8 @@ public class LocationView extends LinearLayout {
       forecastButton.setImageDrawable(imageForecastDark);
       Drawable imageDiagramDark = context.getResources().getDrawable(R.drawable.ic_action_picture_dark);
       diagramButton.setImageDrawable(imageDiagramDark);
-
     }
+    setExpanded(expanded);
   }
 
   public void setTextColor(int color) {
