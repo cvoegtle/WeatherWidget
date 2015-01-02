@@ -12,6 +12,7 @@ import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.util.UserFeedback;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -118,6 +119,8 @@ public class DiagramManager {
           if (view != null) {
             ImageView imageView = (ImageView) view.findViewById(R.id.diagram_view);
             imageView.setImageDrawable(newImage);
+            PhotoViewAttacher attacher = new PhotoViewAttacher(imageView);
+            attacher.update();
           } else {
             Log.e("DiagramManager", "View is null");
           }
