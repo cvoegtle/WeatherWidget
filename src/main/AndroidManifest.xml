@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="133"
+          android:versionCode="134"
           android:versionName="1.5">
 
   <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="21"/>
