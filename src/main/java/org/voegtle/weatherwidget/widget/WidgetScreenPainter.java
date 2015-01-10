@@ -69,30 +69,13 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
       updated = false;
     } else {
       remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(data.getTimestamp()));
-      remoteViews.setTextViewText(location.getWeatherViewId(), getWeatherText(location, data));
+      remoteViews.setTextViewText(location.getWeatherViewId(), formatter.formatWidgetLine(location, data, detailed));
 
       boolean isRaining = data.getRain() != null;
       remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining, data.getTimestamp()));
       updated = true;
     }
     return updated;
-  }
-
-  private String getWeatherText(WeatherLocation location, WeatherData data) {
-    StringBuilder weatherData = new StringBuilder(location.getShortName() + " "
-        + retrieveFormattedTemperature(data));
-    if (detailed) {
-      weatherData.append(" | ");
-      weatherData.append(numberFormat.format(data.getHumidity()));
-      weatherData.append("%");
-      if (data.getRainToday() != null) {
-        weatherData.append(" | ");
-        weatherData.append(numberFormat.format(data.getRainToday()));
-        weatherData.append("l");
-      }
-    }
-
-    return weatherData.toString();
   }
 
 }

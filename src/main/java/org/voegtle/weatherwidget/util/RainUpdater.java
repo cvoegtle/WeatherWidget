@@ -1,37 +1,28 @@
 package org.voegtle.weatherwidget.util;
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.net.Uri;
-import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.RainData;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.state.State;
 import org.voegtle.weatherwidget.state.StateCache;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RainUpdater {
-
-  private Resources res;
   private StateCache stateCache;
 
   private WeatherDataFetcher weatherDataFetcher;
-  private DecimalFormat numberFormat;
+  private DataFormatter formatter;
 
   public RainUpdater(Activity activity) {
-    this.res = activity.getResources();
+    this.formatter = new DataFormatter(activity.getResources());
     this.stateCache = new StateCache(activity);
 
     this.weatherDataFetcher = new WeatherDataFetcher();
-    this.numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
-    this.numberFormat.applyPattern("###.#");
 
   }
 
@@ -66,14 +57,9 @@ public class RainUpdater {
   }
 
   private void updateLocation(final LocationView locationView, RainData rainData) {
-    final StringBuilder builder = new StringBuilder();
-
-    builder.append(buildRainString(res.getString(R.string.rain_yesterday), rainData.getRainYeasterday())).append("\n");
-    builder.append(buildRainString(res.getString(R.string.rain_last_week), rainData.getRainLastWeek())).append("\n");
-    builder.append(buildRainString(res.getString(R.string.rain_30_days), rainData.getRain30Days()));
-
-    updateView(locationView, builder.toString());
-    updateCache(locationView, builder.toString());
+    String rainString = formatter.formatRainData(rainData);
+    updateView(locationView, rainString);
+    updateCache(locationView, rainString);
   }
 
   private void updateCache(LocationView locationView, String rainData) {
@@ -91,18 +77,6 @@ public class RainUpdater {
         locationView.setMoreData(moreData);
       }
     });
-  }
-
-  private String buildRainString(String text, Float value) {
-    StringBuilder builder = new StringBuilder();
-
-    builder.append(text);
-    builder.append(" ");
-    if (value != null) {
-      builder.append(numberFormat.format(value));
-      builder.append(res.getString(R.string.liter));
-    }
-    return builder.toString();
   }
 
   public void clearState(LocationView locationView) {

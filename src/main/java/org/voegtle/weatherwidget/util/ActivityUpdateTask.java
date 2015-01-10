@@ -3,7 +3,6 @@ package org.voegtle.weatherwidget.util;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -16,19 +15,14 @@ import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.widget.WidgetScreenPainter;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Locale;
 
 public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
   private final WidgetScreenPainter screenPainter;
   private final WidgetScreenPainter screenPainterLarge;
   private WeatherActivity activity;
-  private final Resources res;
-  private DecimalFormat numberFormat;
-
+  private DataFormatter formatter;
   private final WeatherDataFetcher weatherDataFetcher;
 
   private boolean showToast;
@@ -41,11 +35,8 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     this.screenPainterLarge = createScreenPainter(true, WeatherWidgetProviderLarge.class);
 
     this.showToast = showToast;
-    this.res = activity.getResources();
+    this.formatter = new DataFormatter(activity.getResources());
     this.weatherDataFetcher = new WeatherDataFetcher();
-
-    this.numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
-    this.numberFormat.applyPattern("###.#");
   }
 
   private WidgetScreenPainter createScreenPainter(boolean large, Class<? extends AbstractWidgetProvider> providerClass) {
@@ -102,7 +93,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
     final int color = ColorUtil.byAge(configuration.getColorScheme(), data.getTimestamp());
     final String caption = getCaption(locationName, data);
-    final String text = formatWeatherData(data);
+    final String text = formatter.formatForActivity(data);
 
     updateView(contentView, caption, text, color);
   }
@@ -111,32 +102,6 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
   private String getCaption(String locationName, WeatherData data) {
     return locationName + " - " + sdf.format(data.getTimestamp());
-  }
-
-
-  private String formatWeatherData(WeatherData data) {
-    StringBuilder builder = new StringBuilder();
-    builder.append(res.getString(R.string.temperature)).append(" ");
-    builder.append(numberFormat.format(data.getTemperature())).append("°C");
-    if (data.getInsideTemperature() != null) {
-      builder.append(" / ");
-      builder.append(numberFormat.format(data.getInsideTemperature())).append("°C");
-    }
-    builder.append("\n");
-
-    builder.append(res.getString(R.string.humidity)).append(" ").append(numberFormat.format(data.getHumidity())).append("%");
-    if (data.getInsideHumidity() != null) {
-      builder.append(" / ").append(numberFormat.format(data.getInsideHumidity())).append("%");
-    }
-    if (data.getRain() != null) {
-      builder.append("\n");
-      builder.append(res.getString(R.string.rain_last_hour)).append(" ").append(numberFormat.format(data.getRain())).append(res.getString(R.string.liter));
-    }
-    if (data.getRainToday() != null) {
-      builder.append("\n");
-      builder.append(res.getString(R.string.rain_today)).append(" ").append(numberFormat.format(data.getRainToday())).append(res.getString(R.string.liter));
-    }
-    return builder.toString();
   }
 
   private void updateView(final LocationView view, final String caption, final String text, final int color) {

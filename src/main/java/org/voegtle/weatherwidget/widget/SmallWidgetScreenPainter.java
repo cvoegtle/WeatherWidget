@@ -26,7 +26,7 @@ public class SmallWidgetScreenPainter extends AbstractWidgetScreenPainter {
 
   public void updateData(WeatherData data) {
     if (data != null) {
-      remoteViews.setTextViewText(R.id.weather_small, retrieveFormattedTemperature(data));
+      remoteViews.setTextViewText(R.id.weather_small, formatter.formatTemperature(data));
       remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.getTimestamp()));
     } else {
       remoteViews.setTextColor(R.id.weather_small, ColorUtil.outdatedColor());
