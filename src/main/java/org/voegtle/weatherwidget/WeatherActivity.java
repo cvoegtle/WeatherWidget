@@ -43,7 +43,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
     rainUpdater = new RainUpdater(this);
 
-    configure(preferences);
+    setupLocations();
     configureLocationSymbolColor();
 
     updater = new WeatherDataUpdater(this, configuration);
@@ -53,7 +53,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     updater.startWeatherScheduler(180);
   }
 
-  private void configure(SharedPreferences preferences) {
+  private void setupLocations() {
     for (WeatherLocation location : configuration.getLocations()) {
       addClickHandler(location);
       updateVisibility(location);
@@ -103,6 +103,15 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
   }
 
+  private void updateRainData() {
+    for (WeatherLocation location : configuration.getLocations()) {
+      final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
+      if (locationView.isExpanded()) {
+        rainUpdater.updateRain(locationView, location.getRainDetailsUrl());
+      }
+    }
+  }
+
   private void updateVisibility(WeatherLocation location) {
     boolean show = location.getPreferences().isShowInApp();
     updateVisibility(location.getWeatherViewId(), show);
@@ -146,6 +155,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
   @Override
   protected void onResume() {
     super.onResume();
+    updateRainData();
     updater.updateWeatherOnce(false);
     startWeatherUpdater();
   }
@@ -183,7 +193,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
     readConfiguration(preferences);
-    configure(preferences);
+    setupLocations();
     updater.stopWeatherScheduler();
     updater = new WeatherDataUpdater(this, configuration);
   }
