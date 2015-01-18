@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import org.voegtle.weatherwidget.R;
 
 public class WeatherPreferenceFragment extends PreferenceFragment {
@@ -22,19 +23,21 @@ public class WeatherPreferenceFragment extends PreferenceFragment {
     addBuildInformation(getVersionNotice());
   }
 
-  private void addBuildInformation(Preference versionNotice) {
-    String summary = versionNotice.getSummary().toString();
-    summary = summary.replace(PLACEHOLDER_VERSION, versionName);
-    summary = summary.replace(PLACEHOLDER_BUILD, Integer.toString(buildNumber));
-    versionNotice.setSummary(summary);
+  private void addBuildInformation(PreferenceScreen appInfoScreen) {
+    String versionInfo = appInfoScreen.getSummary().toString();
+    versionInfo = versionInfo.replace(PLACEHOLDER_VERSION, versionName);
+    versionInfo = versionInfo.replace(PLACEHOLDER_BUILD, Integer.toString(buildNumber));
+    appInfoScreen.setSummary(versionInfo);
+
+    appInfoScreen.getPreference(0).setTitle(versionInfo);
   }
 
 
-  private Preference getVersionNotice() {
+  private PreferenceScreen getVersionNotice() {
     int lastIndex = getPreferenceScreen().getPreferenceCount() - 1;
 
     PreferenceCategory versionCategory = (PreferenceCategory) getPreferenceScreen().getPreference(lastIndex);
-    return versionCategory.getPreference(0);
+    return (PreferenceScreen) versionCategory.getPreference(0);
   }
 
   private void readVersionInformationFromAndroidManifest() {

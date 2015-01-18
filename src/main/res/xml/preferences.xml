@@ -97,9 +97,28 @@
   <PreferenceCategory
           android:title="@string/version_info"
           android:key="settings_version">
-    <Preference android:key="version"
-                android:title="@string/app_name"
-                android:summary="@string/version"/>
+    <PreferenceScreen android:key="version"
+                      android:title="@string/app_details"
+                      android:summary="@string/version">
+      <Preference android:title="@string/version"
+                  android:summary="@string/app_author"/>
+      <Preference android:title="@string/send_message"
+                  android:summary="@string/send_mail">
+        <intent android:action="android.intent.action.SENDTO"
+                android:data="mailto:christian@voegtle.org"/>
+      </Preference>
+      <Preference android:title="@string/view_website"
+                  android:summary="@string/www_voegtle_org">
+        <intent android:action="android.intent.action.VIEW"
+                android:data="http://www.voegtle.org/~christian"/>
+      </Preference>
+      <Preference android:title="@string/sourcecode"
+                  android:summary="@string/on_github">
+        <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/cvoegtle/WeatherWidget"/>
+      </Preference>
+
+    </PreferenceScreen>
   </PreferenceCategory>
 
 </PreferenceScreen>

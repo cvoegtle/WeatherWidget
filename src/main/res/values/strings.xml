@@ -45,7 +45,7 @@
   <string name="action_diagrams">Diagramme</string>
   <string name="settings">Einstellungen</string>
   <string name="version">Version {v} Build {b}</string>
-  <string name="version_info">Versionshinweis</string>
+  <string name="version_info">Info zur App</string>
   <string name="rain_yesterday">Regen gestern:</string>
   <string name="rain_last_week">Regen letzte Woche:</string>
   <string name="rain_30_days">Regen letzte 30 Tage:</string>
@@ -65,4 +65,12 @@
   <string name="theme_summary">App wirklich beenden, damit das neue Schema wirksam wird</string>
   <string name="weather_as_notification_summary">Wetterdaten als Notification anzeigen</string>
   <string name="secret_summary">damit sieht man mehr</string>
+  <string name="app_details">Details zu Wetter Wolke</string>
+  <string name="app_author">von Christian Vögtle</string>
+  <string name="send_message">Nachricht an Christian</string>
+  <string name="sourcecode">Sourcecode</string>
+  <string name="on_github">https://github.com/cvoegtle/WeatherWidget</string>
+  <string name="send_mail">als E-Mail schicken</string>
+  <string name="view_website">Christians Website</string>
+  <string name="www_voegtle_org">http://www.voegtle.org/~christian</string>
 </resources>
