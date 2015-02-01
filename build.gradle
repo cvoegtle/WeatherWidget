@@ -46,7 +46,6 @@ android {
             debuggable false
             jniDebuggable false
             signingConfig signingConfigs.cvoegtle
-            minifyEnabled false
             zipAlignEnabled true
             minifyEnabled true
         }

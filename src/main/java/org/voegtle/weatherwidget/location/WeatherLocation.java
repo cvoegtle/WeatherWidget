@@ -7,6 +7,7 @@ public class WeatherLocation {
   private LocationIdentifier key;
   private String name;
   private String shortName;
+  private String identifier;
   private Uri forecastUrl;
   private Uri rainDetailsUrl;
   private int weatherViewId;
@@ -111,5 +112,13 @@ public class WeatherLocation {
 
   public int getWeatherLineId() {
     return weatherLineId;
+  }
+
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
   }
 }

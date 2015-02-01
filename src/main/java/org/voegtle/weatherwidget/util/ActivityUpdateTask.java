@@ -52,7 +52,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
   @Override
   protected HashMap<LocationIdentifier, WeatherData> doInBackground(Void... voids) {
-    return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getSecret());
+    return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getLocations(), configuration.getSecret());
   }
 
   @Override

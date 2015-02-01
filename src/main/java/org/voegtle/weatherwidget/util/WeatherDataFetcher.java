@@ -14,14 +14,14 @@ import org.json.JSONObject;
 import org.voegtle.weatherwidget.data.RainData;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
+import org.voegtle.weatherwidget.location.WeatherLocation;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class WeatherDataFetcher {
 
@@ -30,15 +30,12 @@ public class WeatherDataFetcher {
 
 
   @SuppressWarnings("deprecation")
-  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer(String secret) {
+  public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer(List<WeatherLocation> locations, String secret) {
     HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<>();
-    String urlEncodedSecret = null;
-    try {
-      urlEncodedSecret = URLEncoder.encode(secret, "UTF-8");
-    } catch (UnsupportedEncodingException ignore) {
-    }
+    String urlEncodedSecret = StringUtil.urlEncode(secret);
+    String locationIdenfiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("http://tegelwetter.appspot.com/weatherstation/query?type=all&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + locationIdenfiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -55,6 +52,17 @@ public class WeatherDataFetcher {
       }
     }
     return resultList;
+  }
+
+  private String concatenateLocations(List<WeatherLocation> locations) {
+    StringBuilder sb = new StringBuilder();
+    for (WeatherLocation location : locations) {
+      if (sb.length() > 0) {
+        sb.append(",");
+      }
+      sb.append(location.getIdentifier());
+    }
+    return sb.toString();
   }
 
   @SuppressWarnings("deprecation")

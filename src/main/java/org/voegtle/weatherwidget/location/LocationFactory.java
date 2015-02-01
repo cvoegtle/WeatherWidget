@@ -9,11 +9,12 @@ import java.util.List;
 
 public class LocationFactory {
   static public List<WeatherLocation> buildWeatherLocations(Resources res) {
-    ArrayList<WeatherLocation> locations = new ArrayList<WeatherLocation>();
+    ArrayList<WeatherLocation> locations = new ArrayList<>();
 
     WeatherLocation paderborn = new WeatherLocation(LocationIdentifier.Paderborn);
     paderborn.setName(res.getString(R.string.city_paderborn_full));
     paderborn.setShortName(res.getString(R.string.city_paderborn));
+    paderborn.setIdentifier("tegelweg8");
     paderborn.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"));
     paderborn.setRainDetailsUrl(Uri.parse("http://tegelwetter.appspot.com/weatherstation/query?type=rain"));
     paderborn.setWeatherLineId(R.id.line_paderborn);
@@ -27,6 +28,7 @@ public class LocationFactory {
     WeatherLocation bonn = new WeatherLocation(LocationIdentifier.Bonn);
     bonn.setName(res.getString(R.string.city_bonn_full));
     bonn.setShortName(res.getString(R.string.city_bonn));
+    bonn.setIdentifier("forstweg17");
     bonn.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=105170&wahl=vorhersage"));
     bonn.setRainDetailsUrl(Uri.parse("http://forstwetter.appspot.com/weatherstation/query?type=rain"));
     bonn.setWeatherLineId(R.id.line_bonn);
@@ -40,6 +42,7 @@ public class LocationFactory {
     WeatherLocation freiburg = new WeatherLocation(LocationIdentifier.Freiburg);
     freiburg.setName(res.getString(R.string.city_freiburg_full));
     freiburg.setShortName(res.getString(R.string.city_freiburg));
+    freiburg.setIdentifier("ochsengasse");
     freiburg.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=108030&wahl=vorhersage"));
     freiburg.setRainDetailsUrl(Uri.parse("http://oxenwetter.appspot.com/weatherstation/query?type=rain"));
     freiburg.setWeatherLineId(R.id.line_freiburg);
