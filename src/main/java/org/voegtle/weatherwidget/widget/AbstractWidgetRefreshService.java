@@ -51,7 +51,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
     ensureResources();
 
     ComponentName thisWidget = new ComponentName(this, getWidgetProviderClass());
-    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews,
         configuration.getLocations(), isDetailed());

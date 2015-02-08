@@ -36,6 +36,7 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
       remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.updateColor());
       remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.updateColor());
     }
+    remoteViews.setTextColor(R.id.update_time, ColorUtil.updateColor());
     updateAllWidgets();
   }
 
@@ -59,6 +60,7 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
   private void updateUpdateTime() {
     DateFormat df = new SimpleDateFormat("HH:mm");
     remoteViews.setTextViewText(R.id.update_time, df.format(new Date()));
+    remoteViews.setTextColor(R.id.update_time, ColorUtil.byAge(new Date()));
   }
 
   private boolean visualizeData(WeatherLocation location, WeatherData data) {

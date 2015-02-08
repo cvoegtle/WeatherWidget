@@ -12,7 +12,11 @@ public enum DiagramEnum {
 
   freiburg_2days(8, "http://wetterimages.appspot.com/weatherstation/image?oid=7&zx=1geb1qiwcx3b"),
   freiburg_year(9, "http://wetterimages.appspot.com/weatherstation/image?oid=16&zx=v9yov3sfksqb"),
-  freiburg_lastyear(10, "http://wetterimages.appspot.com/weatherstation/image?oid=25&zx=3l67kc4xl7vx");
+  freiburg_lastyear(10, "http://wetterimages.appspot.com/weatherstation/image?oid=25&zx=3l67kc4xl7vx"),
+
+  bonn_2days(11, "http://wetterimages.appspot.com/weatherstation/image?oid=29&zx=uf33j7c2qrmv"),
+  bonn_year(12, "http://wetterimages.appspot.com/weatherstation/image?oid=30&zx=8m9h7ygvo9cp"),
+  bonn_lastyear(13, "http://wetterimages.appspot.com/weatherstation/image?oid=28&zx=bmqfp6za64c3");
 
   private String url;
   private int id;

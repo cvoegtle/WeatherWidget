@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import org.voegtle.weatherwidget.base.ThemedActivity;
+import org.voegtle.weatherwidget.diagram.BonnDiagramActivity;
 import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity;
 import org.voegtle.weatherwidget.diagram.MainDiagramActivity;
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity;
@@ -85,6 +86,9 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
         switch (view.getId()) {
           case R.id.weather_paderborn:
             startActivity(new Intent(WeatherActivity.this, PaderbornDiagramActivity.class));
+            break;
+          case R.id.weather_bonn:
+            startActivity(new Intent(WeatherActivity.this, BonnDiagramActivity.class));
             break;
           case R.id.weather_freiburg:
             startActivity(new Intent(WeatherActivity.this, FreiburgDiagramActivity.class));
