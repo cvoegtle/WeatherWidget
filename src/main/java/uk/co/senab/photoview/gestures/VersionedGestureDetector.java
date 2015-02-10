@@ -17,16 +17,26 @@ package uk.co.senab.photoview.gestures;
  *******************************************************************************/
 
 import android.content.Context;
+import android.os.Build;
 
 public final class VersionedGestureDetector {
 
-  public static GestureDetector newInstance(Context context,
-                                            OnGestureListener listener) {
-    GestureDetector detector = new FroyoGestureDetector(context);
+    public static GestureDetector newInstance(Context context,
+                                              OnGestureListener listener) {
+        final int sdkVersion = Build.VERSION.SDK_INT;
+        GestureDetector detector;
 
-    detector.setOnGestureListener(listener);
+        if (sdkVersion < Build.VERSION_CODES.ECLAIR) {
+            detector = new CupcakeGestureDetector(context);
+        } else if (sdkVersion < Build.VERSION_CODES.FROYO) {
+            detector = new EclairGestureDetector(context);
+        } else {
+            detector = new FroyoGestureDetector(context);
+        }
 
-    return detector;
-  }
+        detector.setOnGestureListener(listener);
+
+        return detector;
+    }
 
 }
