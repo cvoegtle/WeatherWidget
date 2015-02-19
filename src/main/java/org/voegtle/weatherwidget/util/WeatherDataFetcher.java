@@ -33,17 +33,18 @@ public class WeatherDataFetcher {
   public HashMap<LocationIdentifier, WeatherData> fetchAllWeatherDataFromServer(List<WeatherLocation> locations, String secret) {
     HashMap<LocationIdentifier, WeatherData> resultList = new HashMap<>();
     String urlEncodedSecret = StringUtil.urlEncode(secret);
-    String locationIdenfiers = concatenateLocations(locations);
+    String locationIdentifiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + locationIdenfiers + "&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
         JSONArray weatherList = new JSONArray(jsonWeather);
         for (int i = 0; i < weatherList.length(); i++) {
           JSONObject weather = weatherList.getJSONObject(i);
-          WeatherData data = getWeatherData(weather);
-          if (data != null) {
+          LocationIdentifier identifier = getLocationIdentifier(locations, weather);
+          if (identifier != null) {
+            WeatherData data = parseWeatherData(identifier, weather);
             resultList.put(data.getLocation(), data);
           }
         }
@@ -60,7 +61,9 @@ public class WeatherDataFetcher {
       if (sb.length() > 0) {
         sb.append(",");
       }
-      sb.append(location.getIdentifier());
+      if (location.isActive()) {
+        sb.append(location.getIdentifier());
+      }
     }
     return sb.toString();
   }
@@ -82,8 +85,19 @@ public class WeatherDataFetcher {
     return data;
   }
 
+  private LocationIdentifier getLocationIdentifier(List<WeatherLocation> locations, JSONObject weather) {
+    String id = weather.optString("id");
+    for (WeatherLocation location : locations) {
+      if (location.getIdentifier().equals(id)) {
+        return location.getKey();
+      }
+    }
+    return null;
+  }
+
+
   private WeatherData getWeatherData(JSONObject weather) throws JSONException {
-    LocationIdentifier locationIdentifier = LocationIdentifier.getByString(weather.optString("location"));
+    LocationIdentifier locationIdentifier = LocationIdentifier.getByString(weather.optString("id"));
 
     if (locationIdentifier == null) {
       return null;
@@ -92,6 +106,7 @@ public class WeatherDataFetcher {
     }
   }
 
+  @SuppressWarnings("deprecation")
   private WeatherData parseWeatherData(LocationIdentifier locationIdentifier, JSONObject weather) throws JSONException {
     WeatherData data = new WeatherData(locationIdentifier);
 

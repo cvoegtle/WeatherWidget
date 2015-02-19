@@ -46,8 +46,10 @@ public class WeatherSettingsReader {
   private List<WeatherLocation> readLocations(SharedPreferences preferences) {
     List<WeatherLocation> locations = LocationFactory.buildWeatherLocations(resources);
     for (WeatherLocation location : locations) {
-      LocationPreferences locationPreferences = new LocationPreferences(getBoolean(preferences, location.getPrefShowInWidget()),
-          getBoolean(preferences, location.getPrefShowInApp()),
+      boolean visibleByDefault = location.isVisibleByDefault();
+      LocationPreferences locationPreferences = new LocationPreferences(
+          getBoolean(preferences, location.getPrefShowInWidget(), visibleByDefault),
+          getBoolean(preferences, location.getPrefShowInApp(), visibleByDefault),
           getBoolean(preferences, location.getPrefAlert(), false));
       location.setPreferences(locationPreferences);
     }
@@ -58,10 +60,6 @@ public class WeatherSettingsReader {
   private Integer getInteger(SharedPreferences preferences, String key, int defaultValue) {
     String value = preferences.getString(key, Integer.toString(defaultValue));
     return Integer.valueOf(value);
-  }
-
-  private boolean getBoolean(SharedPreferences preferences, String key) {
-    return getBoolean(preferences, key, true);
   }
 
   private boolean getBoolean(SharedPreferences preferences, String key, boolean defaultValue) {

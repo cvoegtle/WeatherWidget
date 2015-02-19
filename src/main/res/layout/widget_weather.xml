@@ -73,6 +73,30 @@
               android:layout_alignParentLeft="true"
               android:text="@string/city_freiburg"/>
   </LinearLayout>
+  <LinearLayout android:id="@+id/line_mobil"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/line_freiburg"
+                android:paddingLeft="2dp"
+                android:orientation="horizontal">
+    <TextView android:id="@+id/rain_indicator_mobil"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="2dp"
+              android:textColor="#ffffff"
+              android:textSize="11sp"
+              android:text="@string/big_dot"/>
+    <TextView android:id="@+id/weather_mobil"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="2dp"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="11sp"
+              android:layout_alignParentLeft="true"
+              android:text="@string/city_mobil"/>
+  </LinearLayout>
   <TextView android:id="@+id/update_time"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"

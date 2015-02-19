@@ -6,13 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
@@ -44,8 +42,7 @@ public class NotificationSystemManager {
     this.configuration = configuration;
     this.res = context.getResources();
     this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-    this.stationCheck = new WeatherStationCheck(preferences);
+    this.stationCheck = new WeatherStationCheck(configuration);
     this.numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
     this.numberFormat.applyPattern("###.#");
   }

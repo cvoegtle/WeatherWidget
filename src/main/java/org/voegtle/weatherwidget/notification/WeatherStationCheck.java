@@ -1,8 +1,9 @@
 package org.voegtle.weatherwidget.notification;
 
-import android.content.SharedPreferences;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
+import org.voegtle.weatherwidget.location.WeatherLocation;
+import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,30 +12,22 @@ import java.util.List;
 
 public class WeatherStationCheck {
   private static int THRESHOLD = 20 * 60 * 1000; // 20 min
-  boolean alertPaderborn;
-  boolean alertFreiburg;
-  boolean alertBonn;
+  private final ApplicationSettings configuration;
 
   List<WeatherAlert> alerts = new ArrayList<>();
 
-  public WeatherStationCheck(SharedPreferences preferences) {
-    alertPaderborn = preferences.getBoolean("alert_paderborn", false);
-    alertFreiburg = preferences.getBoolean("alert_freiburg", false);
-    alertBonn = preferences.getBoolean("alert_bonn", false);
+  public WeatherStationCheck(ApplicationSettings configuration) {
+    this.configuration = configuration;
   }
 
   public List<WeatherAlert> checkForOverdueStations(HashMap<LocationIdentifier, WeatherData> data) {
     alerts.clear();
-    if (alertPaderborn) {
-      buildAlert(data.get(LocationIdentifier.Paderborn));
+    for (WeatherLocation location : configuration.getLocations()) {
+      if (location.getPreferences().isAlertActive()) {
+        buildAlert(data.get(location.getKey()));
+      }
     }
 
-    if (alertFreiburg) {
-      buildAlert(data.get(LocationIdentifier.Freiburg));
-    }
-    if (alertBonn) {
-      buildAlert(data.get(LocationIdentifier.Bonn));
-    }
     return alerts;
   }
 

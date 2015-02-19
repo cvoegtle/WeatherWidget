@@ -30,6 +30,13 @@
                                                        android:paddingBottom="9dp"
                                                        weather:diagrams="true"
                                                        weather:caption="@string/city_freiburg_full"/>
+      <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_mobil"
+                                                       android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
+                                                       android:paddingBottom="9dp"
+                                                       weather:diagrams="false"
+                                                       weather:forecast="false"
+                                                       weather:caption="@string/city_mobil_full"/>
 
       <Button android:id="@+id/button_compare_freiburg_paderborn_bonn"
               android:layout_width="fill_parent"

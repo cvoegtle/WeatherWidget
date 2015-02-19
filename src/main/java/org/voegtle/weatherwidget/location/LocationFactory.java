@@ -53,6 +53,20 @@ public class LocationFactory {
     freiburg.setPrefAlert("alert_freiburg");
     locations.add(freiburg);
 
+    WeatherLocation mobil = new WeatherLocation(LocationIdentifier.Mobil);
+    mobil.setName(res.getString(R.string.city_mobil_full));
+    mobil.setShortName(res.getString(R.string.city_mobil));
+    mobil.setIdentifier("instant");
+    mobil.setRainDetailsUrl(Uri.parse("http://instantwetter.appspot.com/weatherstation/query?type=rain"));
+    mobil.setWeatherLineId(R.id.line_mobil);
+    mobil.setWeatherViewId(R.id.weather_mobil);
+    mobil.setRainIndicatorId(R.id.rain_indicator_mobil);
+    mobil.setPrefShowInApp("app_show_mobil");
+    mobil.setPrefShowInWidget("widget_show_mobil");
+    mobil.setVisibleByDefault(false);
+    mobil.setPrefAlert("alert_mobil");
+    locations.add(mobil);
+
     return locations;
   }
 

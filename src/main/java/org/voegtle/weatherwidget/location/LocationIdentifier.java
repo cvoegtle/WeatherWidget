@@ -1,12 +1,17 @@
 package org.voegtle.weatherwidget.location;
 
 public enum LocationIdentifier {
-  Paderborn, Freiburg, Bonn;
+  Paderborn("tegelweg8"), Freiburg("ochsengasse"), Bonn("forstweg17"), Mobil("mobil");
+  private final String id;
+
+  LocationIdentifier(String id) {
+    this.id = id;
+  }
 
   public static LocationIdentifier getByString(String stringIdentifier) {
-    for (LocationIdentifier id : values()) {
-      if (id.toString().equals(stringIdentifier)) {
-        return id;
+    for (LocationIdentifier identifier : values()) {
+      if (identifier.id.equals(stringIdentifier)) {
+        return identifier;
       }
     }
     return null;

@@ -15,11 +15,16 @@ public class WeatherLocation {
   private String prefShowInWidget;
   private String prefShowInApp;
   private String prefAlert;
+  private boolean visibleByDefault = true;
   private LocationPreferences preferences;
   private int weatherLineId;
 
   public WeatherLocation(LocationIdentifier key) {
     this.key = key;
+  }
+
+  public boolean isActive() {
+    return preferences.isShowInApp() || preferences.isShowInWidget() || preferences.isAlertActive();
   }
 
   public LocationIdentifier getKey() {
@@ -120,5 +125,13 @@ public class WeatherLocation {
 
   public void setIdentifier(String identifier) {
     this.identifier = identifier;
+  }
+
+  public boolean isVisibleByDefault() {
+    return visibleByDefault;
+  }
+
+  public void setVisibleByDefault(boolean visibleByDefault) {
+    this.visibleByDefault = visibleByDefault;
   }
 }

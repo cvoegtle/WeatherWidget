@@ -83,6 +83,27 @@
               android:defaultValue="false"
               />
     </PreferenceScreen>
+
+    <PreferenceScreen
+            android:title="@string/station_mobil"
+            android:key="settings_mobil">
+      <CheckBoxPreference
+              android:key="app_show_mobil"
+              android:title="@string/in_app"
+              android:defaultValue="false"
+              />
+      <CheckBoxPreference
+              android:key="widget_show_mobil"
+              android:title="@string/in_widget"
+              android:defaultValue="false"
+              />
+      <CheckBoxPreference
+              android:key="alert_mobil"
+              android:title="@string/alert"
+              android:defaultValue="false"
+              />
+    </PreferenceScreen>
+
   </PreferenceCategory>
 
   <PreferenceCategory
