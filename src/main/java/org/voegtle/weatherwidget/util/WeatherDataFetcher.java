@@ -42,9 +42,10 @@ public class WeatherDataFetcher {
         JSONArray weatherList = new JSONArray(jsonWeather);
         for (int i = 0; i < weatherList.length(); i++) {
           JSONObject weather = weatherList.getJSONObject(i);
-          LocationIdentifier identifier = getLocationIdentifier(locations, weather);
-          if (identifier != null) {
-            WeatherData data = parseWeatherData(identifier, weather);
+          WeatherLocation location = getLocation(locations, weather);
+          if (location != null) {
+            WeatherData data = parseWeatherData(location.getKey(), weather);
+            parseLocationData(location, weather);
             resultList.put(data.getLocation(), data);
           }
         }
@@ -85,11 +86,11 @@ public class WeatherDataFetcher {
     return data;
   }
 
-  private LocationIdentifier getLocationIdentifier(List<WeatherLocation> locations, JSONObject weather) {
+  private WeatherLocation getLocation(List<WeatherLocation> locations, JSONObject weather) {
     String id = weather.optString("id");
     for (WeatherLocation location : locations) {
       if (location.getIdentifier().equals(id)) {
-        return location.getKey();
+        return location;
       }
     }
     return null;
@@ -139,6 +140,14 @@ public class WeatherDataFetcher {
       data.setRainToday(((Number) rainToday).floatValue());
     }
     return data;
+  }
+
+  private void parseLocationData(WeatherLocation location, JSONObject weather) throws JSONException {
+    String locationName = weather.getString("location");
+    location.setName(locationName);
+
+    String locationShort = weather.getString("location_short");
+    location.setShortName(locationShort);
   }
 
   public RainData fetchRainDataFromUrl(Uri uri) {
