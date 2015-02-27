@@ -25,6 +25,21 @@ public class LocationFactory {
     paderborn.setPrefAlert("alert_paderborn");
     locations.add(paderborn);
 
+    WeatherLocation badLippspringe = new WeatherLocation(LocationIdentifier.BadLippspringe);
+    badLippspringe.setName(res.getString(R.string.city_bali_full));
+    badLippspringe.setShortName(res.getString(R.string.city_bali));
+    badLippspringe.setIdentifier("bali");
+    badLippspringe.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"));
+    badLippspringe.setRainDetailsUrl(Uri.parse("http://baliwetter.appspot.com/weatherstation/query?type=rain"));
+    badLippspringe.setWeatherLineId(R.id.line_bali);
+    badLippspringe.setWeatherViewId(R.id.weather_bali);
+    badLippspringe.setRainIndicatorId(R.id.rain_indicator_bali);
+    badLippspringe.setPrefShowInApp("app_show_bali");
+    badLippspringe.setPrefShowInWidget("widget_show_bali");
+    badLippspringe.setPrefAlert("alert_bali");
+    badLippspringe.setVisibleByDefault(false);
+    locations.add(badLippspringe);
+
     WeatherLocation bonn = new WeatherLocation(LocationIdentifier.Bonn);
     bonn.setName(res.getString(R.string.city_bonn_full));
     bonn.setShortName(res.getString(R.string.city_bonn));

@@ -28,11 +28,34 @@
               android:textSize="11sp"
               android:text="@string/city_paderborn"/>
   </LinearLayout>
-  <LinearLayout android:id="@+id/line_bonn"
+  <LinearLayout android:id="@+id/line_bali"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/line_paderborn"
+                android:paddingLeft="2dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+    <TextView android:id="@+id/rain_indicator_bali"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="2dp"
+              android:textColor="#ffffff"
+              android:textSize="11sp"
+              android:text="@string/big_dot"/>
+    <TextView android:id="@+id/weather_bali"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="11sp"
+              android:text="@string/city_bali"/>
+  </LinearLayout>
+  <LinearLayout android:id="@+id/line_bonn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/line_bali"
                 android:paddingLeft="2dp"
                 android:orientation="horizontal"
                 android:visibility="gone">

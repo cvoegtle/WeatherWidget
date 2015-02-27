@@ -62,7 +62,7 @@
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
   <string name="weather_as_notification">Wetter Notification</string>
-  <string name="stations">Stationen</string>
+  <string name="stations">Messstationen</string>
   <string name="theme">Farbschema</string>
   <string name="theme_summary">App wirklich beenden, damit das neue Schema wirksam wird</string>
   <string name="weather_as_notification_summary">Wetterdaten als Notification anzeigen</string>
@@ -77,4 +77,8 @@
   <string name="www_voegtle_org">http://www.voegtle.org/~christian</string>
   <string name="station_mobil">Mobile Wetterstation</string>
   <string name="action_instant_paderborn">Vergleich mit Paderborn</string>
+  <string name="configure_stations">Messstationen einrichten</string>
+  <string name="station_bali">Wetterstation in Bad Lippspringe</string>
+  <string name="city_bali_full">Bad Lippspringe</string>
+  <string name="city_bali">BaLi</string>
 </resources>

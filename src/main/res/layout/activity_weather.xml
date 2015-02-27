@@ -18,6 +18,13 @@
                                                        android:paddingBottom="9dp"
                                                        weather:caption="@string/city_paderborn_full"
                                                        weather:diagrams="true"/>
+      <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bali"
+                                                       android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
+                                                       android:paddingBottom="9dp"
+                                                       weather:caption="@string/city_bali_full"
+                                                       weather:diagrams="true"
+                                                       weather:forecast="true"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bonn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
