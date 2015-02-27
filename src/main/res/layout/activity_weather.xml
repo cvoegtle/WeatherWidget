@@ -34,7 +34,7 @@
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
                                                        android:paddingBottom="9dp"
-                                                       weather:diagrams="false"
+                                                       weather:diagrams="true"
                                                        weather:forecast="false"
                                                        weather:caption="@string/city_mobil_full"/>
 

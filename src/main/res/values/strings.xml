@@ -76,4 +76,5 @@
   <string name="view_website">Christians Website</string>
   <string name="www_voegtle_org">http://www.voegtle.org/~christian</string>
   <string name="station_mobil">Mobile Wetterstation</string>
+  <string name="action_instant_paderborn">Vergleich mit Paderborn</string>
 </resources>
