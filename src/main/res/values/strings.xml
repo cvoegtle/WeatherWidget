@@ -81,4 +81,6 @@
   <string name="station_bali">Wetterstation in Bad Lippspringe</string>
   <string name="city_bali_full">Bad Lippspringe</string>
   <string name="city_bali">BaLi</string>
+  <string name="action_bali_7days">7 Tage Verlauf</string>
+  <string name="action_bali_paderborn">Vergleich mit Paderborn</string>
 </resources>

@@ -10,6 +10,7 @@ public class BaliDiagramActivity extends DiagramActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    addDiagram((DiagramEnum.bali_7days));
     addDiagram(DiagramEnum.bali_paderborn);
   }
 
