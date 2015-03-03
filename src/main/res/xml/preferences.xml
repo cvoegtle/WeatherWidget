@@ -53,7 +53,7 @@
         <CheckBoxPreference
                 android:key="app_show_bali"
                 android:title="@string/in_app"
-                android:defaultValue="false"
+                android:defaultValue="true"
                 />
         <CheckBoxPreference
                 android:key="widget_show_bali"

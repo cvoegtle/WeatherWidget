@@ -46,10 +46,11 @@ public class WeatherSettingsReader {
   private List<WeatherLocation> readLocations(SharedPreferences preferences) {
     List<WeatherLocation> locations = LocationFactory.buildWeatherLocations(resources);
     for (WeatherLocation location : locations) {
-      boolean visibleByDefault = location.isVisibleByDefault();
+      boolean visibleInWidgetByDefault = location.isVisibleInWidgetByDefault();
+      boolean visibleInAppByDefault = location.isVisibleInAppByDefault();
       LocationPreferences locationPreferences = new LocationPreferences(
-          getBoolean(preferences, location.getPrefShowInWidget(), visibleByDefault),
-          getBoolean(preferences, location.getPrefShowInApp(), visibleByDefault),
+          getBoolean(preferences, location.getPrefShowInWidget(), visibleInWidgetByDefault),
+          getBoolean(preferences, location.getPrefShowInApp(), visibleInAppByDefault),
           getBoolean(preferences, location.getPrefAlert(), false));
       location.setPreferences(locationPreferences);
     }

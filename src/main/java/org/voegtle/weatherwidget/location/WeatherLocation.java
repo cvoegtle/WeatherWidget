@@ -15,7 +15,8 @@ public class WeatherLocation {
   private String prefShowInWidget;
   private String prefShowInApp;
   private String prefAlert;
-  private boolean visibleByDefault = true;
+  private boolean visibleInAppByDefault = true;
+  private boolean visibleInWidgetByDefault = true;
   private LocationPreferences preferences;
   private int weatherLineId;
 
@@ -127,11 +128,19 @@ public class WeatherLocation {
     this.identifier = identifier;
   }
 
-  public boolean isVisibleByDefault() {
-    return visibleByDefault;
+  public boolean isVisibleInAppByDefault() {
+    return visibleInAppByDefault;
   }
 
-  public void setVisibleByDefault(boolean visibleByDefault) {
-    this.visibleByDefault = visibleByDefault;
+  public void setVisibleInAppByDefault(boolean visibleInAppByDefault) {
+    this.visibleInAppByDefault = visibleInAppByDefault;
+  }
+
+  public boolean isVisibleInWidgetByDefault() {
+    return visibleInWidgetByDefault;
+  }
+
+  public void setVisibleInWidgetByDefault(boolean visibleInWidgetByDefault) {
+    this.visibleInWidgetByDefault = visibleInWidgetByDefault;
   }
 }

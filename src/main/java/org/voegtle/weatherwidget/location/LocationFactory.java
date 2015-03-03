@@ -37,7 +37,8 @@ public class LocationFactory {
     badLippspringe.setPrefShowInApp("app_show_bali");
     badLippspringe.setPrefShowInWidget("widget_show_bali");
     badLippspringe.setPrefAlert("alert_bali");
-    badLippspringe.setVisibleByDefault(false);
+    badLippspringe.setVisibleInAppByDefault(true);
+    badLippspringe.setVisibleInWidgetByDefault(false);
     locations.add(badLippspringe);
 
     WeatherLocation bonn = new WeatherLocation(LocationIdentifier.Bonn);
@@ -78,7 +79,8 @@ public class LocationFactory {
     mobil.setRainIndicatorId(R.id.rain_indicator_mobil);
     mobil.setPrefShowInApp("app_show_mobil");
     mobil.setPrefShowInWidget("widget_show_mobil");
-    mobil.setVisibleByDefault(false);
+    mobil.setVisibleInAppByDefault(false);
+    mobil.setVisibleInWidgetByDefault(false);
     mobil.setPrefAlert("alert_mobil");
     locations.add(mobil);
 
