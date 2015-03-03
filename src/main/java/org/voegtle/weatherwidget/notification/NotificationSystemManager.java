@@ -135,21 +135,28 @@ public class NotificationSystemManager {
     StringBuilder weatherText = new StringBuilder();
 
     for (WeatherLocation location : configuration.getLocations()) {
-      WeatherData weatherData = data.get(location.getKey());
-      if (weatherData != null) {
-        weatherText.append(location.getShortName());
-        weatherText.append(": ");
-        weatherText.append(numberFormat.format(weatherData.getTemperature())).append("°C, ");
-        if (weatherData.getInsideTemperature() != null) {
-          weatherText.append(numberFormat.format(weatherData.getInsideTemperature())).append("°C");
-        } else {
-          weatherText.append(numberFormat.format(weatherData.getHumidity())).append("%");
+      if (location.getPreferences().isShowInWidget()) {
+        WeatherData weatherData = data.get(location.getKey());
+        if (weatherData != null) {
+          describeLocation(weatherText, location, weatherData);
+          weatherText.append(" | ");
         }
-        weatherText.append(" | ");
       }
     }
 
     return weatherText.substring(0, weatherText.length() - 3);
+  }
+
+  private void describeLocation(StringBuilder weatherText, WeatherLocation location, WeatherData weatherData) {
+    weatherText.append(location.getShortName());
+    weatherText.append(": ");
+    weatherText.append(numberFormat.format(weatherData.getTemperature())).append("°C");
+    if (weatherData.getInsideTemperature() != null) {
+      weatherText.append(", ").append(numberFormat.format(weatherData.getInsideTemperature())).append("°C");
+    }
+    if (weatherData.getRainToday() != null) {
+      weatherText.append(", ").append(numberFormat.format(weatherData.getRainToday())).append("l");
+    }
   }
 
 
