@@ -26,8 +26,11 @@ public class BaliDiagramActivity extends DiagramActivity {
   @Override
   protected boolean onCustomItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_bali_paderborn:
+      case R.id.action_bali_7days:
         viewPager.setCurrentItem(0, true);
+        break;
+      case R.id.action_bali_paderborn:
+        viewPager.setCurrentItem(1, true);
         return true;
     }
     return false;
