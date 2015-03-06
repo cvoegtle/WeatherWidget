@@ -28,8 +28,7 @@ public class DiagramFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.diagramManager = new DiagramManager(this);
-    diagramId = DiagramEnum.byId(getArguments().getInt(DiagramEnum.class.getName(), -1));
+    ensureResources();
   }
 
   @Override
@@ -40,6 +39,7 @@ public class DiagramFragment extends Fragment {
   @Override
   public void onResume() {
     super.onResume();
+    ensureResources();
     diagramManager.onResume();
     diagramManager.updateDiagram(diagramId);
   }
@@ -49,6 +49,14 @@ public class DiagramFragment extends Fragment {
     diagramManager.onPause();
     super.onPause();
   }
+
+  private void ensureResources() {
+    if (diagramManager == null) {
+      this.diagramManager = new DiagramManager(this);
+      diagramId = DiagramEnum.byId(getArguments().getInt(DiagramEnum.class.getName(), -1));
+    }
+  }
+
 
   public void reload() {
     diagramManager.updateDiagram(diagramId, true);
