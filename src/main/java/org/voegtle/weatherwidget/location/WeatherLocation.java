@@ -9,7 +9,7 @@ public class WeatherLocation {
   private String shortName;
   private String identifier;
   private Uri forecastUrl;
-  private Uri rainDetailsUrl;
+  private Uri statisticsUrl;
   private int weatherViewId;
   private int rainIndicatorId;
   private String prefShowInWidget;
@@ -96,12 +96,12 @@ public class WeatherLocation {
     this.preferences = preferences;
   }
 
-  public Uri getRainDetailsUrl() {
-    return rainDetailsUrl;
+  public Uri getStatisticsUrl() {
+    return statisticsUrl;
   }
 
-  public void setRainDetailsUrl(Uri rainDetailsUrl) {
-    this.rainDetailsUrl = rainDetailsUrl;
+  public void setStatisticsUrl(Uri statisticsUrl) {
+    this.statisticsUrl = statisticsUrl;
   }
 
   public int getRainIndicatorId() {

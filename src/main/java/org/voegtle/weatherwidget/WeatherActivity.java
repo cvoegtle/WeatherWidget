@@ -70,7 +70,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
       @Override
       public void onClick(View view) {
         if (locationView.isExpanded()) {
-          rainUpdater.updateRain(locationView, location.getRainDetailsUrl());
+          rainUpdater.updateRain(locationView, location.getStatisticsUrl());
         } else {
           rainUpdater.clearState(locationView);
         }
@@ -114,7 +114,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     for (WeatherLocation location : configuration.getLocations()) {
       final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
       if (locationView.isExpanded()) {
-        rainUpdater.updateRain(locationView, location.getRainDetailsUrl());
+        rainUpdater.updateRain(locationView, location.getStatisticsUrl());
       }
     }
   }
@@ -141,7 +141,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
   private void updateState(WeatherLocation location) {
     final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
-    rainUpdater.setupRain(locationView, location.getRainDetailsUrl());
+    rainUpdater.setupRain(locationView, location.getStatisticsUrl());
   }
 
 

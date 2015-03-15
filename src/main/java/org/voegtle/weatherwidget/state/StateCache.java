@@ -9,7 +9,7 @@ public class StateCache {
   private final static String STATE_CACHE = "STATE";
   private final static String STATE_AGE = "AGE";
   private final static String STATE = "STATE";
-  private final static String RAIN_DATA = "RAINDATA";
+  private final static String STATISTICS = "STATISTICS";
 
   private final SharedPreferences statePreferences;
 
@@ -24,7 +24,7 @@ public class StateCache {
       state.setAge(new Date(age));
     }
     state.setExpanded(statePreferences.getBoolean(getKey(STATE, id), false));
-    state.setRainData(statePreferences.getString(getKey(RAIN_DATA, id), ""));
+    state.setStatistics(statePreferences.getString(getKey(STATISTICS, id), ""));
 
     return state;
   }
@@ -33,11 +33,12 @@ public class StateCache {
     SharedPreferences.Editor editor = statePreferences.edit();
     editor.putLong(getKey(STATE_AGE, state.getId()), state.getAge().getTime());
     editor.putBoolean(getKey(STATE, state.getId()), state.isExpanded());
-    editor.putString(getKey(RAIN_DATA, state.getId()), state.getRainData());
+    editor.putString(getKey(STATISTICS, state.getId()), state.getStatistics());
     editor.commit();
   }
 
   private String getKey(String prefix, int id) {
     return prefix + id;
   }
+
 }

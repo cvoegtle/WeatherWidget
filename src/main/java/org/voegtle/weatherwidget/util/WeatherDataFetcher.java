@@ -11,7 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.voegtle.weatherwidget.data.RainData;
+import org.voegtle.weatherwidget.data.Statistics;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
@@ -150,48 +150,15 @@ public class WeatherDataFetcher {
     location.setShortName(locationShort);
   }
 
-  public RainData fetchRainDataFromUrl(Uri uri) {
-    String jsonWeather = getStringFromUrl(uri.toString());
+  public Statistics fetchStatisticsFromUrl(Uri uri) {
+    String jsonStatistics = getStringFromUrl(uri.toString());
     try {
-      JSONObject rain = new JSONObject(jsonWeather);
-      return getRainData(rain);
+      return JsonTranslater.toStatistics(jsonStatistics);
     } catch (Throwable e) {
-      Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonWeather + ">", e);
+      Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonStatistics + ">", e);
     }
-    return new RainData();
+    return new Statistics();
   }
-
-  private RainData getRainData(JSONObject rain) throws JSONException {
-    RainData rainData = new RainData();
-
-    Object today = rain.get("today");
-    if (today instanceof Number) {
-      rainData.setRainToday(((Number) today).floatValue());
-    }
-
-    Object lastHour = rain.get("lastHour");
-    if (lastHour instanceof Number) {
-      rainData.setRainLastHour(((Number) lastHour).floatValue());
-    }
-
-    Object yesterday = rain.get("yesterday");
-    if (yesterday instanceof Number) {
-      rainData.setRainYeasterday(((Number) yesterday).floatValue());
-    }
-
-    Object lastWeek = rain.get("lastWeek");
-    if (lastWeek instanceof Number) {
-      rainData.setRainLastWeek(((Number) lastWeek).floatValue());
-    }
-
-    Object last30days = rain.get("last30days");
-    if (last30days instanceof Number) {
-      rainData.setRain30Days(((Number) last30days).floatValue());
-    }
-
-    return rainData;
-  }
-
 
   private String getStringFromUrl(String uri) {
     StringBuilder builder = new StringBuilder();

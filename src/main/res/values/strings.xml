@@ -83,4 +83,11 @@
   <string name="city_bali">BaLi</string>
   <string name="action_bali_7days">7 Tage Verlauf</string>
   <string name="action_bali_paderborn">Vergleich mit Paderborn</string>
+  <string name="rain">Regen</string>
+  <string name="min_temperature">T min</string>
+  <string name="max_temperature">T max</string>
+  <string name="today">Heute</string>
+  <string name="yesterday">Gestern</string>
+  <string name="week">7 Tage</string>
+  <string name="month">30 Tage</string>
 </resources>

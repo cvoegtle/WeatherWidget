@@ -8,7 +8,7 @@ public class State {
   private int id;
   private boolean expanded;
   private Date age;
-  private String rainData;
+  private String statistics;
 
   public State(int id) {
     this.id = id;
@@ -43,11 +43,11 @@ public class State {
     this.age = age;
   }
 
-  public String getRainData() {
-    return rainData;
+  public String getStatistics() {
+    return statistics;
   }
 
-  public void setRainData(String rainData) {
-    this.rainData = rainData;
+  public void setStatistics(String statistics) {
+    this.statistics = statistics;
   }
 }

@@ -6,19 +6,23 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.data.Statistics;
+import org.voegtle.weatherwidget.data.StatisticsSet;
+import org.voegtle.weatherwidget.util.DataFormatter;
 
 public class LocationView extends LinearLayout {
   private final Context context;
   private TextView captionView;
   private TextView dataView;
-  private TextView moreDataView;
   private ImageButton resizeButton;
   private ImageButton diagramButton;
   private ImageButton forecastButton;
+  private GridLayout moreData;
 
   private boolean expanded;
   private Drawable imageExpand;
@@ -36,7 +40,7 @@ public class LocationView extends LinearLayout {
 
     captionView = (TextView) findViewById(R.id.caption);
     dataView = (TextView) findViewById(R.id.data);
-    moreDataView = (TextView) findViewById(R.id.more_data);
+    moreData = (GridLayout) findViewById(R.id.more_data);
 
     imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse);
     imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand);
@@ -118,8 +122,34 @@ public class LocationView extends LinearLayout {
     dataView.setText(data);
   }
 
-  public void setMoreData(String moreData) {
-    moreDataView.setText(moreData);
+  public void setMoreData(Statistics statistics) {
+    StatisticsSet today = statistics.get(Statistics.TimeRange.today);
+    updateStatistics(today, R.id.today_rain, R.id.today_min_temperature, R.id.today_max_temperature);
+
+    StatisticsSet yesterday = statistics.get(Statistics.TimeRange.yesterday);
+    updateStatistics(yesterday, R.id.yesterday_rain, R.id.yesterday_min_temperature, R.id.yesterday_max_temperature);
+
+    StatisticsSet week = statistics.get(Statistics.TimeRange.last7days);
+    updateStatistics(week, R.id.week_rain, R.id.week_min_temperature, R.id.week_max_temperature);
+
+    StatisticsSet month = statistics.get(Statistics.TimeRange.last30days);
+    updateStatistics(month, R.id.month_rain, R.id.month_min_temperature, R.id.month_max_temperature);
+  }
+
+  private void updateStatistics(StatisticsSet stats, int rainId, int minTemperatureId, int maxTemperatureId) {
+    TextView rainView = (TextView) findViewById(rainId);
+    TextView minView = (TextView) findViewById(minTemperatureId);
+    TextView maxView = (TextView) findViewById(maxTemperatureId);
+    if (stats != null) {
+      DataFormatter formatter = new DataFormatter(context.getResources());
+      rainView.setText(formatter.formatRain(stats.getRain()));
+      minView.setText(formatter.formatTemperature(stats.getMinTemperature()));
+      maxView.setText(formatter.formatTemperature(stats.getMaxTemperature()));
+    } else {
+      rainView.setText("");
+      minView.setText("");
+      maxView.setText("");
+    }
   }
 
   public void configureSymbols(boolean useDarkSymbols) {
@@ -146,6 +176,6 @@ public class LocationView extends LinearLayout {
   public void setExpanded(boolean expanded) {
     this.expanded = expanded;
     resizeButton.setImageDrawable(expanded ? imageCollapse : imageExpand);
-    moreDataView.setVisibility(expanded ? View.VISIBLE : View.GONE);
+    moreData.setVisibility(expanded ? View.VISIBLE : View.GONE);
   }
 }
