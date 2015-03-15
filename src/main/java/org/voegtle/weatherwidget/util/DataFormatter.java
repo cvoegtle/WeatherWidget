@@ -1,7 +1,5 @@
 package org.voegtle.weatherwidget.util;
 
-import android.content.res.Resources;
-import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 
@@ -11,39 +9,19 @@ import java.util.Locale;
 
 public class DataFormatter {
   private DecimalFormat numberFormat;
-  private Resources res;
 
   public DataFormatter() {
     this.numberFormat = (DecimalFormat) NumberFormat.getNumberInstance(Locale.GERMANY);
     this.numberFormat.applyPattern("###.#");
   }
 
-  public DataFormatter(Resources res) {
-    this();
-    this.res = res;
-  }
 
-  public String formatForActivity(WeatherData data) {
+  public String formatTemperatureForActivity(WeatherData data) {
     StringBuilder builder = new StringBuilder();
-    builder.append(res.getString(R.string.temperature)).append(" ");
     builder.append(formatTemperature(data.getTemperature()));
     if (data.getInsideTemperature() != null) {
       builder.append(" / ");
       builder.append(formatTemperature(data.getInsideTemperature()));
-    }
-    builder.append("\n");
-
-    builder.append(res.getString(R.string.humidity)).append(" ").append(formatPercent(data.getHumidity()));
-    if (data.getInsideHumidity() != null) {
-      builder.append(" / ").append(formatPercent(data.getInsideHumidity()));
-    }
-    if (data.getRain() != null) {
-      builder.append("\n");
-      builder.append(res.getString(R.string.rain_last_hour)).append(" ").append(formatRain(data.getRain()));
-    }
-    if (data.getRainToday() != null) {
-      builder.append("\n");
-      builder.append(res.getString(R.string.rain_today)).append(" ").append(formatRain(data.getRainToday()));
     }
     return builder.toString();
   }

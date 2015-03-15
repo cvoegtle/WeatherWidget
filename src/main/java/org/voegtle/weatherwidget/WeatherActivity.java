@@ -18,12 +18,12 @@ import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.preferences.WeatherPreferences;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
-import org.voegtle.weatherwidget.util.RainUpdater;
+import org.voegtle.weatherwidget.util.StatisticsUpdater;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
 public class WeatherActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
-  private RainUpdater rainUpdater;
+  private StatisticsUpdater rainUpdater;
   private ApplicationSettings configuration;
 
   @Override
@@ -39,7 +39,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     readConfiguration(preferences);
     preferences.registerOnSharedPreferenceChangeListener(this);
 
-    rainUpdater = new RainUpdater(this);
+    rainUpdater = new StatisticsUpdater(this);
 
     setupLocations();
     configureLocationSymbolColor();

@@ -13,12 +13,12 @@ import android.widget.TextView;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.Statistics;
 import org.voegtle.weatherwidget.data.StatisticsSet;
+import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.util.DataFormatter;
 
 public class LocationView extends LinearLayout {
   private final Context context;
   private TextView captionView;
-  private TextView dataView;
   private ImageButton resizeButton;
   private ImageButton diagramButton;
   private ImageButton forecastButton;
@@ -31,15 +31,18 @@ public class LocationView extends LinearLayout {
   private OnClickListener diagramListener;
   private OnClickListener forecastListener;
 
+  private DataFormatter formatter;
+
+
   public LocationView(Context context, AttributeSet attrs) {
     super(context, attrs);
     this.context = context;
+    formatter = new DataFormatter();
 
     LayoutInflater li = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     li.inflate(R.layout.view_location, this, true);
 
     captionView = (TextView) findViewById(R.id.caption);
-    dataView = (TextView) findViewById(R.id.data);
     moreData = (GridLayout) findViewById(R.id.more_data);
 
     imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse);
@@ -109,8 +112,6 @@ public class LocationView extends LinearLayout {
   private void initializeTextViews(TypedArray attributes) {
     String caption = attributes.getString(R.styleable.LocationView_caption);
     captionView.setText(caption);
-    String data = attributes.getString(R.styleable.LocationView_data);
-    dataView.setText(data);
 
   }
 
@@ -118,8 +119,29 @@ public class LocationView extends LinearLayout {
     captionView.setText(caption);
   }
 
-  public void setData(String data) {
-    dataView.setText(data);
+  public void setData(WeatherData data) {
+    TextView temperature = (TextView) findViewById(R.id.temperature);
+    temperature.setText(formatter.formatTemperatureForActivity(data));
+
+    TextView humidity = (TextView) findViewById(R.id.humidity);
+    humidity.setText(formatter.formatPercent(data.getHumidity()));
+
+    setRainData(data.getRain(), R.id.label_rain_last_hour, R.id.rain_last_hour);
+    setRainData(data.getRainToday(), R.id.label_rain_today, R.id.rain_today);
+  }
+
+  private void setRainData(Float value, int labelId, int dataId) {
+    TextView rainLabel = (TextView) findViewById(labelId);
+    TextView rain = (TextView) findViewById(dataId);
+    if (value != null) {
+      rainLabel.setVisibility(View.VISIBLE);
+      rain.setVisibility(View.VISIBLE);
+      rain.setText(formatter.formatRain(value));
+    } else {
+      rainLabel.setVisibility(View.GONE);
+      rain.setVisibility(View.GONE);
+
+    }
   }
 
   public void setMoreData(Statistics statistics) {
@@ -141,7 +163,6 @@ public class LocationView extends LinearLayout {
     TextView minView = (TextView) findViewById(minTemperatureId);
     TextView maxView = (TextView) findViewById(maxTemperatureId);
     if (stats != null) {
-      DataFormatter formatter = new DataFormatter(context.getResources());
       rainView.setText(formatter.formatRain(stats.getRain()));
       minView.setText(formatter.formatTemperature(stats.getMinTemperature()));
       maxView.setText(formatter.formatTemperature(stats.getMaxTemperature()));

@@ -12,12 +12,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class RainUpdater {
+public class StatisticsUpdater {
   private StateCache stateCache;
 
   private WeatherDataFetcher weatherDataFetcher;
 
-  public RainUpdater(Activity activity) {
+  public StatisticsUpdater(Activity activity) {
     this.stateCache = new StateCache(activity);
 
     this.weatherDataFetcher = new WeatherDataFetcher();

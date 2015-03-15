@@ -22,7 +22,6 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   private final WidgetScreenPainter screenPainter;
   private final WidgetScreenPainter screenPainterLarge;
   private WeatherActivity activity;
-  private DataFormatter formatter;
   private final WeatherDataFetcher weatherDataFetcher;
 
   private boolean showToast;
@@ -35,7 +34,6 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     this.screenPainterLarge = createScreenPainter(true, WeatherWidgetProviderLarge.class);
 
     this.showToast = showToast;
-    this.formatter = new DataFormatter(activity.getResources());
     this.weatherDataFetcher = new WeatherDataFetcher();
   }
 
@@ -93,9 +91,8 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
     final int color = ColorUtil.byAge(configuration.getColorScheme(), data.getTimestamp());
     final String caption = getCaption(locationName, data);
-    final String text = formatter.formatForActivity(data);
 
-    updateView(contentView, caption, text, color);
+    updateView(contentView, caption, data, color);
   }
 
   private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -104,9 +101,9 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     return locationName + " - " + sdf.format(data.getTimestamp());
   }
 
-  private void updateView(final LocationView view, final String caption, final String text, final int color) {
+  private void updateView(final LocationView view, final String caption, final WeatherData data, final int color) {
     view.setCaption(caption);
-    view.setData(text);
+    view.setData(data);
     view.setTextColor(color);
   }
 }
