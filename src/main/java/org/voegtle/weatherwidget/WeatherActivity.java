@@ -23,7 +23,7 @@ import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
 public class WeatherActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
-  private StatisticsUpdater rainUpdater;
+  private StatisticsUpdater statisticsUpdater;
   private ApplicationSettings configuration;
 
   @Override
@@ -39,7 +39,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     readConfiguration(preferences);
     preferences.registerOnSharedPreferenceChangeListener(this);
 
-    rainUpdater = new StatisticsUpdater(this);
+    statisticsUpdater = new StatisticsUpdater(this);
 
     setupLocations();
     configureLocationSymbolColor();
@@ -70,9 +70,9 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
       @Override
       public void onClick(View view) {
         if (locationView.isExpanded()) {
-          rainUpdater.updateRain(locationView, location.getStatisticsUrl());
+          statisticsUpdater.updateStatistics(locationView, location.getStatisticsUrl());
         } else {
-          rainUpdater.clearState(locationView);
+          statisticsUpdater.clearState(locationView);
         }
       }
     });
@@ -110,11 +110,11 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
   }
 
-  private void updateRainData() {
+  private void updateStatistics() {
     for (WeatherLocation location : configuration.getLocations()) {
       final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
       if (locationView.isExpanded()) {
-        rainUpdater.updateRain(locationView, location.getStatisticsUrl());
+        statisticsUpdater.updateStatistics(locationView, location.getStatisticsUrl());
       }
     }
   }
@@ -141,7 +141,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
   private void updateState(WeatherLocation location) {
     final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
-    rainUpdater.setupRain(locationView, location.getStatisticsUrl());
+    statisticsUpdater.setupStatistics(locationView, location.getStatisticsUrl());
   }
 
 
@@ -162,7 +162,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
   @Override
   protected void onResume() {
     super.onResume();
-    updateRainData();
+    updateStatistics();
     updater.updateWeatherOnce(false);
     startWeatherUpdater();
   }

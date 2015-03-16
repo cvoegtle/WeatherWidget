@@ -59,11 +59,7 @@ public class JsonTranslater {
       }
     }
 
-    try {
-      return json.toString(2);
-    } catch (JSONException e) {
-      return "";
-    }
+    return json.toString();
   }
 
   private static JSONObject toJson(StatisticsSet set) throws JSONException {

@@ -15,10 +15,9 @@ public class DateUtil {
     return cal.getTime();
   }
 
-  public static Date getToday() {
+  public static Date getOneHoureBefore() {
     Calendar cal = Calendar.getInstance(Locale.GERMANY);
-    removeTimeFraction(cal);
-
+    cal.add(Calendar.HOUR, -1);
     return cal.getTime();
   }
 
@@ -28,8 +27,6 @@ public class DateUtil {
     cal.set(Calendar.SECOND, 0);
     cal.set(Calendar.MILLISECOND, 0);
   }
-
-
 
 
 }

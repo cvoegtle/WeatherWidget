@@ -24,19 +24,19 @@ public class StatisticsUpdater {
 
   }
 
-  public void setupRain(final LocationView locationView, final Uri uri) {
+  public void setupStatistics(final LocationView locationView, final Uri uri) {
     State state = stateCache.read(locationView.getId());
     locationView.setExpanded(state.isExpanded());
     if (state.isExpanded()) {
       if (state.outdated()) {
-        updateRain(locationView, uri);
+        updateStatistics(locationView, uri);
       } else {
         updateView(locationView, JsonTranslater.toStatistics(state.getStatistics()));
       }
     }
   }
 
-  public void updateRain(final LocationView locationView, final Uri uri) {
+  public void updateStatistics(final LocationView locationView, final Uri uri) {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {

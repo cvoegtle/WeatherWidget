@@ -15,8 +15,8 @@ public class State {
   }
 
   public boolean outdated() {
-    Date today = DateUtil.getToday();
-    return age == null || age.before(today);
+    Date oneHourBefore = DateUtil.getOneHoureBefore();
+    return age == null || age.before(oneHourBefore);
   }
 
   public int getId() {
