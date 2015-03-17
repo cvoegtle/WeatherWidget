@@ -18,6 +18,8 @@ public class Statistics {
     }
   }
 
+  private String id;
+
   private HashMap<TimeRange, StatisticsSet> statistics = new HashMap<>();
 
   public void add(StatisticsSet set) {
@@ -30,5 +32,13 @@ public class Statistics {
 
   public Collection<StatisticsSet> values() {
     return statistics.values();
+  }
+
+  public String getId() {
+    return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 }

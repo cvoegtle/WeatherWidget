@@ -1,11 +1,14 @@
 package org.voegtle.weatherwidget.util;
 
+import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.voegtle.weatherwidget.data.Statistics;
 import org.voegtle.weatherwidget.data.StatisticsSet;
 import org.voegtle.weatherwidget.data.WeatherJSONObject;
+
+import java.util.HashMap;
 
 public class JsonTranslater {
 
@@ -17,12 +20,35 @@ public class JsonTranslater {
     return null;
   }
 
-  public static Statistics toStatistics(String jsonStr) {
+  public static HashMap<String, Statistics> toStatistics(String jsonStr) {
+    HashMap<String, Statistics> statisticsMap = new HashMap<>();
+    try {
+      JSONArray jsonStatistics = new JSONArray(jsonStr);
+      for (int i = 0; i < jsonStatistics.length(); i++) {
+        Statistics stats = toStatistics(jsonStatistics.getJSONObject(i));
+        statisticsMap.put(stats.getId(), stats);
+      }
+    } catch (JSONException e) {
+    }
+    return statisticsMap;
+  }
+
+  public static Statistics toSingleStatistics(String jsonStr) {
+    try {
+      JSONObject json = new JSONObject(jsonStr);
+      return toStatistics(json);
+    } catch (JSONException e) {
+    }
+    return null;
+  }
+
+  private static Statistics toStatistics(JSONObject jsonStatistics) {
     Statistics result = new Statistics();
     try {
-      JSONArray jsonArray = new JSONArray(jsonStr);
-      for (int i = 0; i < jsonArray.length(); i++) {
-        JSONObject json = (JSONObject) jsonArray.get(i);
+      result.setId(jsonStatistics.optString("id"));
+      JSONArray jsonStats = jsonStatistics.getJSONArray("stats");
+      for (int i = 0; i < jsonStats.length(); i++) {
+        JSONObject json = (JSONObject) jsonStats.get(i);
         StatisticsSet statisticsSet = toStatisticsSet(json);
         if (statisticsSet != null) {
           result.add(statisticsSet);
@@ -30,6 +56,7 @@ public class JsonTranslater {
 
       }
     } catch (JSONException ignore) {
+      Log.e("Problem", "Exception parsing server response:", ignore);
     }
     return result;
   }
@@ -50,15 +77,18 @@ public class JsonTranslater {
   }
 
   public static String toString(Statistics statistics) {
-    JSONArray json = new JSONArray();
-    for (StatisticsSet set : statistics.values()) {
-      try {
-        JSONObject jsonObject = toJson(set);
-        json.put(jsonObject);
-      } catch (JSONException ignore) {
-      }
-    }
+    JSONObject json = new WeatherJSONObject();
+    try {
+      json.put("id", statistics.getId());
 
+      JSONArray jsonStats = new JSONArray();
+      for (StatisticsSet set : statistics.values()) {
+        JSONObject jsonObject = toJson(set);
+        jsonStats.put(jsonObject);
+      }
+      json.put("stats", jsonStats);
+    } catch (JSONException ignore) {
+    }
     return json.toString();
   }
 

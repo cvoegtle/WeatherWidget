@@ -1,6 +1,5 @@
 package org.voegtle.weatherwidget.util;
 
-import android.net.Uri;
 import android.util.Log;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -150,10 +149,11 @@ public class WeatherDataFetcher {
     location.setShortName(locationShort);
   }
 
-  public Statistics fetchStatisticsFromUrl(Uri uri) {
-    String jsonStatistics = getStringFromUrl(uri.toString());
+  public Statistics fetchStatisticsFromUrl(String locationId) {
+    String jsonStatistics = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + locationId + "&type=stats");
     try {
-      return JsonTranslater.toStatistics(jsonStatistics);
+      HashMap<String, Statistics> statistics = JsonTranslater.toStatistics(jsonStatistics);
+      return statistics.get(locationId);
     } catch (Throwable e) {
       Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonStatistics + ">", e);
     }

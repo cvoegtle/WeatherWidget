@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.util;
 
 import android.app.Activity;
-import android.net.Uri;
 import org.voegtle.weatherwidget.data.Statistics;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.state.State;
@@ -24,28 +23,28 @@ public class StatisticsUpdater {
 
   }
 
-  public void setupStatistics(final LocationView locationView, final Uri uri) {
+  public void setupStatistics(final LocationView locationView, final String locationId) {
     State state = stateCache.read(locationView.getId());
     locationView.setExpanded(state.isExpanded());
     if (state.isExpanded()) {
       if (state.outdated()) {
-        updateStatistics(locationView, uri);
+        updateStatistics(locationView, locationId);
       } else {
-        updateView(locationView, JsonTranslater.toStatistics(state.getStatistics()));
+        updateView(locationView, JsonTranslater.toSingleStatistics(state.getStatistics()));
       }
     }
   }
 
-  public void updateStatistics(final LocationView locationView, final Uri uri) {
+  public void updateStatistics(final LocationView locationView, final String locationId) {
     final Runnable updater = new Runnable() {
       @Override
       public void run() {
         State state = stateCache.read(locationView.getId());
         if (state.outdated()) {
-          Statistics statistics = weatherDataFetcher.fetchStatisticsFromUrl(uri);
+          Statistics statistics = weatherDataFetcher.fetchStatisticsFromUrl(locationId);
           updateLocation(locationView, statistics);
         } else {
-          updateView(locationView, JsonTranslater.toStatistics(state.getStatistics()));
+          updateView(locationView, JsonTranslater.toSingleStatistics(state.getStatistics()));
         }
       }
     };
