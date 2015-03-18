@@ -18,6 +18,7 @@ import org.voegtle.weatherwidget.location.WeatherLocation;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -149,15 +150,21 @@ public class WeatherDataFetcher {
     location.setShortName(locationShort);
   }
 
-  public Statistics fetchStatisticsFromUrl(String locationId) {
-    String jsonStatistics = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + locationId + "&type=stats");
-    try {
-      HashMap<String, Statistics> statistics = JsonTranslater.toStatistics(jsonStatistics);
-      return statistics.get(locationId);
-    } catch (Throwable e) {
-      Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonStatistics + ">", e);
+  public HashMap<String, Statistics> fetchStatisticsFromUrl(ArrayList<String> locationIds) {
+    if (locationIds.size() > 0) {
+      String concatenatedLocationIds = locationIds.get(0);
+      for (int i = 1; i < locationIds.size(); i++) {
+        concatenatedLocationIds += "," + locationIds.get(i);
+      }
+      String jsonStatistics = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + concatenatedLocationIds + "&type=stats");
+      try {
+        HashMap<String, Statistics> statistics = JsonTranslater.toStatistics(jsonStatistics);
+        return statistics;
+      } catch (Throwable e) {
+        Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonStatistics + ">", e);
+      }
     }
-    return new Statistics();
+    return new HashMap<>();
   }
 
   private String getStringFromUrl(String uri) {

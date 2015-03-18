@@ -21,6 +21,8 @@ import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.util.StatisticsUpdater;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
+import java.util.HashMap;
+
 public class WeatherActivity extends ThemedActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
   private WeatherDataUpdater updater;
   private StatisticsUpdater statisticsUpdater;
@@ -70,7 +72,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
       @Override
       public void onClick(View view) {
         if (locationView.isExpanded()) {
-          statisticsUpdater.updateStatistics(locationView, location.getIdentifier());
+          statisticsUpdater.updateStatistics(locationView, location);
         } else {
           statisticsUpdater.clearState(locationView);
         }
@@ -111,12 +113,14 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
   }
 
   private void updateStatistics() {
+    HashMap<LocationView, WeatherLocation> updateCandidates = new HashMap<>();
     for (WeatherLocation location : configuration.getLocations()) {
       final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
       if (locationView.isExpanded()) {
-        statisticsUpdater.updateStatistics(locationView, location.getIdentifier());
+        updateCandidates.put(locationView, location);
       }
     }
+    statisticsUpdater.updateStatistics(updateCandidates, false);
   }
 
   private void updateVisibility(WeatherLocation location) {
@@ -141,7 +145,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
   private void updateState(WeatherLocation location) {
     final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
-    statisticsUpdater.setupStatistics(locationView, location.getIdentifier());
+    statisticsUpdater.setupStatistics(locationView, location);
   }
 
 
