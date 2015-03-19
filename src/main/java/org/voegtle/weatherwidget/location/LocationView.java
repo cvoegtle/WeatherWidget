@@ -145,6 +145,10 @@ public class LocationView extends LinearLayout {
   }
 
   public void setMoreData(Statistics statistics) {
+    if (statistics == null) {
+      statistics = new Statistics();
+    }
+
     StatisticsSet today = statistics.get(Statistics.TimeRange.today);
     updateStatistics(today, R.id.today_rain, R.id.today_min_temperature, R.id.today_max_temperature);
 

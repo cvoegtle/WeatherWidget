@@ -26,7 +26,7 @@ public class StatisticsUpdater {
 
   }
 
-  public void setupStatistics(final LocationView locationView, final WeatherLocation location) {
+  public void setupStatistics(final LocationView locationView) {
     State state = stateCache.read(locationView.getId());
     locationView.setExpanded(state.isExpanded());
   }
@@ -38,6 +38,7 @@ public class StatisticsUpdater {
   }
 
   public void updateStatistics(final HashMap<LocationView, WeatherLocation> updateCandidates, final boolean forceUpdate) {
+    updateCachedLocations(updateCandidates);
 
     final Runnable updater = new Runnable() {
       @Override
@@ -51,6 +52,7 @@ public class StatisticsUpdater {
     ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     scheduler.schedule(updater, 0, TimeUnit.SECONDS);
   }
+
 
   private void updateLocations(HashMap<LocationView, WeatherLocation> updateCandidates, HashMap<String, Statistics> statistics) {
     for (LocationView locationView : updateCandidates.keySet()) {
@@ -70,17 +72,29 @@ public class StatisticsUpdater {
       if (state.outdated() || forceUpdate) {
         WeatherLocation outdatedLocation = updateCandidates.get(locationView);
         outdatedLocations.add(outdatedLocation.getIdentifier());
-      } else {
-        updateView(locationView, JsonTranslater.toSingleStatistics(state.getStatistics()));
       }
 
     }
     return outdatedLocations;
   }
 
-  private void updateLocation(final LocationView locationView, Statistics statistics) {
-    updateView(locationView, statistics);
-    updateCache(locationView, statistics);
+  private void updateCachedLocations(HashMap<LocationView, WeatherLocation> updateCandidates) {
+    for (LocationView locationView : updateCandidates.keySet()) {
+      State state = stateCache.read(locationView.getId());
+      if (!state.outdated()) {
+        updateView(locationView, JsonTranslater.toSingleStatistics(state.getStatistics()));
+      }
+    }
+  }
+
+  private void updateLocation(final LocationView locationView, final Statistics statistics) {
+    locationView.post(new Runnable() {
+      @Override
+      public void run() {
+        updateView(locationView, statistics);
+        updateCache(locationView, statistics);
+      }
+    });
   }
 
   private void updateCache(LocationView locationView, Statistics statistics) {
@@ -92,12 +106,7 @@ public class StatisticsUpdater {
   }
 
   private void updateView(final LocationView locationView, final Statistics moreData) {
-    locationView.post(new Runnable() {
-      @Override
-      public void run() {
-        locationView.setMoreData(moreData);
-      }
-    });
+    locationView.setMoreData(moreData);
   }
 
   public void clearState(LocationView locationView) {

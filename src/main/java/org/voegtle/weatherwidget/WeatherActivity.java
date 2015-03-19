@@ -145,7 +145,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
   private void updateState(WeatherLocation location) {
     final LocationView locationView = (LocationView) findViewById(location.getWeatherViewId());
-    statisticsUpdater.setupStatistics(locationView, location);
+    statisticsUpdater.setupStatistics(locationView);
   }
 
 

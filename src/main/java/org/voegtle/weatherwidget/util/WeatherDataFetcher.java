@@ -158,8 +158,7 @@ public class WeatherDataFetcher {
       }
       String jsonStatistics = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + concatenatedLocationIds + "&type=stats");
       try {
-        HashMap<String, Statistics> statistics = JsonTranslater.toStatistics(jsonStatistics);
-        return statistics;
+        return JsonTranslater.toStatistics(jsonStatistics);
       } catch (Throwable e) {
         Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonStatistics + ">", e);
       }
@@ -178,7 +177,7 @@ public class WeatherDataFetcher {
       if (statusCode == 200) {
         HttpEntity entity = response.getEntity();
         InputStream content = entity.getContent();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(content));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(content, "ISO-8859-1"));
         String line;
         while ((line = reader.readLine()) != null) {
           builder.append(line);
