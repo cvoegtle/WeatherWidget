@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import org.voegtle.weatherwidget.base.ThemedActivity;
 import org.voegtle.weatherwidget.diagram.*;
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
@@ -96,7 +97,12 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
             startActivity(new Intent(WeatherActivity.this, FreiburgDiagramActivity.class));
             break;
           case R.id.weather_mobil:
-            startActivity(new Intent(WeatherActivity.this, MobilDiagramActivity.class));
+            Intent intent = new Intent(WeatherActivity.this, MobilDiagramActivity.class);
+            WeatherLocation location = configuration.findLocation(LocationIdentifier.Mobil);
+            if (location != null) {
+              intent.putExtra(MobilDiagramActivity.class.getName(), location.getName());
+            }
+            startActivity(intent);
             break;
         }
       }

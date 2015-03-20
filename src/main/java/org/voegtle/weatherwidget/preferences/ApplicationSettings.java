@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.preferences;
 
+import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 
 import java.util.List;
@@ -52,5 +53,14 @@ public class ApplicationSettings {
 
   public void setColorScheme(ColorScheme colorScheme) {
     this.colorScheme = colorScheme;
+  }
+
+  public WeatherLocation findLocation(LocationIdentifier identifier) {
+    for (WeatherLocation location : locations) {
+      if (location.getKey().equals(identifier)) {
+        return location;
+      }
+    }
+    return null;
   }
 }
