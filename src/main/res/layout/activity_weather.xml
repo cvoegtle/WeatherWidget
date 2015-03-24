@@ -42,7 +42,7 @@
                                                        android:layout_height="wrap_content"
                                                        android:paddingBottom="9dp"
                                                        weather:diagrams="true"
-                                                       weather:forecast="false"
+                                                       weather:forecast="true"
                                                        weather:caption="@string/city_mobil_full"/>
 
       <Button android:id="@+id/button_compare_freiburg_paderborn_bonn"

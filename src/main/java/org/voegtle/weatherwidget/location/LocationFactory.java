@@ -69,6 +69,7 @@ public class LocationFactory {
     mobil.setName(res.getString(R.string.city_mobil_full));
     mobil.setShortName(res.getString(R.string.city_mobil));
     mobil.setIdentifier("instant");
+    mobil.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=103250&wahl=vorhersage"));
     mobil.setWeatherLineId(R.id.line_mobil);
     mobil.setWeatherViewId(R.id.weather_mobil);
     mobil.setRainIndicatorId(R.id.rain_indicator_mobil);
