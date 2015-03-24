@@ -15,7 +15,8 @@ public class MobilDiagramActivity extends DiagramActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.mobil_paderborn);
-
+    addDiagram(DiagramEnum.mobil_regen);
+    addDiagram(DiagramEnum.mobil_wind);
     Intent intent = getIntent();
     if (intent != null) {
       String title = intent.getStringExtra(MobilDiagramActivity.class.getName());
@@ -39,6 +40,12 @@ public class MobilDiagramActivity extends DiagramActivity {
     switch (item.getItemId()) {
       case R.id.action_instant_paderborn:
         viewPager.setCurrentItem(0, true);
+        return true;
+      case R.id.action_instant_rain:
+        viewPager.setCurrentItem(1, true);
+        return true;
+      case R.id.action_instant_wind:
+        viewPager.setCurrentItem(2, true);
         return true;
     }
     return false;

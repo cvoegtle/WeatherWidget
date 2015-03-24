@@ -8,6 +8,9 @@
   <item android:id="@+id/action_7_days"
         android:showAsAction="ifRoom"
         android:title="@string/action_7_days"/>
+  <item android:id="@+id/action_7_days_owl"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_7_days_owl"/>
   <item android:id="@+id/action_7_days_average"
         android:showAsAction="ifRoom"
         android:title="@string/action_7_days_average"/>

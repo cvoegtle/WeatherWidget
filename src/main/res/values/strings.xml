@@ -90,4 +90,7 @@
   <string name="yesterday">Gestern</string>
   <string name="week">7 Tage</string>
   <string name="month">30 Tage</string>
+  <string name="action_instant_rain">Regen</string>
+  <string name="action_instant_wind">Wind</string>
+  <string name="action_7_days_owl">OWL 7 Tage</string>
 </resources>

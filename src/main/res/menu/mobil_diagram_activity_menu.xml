@@ -8,4 +8,10 @@
   <item android:id="@+id/action_instant_paderborn"
         android:showAsAction="ifRoom"
         android:title="@string/action_instant_paderborn"/>
+  <item android:id="@+id/action_instant_rain"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_instant_rain"/>
+  <item android:id="@+id/action_instant_wind"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_instant_wind"/>
 </menu>
