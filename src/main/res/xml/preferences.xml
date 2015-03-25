@@ -10,6 +10,13 @@
           android:entryValues="@array/updateIntervalValues"
           />
   <ListPreference
+          android:key="widget_font_size"
+          android:title="@string/widget_font_size"
+          android:defaultValue="11"
+          android:entries="@array/fontSize"
+          android:entryValues="@array/fontSizeValues"
+          />
+  <ListPreference
           android:key="color_scheme"
           android:title="@string/theme"
           android:summary="@string/theme_summary"

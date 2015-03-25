@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
@@ -19,6 +20,8 @@ import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.IntentFactory;
 import org.voegtle.weatherwidget.system.WidgetUpdateManager;
 import org.voegtle.weatherwidget.util.NotificationTask;
+
+import static android.os.Build.VERSION.SDK_INT;
 
 public abstract class AbstractWidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
@@ -101,7 +104,11 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
     for (WeatherLocation location : configuration.getLocations()) {
       boolean show = location.getPreferences().isShowInWidget();
       updateVisibility(location.getWeatherLineId(), show);
+      if (SDK_INT >= 16) {
+        remoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWdigetFontSize());
+      }
     }
+
     updateAllWidgets();
   }
 
