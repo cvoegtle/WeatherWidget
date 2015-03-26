@@ -87,11 +87,11 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
 
     Integer interval = configuration.getUpdateIntervall();
 
-    if (oldInterval != interval) {
+    if (oldInterval == null || oldInterval.compareTo(interval) != 0) {
       new WidgetUpdateManager(getApplicationContext()).rescheduleService();
     }
 
-    if (oldInterval != null && oldInterval != interval) {
+    if (oldInterval != null && oldInterval.compareTo(interval) != 0) {
       String message;
       if (interval > 0) {
         message = getApplicationContext().getString(R.string.intervall_changed) + " " + interval + "min";
@@ -105,7 +105,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
       boolean show = location.getPreferences().isShowInWidget();
       updateVisibility(location.getWeatherLineId(), show);
       if (SDK_INT >= 16) {
-        remoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWdigetFontSize());
+        remoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
       }
     }
 

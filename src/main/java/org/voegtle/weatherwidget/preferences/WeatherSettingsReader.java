@@ -29,7 +29,7 @@ public class WeatherSettingsReader {
     configuration.setSecret(getString(preferences, "secret"));
     configuration.setShowInfoNotification(getBoolean(preferences, "info_notification", false));
     configuration.setUpdateIntervall(getInteger(preferences, "update_interval", 30));
-    configuration.setWdigetFontSize(getInteger(preferences, "widget_font_size", 11));
+    configuration.setTextSize(getInteger(preferences, "text_size", 11));
     configuration.setColorScheme(getColorScheme(preferences, "color_scheme", ColorScheme.dark));
 
     return configuration;

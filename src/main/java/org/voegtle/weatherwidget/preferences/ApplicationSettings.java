@@ -9,7 +9,7 @@ public class ApplicationSettings {
   private List<WeatherLocation> locations;
   private String secret;
   private Integer updateIntervall;
-  private Integer wdigetFontSize;
+  private Integer textSize;
   private boolean showInfoNotification;
   private ColorScheme colorScheme;
 
@@ -56,12 +56,16 @@ public class ApplicationSettings {
     this.colorScheme = colorScheme;
   }
 
-  public Integer getWdigetFontSize() {
-    return wdigetFontSize;
+  public Integer getWidgetTextSize() {
+    return textSize;
   }
 
-  public void setWdigetFontSize(Integer wdigetFontSize) {
-    this.wdigetFontSize = wdigetFontSize;
+  public Integer getAppTextSize() {
+    return textSize + 3;
+  }
+
+  public void setTextSize(Integer textSize) {
+    this.textSize = textSize;
   }
 
   public WeatherLocation findLocation(LocationIdentifier identifier) {

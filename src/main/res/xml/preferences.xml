@@ -10,8 +10,8 @@
           android:entryValues="@array/updateIntervalValues"
           />
   <ListPreference
-          android:key="widget_font_size"
-          android:title="@string/widget_font_size"
+          android:key="text_size"
+          android:title="@string/text_size"
           android:defaultValue="11"
           android:entries="@array/fontSize"
           android:entryValues="@array/fontSizeValues"

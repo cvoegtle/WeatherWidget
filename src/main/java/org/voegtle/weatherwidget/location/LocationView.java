@@ -115,6 +115,20 @@ public class LocationView extends LinearLayout {
 
   }
 
+  public void setTextSize(int textSize) {
+    captionView.setTextSize(textSize + 1);
+    updateTextSize((GridLayout) findViewById(R.id.grid_current), textSize);
+    updateTextSize((GridLayout) findViewById(R.id.more_data), textSize);
+  }
+
+  private void updateTextSize(GridLayout container, int textSize) {
+    for (int i = 0; i < container.getChildCount(); i++) {
+      TextView view = (TextView) container.getChildAt(i);
+      view.setTextSize(textSize);
+    }
+  }
+
+
   public void setCaption(String caption) {
     captionView.setText(caption);
   }

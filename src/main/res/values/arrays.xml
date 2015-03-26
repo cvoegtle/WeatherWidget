@@ -21,7 +21,7 @@
     <item name="12">L</item>
     <item name="13">XL</item>
     <item name="14">XXL</item>
-    <item name="15">XXXL</item>
+    <item name="16">XXXL</item>
   </string-array>
   <string-array name="fontSizeValues">
     <item name="10">10</item>
@@ -29,7 +29,7 @@
     <item name="12">12</item>
     <item name="13">13</item>
     <item name="14">14</item>
-    <item name="15">15</item>
+    <item name="16">16</item>
   </string-array>
 
   <string-array name="colorScheme">

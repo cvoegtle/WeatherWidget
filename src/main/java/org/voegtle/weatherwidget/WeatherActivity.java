@@ -37,7 +37,6 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
     initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheet/ccc?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc#gid=11"));
 
-
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
     readConfiguration(preferences);
     preferences.registerOnSharedPreferenceChangeListener(this);
@@ -59,6 +58,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
       addClickHandler(location);
       updateVisibility(location);
       updateState(location);
+      updateTextSize(location, configuration.getAppTextSize());
     }
   }
 
@@ -137,6 +137,13 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
   private void updateVisibility(int viewId, boolean isVisible) {
     View view = findViewById(viewId);
     view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+  }
+
+  private void updateTextSize(WeatherLocation location, Integer textSize) {
+    if (location.getPreferences().isShowInApp()) {
+      LocationView view = (LocationView) findViewById(location.getWeatherViewId());
+      view.setTextSize(textSize);
+    }
   }
 
   private void configureLocationSymbolColor() {
