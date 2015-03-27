@@ -2,13 +2,10 @@ package org.voegtle.weatherwidget.preferences;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import org.voegtle.weatherwidget.R;
-
-import static android.os.Build.VERSION.SDK_INT;
 
 public class WeatherPreferenceFragment extends PreferenceFragment {
   private static final String PLACEHOLDER_VERSION = "{v}";
@@ -24,15 +21,7 @@ public class WeatherPreferenceFragment extends PreferenceFragment {
 
     readVersionInformationFromAndroidManifest();
     addBuildInformation(getVersionNotice());
-    removeUnsupportedSettings();
 
-  }
-
-  private void removeUnsupportedSettings() {
-    if (SDK_INT < 16) {
-      Preference preferenceFontSize = getPreferenceScreen().findPreference(KEY_FONTSIZE);
-      getPreferenceScreen().removePreference(preferenceFontSize);
-    }
   }
 
   private void addBuildInformation(PreferenceScreen appInfoScreen) {

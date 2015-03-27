@@ -61,7 +61,7 @@ public class ApplicationSettings {
   }
 
   public Integer getAppTextSize() {
-    return textSize + 3;
+    return textSize + textSize / 4;
   }
 
   public void setTextSize(Integer textSize) {
