@@ -54,8 +54,8 @@ public class DiagramCache {
         Drawable image = Drawable.createFromStream(inputStream, "Local Cache");
         inputStream.close();
         return new Diagram(diagramId, image, new Date(age));
-      } catch (IOException ex) {
-        Log.e(DiagramCache.class.getName(), "failed to read file " + filename);
+      } catch (Throwable ex) {
+        Log.e(DiagramCache.class.getName(), "failed to read file " + filename, ex);
       }
     }
     return null;
