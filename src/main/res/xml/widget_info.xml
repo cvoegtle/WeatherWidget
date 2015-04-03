@@ -5,6 +5,6 @@
         android:minHeight="40dp"
         android:updatePeriodMillis="0"
         android:initialLayout="@layout/widget_weather"
-        android:resizeMode="vertical|horizontal"
+        android:resizeMode="horizontal|vertical"
         android:previewImage="@drawable/info_widget">
 </appwidget-provider>

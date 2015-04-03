@@ -24,12 +24,13 @@ public enum DiagramEnum {
 
   mobil_paderborn(17, "http://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
   mobil_regen(18, "http://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
-  mobil_wind(19, "http://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1");
+  mobil_wind(19, "http://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
+  mobil_solar(20, "http://wetterimages.appspot.com/weatherstation/image?oid=38&zx=78w1b627jesf");
 
   private String url;
   private int id;
 
-  private DiagramEnum(int id, String url) {
+  DiagramEnum(int id, String url) {
     this.id = id;
     this.url = url;
   }

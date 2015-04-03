@@ -130,6 +130,11 @@ public class WeatherDataFetcher {
       data.setInsideHumidity(insideHumidity.floatValue());
     }
 
+    if (weather.has("watt")) {
+      Number watt = (Number) weather.get("watt");
+      data.setWatt(watt.floatValue());
+    }
+
     Object rain = weather.get("rain");
     if (rain instanceof Number) {
       data.setRain(((Number) rain).floatValue());

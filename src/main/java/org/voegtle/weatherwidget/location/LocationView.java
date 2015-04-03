@@ -142,6 +142,20 @@ public class LocationView extends LinearLayout {
 
     setRainData(data.getRain(), R.id.label_rain_last_hour, R.id.rain_last_hour);
     setRainData(data.getRainToday(), R.id.label_rain_today, R.id.rain_today);
+    setSolarData(data.getWatt(), R.id.label_solar_output, R.id.solar_output);
+  }
+
+  private void setSolarData(Float watt, int labelId, int dataId) {
+    TextView solarLabel = (TextView) findViewById(labelId);
+    TextView solar = (TextView) findViewById(dataId);
+    if (watt != null && watt != 0.0) {
+      solarLabel.setVisibility(View.VISIBLE);
+      solar.setVisibility(View.VISIBLE);
+      solar.setText(formatter.formatOutput(watt));
+    } else {
+      solarLabel.setVisibility(View.GONE);
+      solar.setVisibility(View.GONE);
+    }
   }
 
   private void setRainData(Float value, int labelId, int dataId) {

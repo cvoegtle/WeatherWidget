@@ -14,6 +14,7 @@ public class WeatherData {
   private Float rain;
   private Float rainToday;
   private boolean raining;
+  private Float watt;
 
 
   public WeatherData(LocationIdentifier location) {
@@ -89,5 +90,13 @@ public class WeatherData {
 
   public void setInsideHumidity(Float insideHumidity) {
     this.insideHumidity = insideHumidity;
+  }
+
+  public Float getWatt() {
+    return watt;
+  }
+
+  public void setWatt(Float watt) {
+    this.watt = watt;
   }
 }

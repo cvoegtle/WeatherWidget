@@ -76,4 +76,11 @@ public class DataFormatter {
     }
   }
 
+  public String formatOutput(Float watt) {
+    if (watt != null) {
+      return numberFormat.format(watt) + "W";
+    } else {
+      return "";
+    }
+  }
 }
