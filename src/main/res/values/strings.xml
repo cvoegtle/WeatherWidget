@@ -96,4 +96,5 @@
   <string name="text_size">Schriftgröße festlegen</string>
   <string name="action_instant_solar">Solarleistung</string>
   <string name="solar_output">Solarleistung</string>
+  <string name="kwh">Ertrag</string>
 </resources>

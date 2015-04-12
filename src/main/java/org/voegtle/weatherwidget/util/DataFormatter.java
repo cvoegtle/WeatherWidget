@@ -60,6 +60,14 @@ public class DataFormatter {
     }
   }
 
+  public String formatKwh(Float kwh) {
+    if (kwh != null) {
+      return numberFormat.format(kwh) + "kWh";
+    } else {
+      return "";
+    }
+  }
+
   public String formatRain(Float rain) {
     if (rain != null) {
       return numberFormat.format(rain) + "l";

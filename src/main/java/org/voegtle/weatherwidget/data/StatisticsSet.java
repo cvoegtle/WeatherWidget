@@ -5,6 +5,7 @@ public class StatisticsSet {
   Float rain;
   Float maxTemperature;
   Float minTemperature;
+  Float kwh;
 
   public StatisticsSet(Statistics.TimeRange range) {
     this.range = range;
@@ -32,6 +33,14 @@ public class StatisticsSet {
 
   public void setMinTemperature(Float minTemperature) {
     this.minTemperature = minTemperature;
+  }
+
+  public Float getKwh() {
+    return kwh;
+  }
+
+  public void setKwh(Float kwh) {
+    this.kwh = kwh;
   }
 
   public Statistics.TimeRange getRange() {

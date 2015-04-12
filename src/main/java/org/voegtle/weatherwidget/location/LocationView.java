@@ -23,6 +23,7 @@ public class LocationView extends LinearLayout {
   private ImageButton diagramButton;
   private ImageButton forecastButton;
   private GridLayout moreData;
+  private TextView kwhCaptionView;
 
   private boolean expanded;
   private Drawable imageExpand;
@@ -44,6 +45,7 @@ public class LocationView extends LinearLayout {
 
     captionView = (TextView) findViewById(R.id.caption);
     moreData = (GridLayout) findViewById(R.id.more_data);
+    kwhCaptionView = (TextView) findViewById(R.id.caption_kwh);
 
     imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse);
     imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand);
@@ -178,30 +180,36 @@ public class LocationView extends LinearLayout {
     }
 
     StatisticsSet today = statistics.get(Statistics.TimeRange.today);
-    updateStatistics(today, R.id.today_rain, R.id.today_min_temperature, R.id.today_max_temperature);
+    updateStatistics(today, R.id.today_rain, R.id.today_min_temperature, R.id.today_max_temperature, R.id.today_kwh);
 
     StatisticsSet yesterday = statistics.get(Statistics.TimeRange.yesterday);
-    updateStatistics(yesterday, R.id.yesterday_rain, R.id.yesterday_min_temperature, R.id.yesterday_max_temperature);
+    updateStatistics(yesterday, R.id.yesterday_rain, R.id.yesterday_min_temperature, R.id.yesterday_max_temperature, R.id.yesterday_kwh);
 
     StatisticsSet week = statistics.get(Statistics.TimeRange.last7days);
-    updateStatistics(week, R.id.week_rain, R.id.week_min_temperature, R.id.week_max_temperature);
+    updateStatistics(week, R.id.week_rain, R.id.week_min_temperature, R.id.week_max_temperature, R.id.week_kwh);
 
     StatisticsSet month = statistics.get(Statistics.TimeRange.last30days);
-    updateStatistics(month, R.id.month_rain, R.id.month_min_temperature, R.id.month_max_temperature);
+    updateStatistics(month, R.id.month_rain, R.id.month_min_temperature, R.id.month_max_temperature, R.id.month_kwh);
   }
 
-  private void updateStatistics(StatisticsSet stats, int rainId, int minTemperatureId, int maxTemperatureId) {
+  private void updateStatistics(StatisticsSet stats, int rainId, int minTemperatureId, int maxTemperatureId, int kwhId) {
     TextView rainView = (TextView) findViewById(rainId);
     TextView minView = (TextView) findViewById(minTemperatureId);
     TextView maxView = (TextView) findViewById(maxTemperatureId);
+    TextView kwhView = (TextView) findViewById(kwhId);
     if (stats != null) {
       rainView.setText(formatter.formatRain(stats.getRain()));
       minView.setText(formatter.formatTemperature(stats.getMinTemperature()));
       maxView.setText(formatter.formatTemperature(stats.getMaxTemperature()));
+      if (stats.getKwh() != null) {
+        kwhView.setText(formatter.formatKwh(stats.getKwh()));
+        kwhCaptionView.setVisibility(VISIBLE);
+      }
     } else {
       rainView.setText("");
       minView.setText("");
       maxView.setText("");
+      kwhView.setText("");
     }
   }
 

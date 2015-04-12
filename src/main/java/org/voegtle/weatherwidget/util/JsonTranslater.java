@@ -13,9 +13,11 @@ import java.util.HashMap;
 public class JsonTranslater {
 
   private static Float toFloat(JSONObject json, String identifer) throws JSONException {
-    Object value = json.get(identifer);
-    if (value instanceof Number) {
-      return ((Number) value).floatValue();
+    if (json.has(identifer)) {
+      Object value = json.get(identifer);
+      if (value instanceof Number) {
+        return ((Number) value).floatValue();
+      }
     }
     return null;
   }
@@ -28,7 +30,7 @@ public class JsonTranslater {
         Statistics stats = toStatistics(jsonStatistics.getJSONObject(i));
         statisticsMap.put(stats.getId(), stats);
       }
-    } catch (JSONException e) {
+    } catch (JSONException ignore) {
     }
     return statisticsMap;
   }
@@ -37,7 +39,7 @@ public class JsonTranslater {
     try {
       JSONObject json = new JSONObject(jsonStr);
       return toStatistics(json);
-    } catch (JSONException e) {
+    } catch (JSONException ignore) {
     }
     return null;
   }
@@ -72,6 +74,7 @@ public class JsonTranslater {
       result.setRain(toFloat(json, "rain"));
       result.setMinTemperature(toFloat(json, "minTemperature"));
       result.setMaxTemperature(toFloat(json, "maxTemperature"));
+      result.setKwh(toFloat(json, "kwh"));
     }
     return result;
   }
