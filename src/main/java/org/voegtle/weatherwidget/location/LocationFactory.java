@@ -75,7 +75,7 @@ public class LocationFactory {
     mobil.setRainIndicatorId(R.id.rain_indicator_mobil);
     mobil.setPrefShowInApp("app_show_mobil");
     mobil.setPrefShowInWidget("widget_show_mobil");
-    mobil.setVisibleInAppByDefault(false);
+    mobil.setVisibleInAppByDefault(true);
     mobil.setVisibleInWidgetByDefault(false);
     mobil.setPrefAlert("alert_mobil");
     locations.add(mobil);

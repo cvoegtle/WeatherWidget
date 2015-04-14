@@ -101,6 +101,7 @@ public class JsonTranslater {
     json.put("rain", set.getRain());
     json.put("minTemperature", set.getMinTemperature());
     json.put("maxTemperature", set.getMaxTemperature());
+    json.put("kwh", set.getKwh());
     return json;
   }
 }
