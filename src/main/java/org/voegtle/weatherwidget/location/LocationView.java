@@ -197,6 +197,10 @@ public class LocationView extends LinearLayout {
     TextView minView = (TextView) findViewById(minTemperatureId);
     TextView maxView = (TextView) findViewById(maxTemperatureId);
     TextView kwhView = (TextView) findViewById(kwhId);
+    rainView.setText("");
+    minView.setText("");
+    maxView.setText("");
+    kwhView.setText("");
     if (stats != null) {
       rainView.setText(formatter.formatRain(stats.getRain()));
       minView.setText(formatter.formatTemperature(stats.getMinTemperature()));
@@ -205,11 +209,6 @@ public class LocationView extends LinearLayout {
         kwhView.setText(formatter.formatKwh(stats.getKwh()));
         kwhCaptionView.setVisibility(VISIBLE);
       }
-    } else {
-      rainView.setText("");
-      minView.setText("");
-      maxView.setText("");
-      kwhView.setText("");
     }
   }
 
