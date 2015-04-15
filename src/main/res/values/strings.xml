@@ -97,4 +97,5 @@
   <string name="action_instant_solar">Solarleistung</string>
   <string name="solar_output">Solarleistung</string>
   <string name="kwh">Ertrag</string>
+  <string name="action_bali_wind">Wind</string>
 </resources>

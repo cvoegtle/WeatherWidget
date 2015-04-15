@@ -11,4 +11,7 @@
   <item android:id="@+id/action_bali_paderborn"
         android:showAsAction="ifRoom"
         android:title="@string/action_bali_paderborn"/>
+  <item android:id="@+id/action_bali_wind"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_bali_wind"/>
 </menu>
