@@ -9,11 +9,11 @@
   <string name="city_paderborn">PB</string>
   <string name="city_freiburg">FR</string>
   <string name="city_bonn">BN</string>
-  <string name="city_mobil">Leo</string>
+  <string name="city_leo">Leo</string>
   <string name="city_paderborn_full">Paderborn</string>
   <string name="city_freiburg_full">Freiburg</string>
   <string name="city_bonn_full">Bonn</string>
-  <string name="city_mobil_full">Leopoldshöhe</string>
+  <string name="city_leo_full">Leopoldshöhe</string>
   <string name="temperature">Temperatur</string>
   <string name="humidity">Luftfeuchtigkeit</string>
   <string name="rain_last_hour">Regen 1h</string>
@@ -75,8 +75,8 @@
   <string name="send_mail">als E-Mail schicken</string>
   <string name="view_website">Christians Website</string>
   <string name="www_voegtle_org">http://www.voegtle.org/~christian</string>
-  <string name="station_mobil">Wetterstation in Leopoldshöhe</string>
-  <string name="action_instant_paderborn">Vergleich mit Paderborn</string>
+  <string name="station_leo">Wetterstation in Leopoldshöhe</string>
+  <string name="action_compare_with_paderborn">Vergleich mit Paderborn</string>
   <string name="configure_stations">Messstationen einrichten</string>
   <string name="station_bali">Wetterstation in Bad Lippspringe</string>
   <string name="city_bali_full">Bad Lippspringe</string>
@@ -90,12 +90,15 @@
   <string name="yesterday">Gestern</string>
   <string name="week">7 Tage</string>
   <string name="month">30 Tage</string>
-  <string name="action_instant_rain">Regen</string>
-  <string name="action_instant_wind">Wind</string>
+  <string name="action_rain">Regen</string>
+  <string name="action_wind">Wind</string>
   <string name="action_7_days_owl">OWL 7 Tage</string>
   <string name="text_size">Schriftgröße festlegen</string>
-  <string name="action_instant_solar">Solarleistung</string>
+  <string name="action_solar">Solarleistung</string>
   <string name="solar_output">Solarleistung</string>
   <string name="kwh">Ertrag</string>
   <string name="action_bali_wind">Wind</string>
+  <string name="city_mobil">MO</string>
+  <string name="city_mobil_full">Mobil</string>
+  <string name="station_mobil">Mobile Wetterstation</string>
 </resources>

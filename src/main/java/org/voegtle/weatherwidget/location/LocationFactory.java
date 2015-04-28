@@ -65,9 +65,24 @@ public class LocationFactory {
     freiburg.setPrefAlert("alert_freiburg");
     locations.add(freiburg);
 
+    WeatherLocation leopoldshoehe = new WeatherLocation(LocationIdentifier.Leopoldshoehe);
+    leopoldshoehe.setName(res.getString(R.string.city_leo_full));
+    leopoldshoehe.setShortName(res.getString(R.string.city_leo));
+    leopoldshoehe.setIdentifier("leoxity");
+    leopoldshoehe.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=103250&wahl=vorhersage"));
+    leopoldshoehe.setWeatherLineId(R.id.line_leo);
+    leopoldshoehe.setWeatherViewId(R.id.weather_leo);
+    leopoldshoehe.setRainIndicatorId(R.id.rain_indicator_leo);
+    leopoldshoehe.setPrefShowInApp("app_show_leo");
+    leopoldshoehe.setPrefShowInWidget("widget_show_leo");
+    leopoldshoehe.setVisibleInAppByDefault(true);
+    leopoldshoehe.setVisibleInWidgetByDefault(false);
+    leopoldshoehe.setPrefAlert("alert_leo");
+    locations.add(leopoldshoehe);
+
     WeatherLocation mobil = new WeatherLocation(LocationIdentifier.Mobil);
-    mobil.setName(res.getString(R.string.city_mobil_full));
-    mobil.setShortName(res.getString(R.string.city_mobil));
+    mobil.setName(res.getString(R.string.city_leo_full));
+    mobil.setShortName(res.getString(R.string.city_leo));
     mobil.setIdentifier("instant");
     mobil.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=103250&wahl=vorhersage"));
     mobil.setWeatherLineId(R.id.line_mobil);

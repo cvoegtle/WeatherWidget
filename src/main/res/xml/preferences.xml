@@ -75,6 +75,26 @@
       </PreferenceCategory>
 
       <PreferenceCategory
+              android:title="@string/station_leo"
+              android:key="settings_leo">
+        <CheckBoxPreference
+                android:key="app_show_leo"
+                android:title="@string/in_app"
+                android:defaultValue="true"
+                />
+        <CheckBoxPreference
+                android:key="widget_show_leo"
+                android:title="@string/in_widget"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="alert_leo"
+                android:title="@string/alert"
+                android:defaultValue="false"
+                />
+      </PreferenceCategory>
+
+      <PreferenceCategory
               android:title="@string/station_bonn"
               android:key="settings_bonn">
         <CheckBoxPreference
@@ -113,14 +133,13 @@
                 android:defaultValue="false"
                 />
       </PreferenceCategory>
-
       <PreferenceCategory
               android:title="@string/station_mobil"
               android:key="settings_mobil">
         <CheckBoxPreference
                 android:key="app_show_mobil"
                 android:title="@string/in_app"
-                android:defaultValue="true"
+                android:defaultValue="false"
                 />
         <CheckBoxPreference
                 android:key="widget_show_mobil"

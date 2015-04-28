@@ -26,7 +26,12 @@ public enum DiagramEnum {
   mobil_paderborn(18, "http://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
   mobil_regen(19, "http://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
   mobil_wind(20, "http://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
-  mobil_solar(21, "http://wetterimages.appspot.com/weatherstation/image?oid=38&zx=78w1b627jesf");
+  mobil_solar(21, "http://wetterimages.appspot.com/weatherstation/image?oid=38&zx=78w1b627jesf"),
+
+  leo_paderborn(22, "http://wetterimages.appspot.com/weatherstation/image?oid=40&zx=zf3qhidwp0d3"),
+  leo_regen(23, "http://wetterimages.appspot.com/weatherstation/image?oid=41&zx=thizdb5vljeh"),
+  leo_wind(24, "http://wetterimages.appspot.com/weatherstation/image?oid=42&zx=yodi027ovehq"),
+  leo_solar(25, "http://wetterimages.appspot.com/weatherstation/image?oid=43&zx=3qzlsg27ha0v");
 
   private String url;
   private int id;

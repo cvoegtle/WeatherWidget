@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="335"
-          android:versionName="1.11">
+          android:versionCode="336"
+          android:versionName="1.12">
 
   <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="22"/>
 
@@ -58,8 +58,14 @@
               android:parentActivityName=".WeatherActivity">
     </activity>
 
+    <activity android:name=".diagram.LeoDiagramActivity"
+              android:label="@string/city_leo_full"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+    </activity>
+
     <activity android:name=".diagram.MobilDiagramActivity"
-              android:label="@string/city_mobil_full"
+              android:label="@string/city_leo_full"
               android:logo="@drawable/wetterlogo"
               android:parentActivityName=".WeatherActivity">
     </activity>

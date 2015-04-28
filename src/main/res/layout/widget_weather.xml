@@ -51,7 +51,7 @@
               android:textSize="11sp"
               android:text="@string/city_bali"/>
   </LinearLayout>
-  <LinearLayout android:id="@+id/line_mobil"
+  <LinearLayout android:id="@+id/line_leo"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -59,14 +59,14 @@
                 android:paddingLeft="2dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
-    <TextView android:id="@+id/rain_indicator_mobil"
+    <TextView android:id="@+id/rain_indicator_leo"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginRight="2dp"
               android:textColor="#ffffff"
               android:textSize="11sp"
               android:text="@string/big_dot"/>
-    <TextView android:id="@+id/weather_mobil"
+    <TextView android:id="@+id/weather_leo"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_marginBottom="2dp"
@@ -74,14 +74,14 @@
               android:textStyle="bold"
               android:textSize="11sp"
               android:layout_alignParentLeft="true"
-              android:text="@string/city_mobil"/>
+              android:text="@string/city_leo"/>
   </LinearLayout>
 
   <LinearLayout android:id="@+id/line_bonn"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/line_mobil"
+                android:layout_below="@id/line_leo"
                 android:paddingLeft="2dp"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -125,6 +125,32 @@
               android:layout_alignParentLeft="true"
               android:text="@string/city_freiburg"/>
   </LinearLayout>
+  <LinearLayout android:id="@+id/line_mobil"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@id/line_freiburg"
+                android:paddingLeft="2dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+    <TextView android:id="@+id/rain_indicator_mobil"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginRight="2dp"
+              android:textColor="#ffffff"
+              android:textSize="11sp"
+              android:text="@string/big_dot"/>
+    <TextView android:id="@+id/weather_mobil"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="2dp"
+              android:textColor="#ffffff"
+              android:textStyle="bold"
+              android:textSize="11sp"
+              android:layout_alignParentLeft="true"
+              android:text="@string/city_mobil"/>
+  </LinearLayout>
+
   <TextView android:id="@+id/update_time"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"

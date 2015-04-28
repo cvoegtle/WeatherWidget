@@ -154,7 +154,7 @@
               android:layout_column="4"
               android:text="@string/kwh"
               android:textStyle="bold"
-              android:paddingLeft="20dp"
+              android:paddingLeft="32dp"
               android:visibility="gone"/>
 
     <TextView android:layout_row="1"
