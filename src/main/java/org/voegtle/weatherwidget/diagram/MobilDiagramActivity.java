@@ -17,7 +17,6 @@ public class MobilDiagramActivity extends DiagramActivity {
     addDiagram(DiagramEnum.mobil_paderborn);
     addDiagram(DiagramEnum.mobil_regen);
     addDiagram(DiagramEnum.mobil_wind);
-    addDiagram(DiagramEnum.mobil_solar);
     Intent intent = getIntent();
     if (intent != null) {
       String title = intent.getStringExtra(MobilDiagramActivity.class.getName());
@@ -47,9 +46,6 @@ public class MobilDiagramActivity extends DiagramActivity {
         return true;
       case R.id.action_instant_wind:
         viewPager.setCurrentItem(2, true);
-        return true;
-      case R.id.action_instant_solar:
-        viewPager.setCurrentItem(3, true);
         return true;
     }
     return false;

@@ -14,7 +14,4 @@
   <item android:id="@+id/action_instant_wind"
         android:showAsAction="ifRoom"
         android:title="@string/action_wind"/>
-  <item android:id="@+id/action_instant_solar"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_solar"/>
 </menu>

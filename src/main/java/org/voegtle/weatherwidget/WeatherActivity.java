@@ -34,8 +34,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_weather);
-    initButton(R.id.button_compare_freiburg_paderborn_bonn, Uri.parse("http://www.voegtle.org/~christian/weather_fr_pb_bn.html"));
-    initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheet/ccc?key=0AnsQlmDoHHbKdFVvS1VEMUp6c3FkcElibFhWUGpramc#gid=11"));
+    initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"));
 
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
     readConfiguration(preferences);

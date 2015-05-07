@@ -35,7 +35,7 @@ public class WeatherDataFetcher {
     String urlEncodedSecret = StringUtil.urlEncode(secret);
     String locationIdentifiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -161,7 +161,7 @@ public class WeatherDataFetcher {
       for (int i = 1; i < locationIds.size(); i++) {
         concatenatedLocationIds += "," + locationIds.get(i);
       }
-      String jsonStatistics = getStringFromUrl("http://wettercentral.appspot.com/weatherstation/read?locations=" + concatenatedLocationIds + "&type=stats");
+      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?locations=" + concatenatedLocationIds + "&type=stats");
       try {
         return JsonTranslater.toStatistics(jsonStatistics);
       } catch (Throwable e) {

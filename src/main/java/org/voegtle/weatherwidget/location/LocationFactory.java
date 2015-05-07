@@ -81,8 +81,8 @@ public class LocationFactory {
     locations.add(leopoldshoehe);
 
     WeatherLocation mobil = new WeatherLocation(LocationIdentifier.Mobil);
-    mobil.setName(res.getString(R.string.city_leo_full));
-    mobil.setShortName(res.getString(R.string.city_leo));
+    mobil.setName(res.getString(R.string.city_mobil_full));
+    mobil.setShortName(res.getString(R.string.city_mobil));
     mobil.setIdentifier("instant");
     mobil.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=103250&wahl=vorhersage"));
     mobil.setWeatherLineId(R.id.line_mobil);
@@ -90,7 +90,7 @@ public class LocationFactory {
     mobil.setRainIndicatorId(R.id.rain_indicator_mobil);
     mobil.setPrefShowInApp("app_show_mobil");
     mobil.setPrefShowInWidget("widget_show_mobil");
-    mobil.setVisibleInAppByDefault(true);
+    mobil.setVisibleInAppByDefault(false);
     mobil.setVisibleInWidgetByDefault(false);
     mobil.setPrefAlert("alert_mobil");
     locations.add(mobil);
