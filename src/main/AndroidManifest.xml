@@ -64,6 +64,12 @@
               android:parentActivityName=".WeatherActivity">
     </activity>
 
+    <activity android:name=".diagram.HerzoDiagramActivity"
+              android:label="@string/city_herzo_full"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+    </activity>
+
     <activity android:name=".diagram.MobilDiagramActivity"
               android:label="@string/city_leo_full"
               android:logo="@drawable/wetterlogo"

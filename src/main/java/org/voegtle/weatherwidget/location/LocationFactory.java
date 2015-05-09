@@ -80,6 +80,21 @@ public class LocationFactory {
     leopoldshoehe.setPrefAlert("alert_leo");
     locations.add(leopoldshoehe);
 
+    WeatherLocation herzogenaurach = new WeatherLocation(LocationIdentifier.Herzogenaurach);
+    herzogenaurach.setName(res.getString(R.string.city_herzo_full));
+    herzogenaurach.setShortName(res.getString(R.string.city_herzo));
+    herzogenaurach.setIdentifier("herzo");
+    herzogenaurach.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=194919&wahl=vorhersage"));
+    herzogenaurach.setWeatherLineId(R.id.line_herzogenaurach);
+    herzogenaurach.setWeatherViewId(R.id.weather_herzogenaurach);
+    herzogenaurach.setRainIndicatorId(R.id.rain_indicator_herzogenaurach);
+    herzogenaurach.setPrefShowInApp("app_show_herzo");
+    herzogenaurach.setPrefShowInWidget("widget_show_herzo");
+    herzogenaurach.setVisibleInAppByDefault(false);
+    herzogenaurach.setVisibleInWidgetByDefault(false);
+    herzogenaurach.setPrefAlert("alert_herzo");
+    locations.add(herzogenaurach);
+
     WeatherLocation mobil = new WeatherLocation(LocationIdentifier.Mobil);
     mobil.setName(res.getString(R.string.city_mobil_full));
     mobil.setShortName(res.getString(R.string.city_mobil));

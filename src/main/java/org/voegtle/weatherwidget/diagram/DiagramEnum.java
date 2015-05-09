@@ -12,25 +12,30 @@ public enum DiagramEnum {
   paderborn_lastyear(8, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2118924146&format=image"),
 
   freiburg_2days(9, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=145042526&format=image"),
-  freiburg_year(10, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1963429675&format=image"),
-  freiburg_lastyear(11, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1557105940&format=image"),
+  freiburg_wind(10, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1045869484&format=image"),
+  freiburg_year(11, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1963429675&format=image"),
+  freiburg_lastyear(12, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1557105940&format=image"),
 
-  bonn_2days(12, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=529970705&format=image"),
-  bonn_year(13, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=2014590801&format=image"),
-  bonn_lastyear(14, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1706278998&format=image"),
+  bonn_2days(13, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=529970705&format=image"),
+  bonn_year(14, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=2014590801&format=image"),
+  bonn_lastyear(15, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1706278998&format=image"),
 
-  bali_7days(15, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=376041681&format=image"),
-  bali_paderborn(16, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1754363161&format=image"),
-  bali_wind(17, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1959064763&format=image"),
+  bali_7days(16, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=376041681&format=image"),
+  bali_paderborn(17, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1754363161&format=image"),
+  bali_wind(18, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1959064763&format=image"),
 
-  mobil_paderborn(18, "https://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
-  mobil_regen(19, "https://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
-  mobil_wind(20, "https://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
+  mobil_paderborn(19, "https://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
+  mobil_regen(20, "https://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
+  mobil_wind(21, "https://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
 
-  leo_paderborn(21, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1747103714&format=image"),
-  leo_regen(22, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
-  leo_wind(23, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
-  leo_solar(24, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image");
+  leo_paderborn(22, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1747103714&format=image"),
+  leo_regen(23, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
+  leo_wind(24, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
+  leo_solar(25, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image"),
+
+  herzo_regen(26, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
+  herzo_wind(27, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
+  herzo_paderborn_freiburg(28, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image");
 
   private String url;
   private int id;

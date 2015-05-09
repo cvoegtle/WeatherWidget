@@ -5,16 +5,13 @@
         android:icon="@drawable/reload"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
-  <item android:id="@+id/action_rain"
+  <item android:id="@+id/action_herzo_rain"
         android:showAsAction="ifRoom"
-        android:title="@string/action_2_days"/>
-  <item android:id="@+id/action_wind"
+        android:title="@string/action_rain"/>
+  <item android:id="@+id/action_herzo_wind"
         android:showAsAction="ifRoom"
         android:title="@string/action_wind"/>
-  <item android:id="@+id/action_year"
+  <item android:id="@+id/action_hza_pb_fr"
         android:showAsAction="ifRoom"
-        android:title="@string/action_year"/>
-  <item android:id="@+id/action_last_year"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_last_year"/>
+        android:title="@string/action_compare_with_pb_fr"/>
 </menu>

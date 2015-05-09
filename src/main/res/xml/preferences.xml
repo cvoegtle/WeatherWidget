@@ -134,6 +134,25 @@
                 />
       </PreferenceCategory>
       <PreferenceCategory
+              android:title="@string/station_herzogenaurach"
+              android:key="settings_herzo">
+        <CheckBoxPreference
+                android:key="app_show_herzo"
+                android:title="@string/in_app"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="widget_show_herzo"
+                android:title="@string/in_widget"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="alert_herzo"
+                android:title="@string/alert"
+                android:defaultValue="false"
+                />
+      </PreferenceCategory>
+      <PreferenceCategory
               android:title="@string/station_mobil"
               android:key="settings_mobil">
         <CheckBoxPreference
