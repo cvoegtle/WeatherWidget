@@ -6,10 +6,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.AbstractWidgetUpdateManager;
 import org.voegtle.weatherwidget.system.IntentFactory;
@@ -37,7 +39,9 @@ public abstract class AbstractWidgetProvider extends AppWidgetProvider {
   public void onUpdate(Context context, final AppWidgetManager appWidgetManager, int[] appWidgetIds) {
     ensureResources(context);
 
+
     for (int widgetId : appWidgetIds) {
+      updateBackgroundColor();
       PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(context.getApplicationContext());
       for (WeatherLocation location : configuration.getLocations()) {
         remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
@@ -47,6 +51,14 @@ public abstract class AbstractWidgetProvider extends AppWidgetProvider {
           IntentFactory.createRefreshIntent(context.getApplicationContext(), getWidgetServiceClass()));
 
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
+    }
+  }
+
+  private void updateBackgroundColor() {
+    if (configuration.getColorScheme().equals(ColorScheme.dark)) {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
+    } else {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
     }
   }
 

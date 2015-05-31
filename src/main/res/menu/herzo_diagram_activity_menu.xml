@@ -2,7 +2,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:id="@+id/action_reload"
-        android:icon="@drawable/reload"
+        android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
   <item android:id="@+id/action_herzo_rain"

@@ -3,6 +3,7 @@ package org.voegtle.weatherwidget.util;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -13,6 +14,7 @@ import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.widget.WidgetScreenPainter;
 
 import java.text.SimpleDateFormat;
@@ -45,7 +47,14 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
 
-    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration.getLocations(), large);
+    Drawable refreshImage = getRefreshImage(applicationContext);
+
+
+    return new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews, configuration, refreshImage, large);
+  }
+
+  private Drawable getRefreshImage(Context applicationContext) {
+    return applicationContext.getResources().getDrawable(configuration.getColorScheme() == ColorScheme.dark ? R.drawable.ic_action_refresh : R.drawable.ic_action_refresh_dark);
   }
 
   @Override

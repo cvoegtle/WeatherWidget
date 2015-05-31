@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.TypedValue;
@@ -16,6 +18,7 @@ import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
 import org.voegtle.weatherwidget.system.IntentFactory;
 import org.voegtle.weatherwidget.system.WidgetUpdateManager;
@@ -57,9 +60,14 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     WidgetScreenPainter screenPainter = new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews,
-        configuration.getLocations(), isDetailed());
+        configuration, getRefreshImage(), isDetailed());
     new WidgetUpdateTask(getApplicationContext(), configuration, screenPainter).execute();
   }
+
+  private Drawable getRefreshImage() {
+    return getApplicationContext().getResources().getDrawable(configuration.getColorScheme() == ColorScheme.dark ? R.drawable.ic_action_refresh : R.drawable.ic_action_refresh_dark);
+  }
+
 
   @Override
   public void onSharedPreferenceChanged(SharedPreferences preferences, String s) {
@@ -117,6 +125,7 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
   }
 
   protected void updateAllWidgets() {
+    updateBackgroundColor();
     ComponentName thisWidget = new ComponentName(this, getWidgetProviderClass());
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
     int[] widgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
@@ -125,6 +134,15 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
       appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
   }
+
+  private void updateBackgroundColor() {
+    if (configuration.getColorScheme().equals(ColorScheme.dark)) {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
+    } else {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
+    }
+  }
+
 
   private void setWidgetIntents() {
     PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(getApplicationContext());

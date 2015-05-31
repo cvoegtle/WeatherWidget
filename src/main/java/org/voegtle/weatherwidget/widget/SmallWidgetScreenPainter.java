@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.preferences.ColorScheme;
 import org.voegtle.weatherwidget.util.ColorUtil;
 
 public class SmallWidgetScreenPainter extends AbstractWidgetScreenPainter {
@@ -16,7 +17,7 @@ public class SmallWidgetScreenPainter extends AbstractWidgetScreenPainter {
 
   @Override
   public void showDataIsInvalid() {
-    remoteViews.setTextColor(R.id.weather_small, ColorUtil.updateColor());
+    remoteViews.setTextColor(R.id.weather_small, ColorUtil.updateColor(ColorScheme.dark));
   }
 
   @Override
@@ -29,7 +30,7 @@ public class SmallWidgetScreenPainter extends AbstractWidgetScreenPainter {
       remoteViews.setTextViewText(R.id.weather_small, formatter.formatTemperature(data));
       remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.getTimestamp()));
     } else {
-      remoteViews.setTextColor(R.id.weather_small, ColorUtil.outdatedColor());
+      remoteViews.setTextColor(R.id.weather_small, ColorUtil.outdatedColor(ColorScheme.dark));
     }
   }
 }

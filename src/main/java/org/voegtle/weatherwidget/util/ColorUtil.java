@@ -27,10 +27,10 @@ public class ColorUtil {
     return Color.rgb(red, MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK);
   }
 
-  public static int byRain(boolean isRaining, Date lastUpdate) {
+  public static int byRain(boolean isRaining, ColorScheme scheme, Date lastUpdate) {
     int age = getAge(lastUpdate);
     if (age < WAITING_PERIOD) {
-      return isRaining ? Color.rgb(77, 140, 255) : Color.WHITE;
+      return isRaining ? Color.rgb(77, 140, 255) : (scheme == ColorScheme.dark ? Color.WHITE : Color.rgb(MIN_RGB_VALUE, MIN_RGB_VALUE, MIN_RGB_VALUE));
     }
     return byAge(lastUpdate);
   }
@@ -40,11 +40,11 @@ public class ColorUtil {
   }
 
 
-  public static int updateColor() {
-    return Color.DKGRAY;
+  public static int updateColor(ColorScheme scheme) {
+    return scheme == ColorScheme.dark ? Color.DKGRAY : Color.GRAY;
   }
 
-  public static int outdatedColor() {
-    return Color.GRAY;
+  public static int outdatedColor(ColorScheme scheme) {
+    return scheme == ColorScheme.dark ? Color.GRAY : Color.DKGRAY;
   }
 }
