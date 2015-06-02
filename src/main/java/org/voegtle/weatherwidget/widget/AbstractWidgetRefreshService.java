@@ -136,10 +136,8 @@ public abstract class AbstractWidgetRefreshService extends Service implements Sh
   }
 
   private void updateBackgroundColor() {
-    if (configuration.getColorScheme().equals(ColorScheme.dark)) {
-      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
-    } else {
-      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
+    if (configuration.getColorScheme().equals(ColorScheme.light)) {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD8, 0xff, 0xff, 0xff));
     }
   }
 

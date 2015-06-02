@@ -37,7 +37,7 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
 
   @Override
   public void showDataIsInvalid() {
-    remoteViews.setViewVisibility(R.id.refresh_button, View.INVISIBLE);
+    remoteViews.setViewVisibility(R.id.refresh_button, View.GONE);
 
     for (WeatherLocation location : locations) {
       remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.updateColor(colorScheme));

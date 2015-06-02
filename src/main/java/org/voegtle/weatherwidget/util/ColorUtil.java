@@ -30,9 +30,9 @@ public class ColorUtil {
   public static int byRain(boolean isRaining, ColorScheme scheme, Date lastUpdate) {
     int age = getAge(lastUpdate);
     if (age < WAITING_PERIOD) {
-      return isRaining ? Color.rgb(77, 140, 255) : (scheme == ColorScheme.dark ? Color.WHITE : Color.rgb(MIN_RGB_VALUE, MIN_RGB_VALUE, MIN_RGB_VALUE));
+      return isRaining ? Color.rgb(77, 140, 255) : (scheme == ColorScheme.dark ? Color.WHITE : Color.rgb(MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK));
     }
-    return byAge(lastUpdate);
+    return byAge(scheme, lastUpdate);
   }
 
   private static int getAge(Date lastUpdate) {
