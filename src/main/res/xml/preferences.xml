@@ -139,7 +139,7 @@
         <CheckBoxPreference
                 android:key="app_show_herzo"
                 android:title="@string/in_app"
-                android:defaultValue="false"
+                android:defaultValue="true"
                 />
         <CheckBoxPreference
                 android:key="widget_show_herzo"
