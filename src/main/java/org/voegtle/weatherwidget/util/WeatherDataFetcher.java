@@ -59,10 +59,10 @@ public class WeatherDataFetcher {
   private String concatenateLocations(List<WeatherLocation> locations) {
     StringBuilder sb = new StringBuilder();
     for (WeatherLocation location : locations) {
-      if (sb.length() > 0) {
-        sb.append(",");
-      }
       if (location.isActive()) {
+        if (sb.length() > 0) {
+          sb.append(",");
+        }
         sb.append(location.getIdentifier());
       }
     }

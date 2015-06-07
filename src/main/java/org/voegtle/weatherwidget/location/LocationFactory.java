@@ -90,7 +90,7 @@ public class LocationFactory {
     herzogenaurach.setRainIndicatorId(R.id.rain_indicator_herzogenaurach);
     herzogenaurach.setPrefShowInApp("app_show_herzo");
     herzogenaurach.setPrefShowInWidget("widget_show_herzo");
-    herzogenaurach.setVisibleInAppByDefault(false);
+    herzogenaurach.setVisibleInAppByDefault(true);
     herzogenaurach.setVisibleInWidgetByDefault(false);
     herzogenaurach.setPrefAlert("alert_herzo");
     locations.add(herzogenaurach);
@@ -105,7 +105,7 @@ public class LocationFactory {
     mobil.setRainIndicatorId(R.id.rain_indicator_mobil);
     mobil.setPrefShowInApp("app_show_mobil");
     mobil.setPrefShowInWidget("widget_show_mobil");
-    mobil.setVisibleInAppByDefault(true);
+    mobil.setVisibleInAppByDefault(false);
     mobil.setVisibleInWidgetByDefault(false);
     mobil.setPrefAlert("alert_mobil");
     locations.add(mobil);

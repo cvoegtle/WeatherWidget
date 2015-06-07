@@ -66,7 +66,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       updateViewData(data);
-      updateWidgets(data);
+//      updateWidgets(data);
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
 
