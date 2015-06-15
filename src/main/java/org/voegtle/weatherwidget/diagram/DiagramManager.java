@@ -21,7 +21,6 @@ import java.util.concurrent.TimeUnit;
 public class DiagramManager {
 
   private DiagramFragment fragment;
-  private DiagramMap diagrams = new DiagramMap();
   private DiagramCache diagramCache;
   private Drawable placeholderImage;
   private boolean active = false;
@@ -35,7 +34,6 @@ public class DiagramManager {
     configureTheme();
 
     active = true;
-    diagramCache.readAll(diagrams);
   }
 
   private void configureTheme() {
@@ -78,13 +76,12 @@ public class DiagramManager {
     try {
       inProgress = true;
 
-      Diagram diagram = diagrams.get(diagramId);
+      Diagram diagram = diagramCache.read(diagramId);
       if (diagram == null || diagram.isOld() || force) {
         showDrawable(placeholderImage);
         Drawable image = fetchDrawable(diagramId);
         diagram = new Diagram(diagramId, image);
 
-        diagrams.put(diagramId, diagram);
         diagramCache.write(diagram);
       }
 

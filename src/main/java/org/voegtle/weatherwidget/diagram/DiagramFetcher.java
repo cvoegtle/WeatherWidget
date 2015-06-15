@@ -28,8 +28,8 @@ public class DiagramFetcher {
       if (statusCode / 100 == 2) { // check for 200 ... 299
         return createImageFromResponse(response);
       }
-    } catch (Exception e) {
-      Log.d(DiagramFetcher.class.toString(), "Failed to download image", e);
+    } catch (Throwable e) {
+      Log.e(DiagramFetcher.class.toString(), "Failed to download image", e);
     }
     return null;
   }

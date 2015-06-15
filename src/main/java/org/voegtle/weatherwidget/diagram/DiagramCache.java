@@ -35,17 +35,7 @@ public class DiagramCache {
     return diagramIndex > 0 ? diagramIndex : 0;
   }
 
-  public void readAll(DiagramMap diagrams) {
-    diagrams.clear();
-    for (DiagramEnum diagramId : DiagramEnum.values()) {
-      Diagram diagram = read(diagramId);
-      if (diagram != null) {
-        diagrams.put(diagramId, diagram);
-      }
-    }
-  }
-
-  private Diagram read(DiagramEnum diagramId) {
+  Diagram read(DiagramEnum diagramId) {
     long age = diagramPreferences.getLong(getAgeKey(diagramId), -1);
     if (age > 0) {
       String filename = getFilename(diagramId);
