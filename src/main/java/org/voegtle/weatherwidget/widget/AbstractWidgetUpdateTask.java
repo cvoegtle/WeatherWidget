@@ -14,25 +14,15 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
 
   private final Context context;
   private ApplicationSettings configuration;
-  private AbstractWidgetScreenPainter screenPainter;
   private final WeatherDataFetcher weatherDataFetcher;
 
-  public AbstractWidgetUpdateTask(Context context, ApplicationSettings configuration,
-                                  AbstractWidgetScreenPainter screenPainter) {
+  public AbstractWidgetUpdateTask(Context context, ApplicationSettings configuration) {
     super();
 
     this.context = context;
     this.configuration = configuration;
-    this.screenPainter = screenPainter;
     this.weatherDataFetcher = new WeatherDataFetcher();
   }
-
-  @Override
-  protected void onPreExecute() {
-    screenPainter.showDataIsInvalid();
-    screenPainter.updateAllWidgets();
-  }
-
 
   protected HashMap<LocationIdentifier, WeatherData> fetchAllWeatherData() {
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getLocations(), configuration.getSecret());

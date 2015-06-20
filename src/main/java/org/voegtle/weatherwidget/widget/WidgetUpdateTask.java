@@ -6,14 +6,23 @@ import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
-  private final WidgetScreenPainter screenPainter;
+  private final ArrayList<WidgetScreenPainter> screenPainters;
 
-  public WidgetUpdateTask(Context context, ApplicationSettings configuration, WidgetScreenPainter screenPainter) {
-    super(context, configuration, screenPainter);
-    this.screenPainter = screenPainter;
+  public WidgetUpdateTask(Context context, ApplicationSettings configuration, ArrayList<WidgetScreenPainter> screenPainters) {
+    super(context, configuration);
+    this.screenPainters = screenPainters;
+  }
+
+  @Override
+  protected void onPreExecute() {
+    for (WidgetScreenPainter screenPainter : screenPainters) {
+      screenPainter.showDataIsInvalid();
+      screenPainter.updateAllWidgets();
+    }
   }
 
 
@@ -22,7 +31,7 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
     try {
       return fetchAllWeatherData();
     } catch (Throwable th) {
-      screenPainter.showDataIsValid();
+      showDataIsValid();
     }
     return new HashMap<>();
   }
@@ -30,11 +39,19 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
   @Override
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
-      screenPainter.updateWidgetData(data);
+      for (WidgetScreenPainter screenPainter : screenPainters) {
+        screenPainter.updateWidgetData(data);
+      }
       checkDataForAlert(data);
     } catch (Throwable th) {
       Log.e(WidgetUpdateTask.class.toString(), "Failed to update View", th);
     } finally {
+      showDataIsValid();
+    }
+  }
+
+  private void showDataIsValid() {
+    for (WidgetScreenPainter screenPainter : screenPainters) {
       screenPainter.showDataIsValid();
     }
   }

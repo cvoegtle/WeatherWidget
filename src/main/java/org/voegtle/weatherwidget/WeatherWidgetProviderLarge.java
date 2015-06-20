@@ -2,8 +2,8 @@ package org.voegtle.weatherwidget;
 
 import android.content.Context;
 import org.voegtle.weatherwidget.system.AbstractWidgetUpdateManager;
-import org.voegtle.weatherwidget.system.WidgetUpdateManagerLarge;
-import org.voegtle.weatherwidget.widget.WidgetRefreshServiceLarge;
+import org.voegtle.weatherwidget.system.WidgetUpdateManager;
+import org.voegtle.weatherwidget.widget.WidgetRefreshService;
 
 public class WeatherWidgetProviderLarge extends AbstractWidgetProvider {
 
@@ -12,11 +12,11 @@ public class WeatherWidgetProviderLarge extends AbstractWidgetProvider {
 
   @Override
   Class<?> getWidgetServiceClass() {
-    return WidgetRefreshServiceLarge.class;
+    return WidgetRefreshService.class;
   }
 
   @Override
   AbstractWidgetUpdateManager getUpdateManager(Context context) {
-    return new WidgetUpdateManagerLarge(context);
+    return new WidgetUpdateManager(context);
   }
 }

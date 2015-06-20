@@ -11,8 +11,14 @@ public class SmallWidgetUpdateTask extends AbstractWidgetUpdateTask<String, Void
 
   public SmallWidgetUpdateTask(Context context, ApplicationSettings configuration,
                                SmallWidgetScreenPainter screenPainter) {
-    super(context, configuration, screenPainter);
+    super(context, configuration);
     this.screenPainter = screenPainter;
+  }
+
+  @Override
+  protected void onPreExecute() {
+    screenPainter.showDataIsInvalid();
+    screenPainter.updateAllWidgets();
   }
 
 
