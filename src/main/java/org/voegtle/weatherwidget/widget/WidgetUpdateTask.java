@@ -29,12 +29,19 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
   @Override
   protected HashMap<LocationIdentifier, WeatherData> doInBackground(Void... voids) {
     try {
-      return fetchAllWeatherData();
+      if (!screenPainters.isEmpty()) {
+        return fetchAllWeatherData();
+      }
     } catch (Throwable th) {
       showDataIsValid();
     }
     return new HashMap<>();
   }
+
+  protected HashMap<LocationIdentifier, WeatherData> fetchAllWeatherData() {
+    return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getLocations(), configuration.getSecret());
+  }
+
 
   @Override
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {

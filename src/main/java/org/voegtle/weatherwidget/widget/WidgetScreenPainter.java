@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
 
@@ -65,7 +66,7 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
   }
 
   private void updateUpdateTime() {
-    DateFormat df = new SimpleDateFormat("HH:mm");
+    DateFormat df = new SimpleDateFormat("HH:mm", Locale.GERMANY);
     remoteViews.setTextViewText(R.id.update_time, df.format(new Date()));
     remoteViews.setTextColor(R.id.update_time, ColorUtil.byAge(colorScheme, new Date()));
   }

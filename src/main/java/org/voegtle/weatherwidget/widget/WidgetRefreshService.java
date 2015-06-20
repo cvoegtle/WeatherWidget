@@ -16,7 +16,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
-import org.voegtle.weatherwidget.WeatherWidgetProvider;
 import org.voegtle.weatherwidget.WeatherWidgetProviderLarge;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
@@ -57,7 +56,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   private void updateWidget() {
     ensureResources();
     ArrayList<WidgetScreenPainter> screenPainters = new ArrayList<>();
-    getWidgetScreenPainter(screenPainters, false, WeatherWidgetProvider.class);
     getWidgetScreenPainter(screenPainters, true, WeatherWidgetProviderLarge.class);
     new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
   }
@@ -109,12 +107,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     }
 
     if (oldInterval != null && oldInterval.compareTo(interval) != 0) {
-      String message;
-      if (interval > 0) {
-        message = getApplicationContext().getString(R.string.intervall_changed) + " " + interval + "min";
-      } else {
-        message = getApplicationContext().getString(R.string.update_deaktiviert);
-      }
+      String message = getNotificationMessage(interval);
       new NotificationTask(getApplicationContext(), message).execute();
     }
 
@@ -126,7 +119,17 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
       }
     }
 
-    updateAllWidgets();
+    updateBackgroundColor();
+  }
+
+  private String getNotificationMessage(Integer interval) {
+    String message;
+    if (interval > 0) {
+      message = getApplicationContext().getString(R.string.intervall_changed) + " " + interval + "min";
+    } else {
+      message = getApplicationContext().getString(R.string.update_deaktiviert);
+    }
+    return message;
   }
 
   private void updateVisibility(int id, boolean isVisible) {
@@ -135,8 +138,10 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
 
 
   private void updateBackgroundColor() {
-    if (configuration.getColorScheme().equals(ColorScheme.light)) {
-      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD8, 0xff, 0xff, 0xff));
+    if (configuration.getColorScheme().equals(ColorScheme.dark)) {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
+    } else {
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
     }
   }
 
@@ -148,7 +153,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     }
 
     remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
-    updateAllWidgets();
   }
 
   private void ensureResources() {
@@ -159,22 +163,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     }
   }
 
-
-  private void updateAllWidgets() {
-    updateAllWidgets(WeatherWidgetProvider.class);
-    updateAllWidgets(WeatherWidgetProviderLarge.class);
-  }
-
-  protected void updateAllWidgets(Class<?> clazz) {
-    updateBackgroundColor();
-    ComponentName thisWidget = new ComponentName(this, clazz);
-    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-    int[] widgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-
-    for (int widgetId : widgetIds) {
-      appWidgetManager.updateAppWidget(widgetId, remoteViews);
-    }
-  }
 
   @Override
   public IBinder onBind(Intent intent) {

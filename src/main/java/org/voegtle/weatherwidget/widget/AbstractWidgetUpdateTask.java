@@ -13,8 +13,8 @@ import java.util.HashMap;
 abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncTask<Params, Progress, Result> {
 
   private final Context context;
-  private ApplicationSettings configuration;
-  private final WeatherDataFetcher weatherDataFetcher;
+  protected ApplicationSettings configuration;
+  protected final WeatherDataFetcher weatherDataFetcher;
 
   public AbstractWidgetUpdateTask(Context context, ApplicationSettings configuration) {
     super();
@@ -22,10 +22,6 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
     this.context = context;
     this.configuration = configuration;
     this.weatherDataFetcher = new WeatherDataFetcher();
-  }
-
-  protected HashMap<LocationIdentifier, WeatherData> fetchAllWeatherData() {
-    return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.getLocations(), configuration.getSecret());
   }
 
   protected WeatherData fetchWeatherData(String weatherServerUrl) {
