@@ -32,9 +32,11 @@ public class WeatherStationCheck {
   }
 
   private void buildAlert(WeatherData data) {
-    Date now = new Date();
-    if ((now.getTime() - data.getTimestamp().getTime()) > THRESHOLD) {
-      alerts.add(new WeatherAlert(data.getLocation(), data.getTimestamp()));
+    if (data != null) {
+      Date now = new Date();
+      if ((now.getTime() - data.getTimestamp().getTime()) > THRESHOLD) {
+        alerts.add(new WeatherAlert(data.getLocation(), data.getTimestamp()));
+      }
     }
   }
 }
