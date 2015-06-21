@@ -12,11 +12,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.WeatherWidgetProvider;
 import org.voegtle.weatherwidget.WeatherWidgetProviderLarge;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
@@ -32,7 +32,9 @@ import static android.os.Build.VERSION.SDK_INT;
 
 public class WidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
-  private RemoteViews remoteViews;
+
+  private RemoteViews smallRemoteViews;
+  private RemoteViews largeRemoteViews;
   private ApplicationSettings configuration;
 
   @Override
@@ -60,6 +62,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
 
   private void updateWidget() {
     ArrayList<WidgetScreenPainter> screenPainters = new ArrayList<>();
+    getWidgetScreenPainter(screenPainters, false, WeatherWidgetProvider.class);
     getWidgetScreenPainter(screenPainters, true, WeatherWidgetProviderLarge.class);
     new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
   }
@@ -70,7 +73,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     if (allWidgetIds.length > 0) {
-      screenPainters.add(new WidgetScreenPainter(appWidgetManager, allWidgetIds, remoteViews,
+      screenPainters.add(new WidgetScreenPainter(appWidgetManager, allWidgetIds, isDetailed ? largeRemoteViews : smallRemoteViews,
           configuration, getRefreshImage(), isDetailed));
     }
   }
@@ -119,7 +122,8 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
       boolean show = location.getPreferences().isShowInWidget();
       updateVisibility(location.getWeatherLineId(), show);
       if (SDK_INT >= 16) {
-        remoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
+        largeRemoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
+        smallRemoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
       }
     }
 
@@ -137,15 +141,18 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   }
 
   private void updateVisibility(int id, boolean isVisible) {
-    remoteViews.setViewVisibility(id, isVisible ? View.VISIBLE : View.GONE);
+    largeRemoteViews.setViewVisibility(id, isVisible ? View.VISIBLE : View.GONE);
+    smallRemoteViews.setViewVisibility(id, isVisible ? View.VISIBLE : View.GONE);
   }
 
 
   private void updateBackgroundColor() {
     if (configuration.getColorScheme().equals(ColorScheme.dark)) {
-      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
+      largeRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
+      smallRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
     } else {
-      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
+      largeRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
+      smallRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
     }
   }
 
@@ -153,17 +160,20 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   private void setWidgetIntents() {
     PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(getApplicationContext());
     for (WeatherLocation location : configuration.getLocations()) {
-      remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
+      largeRemoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
+      smallRemoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
     }
 
-    remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
+    largeRemoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
+    smallRemoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
   }
 
   private void ensureResources() {
     if (res == null) {
       res = getResources();
       configuration = new ApplicationSettings();
-      remoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
+      largeRemoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
+      smallRemoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
     }
   }
 
