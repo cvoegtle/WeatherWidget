@@ -32,8 +32,7 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
       if (!screenPainters.isEmpty()) {
         return fetchAllWeatherData();
       }
-    } catch (Throwable th) {
-      showDataIsValid();
+    } catch (Throwable ignore) {
     }
     return new HashMap<>();
   }
@@ -58,8 +57,12 @@ public class WidgetUpdateTask extends AbstractWidgetUpdateTask<Void, Void, HashM
   }
 
   private void showDataIsValid() {
-    for (WidgetScreenPainter screenPainter : screenPainters) {
-      screenPainter.showDataIsValid();
+    try {
+      for (WidgetScreenPainter screenPainter : screenPainters) {
+        screenPainter.showDataIsValid();
+      }
+    } catch (Throwable th) {
+      Log.e(WidgetUpdateTask.class.toString(), "Failed to repaint view", th);
     }
   }
 }

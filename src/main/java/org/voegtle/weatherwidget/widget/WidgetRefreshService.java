@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -48,13 +49,16 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    setWidgetIntents();
-    updateWidget();
-    return super.onStartCommand(intent, flags, startId);
+    try {
+      ensureResources();
+      setWidgetIntents();
+      updateWidget();
+    } finally {
+      return super.onStartCommand(intent, flags, startId);
+    }
   }
 
   private void updateWidget() {
-    ensureResources();
     ArrayList<WidgetScreenPainter> screenPainters = new ArrayList<>();
     getWidgetScreenPainter(screenPainters, true, WeatherWidgetProviderLarge.class);
     new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
