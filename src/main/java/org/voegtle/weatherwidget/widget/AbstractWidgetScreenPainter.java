@@ -22,7 +22,7 @@ public abstract class AbstractWidgetScreenPainter {
 
   protected void updateAllWidgets() {
     for (int widgetId : widgetIds) {
-      appWidgetManager.partiallyUpdateAppWidget(widgetId, remoteViews);
+      appWidgetManager.updateAppWidget(widgetId, remoteViews);
     }
   }
 

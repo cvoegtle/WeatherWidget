@@ -33,8 +33,6 @@ import static android.os.Build.VERSION.SDK_INT;
 public class WidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
 
-  private RemoteViews smallRemoteViews;
-  private RemoteViews largeRemoteViews;
   private ApplicationSettings configuration;
 
   @Override
@@ -46,14 +44,12 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     preferences.registerOnSharedPreferenceChangeListener(this);
 
     processPreferences(preferences);
-    setWidgetIntents();
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     try {
       ensureResources();
-      setWidgetIntents();
       updateWidget();
     } finally {
       return super.onStartCommand(intent, flags, startId);
@@ -73,7 +69,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(getApplicationContext());
     int[] allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
     if (allWidgetIds.length > 0) {
-      screenPainters.add(new WidgetScreenPainter(appWidgetManager, allWidgetIds, isDetailed ? largeRemoteViews : smallRemoteViews,
+      screenPainters.add(new WidgetScreenPainter(appWidgetManager, allWidgetIds, createRemoteViews(),
           configuration, getRefreshImage(), isDetailed));
     }
   }
@@ -98,7 +94,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
-    setWidgetIntents();
   }
 
   private void processPreferences(SharedPreferences preferences) {
@@ -118,16 +113,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
       new NotificationTask(getApplicationContext(), message).execute();
     }
 
-    for (WeatherLocation location : configuration.getLocations()) {
-      boolean show = location.getPreferences().isShowInWidget();
-      updateVisibility(location.getWeatherLineId(), show);
-      if (SDK_INT >= 16) {
-        largeRemoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
-        smallRemoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
-      }
-    }
-
-    updateBackgroundColor();
   }
 
   private String getNotificationMessage(Integer interval) {
@@ -140,40 +125,49 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     return message;
   }
 
-  private void updateVisibility(int id, boolean isVisible) {
-    largeRemoteViews.setViewVisibility(id, isVisible ? View.VISIBLE : View.GONE);
-    smallRemoteViews.setViewVisibility(id, isVisible ? View.VISIBLE : View.GONE);
+  private RemoteViews createRemoteViews() {
+    RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
+
+    updateBackgroundColor(remoteViews);
+    for (WeatherLocation location : configuration.getLocations()) {
+      boolean show = location.getPreferences().isShowInWidget();
+      updateVisibility(remoteViews, location.getWeatherLineId(), show);
+      if (SDK_INT >= 16) {
+        remoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());
+      }
+    }
+
+    setWidgetIntents(remoteViews);
+    return remoteViews;
+  }
+
+  private void updateVisibility(RemoteViews remoteViews, int id, boolean isVisible) {
+    remoteViews.setViewVisibility(id, isVisible ? View.VISIBLE : View.GONE);
   }
 
 
-  private void updateBackgroundColor() {
+  private void updateBackgroundColor(RemoteViews remoteViews) {
     if (configuration.getColorScheme().equals(ColorScheme.dark)) {
-      largeRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
-      smallRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xB1, 0x00, 0x00, 0x00));
     } else {
-      largeRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
-      smallRemoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
+      remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff));
     }
   }
 
 
-  private void setWidgetIntents() {
+  private void setWidgetIntents(RemoteViews remoteViews) {
     PendingIntent pendingOpenApp = IntentFactory.createOpenAppIntent(getApplicationContext());
     for (WeatherLocation location : configuration.getLocations()) {
-      largeRemoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
-      smallRemoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
+      remoteViews.setOnClickPendingIntent(location.getWeatherViewId(), pendingOpenApp);
     }
 
-    largeRemoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
-    smallRemoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
+    remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(getApplicationContext(), this.getClass()));
   }
 
   private void ensureResources() {
     if (res == null) {
       res = getResources();
       configuration = new ApplicationSettings();
-      largeRemoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
-      smallRemoteViews = new RemoteViews(getPackageName(), R.layout.widget_weather);
     }
   }
 
