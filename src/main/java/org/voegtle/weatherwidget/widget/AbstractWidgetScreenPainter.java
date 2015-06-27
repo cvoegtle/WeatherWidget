@@ -21,9 +21,7 @@ public abstract class AbstractWidgetScreenPainter {
   public abstract void showDataIsValid();
 
   protected void updateAllWidgets() {
-    for (int widgetId : widgetIds) {
-      appWidgetManager.updateAppWidget(widgetId, remoteViews);
-    }
+    appWidgetManager.updateAppWidget(widgetIds, remoteViews);
   }
 
 }
