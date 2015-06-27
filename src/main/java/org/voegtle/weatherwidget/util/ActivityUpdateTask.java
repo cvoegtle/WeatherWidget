@@ -10,8 +10,11 @@ import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.widget.ScreenPainterFactory;
+import org.voegtle.weatherwidget.widget.WidgetScreenPainter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
@@ -39,6 +42,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       updateViewData(data);
+      updateWidgets(data);
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
 
@@ -47,6 +51,15 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     } catch (Throwable th) {
       new UserFeedback(activity).showMessage(R.string.message_data_update_failed, showToast);
       Log.e(ActivityUpdateTask.class.toString(), "Failed to update View", th);
+    }
+  }
+
+  private void updateWidgets(HashMap<LocationIdentifier, WeatherData> data) {
+    ScreenPainterFactory factory = new ScreenPainterFactory(activity, configuration);
+    ArrayList<WidgetScreenPainter> screenPainters = factory.createScreenPainters();
+    for (WidgetScreenPainter screenPainter : screenPainters) {
+      screenPainter.updateWidgetData(data);
+      screenPainter.showDataIsValid();
     }
   }
 
