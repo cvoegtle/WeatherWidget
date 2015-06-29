@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -49,7 +50,7 @@ public class ScreenPainterFactory {
   }
 
   private Drawable getRefreshImage() {
-    return context.getResources().getDrawable(configuration.getColorScheme() == ColorScheme.dark ? R.drawable.ic_action_refresh : R.drawable.ic_action_refresh_dark);
+    return ContextCompat.getDrawable(context, configuration.getColorScheme() == ColorScheme.dark ? R.drawable.ic_action_refresh : R.drawable.ic_action_refresh_dark);
   }
 
   private RemoteViews createRemoteViews() {
