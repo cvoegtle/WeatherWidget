@@ -26,6 +26,16 @@ public class DataFormatter {
     return builder.toString();
   }
 
+  public String formatHumidityForActivity(WeatherData data) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(formatPercent(data.getHumidity()));
+    if (data.getInsideHumidity() != null) {
+      builder.append(" / ");
+      builder.append(formatPercent(data.getInsideHumidity()));
+    }
+    return builder.toString();
+  }
+
   public String formatWidgetLine(WeatherLocation location, WeatherData data, boolean detailed) {
     StringBuilder weatherData = new StringBuilder(location.getShortName() + " "
         + formatTemperature(data));

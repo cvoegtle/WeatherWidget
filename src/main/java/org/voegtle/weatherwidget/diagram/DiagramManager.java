@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,9 +43,9 @@ public class DiagramManager {
     WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(context);
     ApplicationSettings configuration = weatherSettingsReader.read(preferences);
     if (configuration.getColorScheme() == ColorScheme.dark) {
-      placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture);
+      placeholderImage = ContextCompat.getDrawable(context, R.drawable.ic_action_picture);
     } else {
-      placeholderImage = fragment.getResources().getDrawable(R.drawable.ic_action_picture_dark);
+      placeholderImage = ContextCompat.getDrawable(context, R.drawable.ic_action_picture_dark);
     }
   }
 

@@ -2,8 +2,8 @@ package org.voegtle.weatherwidget.location;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +48,8 @@ public class LocationView extends LinearLayout {
     moreData = (GridLayout) findViewById(R.id.more_data);
     kwhCaptionView = (TextView) findViewById(R.id.caption_kwh);
 
-    imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse);
-    imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand);
+    imageCollapse = ContextCompat.getDrawable(context, R.drawable.ic_action_collapse);
+    imageExpand = ContextCompat.getDrawable(context, R.drawable.ic_action_expand);
 
     TypedArray attributes = context.getTheme().obtainStyledAttributes(
         attrs, R.styleable.LocationView, 0, 0);
@@ -141,7 +141,7 @@ public class LocationView extends LinearLayout {
     temperature.setText(formatter.formatTemperatureForActivity(data));
 
     TextView humidity = (TextView) findViewById(R.id.humidity);
-    humidity.setText(formatter.formatPercent(data.getHumidity()));
+    humidity.setText(formatter.formatHumidityForActivity(data));
 
     setRainData(data.getRain(), R.id.label_rain_last_hour, R.id.rain_last_hour);
     setRainData(data.getRainToday(), R.id.label_rain_today, R.id.rain_today);
@@ -215,12 +215,12 @@ public class LocationView extends LinearLayout {
 
   public void configureSymbols(boolean useDarkSymbols) {
     if (useDarkSymbols) {
-      imageCollapse = context.getResources().getDrawable(R.drawable.ic_action_collapse_dark);
-      imageExpand = context.getResources().getDrawable(R.drawable.ic_action_expand_dark);
+      imageCollapse = ContextCompat.getDrawable(context, R.drawable.ic_action_collapse_dark);
+      imageExpand = ContextCompat.getDrawable(context, R.drawable.ic_action_expand_dark);
 
-      Drawable imageForecastDark = context.getResources().getDrawable(R.drawable.ic_action_forecast_dark);
+      Drawable imageForecastDark = ContextCompat.getDrawable(context, R.drawable.ic_action_forecast_dark);
       forecastButton.setImageDrawable(imageForecastDark);
-      Drawable imageDiagramDark = context.getResources().getDrawable(R.drawable.ic_action_picture_dark);
+      Drawable imageDiagramDark = ContextCompat.getDrawable(context, R.drawable.ic_action_picture_dark);
       diagramButton.setImageDrawable(imageDiagramDark);
     }
     setExpanded(expanded);
