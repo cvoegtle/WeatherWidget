@@ -40,4 +40,17 @@
     <item name="dark">dark</item>
     <item name="light">light</item>
   </string-array>
+
+  <string-array name="orderCriteria">
+    <item name="location">Ort</item>
+    <item name="temperature">Temperatur</item>
+    <item name="rain">Regen</item>
+    <item name="humidity">Luftfeuchtigkeit</item>
+  </string-array>
+  <string-array name="orderCriteriaValues">
+    <item name="location">location</item>
+    <item name="temperature">temperature</item>
+    <item name="rain">rain</item>
+    <item name="humidity">humidity</item>
+  </string-array>
 </resources>

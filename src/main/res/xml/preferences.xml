@@ -23,6 +23,13 @@
           android:defaultValue="dark"
           android:entries="@array/colorScheme"
           android:entryValues="@array/colorSchemeValues"/>
+  <ListPreference android:key="order_criteria"
+                  android:title="@string/order_criteria"
+                  android:summary="@string/order_summary"
+                  android:defaultValue="location"
+                  android:entries="@array/orderCriteria"
+                  android:entryValues="@array/orderCriteriaValues"/>
+
   <CheckBoxPreference
           android:key="info_notification"
           android:title="@string/weather_as_notification"

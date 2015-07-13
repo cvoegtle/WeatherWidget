@@ -4,7 +4,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier;
 
 import java.util.Date;
 
-public class WeatherData {
+public class WeatherData implements Comparable<WeatherData> {
   private LocationIdentifier location;
   private Date timestamp;
   private Float temperature;
@@ -98,5 +98,13 @@ public class WeatherData {
 
   public void setWatt(Float watt) {
     this.watt = watt;
+  }
+
+  @Override
+  public int compareTo(WeatherData another) {
+    if (getTemperature() == null) {
+      return -1;
+    }
+    return getTemperature().compareTo(another.getTemperature());
   }
 }

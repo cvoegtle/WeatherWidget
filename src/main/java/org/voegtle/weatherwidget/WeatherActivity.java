@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import org.voegtle.weatherwidget.base.ThemedActivity;
 import org.voegtle.weatherwidget.diagram.*;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
@@ -46,6 +47,8 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
     configureLocationSymbolColor();
 
     updater = new WeatherDataUpdater(this, configuration);
+
+    LinearLayout container = (LinearLayout)findViewById(R.id.location_container);
   }
 
   private void startWeatherUpdater() {

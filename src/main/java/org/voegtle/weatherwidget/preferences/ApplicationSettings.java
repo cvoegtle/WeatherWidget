@@ -12,6 +12,7 @@ public class ApplicationSettings {
   private Integer textSize;
   private boolean showInfoNotification;
   private ColorScheme colorScheme;
+  private OrderCriteria orderCriteria;
 
   public ApplicationSettings() {
   }
@@ -75,5 +76,13 @@ public class ApplicationSettings {
       }
     }
     return null;
+  }
+
+  public void setOrderCriteria(OrderCriteria orderCriteria) {
+    this.orderCriteria = orderCriteria;
+  }
+
+  public OrderCriteria getOrderCriteria() {
+    return orderCriteria;
   }
 }

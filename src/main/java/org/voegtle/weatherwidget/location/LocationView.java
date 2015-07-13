@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.location;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -15,6 +16,7 @@ import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.data.Statistics;
 import org.voegtle.weatherwidget.data.StatisticsSet;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.util.ColorUtil;
 import org.voegtle.weatherwidget.util.DataFormatter;
 
 public class LocationView extends LinearLayout {
@@ -238,5 +240,9 @@ public class LocationView extends LinearLayout {
     this.expanded = expanded;
     resizeButton.setImageDrawable(expanded ? imageCollapse : imageExpand);
     moreData.setVisibility(expanded ? View.VISIBLE : View.GONE);
+  }
+
+  public void highlight(boolean highlight) {
+    setBackgroundColor(highlight ? ColorUtil.highlight() : Color.TRANSPARENT);
   }
 }

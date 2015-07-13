@@ -105,4 +105,6 @@
   <string name="action_compare_with_pb_fr">HZA - PB - FR</string>
   <string name="city_herzo">HZA</string>
   <string name="station_herzogenaurach">Wetterstation in Herzogenaurach</string>
+  <string name="order_criteria">Sortierkriterium</string>
+  <string name="order_summary">Bestimmt die Reihenfolge in der App</string>
 </resources>

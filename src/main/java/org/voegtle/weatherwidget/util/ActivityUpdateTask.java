@@ -2,9 +2,11 @@ package org.voegtle.weatherwidget.util;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.LinearLayout;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.WeatherActivity;
 import org.voegtle.weatherwidget.data.WeatherData;
+import org.voegtle.weatherwidget.location.LocationContainer;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
@@ -42,6 +44,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   protected void onPostExecute(HashMap<LocationIdentifier, WeatherData> data) {
     try {
       updateViewData(data);
+      sortViews(data);
       updateWidgets(data);
 
       new UserFeedback(activity).showMessage(R.string.message_data_updated, showToast);
@@ -93,4 +96,11 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     view.setData(data);
     view.setTextColor(color);
   }
+
+  private void sortViews(HashMap<LocationIdentifier, WeatherData> data) {
+    LinearLayout container = (LinearLayout) (activity.findViewById(R.id.location_container));
+    LocationContainer locationContainer = new LocationContainer(activity.getApplicationContext(), container, configuration);
+    locationContainer.updateLocationOrder(data);
+  }
+
 }

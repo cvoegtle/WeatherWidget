@@ -47,4 +47,8 @@ public class ColorUtil {
   public static int outdatedColor(ColorScheme scheme) {
     return scheme == ColorScheme.dark ? Color.GRAY : Color.DKGRAY;
   }
+
+  public static int highlight() {
+    return Color.argb(64, 128, 64, 64);
+  }
 }
