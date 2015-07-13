@@ -54,6 +54,9 @@ public class LocationComparatorFactory {
         if (lhs.getRainToday() == null) {
           return -1;
         }
+        if (rhs.getRainToday() == null) {
+          return 1;
+        }
         return lhs.getRainToday().compareTo(rhs.getRainToday());
       }
     };
