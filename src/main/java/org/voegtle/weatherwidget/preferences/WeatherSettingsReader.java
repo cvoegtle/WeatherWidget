@@ -31,7 +31,6 @@ public class WeatherSettingsReader {
     configuration.setUpdateIntervall(getInteger(preferences, "update_interval", 30));
     configuration.setTextSize(getInteger(preferences, "text_size", 11));
     configuration.setColorScheme(getColorScheme(preferences, "color_scheme", ColorScheme.dark));
-    configuration.setOrderCriteria(getOrderCriteria(preferences, "order_criteria", OrderCriteria.location));
 
     return configuration;
   }
@@ -43,15 +42,6 @@ public class WeatherSettingsReader {
       scheme = defaultScheme;
     }
     return scheme;
-  }
-
-  private OrderCriteria getOrderCriteria(SharedPreferences preferences, String key, OrderCriteria defaultCriteria) {
-    String value = getString(preferences, key);
-    OrderCriteria criteria = OrderCriteria.byKey(value);
-    if (criteria == null) {
-      criteria = defaultCriteria;
-    }
-    return criteria;
   }
 
   private List<WeatherLocation> readLocations(SharedPreferences preferences) {

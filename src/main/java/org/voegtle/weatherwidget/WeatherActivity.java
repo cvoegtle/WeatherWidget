@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -16,10 +17,7 @@ import org.voegtle.weatherwidget.diagram.*;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
 import org.voegtle.weatherwidget.location.WeatherLocation;
-import org.voegtle.weatherwidget.preferences.ApplicationSettings;
-import org.voegtle.weatherwidget.preferences.ColorScheme;
-import org.voegtle.weatherwidget.preferences.WeatherPreferences;
-import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
+import org.voegtle.weatherwidget.preferences.*;
 import org.voegtle.weatherwidget.util.StatisticsUpdater;
 import org.voegtle.weatherwidget.util.WeatherDataUpdater;
 
@@ -48,7 +46,7 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
     updater = new WeatherDataUpdater(this, configuration);
 
-    LinearLayout container = (LinearLayout)findViewById(R.id.location_container);
+    LinearLayout container = (LinearLayout) findViewById(R.id.location_container);
   }
 
   private void startWeatherUpdater() {
@@ -214,6 +212,10 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
         return true;
       case R.id.action_diagrams:
         startActivity(new Intent(this, MainDiagramActivity.class));
+        return true;
+      case R.id.action_sort:
+        AlertDialog orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this, updater);
+        orderCriteriaDialog.show();
         return true;
       case R.id.action_perferences:
         startActivity(new Intent(this, WeatherPreferences.class));

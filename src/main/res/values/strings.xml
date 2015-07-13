@@ -107,4 +107,5 @@
   <string name="station_herzogenaurach">Wetterstation in Herzogenaurach</string>
   <string name="order_criteria">Sortierkriterium</string>
   <string name="order_summary">Bestimmt die Reihenfolge in der App</string>
+  <string name="action_sort">sortieren</string>
 </resources>

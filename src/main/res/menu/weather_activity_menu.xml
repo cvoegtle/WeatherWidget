@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
+  <item android:id="@+id/action_sort"
+        android:icon="@drawable/ic_action_sort_by_size"
+          android:showAsAction="ifRoom"
+        android:title="@string/action_sort"/>
   <item android:id="@+id/action_diagrams"
         android:icon="@drawable/ic_action_picture"
         android:showAsAction="ifRoom"

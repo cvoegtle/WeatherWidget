@@ -11,13 +11,11 @@ public class LocationContainer {
 
   private final LocationOrderStore locationOrderStore;
   private final LinearLayout container;
-  private final ApplicationSettings configuration;
   private List<WeatherLocation> locations;
 
   public LocationContainer(Context context, LinearLayout container, ApplicationSettings configuration) {
     this.container = container;
     this.locations = configuration.getLocations();
-    this.configuration = configuration;
     this.locationOrderStore = new LocationOrderStore(context);
   }
 
@@ -74,7 +72,7 @@ public class LocationContainer {
     for (WeatherData data : weatherData.values()) {
       sortedWeatherData.add(data);
     }
-    Comparator<WeatherData> comparator = LocationComparatorFactory.createComparator(configuration.getOrderCriteria());
+    Comparator<WeatherData> comparator = LocationComparatorFactory.createComparator(locationOrderStore.readOrderCriteria());
     Collections.sort(sortedWeatherData, comparator);
     return sortedWeatherData;
   }

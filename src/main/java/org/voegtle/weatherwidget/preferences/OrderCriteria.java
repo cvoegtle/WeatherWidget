@@ -17,4 +17,29 @@ public enum OrderCriteria {
     }
     return null;
   }
+
+  public static OrderCriteria byIndex(int which) {
+    if (which == 0) {
+      return OrderCriteria.location;
+    } else if (which == 1) {
+      return OrderCriteria.temperature;
+    } else if (which == 2) {
+      return OrderCriteria.rain;
+    } else if (which == 3) {
+      return OrderCriteria.humidity;
+    }
+    return OrderCriteria.location;
+  }
+
+  public static int index(OrderCriteria find) {
+    int i = 0;
+    for (OrderCriteria orderCriteria : values()) {
+      if (orderCriteria.equals(find)) {
+        return i;
+      }
+      i++;
+    }
+    return -1;
+  }
+
 }
