@@ -16,27 +16,23 @@ public class ColorUtil {
   }
 
   public static int byAge(Date lastUpdate) {
-    int age = getAge(lastUpdate);
+    int age = DateUtil.getAge(lastUpdate);
     int notRed = Math.min(MAX_RGB_VALUE, Math.max(MAX_RGB_VALUE - (age - 420) / 10, MIN_RGB_VALUE));
     return Color.rgb(MAX_RGB_VALUE, notRed, notRed);
   }
 
   public static int byAgeDark(Date lastUpdate) {
-    int age = getAge(lastUpdate);
+    int age = DateUtil.getAge(lastUpdate);
     int red = Math.min(MAX_RGB_VALUE, Math.max(MIN_RGB_VALUE_DARK + (age - 420) / 10, MIN_RGB_VALUE_DARK));
     return Color.rgb(red, MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK);
   }
 
   public static int byRain(boolean isRaining, ColorScheme scheme, Date lastUpdate) {
-    int age = getAge(lastUpdate);
+    int age = DateUtil.getAge(lastUpdate);
     if (age < WAITING_PERIOD) {
       return isRaining ? Color.rgb(77, 140, 255) : (scheme == ColorScheme.dark ? Color.WHITE : Color.rgb(MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK));
     }
     return byAge(scheme, lastUpdate);
-  }
-
-  private static int getAge(Date lastUpdate) {
-    return (int) ((new Date().getTime() - lastUpdate.getTime()) / 1000);
   }
 
 

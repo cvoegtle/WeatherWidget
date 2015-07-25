@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.location;
 
 import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.preferences.OrderCriteria;
+import org.voegtle.weatherwidget.util.DateUtil;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,32 +49,52 @@ public class LocationComparatorFactory {
     return new Comparator<WeatherData>() {
       @Override
       public int compare(WeatherData lhs, WeatherData rhs) {
-        if (lhs.getRainToday() == null && rhs.getRainToday() == null) {
-          return 0;
+        Integer nullCheckResult = checkForNullValue(lhs, rhs);
+        if (nullCheckResult != null) {
+          return nullCheckResult;
         }
-        if (lhs.getRainToday() == null) {
-          return -1;
+
+        Integer outdated = DateUtil.checkIfOutdated(lhs.getTimestamp(), rhs.getTimestamp());
+        if (outdated != null) {
+          return outdated;
         }
-        if (rhs.getRainToday() == null) {
-          return 1;
-        }
+
         return lhs.getRainToday().compareTo(rhs.getRainToday());
       }
     };
   }
 
+
   private static Comparator<WeatherData> getHumidityComparator() {
     return new Comparator<WeatherData>() {
       @Override
       public int compare(WeatherData lhs, WeatherData rhs) {
-        if (lhs.getHumidity() == null && rhs.getHumidity() == null) {
-          return 0;
+        Integer nullCheckResult = checkForNullValue(lhs, rhs);
+        if (nullCheckResult != null) {
+          return nullCheckResult;
         }
-        if (lhs.getHumidity() == null) {
-          return -1;
+
+        Integer outdated = DateUtil.checkIfOutdated(lhs.getTimestamp(), rhs.getTimestamp());
+        if (outdated != null) {
+          return outdated;
         }
+
         return lhs.getHumidity().compareTo(rhs.getHumidity());
       }
     };
   }
+
+  private static Integer checkForNullValue(WeatherData lhs, WeatherData rhs) {
+    if (lhs.getRainToday() == null && rhs.getRainToday() == null) {
+      return 0;
+    }
+    if (lhs.getRainToday() == null) {
+      return -1;
+    }
+    if (rhs.getRainToday() == null) {
+      return 1;
+    }
+    return null;
+  }
+
 }

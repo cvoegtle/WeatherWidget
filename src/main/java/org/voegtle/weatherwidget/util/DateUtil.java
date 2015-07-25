@@ -28,5 +28,22 @@ public class DateUtil {
     cal.set(Calendar.MILLISECOND, 0);
   }
 
+  public static int getAge(Date lastUpdate) {
+    return (int) ((new Date().getTime() - lastUpdate.getTime()) / 1000);
+  }
 
+  public static Integer checkIfOutdated(Date d1, Date d2) {
+    if (isOutdated(d1)) {
+      return -1;
+    }
+
+    if (isOutdated(d2)) {
+      return 1;
+    }
+    return null;
+  }
+
+  public static boolean isOutdated(Date timestamp) {
+    return getAge(timestamp) > 20 * 60;
+  }
 }

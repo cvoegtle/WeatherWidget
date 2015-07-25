@@ -1,6 +1,8 @@
 package org.voegtle.weatherwidget.data;
 
+import android.support.annotation.NonNull;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
+import org.voegtle.weatherwidget.util.DateUtil;
 
 import java.util.Date;
 
@@ -101,10 +103,19 @@ public class WeatherData implements Comparable<WeatherData> {
   }
 
   @Override
-  public int compareTo(WeatherData another) {
+  public int compareTo(@NonNull WeatherData another) {
     if (getTemperature() == null) {
       return -1;
     }
+    if (another.getTemperature() == null) {
+      return 1;
+    }
+
+    Integer outdated = DateUtil.checkIfOutdated(getTimestamp(), another.getTimestamp());
+    if (outdated != null) {
+      return outdated;
+    }
+
     return getTemperature().compareTo(another.getTemperature());
   }
 }
