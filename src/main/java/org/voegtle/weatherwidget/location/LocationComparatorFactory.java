@@ -49,14 +49,14 @@ public class LocationComparatorFactory {
     return new Comparator<WeatherData>() {
       @Override
       public int compare(WeatherData lhs, WeatherData rhs) {
-        Integer nullCheckResult = checkForNullValue(lhs, rhs);
-        if (nullCheckResult != null) {
-          return nullCheckResult;
-        }
-
         Integer outdated = DateUtil.checkIfOutdated(lhs.getTimestamp(), rhs.getTimestamp());
         if (outdated != null) {
           return outdated;
+        }
+
+        Integer nullCheckResult = checkForNullValue(lhs.getRainToday(), rhs.getRainToday());
+        if (nullCheckResult != null) {
+          return nullCheckResult;
         }
 
         return lhs.getRainToday().compareTo(rhs.getRainToday());
@@ -69,14 +69,14 @@ public class LocationComparatorFactory {
     return new Comparator<WeatherData>() {
       @Override
       public int compare(WeatherData lhs, WeatherData rhs) {
-        Integer nullCheckResult = checkForNullValue(lhs, rhs);
-        if (nullCheckResult != null) {
-          return nullCheckResult;
-        }
-
         Integer outdated = DateUtil.checkIfOutdated(lhs.getTimestamp(), rhs.getTimestamp());
         if (outdated != null) {
           return outdated;
+        }
+
+        Integer nullCheckResult = checkForNullValue(lhs.getHumidity(), rhs.getHumidity());
+        if (nullCheckResult != null) {
+          return nullCheckResult;
         }
 
         return lhs.getHumidity().compareTo(rhs.getHumidity());
@@ -84,14 +84,14 @@ public class LocationComparatorFactory {
     };
   }
 
-  private static Integer checkForNullValue(WeatherData lhs, WeatherData rhs) {
-    if (lhs.getRainToday() == null && rhs.getRainToday() == null) {
+  private static Integer checkForNullValue(Float lhs, Float rhs) {
+    if (lhs == null && rhs == null) {
       return 0;
     }
-    if (lhs.getRainToday() == null) {
+    if (lhs == null) {
       return -1;
     }
-    if (rhs.getRainToday() == null) {
+    if (rhs == null) {
       return 1;
     }
     return null;

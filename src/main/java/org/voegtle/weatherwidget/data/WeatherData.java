@@ -104,16 +104,16 @@ public class WeatherData implements Comparable<WeatherData> {
 
   @Override
   public int compareTo(@NonNull WeatherData another) {
+    Integer outdated = DateUtil.checkIfOutdated(getTimestamp(), another.getTimestamp());
+    if (outdated != null) {
+      return outdated;
+    }
+
     if (getTemperature() == null) {
       return -1;
     }
     if (another.getTemperature() == null) {
       return 1;
-    }
-
-    Integer outdated = DateUtil.checkIfOutdated(getTimestamp(), another.getTimestamp());
-    if (outdated != null) {
-      return outdated;
     }
 
     return getTemperature().compareTo(another.getTemperature());
