@@ -13,6 +13,7 @@ public class BaliDiagramActivity extends DiagramActivity {
     addDiagram((DiagramEnum.bali_7days));
     addDiagram(DiagramEnum.bali_paderborn);
     addDiagram(DiagramEnum.bali_wind);
+    addDiagram(DiagramEnum.bali_humidity);
   }
 
 
@@ -35,6 +36,9 @@ public class BaliDiagramActivity extends DiagramActivity {
         return true;
       case R.id.action_bali_wind:
         viewPager.setCurrentItem(2, true);
+        return true;
+      case R.id.action_bali_humidity:
+        viewPager.setCurrentItem(3, true);
         return true;
     }
     return false;
