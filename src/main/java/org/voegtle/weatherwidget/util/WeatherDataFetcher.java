@@ -35,7 +35,7 @@ public class WeatherDataFetcher {
     String urlEncodedSecret = StringUtil.urlEncode(secret);
     String locationIdentifiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -161,7 +161,7 @@ public class WeatherDataFetcher {
       for (int i = 1; i < locationIds.size(); i++) {
         concatenatedLocationIds += "," + locationIds.get(i);
       }
-      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?locations=" + concatenatedLocationIds + "&type=stats");
+      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&locations=" + concatenatedLocationIds + "&type=stats");
       try {
         return JsonTranslater.toStatistics(jsonStatistics);
       } catch (Throwable e) {
@@ -182,7 +182,7 @@ public class WeatherDataFetcher {
       if (statusCode == 200) {
         HttpEntity entity = response.getEntity();
         InputStream content = entity.getContent();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(content, "ISO-8859-1"));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(content, "UTF-8"));
         String line;
         while ((line = reader.readLine()) != null) {
           builder.append(line);
