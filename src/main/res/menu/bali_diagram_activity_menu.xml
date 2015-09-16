@@ -8,13 +8,13 @@
   <item android:id="@+id/action_bali_7days"
         android:showAsAction="ifRoom"
         android:title="@string/action_bali_7days"/>
-  <item android:id="@+id/action_bali_paderborn"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_bali_paderborn"/>
   <item android:id="@+id/action_bali_wind"
         android:showAsAction="ifRoom"
         android:title="@string/action_bali_wind"/>
   <item android:id="@+id/action_bali_humidity"
         android:showAsAction="ifRoom"
         android:title="@string/action_bali_humidity"/>
+  <item android:id="@+id/action_bali_paderborn"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_bali_paderborn"/>
 </menu>

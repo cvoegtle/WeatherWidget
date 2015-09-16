@@ -11,9 +11,9 @@ public class BaliDiagramActivity extends DiagramActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addDiagram((DiagramEnum.bali_7days));
-    addDiagram(DiagramEnum.bali_paderborn);
     addDiagram(DiagramEnum.bali_wind);
     addDiagram(DiagramEnum.bali_humidity);
+    addDiagram(DiagramEnum.bali_paderborn);
   }
 
 
@@ -31,13 +31,13 @@ public class BaliDiagramActivity extends DiagramActivity {
       case R.id.action_bali_7days:
         viewPager.setCurrentItem(0, true);
         break;
-      case R.id.action_bali_paderborn:
+      case R.id.action_bali_wind:
         viewPager.setCurrentItem(1, true);
         return true;
-      case R.id.action_bali_wind:
+      case R.id.action_bali_humidity:
         viewPager.setCurrentItem(2, true);
         return true;
-      case R.id.action_bali_humidity:
+      case R.id.action_bali_paderborn:
         viewPager.setCurrentItem(3, true);
         return true;
     }

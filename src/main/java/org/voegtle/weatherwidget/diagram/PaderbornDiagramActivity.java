@@ -12,8 +12,8 @@ public class PaderbornDiagramActivity extends DiagramActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.paderborn_2days);
-    addDiagram(DiagramEnum.paderborn_year);
     addDiagram(DiagramEnum.paderborn_lastyear);
+    addDiagram(DiagramEnum.paderborn_year);
   }
 
 
@@ -32,11 +32,11 @@ public class PaderbornDiagramActivity extends DiagramActivity {
         viewPager.setCurrentItem(0, true);
         return true;
 
-      case R.id.action_year:
+      case R.id.action_last_year:
         viewPager.setCurrentItem(1, true);
         return true;
 
-      case R.id.action_last_year:
+      case R.id.action_year:
         viewPager.setCurrentItem(2, true);
         return true;
     }

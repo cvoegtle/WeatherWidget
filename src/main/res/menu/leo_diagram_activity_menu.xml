@@ -5,9 +5,6 @@
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
-  <item android:id="@+id/action_leo_paderborn"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_compare_with_paderborn"/>
   <item android:id="@+id/action_leo_rain"
         android:showAsAction="ifRoom"
         android:title="@string/action_rain"/>
@@ -17,4 +14,7 @@
   <item android:id="@+id/action_leo_solar"
         android:showAsAction="ifRoom"
         android:title="@string/action_solar"/>
+  <item android:id="@+id/action_leo_paderborn"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_compare_with_paderborn"/>
 </menu>

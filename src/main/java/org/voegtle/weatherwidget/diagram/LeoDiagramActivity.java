@@ -13,10 +13,10 @@ public class LeoDiagramActivity extends DiagramActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    addDiagram(DiagramEnum.leo_paderborn);
     addDiagram(DiagramEnum.leo_regen);
     addDiagram(DiagramEnum.leo_wind);
     addDiagram(DiagramEnum.leo_solar);
+    addDiagram(DiagramEnum.leo_paderborn);
     Intent intent = getIntent();
     if (intent != null) {
       String title = intent.getStringExtra(LeoDiagramActivity.class.getName());
@@ -36,16 +36,16 @@ public class LeoDiagramActivity extends DiagramActivity {
   @Override
   protected boolean onCustomItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_leo_paderborn:
+      case R.id.action_leo_rain:
         viewPager.setCurrentItem(0, true);
         return true;
-      case R.id.action_leo_rain:
+      case R.id.action_leo_wind:
         viewPager.setCurrentItem(1, true);
         return true;
-      case R.id.action_leo_wind:
+      case R.id.action_leo_solar:
         viewPager.setCurrentItem(2, true);
         return true;
-      case R.id.action_leo_solar:
+      case R.id.action_leo_paderborn:
         viewPager.setCurrentItem(3, true);
         return true;
     }
