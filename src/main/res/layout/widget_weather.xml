@@ -89,25 +89,26 @@
                 android:textStyle="bold"
                 android:text="@string/city_bonn"/>
     </LinearLayout>
-    <LinearLayout android:id="@+id/line_freiburg"
+    <LinearLayout android:id="@+id/line_magdeburg"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:visibility="gone">
-      <TextView android:id="@+id/rain_indicator_freiburg"
+      <TextView android:id="@+id/rain_indicator_magdeburg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="2dp"
                 android:textColor="#ffffff"
                 android:text="@string/big_dot"/>
-      <TextView android:id="@+id/weather_freiburg"
+      <TextView android:id="@+id/weather_magdeburg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="2dp"
                 android:textColor="#ffffff"
                 android:textStyle="bold"
-                android:text="@string/city_freiburg"/>
+                android:text="@string/city_magdeburg"/>
     </LinearLayout>
+
     <LinearLayout android:id="@+id/line_herzogenaurach"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
@@ -126,6 +127,25 @@
                 android:textColor="#ffffff"
                 android:textStyle="bold"
                 android:text="@string/city_herzo"/>
+    </LinearLayout>
+    <LinearLayout android:id="@+id/line_freiburg"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:visibility="gone">
+      <TextView android:id="@+id/rain_indicator_freiburg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:textColor="#ffffff"
+                android:text="@string/big_dot"/>
+      <TextView android:id="@+id/weather_freiburg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:text="@string/city_freiburg"/>
     </LinearLayout>
     <LinearLayout android:id="@+id/line_mobil"
                   android:layout_width="fill_parent"

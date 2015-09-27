@@ -5,16 +5,13 @@
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
-  <item android:id="@+id/action_bali_7days"
+  <item android:id="@+id/action_magdeburg_rain"
         android:showAsAction="ifRoom"
-        android:title="@string/action_bali_7days"/>
-  <item android:id="@+id/action_bali_wind"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_bali_wind"/>
-  <item android:id="@+id/action_bali_humidity"
+        android:title="@string/action_rain"/>
+  <item android:id="@+id/action_magdeburg_humidity"
         android:showAsAction="ifRoom"
         android:title="@string/action_humidity"/>
-  <item android:id="@+id/action_bali_paderborn"
+  <item android:id="@+id/action_md_pb_fr"
         android:showAsAction="ifRoom"
-        android:title="@string/action_bali_paderborn"/>
+        android:title="@string/action_compare_md_with_pb_fr"/>
 </menu>

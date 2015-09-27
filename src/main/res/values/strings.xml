@@ -108,5 +108,9 @@
   <string name="order_criteria">Sortierkriterium</string>
   <string name="order_summary">Bestimmt die Reihenfolge in der App</string>
   <string name="action_sort">sortieren</string>
-  <string name="action_bali_humidity">Luftfeuchtigkeit</string>
+  <string name="action_humidity">Luftfeuchtigkeit</string>
+  <string name="city_magdeburg_full">Magdeburg</string>
+  <string name="city_magdeburg">MD</string>
+  <string name="station_magdeburg">Wetterstation in Magdeburg</string>
+  <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
 </resources>

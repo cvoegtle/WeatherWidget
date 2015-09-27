@@ -80,6 +80,21 @@ public class LocationFactory {
     leopoldshoehe.setPrefAlert("alert_leo");
     locations.add(leopoldshoehe);
 
+    WeatherLocation magdeburg = new WeatherLocation(LocationIdentifier.Magdeburg);
+    magdeburg.setName(res.getString(R.string.city_magdeburg_full));
+    magdeburg.setShortName(res.getString(R.string.city_magdeburg));
+    magdeburg.setIdentifier("elb");
+    magdeburg.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=103610&wahl=vorhersage"));
+    magdeburg.setWeatherLineId(R.id.line_magdeburg);
+    magdeburg.setWeatherViewId(R.id.weather_magdeburg);
+    magdeburg.setRainIndicatorId(R.id.rain_indicator_magdeburg);
+    magdeburg.setPrefShowInApp("app_show_magdeburg");
+    magdeburg.setPrefShowInWidget("widget_show_magdeburg");
+    magdeburg.setVisibleInAppByDefault(true);
+    magdeburg.setVisibleInWidgetByDefault(false);
+    magdeburg.setPrefAlert("alert_magdeburg");
+    locations.add(magdeburg);
+
     WeatherLocation herzogenaurach = new WeatherLocation(LocationIdentifier.Herzogenaurach);
     herzogenaurach.setName(res.getString(R.string.city_herzo_full));
     herzogenaurach.setShortName(res.getString(R.string.city_herzo));

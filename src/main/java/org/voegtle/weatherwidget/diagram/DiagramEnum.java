@@ -36,7 +36,11 @@ public enum DiagramEnum {
 
   herzo_regen(27, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
   herzo_wind(28, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
-  herzo_paderborn_freiburg(29, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image");
+  herzo_paderborn_freiburg(29, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
+
+  magdeburg_regen(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
+  magdeburg_humidity(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_paderborn_freiburg(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image");
 
   private String url;
   private int id;

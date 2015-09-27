@@ -116,20 +116,20 @@
       </PreferenceCategory>
 
       <PreferenceCategory
-              android:title="@string/station_freiburg"
-              android:key="settings_freiburg">
+              android:title="@string/station_magdeburg"
+              android:key="settings_magdeburg">
         <CheckBoxPreference
-                android:key="app_show_freiburg"
+                android:key="app_show_magdeburg"
                 android:title="@string/in_app"
                 android:defaultValue="true"
                 />
         <CheckBoxPreference
-                android:key="widget_show_freiburg"
+                android:key="widget_show_magdeburg"
                 android:title="@string/in_widget"
-                android:defaultValue="true"
+                android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="alert_freiburg"
+                android:key="alert_magdeburg"
                 android:title="@string/alert"
                 android:defaultValue="false"
                 />
@@ -153,6 +153,27 @@
                 android:defaultValue="false"
                 />
       </PreferenceCategory>
+
+      <PreferenceCategory
+              android:title="@string/station_freiburg"
+              android:key="settings_freiburg">
+        <CheckBoxPreference
+                android:key="app_show_freiburg"
+                android:title="@string/in_app"
+                android:defaultValue="true"
+                />
+        <CheckBoxPreference
+                android:key="widget_show_freiburg"
+                android:title="@string/in_widget"
+                android:defaultValue="true"
+                />
+        <CheckBoxPreference
+                android:key="alert_freiburg"
+                android:title="@string/alert"
+                android:defaultValue="false"
+                />
+      </PreferenceCategory>
+
       <PreferenceCategory
               android:title="@string/station_mobil"
               android:key="settings_mobil">
