@@ -113,4 +113,5 @@
   <string name="city_magdeburg">MD</string>
   <string name="station_magdeburg">Wetterstation in Magdeburg</string>
   <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
+  <string name="action_30_days">30 Tage</string>
 </resources>

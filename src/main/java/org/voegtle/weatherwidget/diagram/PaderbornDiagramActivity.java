@@ -12,6 +12,7 @@ public class PaderbornDiagramActivity extends DiagramActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.paderborn_2days);
+    addDiagram(DiagramEnum.paderborn_30days);
     addDiagram(DiagramEnum.paderborn_lastyear);
     addDiagram(DiagramEnum.paderborn_year);
   }

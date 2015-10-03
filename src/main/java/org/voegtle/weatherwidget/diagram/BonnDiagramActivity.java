@@ -11,8 +11,9 @@ public class BonnDiagramActivity extends DiagramActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.bonn_2days);
-    addDiagram(DiagramEnum.bonn_year);
+    addDiagram(DiagramEnum.bonn_30days);
     addDiagram(DiagramEnum.bonn_lastyear);
+    addDiagram(DiagramEnum.bonn_year);
   }
 
 
@@ -31,13 +32,18 @@ public class BonnDiagramActivity extends DiagramActivity {
         viewPager.setCurrentItem(0, true);
         return true;
 
-      case R.id.action_year:
+      case R.id.action_30_days:
         viewPager.setCurrentItem(1, true);
-        return true;
+        break;
 
       case R.id.action_last_year:
         viewPager.setCurrentItem(2, true);
         return true;
+
+      case R.id.action_year:
+        viewPager.setCurrentItem(3, true);
+        return true;
+
     }
     return false;
   }
