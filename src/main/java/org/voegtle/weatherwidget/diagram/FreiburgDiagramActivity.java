@@ -39,6 +39,7 @@ public class FreiburgDiagramActivity extends DiagramActivity {
 
       case R.id.action_30_days:
         viewPager.setCurrentItem(2, true);
+        return true;
 
       case R.id.action_last_year:
         viewPager.setCurrentItem(3, true);

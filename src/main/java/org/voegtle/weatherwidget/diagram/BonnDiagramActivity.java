@@ -34,7 +34,7 @@ public class BonnDiagramActivity extends DiagramActivity {
 
       case R.id.action_30_days:
         viewPager.setCurrentItem(1, true);
-        break;
+        return true;
 
       case R.id.action_last_year:
         viewPager.setCurrentItem(2, true);

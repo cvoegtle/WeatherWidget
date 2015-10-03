@@ -9,41 +9,41 @@ public enum DiagramEnum {
 
   paderborn_2days(6, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=426012227&format=image"),
   paderborn_30days(7, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=183626445&format=image"),
-  paderborn_year(7, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=747368525&format=image"),
-  paderborn_lastyear(8, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2118924146&format=image"),
+  paderborn_year(8, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=747368525&format=image"),
+  paderborn_lastyear(9, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2118924146&format=image"),
 
-  freiburg_2days(9, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=145042526&format=image"),
-  freiburg_wind(10, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1045869484&format=image"),
-  freiburg_30days(11, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1650739963&format=image"),
-  freiburg_year(12, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1963429675&format=image"),
-  freiburg_lastyear(13, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1557105940&format=image"),
+  freiburg_2days(10, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=145042526&format=image"),
+  freiburg_wind(11, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1045869484&format=image"),
+  freiburg_30days(12, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1650739963&format=image"),
+  freiburg_year(13, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1963429675&format=image"),
+  freiburg_lastyear(14, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1557105940&format=image"),
 
-  bonn_2days(14, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=529970705&format=image"),
-  bonn_30days(15, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1771661938&format=image"),
-  bonn_year(16, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=2014590801&format=image"),
-  bonn_lastyear(17, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1706278998&format=image"),
+  bonn_2days(15, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=529970705&format=image"),
+  bonn_30days(16, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1771661938&format=image"),
+  bonn_year(17, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=2014590801&format=image"),
+  bonn_lastyear(18, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1706278998&format=image"),
 
-  bali_7days(18, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=376041681&format=image"),
-  bali_paderborn(19, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1754363161&format=image"),
-  bali_wind(20, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1959064763&format=image"),
-  bali_humidity(21, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1408859930&format=image"),
+  bali_7days(19, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=376041681&format=image"),
+  bali_paderborn(20, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1754363161&format=image"),
+  bali_wind(21, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1959064763&format=image"),
+  bali_humidity(22, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1408859930&format=image"),
 
-  mobil_paderborn(22, "https://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
-  mobil_regen(23, "https://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
-  mobil_wind(22, "https://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
+  mobil_paderborn(23, "https://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
+  mobil_regen(24, "https://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
+  mobil_wind(25, "https://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
 
-  leo_paderborn(24, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1747103714&format=image"),
-  leo_regen(25, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
-  leo_wind(26, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
-  leo_solar(27, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image"),
+  leo_paderborn(26, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1747103714&format=image"),
+  leo_regen(27, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
+  leo_wind(28, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
+  leo_solar(29, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image"),
 
-  herzo_regen(28, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
-  herzo_wind(29, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
-  herzo_paderborn_freiburg(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
+  herzo_regen(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
+  herzo_wind(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
+  herzo_paderborn_freiburg(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
 
-  magdeburg_regen(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
-  magdeburg_humidity(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
-  magdeburg_paderborn_freiburg(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image");
+  magdeburg_regen(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
+  magdeburg_humidity(34, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_paderborn_freiburg(35, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image");
 
   private String url;
   private int id;

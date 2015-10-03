@@ -33,12 +33,16 @@ public class PaderbornDiagramActivity extends DiagramActivity {
         viewPager.setCurrentItem(0, true);
         return true;
 
-      case R.id.action_last_year:
+      case R.id.action_30_days:
         viewPager.setCurrentItem(1, true);
         return true;
 
-      case R.id.action_year:
+      case R.id.action_last_year:
         viewPager.setCurrentItem(2, true);
+        return true;
+
+      case R.id.action_year:
+        viewPager.setCurrentItem(3, true);
         return true;
     }
     return false;
