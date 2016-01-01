@@ -2,41 +2,34 @@ package org.voegtle.weatherwidget.diagram;
 
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class DiagramFetcher {
-  private HttpClient client;
 
   public DiagramFetcher() {
-    client = new DefaultHttpClient();
   }
 
   public Drawable fetchImageFromUrl(DiagramEnum diagramId) {
-    HttpGet httpGet = new HttpGet(diagramId.getUrl());
+    Drawable image = null;
     try {
-      HttpResponse response = client.execute(httpGet);
-      StatusLine statusLine = response.getStatusLine();
-      int statusCode = statusLine.getStatusCode();
-      if (statusCode / 100 == 2) { // check for 200 ... 299
-        return createImageFromResponse(response);
-      }
+      URL url = new URL(diagramId.getUrl());
+      URLConnection connection = url.openConnection();
+      InputStream input = connection.getInputStream();
+
+      image = createImageFromResponse(input);
+
+      input.close();
     } catch (Throwable e) {
       Log.e(DiagramFetcher.class.toString(), "Failed to download image", e);
     }
-    return null;
+    return image;
   }
 
-  private Drawable createImageFromResponse(HttpResponse response) throws IOException {
-    HttpEntity entity = response.getEntity();
-    InputStream inputStream = entity.getContent();
+  private Drawable createImageFromResponse(InputStream inputStream) throws IOException {
     return Drawable.createFromStream(inputStream, "Google Drive");
   }
 }

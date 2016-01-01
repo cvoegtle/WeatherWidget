@@ -1,12 +1,6 @@
 package org.voegtle.weatherwidget.util;
 
 import android.util.Log;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +12,8 @@ import org.voegtle.weatherwidget.location.WeatherLocation;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -173,23 +169,16 @@ public class WeatherDataFetcher {
 
   private String getStringFromUrl(String uri) {
     StringBuilder builder = new StringBuilder();
-    HttpClient client = new DefaultHttpClient();
-    HttpGet httpGet = new HttpGet(uri);
     try {
-      HttpResponse response = client.execute(httpGet);
-      StatusLine statusLine = response.getStatusLine();
-      int statusCode = statusLine.getStatusCode();
-      if (statusCode == 200) {
-        HttpEntity entity = response.getEntity();
-        InputStream content = entity.getContent();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(content, "UTF-8"));
-        String line;
-        while ((line = reader.readLine()) != null) {
-          builder.append(line);
-        }
-      } else {
-        Log.e(WeatherDataFetcher.class.toString(), "Failed to download weather data with statuscode=" + statusCode);
+      URL url = new URL(uri);
+      URLConnection connection = url.openConnection();
+      InputStream content = connection.getInputStream();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(content, "UTF-8"));
+      String line;
+      while ((line = reader.readLine()) != null) {
+        builder.append(line);
       }
+      reader.close();
     } catch (Throwable e) {
       Log.d(WeatherDataFetcher.class.toString(), "Failed to download weather data", e);
     }

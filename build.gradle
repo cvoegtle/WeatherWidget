@@ -3,20 +3,20 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.2.3'
     }
 }
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 repositories {
     mavenCentral()
 }
 android {
-    buildToolsVersion '22.0.1'
-    compileSdkVersion 22
+    buildToolsVersion '23.0.2'
+    compileSdkVersion 23
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
     }
 
     signingConfigs {
@@ -68,7 +68,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:21.0.3'
+    compile 'com.android.support:support-v13:23.1.1'
 }
 
 import java.util.regex.Pattern
