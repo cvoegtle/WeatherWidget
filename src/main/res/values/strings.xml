@@ -114,4 +114,5 @@
   <string name="station_magdeburg">Wetterstation in Magdeburg</string>
   <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
   <string name="action_30_days">30 Tage</string>
+  <string name="wind_speed">Wind</string>
 </resources>

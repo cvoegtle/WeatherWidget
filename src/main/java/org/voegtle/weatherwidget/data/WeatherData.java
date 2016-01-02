@@ -17,6 +17,7 @@ public class WeatherData implements Comparable<WeatherData> {
   private Float rainToday;
   private boolean raining;
   private Float watt;
+  private Float wind;
 
 
   public WeatherData(LocationIdentifier location) {
@@ -100,6 +101,14 @@ public class WeatherData implements Comparable<WeatherData> {
 
   public void setWatt(Float watt) {
     this.watt = watt;
+  }
+
+  public Float getWind() {
+    return wind;
+  }
+
+  public void setWind(Float wind) {
+    this.wind = wind;
   }
 
   @Override

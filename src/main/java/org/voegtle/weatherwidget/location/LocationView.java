@@ -147,6 +147,7 @@ public class LocationView extends LinearLayout {
 
     setRainData(data.getRain(), R.id.label_rain_last_hour, R.id.rain_last_hour);
     setRainData(data.getRainToday(), R.id.label_rain_today, R.id.rain_today);
+    setWind(data.getWind(), R.id.label_wind_speed, R.id.wind_speed);
     setSolarData(data.getWatt(), R.id.label_solar_output, R.id.solar_output);
   }
 
@@ -156,7 +157,7 @@ public class LocationView extends LinearLayout {
     if (watt != null && watt != 0.0) {
       solarLabel.setVisibility(View.VISIBLE);
       solar.setVisibility(View.VISIBLE);
-      solar.setText(formatter.formatOutput(watt));
+      solar.setText(formatter.formatWatt(watt));
     } else {
       solarLabel.setVisibility(View.GONE);
       solar.setVisibility(View.GONE);
@@ -173,8 +174,22 @@ public class LocationView extends LinearLayout {
     } else {
       rainLabel.setVisibility(View.GONE);
       rain.setVisibility(View.GONE);
-
     }
+  }
+
+  private void setWind(Float value, int labelId, int dataId) {
+    TextView windLabel = (TextView) findViewById(labelId);
+    TextView wind = (TextView) findViewById(dataId);
+
+    if (value != null && value >= 1.0) {
+      windLabel.setVisibility(View.VISIBLE);
+      wind.setVisibility(View.VISIBLE);
+      wind.setText(formatter.formatWind(value));
+    } else {
+      windLabel.setVisibility(View.GONE);
+      wind.setVisibility(View.GONE);
+    }
+
   }
 
   public void setMoreData(Statistics statistics) {

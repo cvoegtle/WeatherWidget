@@ -94,7 +94,16 @@ public class DataFormatter {
     }
   }
 
-  public String formatOutput(Float watt) {
+  public String formatWind(Float val) {
+    if (val != null) {
+      return numberFormat.format(val) + "km/h";
+    } else {
+      return "";
+    }
+
+  }
+
+  public String formatWatt(Float watt) {
     if (watt != null) {
       return numberFormat.format(watt) + "W";
     } else {

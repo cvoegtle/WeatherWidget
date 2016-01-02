@@ -44,7 +44,7 @@
   <GridLayout android:id="@+id/grid_current"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:rowCount="5"
+              android:rowCount="6"
               android:columnCount="2"
               android:paddingLeft="5dp">
     <TextView android:id="@+id/label_temperature"
@@ -110,10 +110,27 @@
               android:layout_row="3"
               android:layout_column="1"/>
 
-    <TextView android:id="@+id/label_solar_output"
+    <TextView android:id="@+id/label_wind_speed"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_row="4"
+              android:layout_column="0"
+              android:visibility="gone"
+              android:textStyle="bold"
+              android:text="@string/wind_speed"/>
+    <TextView android:id="@+id/wind_speed"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:visibility="gone"
+              android:paddingLeft="10dp"
+              android:layout_row="4"
+              android:layout_column="1"/>
+
+
+    <TextView android:id="@+id/label_solar_output"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_row="5"
               android:layout_column="0"
               android:visibility="gone"
               android:textStyle="bold"
@@ -123,7 +140,7 @@
               android:layout_height="wrap_content"
               android:visibility="gone"
               android:paddingLeft="10dp"
-              android:layout_row="4"
+              android:layout_row="5"
               android:layout_column="1"/>
   </GridLayout>
 

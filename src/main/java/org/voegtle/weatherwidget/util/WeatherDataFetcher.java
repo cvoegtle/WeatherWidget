@@ -140,6 +140,11 @@ public class WeatherDataFetcher {
     if (rainToday instanceof Number) {
       data.setRainToday(((Number) rainToday).floatValue());
     }
+
+    Object wind = weather.get("wind");
+    if (wind instanceof Number) {
+      data.setWind(((Number)wind).floatValue());
+    }
     return data;
   }
 
