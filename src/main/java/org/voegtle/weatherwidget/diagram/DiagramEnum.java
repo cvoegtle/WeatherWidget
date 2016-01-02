@@ -36,14 +36,16 @@ public enum DiagramEnum {
   leo_regen(27, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
   leo_wind(28, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
   leo_solar(29, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image"),
+  leo_solar_average(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1485103805&format=image"),
+  leo_solar_production(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1189452944&format=image"),
 
-  herzo_regen(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
-  herzo_wind(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
-  herzo_paderborn_freiburg(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
+  herzo_regen(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
+  herzo_wind(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
+  herzo_paderborn_freiburg(34, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
 
-  magdeburg_regen(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
-  magdeburg_humidity(34, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
-  magdeburg_paderborn_freiburg(35, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image");
+  magdeburg_regen(35, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
+  magdeburg_humidity(36, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_paderborn_freiburg(37, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image");
 
   private String url;
   private int id;

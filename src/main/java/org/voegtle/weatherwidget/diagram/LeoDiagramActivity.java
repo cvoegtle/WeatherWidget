@@ -16,6 +16,8 @@ public class LeoDiagramActivity extends DiagramActivity {
     addDiagram(DiagramEnum.leo_regen);
     addDiagram(DiagramEnum.leo_wind);
     addDiagram(DiagramEnum.leo_solar);
+    addDiagram(DiagramEnum.leo_solar_average);
+    addDiagram(DiagramEnum.leo_solar_production);
     addDiagram(DiagramEnum.leo_paderborn);
     Intent intent = getIntent();
     if (intent != null) {
@@ -45,8 +47,14 @@ public class LeoDiagramActivity extends DiagramActivity {
       case R.id.action_leo_solar:
         viewPager.setCurrentItem(2, true);
         return true;
-      case R.id.action_leo_paderborn:
+      case R.id.action_solar_daily:
         viewPager.setCurrentItem(3, true);
+        break;
+      case R.id.action_solar_monthly:
+        viewPager.setCurrentItem(4, true);
+        break;
+      case R.id.action_leo_paderborn:
+        viewPager.setCurrentItem(5, true);
         return true;
     }
     return false;

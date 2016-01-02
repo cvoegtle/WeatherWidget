@@ -115,4 +115,6 @@
   <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
   <string name="action_30_days">30 Tage</string>
   <string name="wind_speed">Wind</string>
+  <string name="action_solar_daily">Tagesproduktion Solaranlage</string>
+  <string name="action_solar_monthly">Monatsproduktion Solaranlage</string>
 </resources>

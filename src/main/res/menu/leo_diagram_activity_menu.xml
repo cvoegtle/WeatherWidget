@@ -14,6 +14,12 @@
   <item android:id="@+id/action_leo_solar"
         android:showAsAction="ifRoom"
         android:title="@string/action_solar"/>
+  <item android:id="@+id/action_solar_daily"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_solar_daily"/>
+  <item android:id="@+id/action_solar_monthly"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_solar_monthly"/>
   <item android:id="@+id/action_leo_paderborn"
         android:showAsAction="ifRoom"
         android:title="@string/action_compare_with_paderborn"/>
