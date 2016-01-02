@@ -14,10 +14,10 @@
   <item android:id="@+id/action_7_days_average"
         android:showAsAction="ifRoom"
         android:title="@string/action_7_days_average"/>
-  <item android:id="@+id/action_summerdays"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_summer_days"/>
   <item android:id="@+id/action_winterdays"
         android:showAsAction="ifRoom"
         android:title="@string/action_winter_days"/>
+  <item android:id="@+id/action_summerdays"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_summer_days"/>
 </menu>
