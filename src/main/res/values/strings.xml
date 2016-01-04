@@ -117,4 +117,8 @@
   <string name="wind_speed">Wind</string>
   <string name="action_solar_daily">Tagesproduktion Solaranlage</string>
   <string name="action_solar_monthly">Monatsproduktion Solaranlage</string>
+  <string name="action_share">Teilen</string>
+  <string name="message_permission_required">Die Schreibrechte sind notwendig, um das Diagramm an andere Anwendungen
+    weiterzugeben.
+  </string>
 </resources>

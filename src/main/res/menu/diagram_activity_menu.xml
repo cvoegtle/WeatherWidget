@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
+  <item android:id="@+id/action_share"
+        android:icon="@drawable/ic_action_share"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_share"/>
   <item android:id="@+id/action_7_days"
         android:showAsAction="ifRoom"
         android:title="@string/action_7_days"/>

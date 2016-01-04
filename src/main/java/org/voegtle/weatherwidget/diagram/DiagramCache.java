@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,6 +51,14 @@ public class DiagramCache {
     }
     return null;
   }
+
+  public byte[] asPNG(DiagramEnum diagramId) {
+    Diagram diagram = read(diagramId);
+    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    saveDrawableAsPng(diagram.getImage(), bytes);
+    return bytes.toByteArray();
+  }
+
 
   public void write(Diagram diagram) {
     SharedPreferences.Editor editor = diagramPreferences.edit();
