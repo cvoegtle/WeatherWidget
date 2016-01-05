@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class DiagramActivity extends ThemedActivity {
   protected ArrayList<DiagramEnum> diagramIdList = new ArrayList<>();
@@ -111,7 +112,7 @@ public abstract class DiagramActivity extends ThemedActivity {
     if (StringUtil.isNotEmpty(filename)) {
       Intent share = new Intent(Intent.ACTION_SEND);
       share.setType("image/png");
-      share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filename));
+      share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filename + "?" + new Date()));
       startActivity(Intent.createChooser(share, "Wetterwolke Diagramm teilen"));
     }
   }
