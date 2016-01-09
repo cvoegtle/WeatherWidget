@@ -39,7 +39,7 @@ public class DiagramCache {
   Diagram read(DiagramEnum diagramId) {
     long age = diagramPreferences.getLong(getAgeKey(diagramId), -1);
     if (age > 0) {
-      String filename = getFilename(diagramId);
+      String filename = diagramId.getFilename();
       try {
         InputStream inputStream = context.openFileInput(filename);
         Drawable image = Drawable.createFromStream(inputStream, "Local Cache");
@@ -70,7 +70,7 @@ public class DiagramCache {
 
   private void saveAsPngFile(Diagram diagram) {
     try {
-      OutputStream outputStream = context.openFileOutput(getFilename(diagram.getId()), Context.MODE_PRIVATE);
+      OutputStream outputStream = context.openFileOutput(diagram.getId().getFilename(), Context.MODE_PRIVATE);
       saveDrawableAsPng(diagram.getImage(), outputStream);
       outputStream.close();
     } catch (IOException ex) {
@@ -85,10 +85,6 @@ public class DiagramCache {
 
   private String getAgeKey(DiagramEnum diagramId) {
     return diagramId.toString() + DIAGRAM_AGE;
-  }
-
-  private String getFilename(DiagramEnum diagramId) {
-    return diagramId.toString() + ".png";
   }
 
 }

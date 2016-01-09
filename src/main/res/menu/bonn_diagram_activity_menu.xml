@@ -9,6 +9,9 @@
         android:icon="@drawable/ic_action_share"
         android:showAsAction="ifRoom"
         android:title="@string/action_share"/>
+  <item android:id="@+id/action_wind"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_wind"/>
   <item android:id="@+id/action_2_days"
         android:showAsAction="ifRoom"
         android:title="@string/action_2_days"/>

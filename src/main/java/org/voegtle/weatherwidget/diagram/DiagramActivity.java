@@ -112,14 +112,15 @@ public abstract class DiagramActivity extends ThemedActivity {
     if (StringUtil.isNotEmpty(filename)) {
       Intent share = new Intent(Intent.ACTION_SEND);
       share.setType("image/png");
-      share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filename + "?" + new Date()));
+      share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filename));
       startActivity(Intent.createChooser(share, "Wetterwolke Diagramm teilen"));
     }
   }
 
   private String writeImageToFile(int diagramIndex) {
-    String filename = Environment.getExternalStorageDirectory() + File.separator + "wetterwolke_share.png";
-    byte[] image = diagramCache.asPNG(diagramIdList.get(diagramIndex));
+    DiagramEnum diagramEnum = diagramIdList.get(diagramIndex);
+    byte[] image = diagramCache.asPNG(diagramEnum);
+    String filename = Environment.getExternalStorageDirectory() + File.separator + diagramEnum.getFilename();
     File f = new File(filename);
     try {
       if (f.exists()) {
