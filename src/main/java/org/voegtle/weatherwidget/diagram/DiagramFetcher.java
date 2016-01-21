@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -13,16 +14,22 @@ public class DiagramFetcher {
   public DiagramFetcher() {
   }
 
+  private int COMMUNICATION_TIMEOUT = 60000;
+
   public Drawable fetchImageFromUrl(DiagramEnum diagramId) {
     Drawable image = null;
     try {
       URL url = new URL(diagramId.getUrl());
-      URLConnection connection = url.openConnection();
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setConnectTimeout(COMMUNICATION_TIMEOUT);
+      connection.setReadTimeout(COMMUNICATION_TIMEOUT);
       InputStream input = connection.getInputStream();
-
-      image = createImageFromResponse(input);
-
-      input.close();
+      try {
+        image = createImageFromResponse(input);
+      } finally {
+        input.close();
+        connection.disconnect();
+      }
     } catch (Throwable e) {
       Log.e(DiagramFetcher.class.toString(), "Failed to download image", e);
     }

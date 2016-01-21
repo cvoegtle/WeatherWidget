@@ -9,9 +9,12 @@ import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -172,21 +175,33 @@ public class WeatherDataFetcher {
     return new HashMap<>();
   }
 
+  private int COMMUNICATION_TIMEOUT = 60000;
   private String getStringFromUrl(String uri) {
-    StringBuilder builder = new StringBuilder();
+    String response = "";
     try {
       URL url = new URL(uri);
-      URLConnection connection = url.openConnection();
-      InputStream content = connection.getInputStream();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(content, "UTF-8"));
-      String line;
-      while ((line = reader.readLine()) != null) {
-        builder.append(line);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      try {
+        connection.setConnectTimeout(COMMUNICATION_TIMEOUT);
+        connection.setReadTimeout(COMMUNICATION_TIMEOUT);
+        response = readStream(connection.getInputStream());
+      } finally {
+        connection.disconnect();
       }
-      reader.close();
     } catch (Throwable e) {
       Log.d(WeatherDataFetcher.class.toString(), "Failed to download weather data", e);
     }
+    return response;
+  }
+
+  private String readStream(InputStream content) throws IOException {
+    StringBuilder builder = new StringBuilder();
+    BufferedReader reader = new BufferedReader(new InputStreamReader(content, "UTF-8"));
+    String line;
+    while ((line = reader.readLine()) != null) {
+      builder.append(line);
+    }
+    reader.close();
     return builder.toString();
   }
 
