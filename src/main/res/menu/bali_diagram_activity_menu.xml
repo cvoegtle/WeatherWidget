@@ -18,7 +18,13 @@
   <item android:id="@+id/action_bali_humidity"
         android:showAsAction="ifRoom"
         android:title="@string/action_humidity"/>
+  <item android:id="@+id/action_30_days"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_30_days"/>
   <item android:id="@+id/action_bali_paderborn"
         android:showAsAction="ifRoom"
         android:title="@string/action_bali_paderborn"/>
+  <item android:id="@+id/action_last_year"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_last_year"/>
 </menu>

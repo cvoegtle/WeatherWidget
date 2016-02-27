@@ -13,7 +13,9 @@ public class BaliDiagramActivity extends DiagramActivity {
     addDiagram((DiagramEnum.bali_7days));
     addDiagram(DiagramEnum.bali_wind);
     addDiagram(DiagramEnum.bali_humidity);
+    addDiagram(DiagramEnum.bali_30days);
     addDiagram(DiagramEnum.bali_paderborn);
+    addDiagram(DiagramEnum.bali_lastyear);
   }
 
 
@@ -37,8 +39,14 @@ public class BaliDiagramActivity extends DiagramActivity {
       case R.id.action_bali_humidity:
         viewPager.setCurrentItem(2, true);
         return true;
-      case R.id.action_bali_paderborn:
+      case R.id.action_30_days:
         viewPager.setCurrentItem(3, true);
+        return true;
+      case R.id.action_bali_paderborn:
+        viewPager.setCurrentItem(4, true);
+        return true;
+      case R.id.action_last_year:
+        viewPager.setCurrentItem(5, true);
         return true;
     }
     return false;
