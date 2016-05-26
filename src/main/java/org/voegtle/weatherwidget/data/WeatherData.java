@@ -9,6 +9,7 @@ import java.util.Date;
 public class WeatherData implements Comparable<WeatherData> {
   private LocationIdentifier location;
   private Date timestamp;
+  private String localtime;
   private Float temperature;
   private Float insideTemperature;
   private Float humidity;
@@ -126,5 +127,13 @@ public class WeatherData implements Comparable<WeatherData> {
     }
 
     return getTemperature().compareTo(another.getTemperature());
+  }
+
+  public void setLocaltime(String localtime) {
+    this.localtime = localtime;
+  }
+
+  public String getLocaltime() {
+    return localtime;
   }
 }

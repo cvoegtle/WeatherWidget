@@ -88,7 +88,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
   private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
   private String getCaption(String locationName, WeatherData data) {
-    return locationName + " - " + sdf.format(data.getTimestamp());
+    return locationName + " - " + data.getLocaltime();
   }
 
   private void updateView(final LocationView view, final String caption, final WeatherData data, final int color) {

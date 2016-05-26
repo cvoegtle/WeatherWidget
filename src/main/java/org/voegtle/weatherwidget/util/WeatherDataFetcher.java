@@ -34,7 +34,7 @@ public class WeatherDataFetcher {
     String urlEncodedSecret = StringUtil.urlEncode(secret);
     String locationIdentifiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&new&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -71,7 +71,7 @@ public class WeatherDataFetcher {
   @SuppressWarnings("deprecation")
   public WeatherData fetchWeatherDataFromUrl(String baseUrl) {
     WeatherData data = null;
-    String jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current");
+    String jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current&new");
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -116,6 +116,10 @@ public class WeatherDataFetcher {
     Number temperature = (Number) weather.get("temperature");
     data.setTemperature(temperature.floatValue());
 
+    if (weather.has("localtime")) {
+      data.setLocaltime((String)weather.get("localtime"));
+    }
+
     if (weather.has("inside_temperature")) {
       Number insideTemperature = (Number) weather.get("inside_temperature");
       data.setInsideTemperature(insideTemperature.floatValue());
@@ -134,19 +138,19 @@ public class WeatherDataFetcher {
       data.setWatt(watt.floatValue());
     }
 
-    Object rain = weather.get("rain");
-    if (rain instanceof Number) {
-      data.setRain(((Number) rain).floatValue());
+    if (weather.has("rain")) {
+      Number rain = (Number)weather.get("rain");
+      data.setRain(rain.floatValue());
     }
 
-    Object rainToday = weather.get("rain_today");
-    if (rainToday instanceof Number) {
-      data.setRainToday(((Number) rainToday).floatValue());
+    if (weather.has("rain_today")) {
+      Number rainToday = (Number)weather.get("rain_today");
+      data.setRainToday(rainToday.floatValue());
     }
 
-    Object wind = weather.get("wind");
-    if (wind instanceof Number) {
-      data.setWind(((Number)wind).floatValue());
+    if (weather.has("wind")) {
+      Number wind = (Number)weather.get("wind");
+      data.setWind(wind.floatValue());
     }
     return data;
   }

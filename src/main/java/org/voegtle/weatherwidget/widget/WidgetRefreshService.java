@@ -1,11 +1,15 @@
 package org.voegtle.weatherwidget.widget;
 
+import android.annotation.TargetApi;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
@@ -20,6 +24,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
 
   private ApplicationSettings configuration;
   private ScreenPainterFactory screenPainterFactory;
+  private PowerManager pm;
 
   @Override
   public void onCreate() {
@@ -28,6 +33,9 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
 
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     preferences.registerOnSharedPreferenceChangeListener(this);
+
+
+    pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
     processPreferences(preferences);
   }
@@ -44,9 +52,12 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     return result;
   }
 
+  @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
   private void updateWidget() {
-    ArrayList<WidgetScreenPainter> screenPainters = screenPainterFactory.createScreenPainters();
-    new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH || pm.isInteractive()) {
+      ArrayList<WidgetScreenPainter> screenPainters = screenPainterFactory.createScreenPainters();
+      new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
+    }
   }
 
 
