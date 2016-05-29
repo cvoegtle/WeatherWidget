@@ -77,6 +77,12 @@
               android:parentActivityName=".WeatherActivity">
     </activity>
 
+    <activity android:name=".diagram.ShenzhenDiagramActivity"
+              android:label="@string/city_shenzhen_full"
+              android:logo="@drawable/wetterlogo"
+              android:parentActivityName=".WeatherActivity">
+    </activity>
+
     <activity android:name=".diagram.MobilDiagramActivity"
               android:label="@string/city_leo_full"
               android:logo="@drawable/wetterlogo"

@@ -1,7 +1,7 @@
 package org.voegtle.weatherwidget.location;
 
 public enum LocationIdentifier {
-  Paderborn("tegelweg8"), BadLippspringe("bali"), Leopoldshoehe("leoxity"), Bonn("forstweg17"), Magdeburg("elb"), Herzogenaurach("herzo"), Freiburg("ochsengasse"), Mobil("mobil");
+  Paderborn("tegelweg8"), BadLippspringe("bali"), Leopoldshoehe("leoxity"), Bonn("forstweg17"), Magdeburg("elb"), Herzogenaurach("herzo"), Freiburg("ochsengasse"), Mobil("mobil"), Shenzhen("SZ");
   private final String id;
 
   LocationIdentifier(String id) {

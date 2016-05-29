@@ -110,6 +110,21 @@ public class LocationFactory {
     herzogenaurach.setPrefAlert("alert_herzo");
     locations.add(herzogenaurach);
 
+    WeatherLocation shenzhen = new WeatherLocation(LocationIdentifier.Shenzhen);
+    shenzhen.setName(res.getString(R.string.city_shenzhen_full));
+    shenzhen.setShortName(res.getString(R.string.city_shenzhen));
+    shenzhen.setIdentifier("shenzhen");
+    shenzhen.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=194919&wahl=vorhersage"));
+    shenzhen.setWeatherLineId(R.id.line_shenzhen);
+    shenzhen.setWeatherViewId(R.id.weather_shenzhen);
+    shenzhen.setRainIndicatorId(R.id.rain_indicator_shenzhen);
+    shenzhen.setPrefShowInApp("app_show_shenzhen");
+    shenzhen.setPrefShowInWidget("widget_show_shenzhen");
+    shenzhen.setVisibleInAppByDefault(true);
+    shenzhen.setVisibleInWidgetByDefault(false);
+    shenzhen.setPrefAlert("alert_shenzhen");
+    locations.add(shenzhen);
+
     WeatherLocation mobil = new WeatherLocation(LocationIdentifier.Mobil);
     mobil.setName(res.getString(R.string.city_mobil_full));
     mobil.setShortName(res.getString(R.string.city_mobil));

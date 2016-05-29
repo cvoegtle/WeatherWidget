@@ -57,6 +57,12 @@
                                                        android:paddingBottom="9dp"
                                                        weather:diagrams="true"
                                                        weather:caption="@string/city_freiburg_full"/>
+      <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_shenzhen"
+                                                       android:layout_width="match_parent"
+                                                       android:layout_height="wrap_content"
+                                                       android:paddingBottom="9dp"
+                                                       weather:diagrams="true"
+                                                       weather:caption="@string/city_shenzhen_full"/>
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_mobil"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"

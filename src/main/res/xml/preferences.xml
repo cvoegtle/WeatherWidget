@@ -175,6 +175,26 @@
       </PreferenceCategory>
 
       <PreferenceCategory
+              android:title="@string/station_shenzhen"
+              android:key="settings_shenzhen">
+        <CheckBoxPreference
+                android:key="app_show_shenzhen"
+                android:title="@string/in_app"
+                android:defaultValue="true"
+        />
+        <CheckBoxPreference
+                android:key="widget_show_shenzhen"
+                android:title="@string/in_widget"
+                android:defaultValue="false"
+        />
+        <CheckBoxPreference
+                android:key="alert_shenzhen"
+                android:title="@string/alert"
+                android:defaultValue="false"
+        />
+      </PreferenceCategory>
+
+      <PreferenceCategory
               android:title="@string/station_mobil"
               android:key="settings_mobil">
         <CheckBoxPreference

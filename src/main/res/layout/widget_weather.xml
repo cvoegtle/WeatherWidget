@@ -147,6 +147,25 @@
                 android:textStyle="bold"
                 android:text="@string/city_freiburg"/>
     </LinearLayout>
+    <LinearLayout android:id="@+id/line_shenzhen"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:visibility="gone">
+      <TextView android:id="@+id/rain_indicator_shenzhen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
+                android:textColor="#ffffff"
+                android:text="@string/big_dot"/>
+      <TextView android:id="@+id/weather_shenzhen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:text="@string/city_shenzhen"/>
+    </LinearLayout>
     <LinearLayout android:id="@+id/line_mobil"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"

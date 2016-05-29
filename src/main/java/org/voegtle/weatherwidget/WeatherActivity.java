@@ -105,6 +105,9 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
           case R.id.weather_magdeburg:
             startActivity(new Intent(WeatherActivity.this, MagdeburgDiagramActivity.class));
             break;
+          case R.id.weather_shenzhen:
+            startActivity(new Intent(WeatherActivity.this, ShenzhenDiagramActivity.class));
+            break;
           case R.id.weather_mobil:
             Intent intent = new Intent(WeatherActivity.this, MobilDiagramActivity.class);
             WeatherLocation location = configuration.findLocation(LocationIdentifier.Mobil);

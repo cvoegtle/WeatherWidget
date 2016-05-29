@@ -121,4 +121,7 @@
   <string name="message_permission_required">Die Schreibrechte sind notwendig, um das Diagramm an andere Anwendungen
     weiterzugeben.
   </string>
+  <string name="city_shenzhen_full">Shenzhen</string>
+  <string name="city_shenzhen">SZ</string>
+  <string name="station_shenzhen">Wetterstation in Shenzhen</string>
 </resources>
