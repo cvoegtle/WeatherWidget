@@ -27,6 +27,7 @@ public class LocationView extends LinearLayout {
   private ImageButton forecastButton;
   private GridLayout moreData;
   private TextView kwhCaptionView;
+  private TextView rainCaptionView;
 
   private boolean expanded;
   private Drawable imageExpand;
@@ -49,6 +50,8 @@ public class LocationView extends LinearLayout {
     captionView = (TextView) findViewById(R.id.caption);
     moreData = (GridLayout) findViewById(R.id.more_data);
     kwhCaptionView = (TextView) findViewById(R.id.caption_kwh);
+    rainCaptionView = (TextView) findViewById(R.id.caption_rain);
+
 
     imageCollapse = ContextCompat.getDrawable(context, R.drawable.ic_action_collapse);
     imageExpand = ContextCompat.getDrawable(context, R.drawable.ic_action_expand);
@@ -220,7 +223,10 @@ public class LocationView extends LinearLayout {
     maxView.setText("");
     kwhView.setText("");
     if (stats != null) {
-      rainView.setText(formatter.formatRain(stats.getRain()));
+      if (stats.getRain() != null) {
+        rainView.setText(formatter.formatRain(stats.getRain()));
+        rainCaptionView.setVisibility(VISIBLE);
+      }
       minView.setText(formatter.formatTemperature(stats.getMinTemperature()));
       maxView.setText(formatter.formatTemperature(stats.getMaxTemperature()));
       if (stats.getKwh() != null) {
