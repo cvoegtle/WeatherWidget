@@ -114,7 +114,7 @@ public class LocationFactory {
     shenzhen.setName(res.getString(R.string.city_shenzhen_full));
     shenzhen.setShortName(res.getString(R.string.city_shenzhen));
     shenzhen.setIdentifier("shenzhen");
-    shenzhen.setForecastUrl(Uri.parse("http://wetterstationen.meteomedia.de/?station=194919&wahl=vorhersage"));
+    shenzhen.setForecastUrl(Uri.parse("http://www.wetter.com/china/shenzhen/CN0GD0012.html"));
     shenzhen.setWeatherLineId(R.id.line_shenzhen);
     shenzhen.setWeatherViewId(R.id.weather_shenzhen);
     shenzhen.setRainIndicatorId(R.id.rain_indicator_shenzhen);
