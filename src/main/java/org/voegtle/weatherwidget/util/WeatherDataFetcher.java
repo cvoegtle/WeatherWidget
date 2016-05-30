@@ -169,7 +169,7 @@ public class WeatherDataFetcher {
       for (int i = 1; i < locationIds.size(); i++) {
         concatenatedLocationIds += "," + locationIds.get(i);
       }
-      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&locations=" + concatenatedLocationIds + "&type=stats");
+      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&new&locations=" + concatenatedLocationIds + "&type=stats");
       try {
         return JsonTranslater.toStatistics(jsonStatistics);
       } catch (Throwable e) {
