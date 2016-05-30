@@ -1,13 +1,10 @@
 package org.voegtle.weatherwidget.widget;
 
-import android.annotation.TargetApi;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -34,9 +31,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     preferences.registerOnSharedPreferenceChangeListener(this);
 
-
-    pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
     processPreferences(preferences);
   }
 
@@ -52,12 +46,9 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     return result;
   }
 
-  @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
   private void updateWidget() {
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH || pm.isInteractive()) {
-      ArrayList<WidgetScreenPainter> screenPainters = screenPainterFactory.createScreenPainters();
-      new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
-    }
+    ArrayList<WidgetScreenPainter> screenPainters = screenPainterFactory.createScreenPainters();
+    new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
   }
 
 
