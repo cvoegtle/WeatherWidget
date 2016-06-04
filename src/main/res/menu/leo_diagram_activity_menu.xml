@@ -27,4 +27,7 @@
   <item android:id="@+id/action_leo_paderborn"
         android:showAsAction="ifRoom"
         android:title="@string/action_compare_with_paderborn"/>
+  <item android:id="@+id/action_leo_last_year"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_last_year"/>
 </menu>

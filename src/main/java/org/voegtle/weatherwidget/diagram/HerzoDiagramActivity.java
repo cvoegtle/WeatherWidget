@@ -15,6 +15,7 @@ public class HerzoDiagramActivity extends DiagramActivity {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.herzo_regen);
     addDiagram(DiagramEnum.herzo_wind);
+    addDiagram(DiagramEnum.herzo_lastyear);
     addDiagram(DiagramEnum.herzo_paderborn_freiburg);
     Intent intent = getIntent();
     if (intent != null) {
@@ -41,8 +42,11 @@ public class HerzoDiagramActivity extends DiagramActivity {
       case R.id.action_herzo_wind:
         viewPager.setCurrentItem(1, true);
         return true;
-      case R.id.action_hza_pb_fr:
+      case R.id.action_herzo_last_year:
         viewPager.setCurrentItem(2, true);
+        return true;
+      case R.id.action_hza_pb_fr:
+        viewPager.setCurrentItem(3, true);
         return true;
     }
     return false;

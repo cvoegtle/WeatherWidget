@@ -19,6 +19,7 @@ public class LeoDiagramActivity extends DiagramActivity {
     addDiagram(DiagramEnum.leo_solar_average);
     addDiagram(DiagramEnum.leo_solar_production);
     addDiagram(DiagramEnum.leo_paderborn);
+    addDiagram(DiagramEnum.leo_lastyear);
     Intent intent = getIntent();
     if (intent != null) {
       String title = intent.getStringExtra(LeoDiagramActivity.class.getName());
@@ -55,6 +56,9 @@ public class LeoDiagramActivity extends DiagramActivity {
         break;
       case R.id.action_leo_paderborn:
         viewPager.setCurrentItem(5, true);
+        return true;
+      case R.id.action_leo_last_year:
+        viewPager.setCurrentItem(6, true);
         return true;
     }
     return false;
