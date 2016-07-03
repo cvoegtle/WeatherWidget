@@ -28,6 +28,9 @@ public class DateUtil {
     cal.set(Calendar.MILLISECOND, 0);
   }
 
+  /**
+   * @return age in seconds
+   */
   public static int getAge(Date lastUpdate) {
     return (int) ((new Date().getTime() - lastUpdate.getTime()) / 1000);
   }

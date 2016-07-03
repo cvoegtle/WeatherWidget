@@ -11,8 +11,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import org.voegtle.weatherwidget.base.ThemedActivity;
+import org.voegtle.weatherwidget.base.UpdatingScrollView;
 import org.voegtle.weatherwidget.diagram.*;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.LocationView;
@@ -46,7 +46,14 @@ public class WeatherActivity extends ThemedActivity implements SharedPreferences
 
     updater = new WeatherDataUpdater(this, configuration);
 
-    LinearLayout container = (LinearLayout) findViewById(R.id.location_container);
+    UpdatingScrollView scrollView = (UpdatingScrollView) findViewById(R.id.scroll_view);
+    scrollView.register(new UpdatingScrollView.Updater() {
+      @Override
+      public void update() {
+        updater.updateWeatherOnce(true);
+      }
+    });
+
   }
 
   private void startWeatherUpdater() {

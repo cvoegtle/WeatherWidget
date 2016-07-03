@@ -7,7 +7,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-  <ScrollView android:layout_width="match_parent" android:layout_height="match_parent">
+  <org.voegtle.weatherwidget.base.UpdatingScrollView android:id="@+id/scroll_view" android:layout_width="match_parent" android:layout_height="match_parent">
     <LinearLayout android:id="@+id/location_container"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
@@ -78,5 +78,5 @@
               android:text="@string/data_mining"/>
 
     </LinearLayout>
-  </ScrollView>
+  </org.voegtle.weatherwidget.base.UpdatingScrollView>
 </LinearLayout>
