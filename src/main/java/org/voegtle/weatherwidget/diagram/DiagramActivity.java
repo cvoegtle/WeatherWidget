@@ -19,10 +19,7 @@ import org.voegtle.weatherwidget.base.ThemedActivity;
 import org.voegtle.weatherwidget.util.StringUtil;
 import org.voegtle.weatherwidget.util.UserFeedback;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -108,6 +105,8 @@ public abstract class DiagramActivity extends ThemedActivity {
       return;
     }
 
+    clearImages();
+
     String filename = writeImageToFile(diagramIndex);
     if (StringUtil.isNotEmpty(filename)) {
       Intent share = new Intent(Intent.ACTION_SEND);
@@ -117,10 +116,23 @@ public abstract class DiagramActivity extends ThemedActivity {
     }
   }
 
+  private void clearImages() {
+    File storageDirectory = Environment.getExternalStorageDirectory();
+    String[] pngFiles = storageDirectory.list(new FilenameFilter() {
+      @Override
+      public boolean accept(File dir, String filename) {
+        return filename.toLowerCase().endsWith(".png");
+      }
+    });
+    for (String filename : pngFiles) {
+      new File(filename).delete();
+    }
+  }
+
   private String writeImageToFile(int diagramIndex) {
     DiagramEnum diagramEnum = diagramIdList.get(diagramIndex);
     byte[] image = diagramCache.asPNG(diagramEnum);
-    String filename = Environment.getExternalStorageDirectory() + File.separator + diagramEnum.getFilename();
+    String filename = Environment.getExternalStorageDirectory() + File.separator + new Date().getTime() + "-" + diagramEnum.getFilename();
     File f = new File(filename);
     try {
       if (f.exists()) {
