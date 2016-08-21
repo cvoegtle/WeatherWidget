@@ -14,6 +14,7 @@ public class MainDiagramActivity extends DiagramActivity {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.temperature7days);
     addDiagram(DiagramEnum.pb_bali_leo);
+    addDiagram(DiagramEnum.family_weather);
     addDiagram(DiagramEnum.average7days);
     addDiagram(DiagramEnum.rain);
     addDiagram(DiagramEnum.summerdays);
@@ -39,20 +40,24 @@ public class MainDiagramActivity extends DiagramActivity {
         viewPager.setCurrentItem(1, true);
         return true;
 
-      case R.id.action_7_days_average:
+      case R.id.action_family_weather:
         viewPager.setCurrentItem(2, true);
         return true;
 
-      case R.id.action_rain:
+      case R.id.action_7_days_average:
         viewPager.setCurrentItem(3, true);
+        return true;
+
+      case R.id.action_rain:
+        viewPager.setCurrentItem(4, true);
         break;
 
       case R.id.action_summerdays:
-        viewPager.setCurrentItem(4, true);
+        viewPager.setCurrentItem(5, true);
         return true;
 
       case R.id.action_winterdays:
-        viewPager.setCurrentItem(5, true);
+        viewPager.setCurrentItem(6, true);
         return true;
     }
     return false;

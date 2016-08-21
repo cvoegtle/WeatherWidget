@@ -102,7 +102,7 @@
   <string name="city_mobil_full">Mobil</string>
   <string name="station_mobil">Mobile Wetterstation</string>
   <string name="city_herzo_full">Herzogenaurach</string>
-  <string name="action_compare_with_pb_fr">HZA - PB - FR</string>
+  <string name="action_family_weather">Familienwetter</string>
   <string name="city_herzo">HZA</string>
   <string name="station_herzogenaurach">Wetterstation in Herzogenaurach</string>
   <string name="order_criteria">Sortierkriterium</string>

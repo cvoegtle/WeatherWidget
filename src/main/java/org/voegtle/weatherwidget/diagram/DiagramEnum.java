@@ -47,7 +47,7 @@ public enum DiagramEnum {
   herzo_regen(37, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
   herzo_wind(38, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
   herzo_lastyear(39, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2068675477&format=image"),
-  herzo_paderborn_freiburg(40, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
+  family_weather(40, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
 
   magdeburg_regen(41, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
   magdeburg_humidity(42, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
