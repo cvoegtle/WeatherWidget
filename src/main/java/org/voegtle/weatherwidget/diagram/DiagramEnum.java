@@ -35,8 +35,7 @@ public enum DiagramEnum {
   mobil_paderborn(27, "https://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
   mobil_regen(28, "https://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
   mobil_wind(29, "https://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
-
-  leo_paderborn(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1747103714&format=image"),
+  leo_30days(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1610295076&format=image"),
   leo_lastyear(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=322622774&format=image"),
   leo_regen(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
   leo_wind(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
@@ -47,13 +46,14 @@ public enum DiagramEnum {
   herzo_regen(37, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
   herzo_wind(38, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),
   herzo_lastyear(39, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2068675477&format=image"),
-  family_weather(40, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
+  herzo_30days(40, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=951457656&format=image"),
+  family_weather(41, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
 
-  magdeburg_regen(41, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
-  magdeburg_humidity(42, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
-  magdeburg_paderborn_freiburg(43, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image"),
+  magdeburg_regen(42, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
+  magdeburg_humidity(43, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_paderborn_freiburg(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image"),
 
-  shenzhen_7days(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image");
+  shenzhen_7days(45, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image");
 
   private String url;
   private int id;

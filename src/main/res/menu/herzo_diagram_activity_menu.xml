@@ -15,6 +15,9 @@
   <item android:id="@+id/action_herzo_wind"
         android:showAsAction="ifRoom"
         android:title="@string/action_wind"/>
+  <item android:id="@+id/action_herzo_30days"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_30_days"/>
   <item android:id="@+id/action_herzo_last_year"
         android:showAsAction="ifRoom"
         android:title="@string/action_last_year"/>

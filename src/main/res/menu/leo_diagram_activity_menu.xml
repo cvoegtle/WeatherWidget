@@ -24,9 +24,9 @@
   <item android:id="@+id/action_solar_monthly"
         android:showAsAction="ifRoom"
         android:title="@string/action_solar_monthly"/>
-  <item android:id="@+id/action_leo_paderborn"
+  <item android:id="@+id/action_leo_30days"
         android:showAsAction="ifRoom"
-        android:title="@string/action_compare_with_paderborn"/>
+        android:title="@string/action_30_days"/>
   <item android:id="@+id/action_leo_last_year"
         android:showAsAction="ifRoom"
         android:title="@string/action_last_year"/>

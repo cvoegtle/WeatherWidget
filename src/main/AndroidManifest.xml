@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="409"
-          android:versionName="1.25">
+          android:versionCode="414"
+          android:versionName="1.26">
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -16,7 +16,8 @@
     <activity
             android:name="WeatherActivity"
             android:label="@string/app_name"
-            android:logo="@drawable/wetterlogo">
+            android:logo="@drawable/wetterlogo"
+            android:resizeableActivity="true">
 
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -28,64 +29,75 @@
     <activity android:name=".preferences.WeatherPreferences"
               android:label="@string/settings"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
     <activity android:name=".diagram.MainDiagramActivity"
               android:label="@string/action_diagrams"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
     <activity android:name=".diagram.PaderbornDiagramActivity"
               android:label="@string/city_paderborn_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.BonnDiagramActivity"
               android:label="@string/city_bonn_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.FreiburgDiagramActivity"
               android:label="@string/city_freiburg_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.BaliDiagramActivity"
               android:label="@string/city_bali_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.LeoDiagramActivity"
               android:label="@string/city_leo_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.HerzoDiagramActivity"
               android:label="@string/city_herzo_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.MagdeburgDiagramActivity"
               android:label="@string/city_magdeburg_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.ShenzhenDiagramActivity"
               android:label="@string/city_shenzhen_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 
     <activity android:name=".diagram.MobilDiagramActivity"
               android:label="@string/city_leo_full"
               android:logo="@drawable/wetterlogo"
+              android:resizeableActivity="true"
               android:parentActivityName=".WeatherActivity">
     </activity>
 

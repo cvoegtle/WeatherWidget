@@ -1,24 +1,25 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.android.tools.build:gradle:2.2.0'
     }
 }
 apply plugin: 'com.android.application'
 repositories {
-    mavenCentral()
+    jcenter()
 }
 android {
-    buildToolsVersion '23.0.2'
-    compileSdkVersion 23
-
+    buildToolsVersion '24.0.3'
+    compileSdkVersion 24
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
+        jackOptions {
+            enabled true
+        }
     }
-
     signingConfigs {
         cvoegtle {
             storeFile file("/Users/cv/Google Developer/cvoegtle.signing.jks")
@@ -28,11 +29,9 @@ android {
         }
 
     }
-
     lintOptions {
         checkReleaseBuilds true
     }
-
     buildTypes {
         debug {
             debuggable true
@@ -51,7 +50,6 @@ android {
         }
 
     }
-
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
             def outputFile = output.outputFile
@@ -60,15 +58,16 @@ android {
             }
         }
     }
-
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    productFlavors {
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v13:23.1.1'
+    compile 'com.android.support:support-v13:24.2.1'
 }
 
 import java.util.regex.Pattern
