@@ -16,6 +16,7 @@ public class MagdeburgDiagramActivity extends DiagramActivity {
     addDiagram(DiagramEnum.magdeburg_regen);
     addDiagram(DiagramEnum.magdeburg_humidity);
     addDiagram(DiagramEnum.magdeburg_paderborn_freiburg);
+    addDiagram(DiagramEnum.magedburg_30days);
     Intent intent = getIntent();
     if (intent != null) {
       String title = intent.getStringExtra(MagdeburgDiagramActivity.class.getName());
@@ -43,6 +44,9 @@ public class MagdeburgDiagramActivity extends DiagramActivity {
         return true;
       case R.id.action_md_pb_fr:
         viewPager.setCurrentItem(2, true);
+        return true;
+      case R.id.action_md_30days:
+        viewPager.setCurrentItem(3, true);
         return true;
     }
     return false;

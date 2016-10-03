@@ -18,4 +18,7 @@
   <item android:id="@+id/action_md_pb_fr"
         android:showAsAction="ifRoom"
         android:title="@string/action_compare_md_with_pb_fr"/>
+  <item android:id="@+id/action_md_30days"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_30_days"/>
 </menu>
