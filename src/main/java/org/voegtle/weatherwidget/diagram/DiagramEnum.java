@@ -35,6 +35,7 @@ public enum DiagramEnum {
   mobil_paderborn(27, "https://wetterimages.appspot.com/weatherstation/image?oid=34&zx=hnij97x1rn3p"),
   mobil_regen(28, "https://wetterimages.appspot.com/weatherstation/image?oid=35&zx=9lmgfvyeawi1"),
   mobil_wind(29, "https://wetterimages.appspot.com/weatherstation/image?oid=36&zx=cz5tavhaf7p1"),
+
   leo_30days(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1610295076&format=image"),
   leo_lastyear(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=322622774&format=image"),
   leo_regen(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),

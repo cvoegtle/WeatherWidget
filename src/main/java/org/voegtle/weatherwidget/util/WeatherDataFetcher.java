@@ -34,7 +34,7 @@ public class WeatherDataFetcher {
     String urlEncodedSecret = StringUtil.urlEncode(secret);
     String locationIdentifiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&new&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&new&experimental&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
