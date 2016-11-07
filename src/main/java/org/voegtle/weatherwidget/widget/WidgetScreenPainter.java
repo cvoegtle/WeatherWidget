@@ -81,8 +81,7 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
       remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(colorScheme, data.getTimestamp()));
       remoteViews.setTextViewText(location.getWeatherViewId(), formatter.formatWidgetLine(location, data, detailed));
 
-      boolean isRaining = data.getRain() != null;
-      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(isRaining, colorScheme, data.getTimestamp()));
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(data.isRaining(), colorScheme, data.getTimestamp()));
       updated = true;
     }
     return updated;

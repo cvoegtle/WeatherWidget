@@ -143,6 +143,10 @@ public class WeatherDataFetcher {
       data.setRain(rain.floatValue());
     }
 
+    if (weather.has("raining")) {
+      data.setRaining(weather.getBoolean("raining"));
+    }
+
     if (weather.has("rain_today")) {
       Number rainToday = (Number)weather.get("rain_today");
       data.setRainToday(rainToday.floatValue());
