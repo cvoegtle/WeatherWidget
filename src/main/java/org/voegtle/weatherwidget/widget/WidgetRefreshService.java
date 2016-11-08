@@ -1,13 +1,16 @@
 package org.voegtle.weatherwidget.widget;
 
 import android.app.Service;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.hardware.display.DisplayManager;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
+import android.view.Display;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader;
@@ -21,7 +24,6 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
 
   private ApplicationSettings configuration;
   private ScreenPainterFactory screenPainterFactory;
-  private PowerManager pm;
 
   @Override
   public void onCreate() {
@@ -32,14 +34,25 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     preferences.registerOnSharedPreferenceChangeListener(this);
 
     processPreferences(preferences);
+
+    IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+    registerReceiver(new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        ensureResources();
+        updateWidget();
+      }
+    }, filter);
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
     int result;
     try {
-      ensureResources();
-      updateWidget();
+      if (isScreenOn()) {
+        ensureResources();
+        updateWidget();
+      }
     } finally {
       result = super.onStartCommand(intent, flags, startId);
     }
@@ -49,6 +62,24 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   private void updateWidget() {
     ArrayList<WidgetScreenPainter> screenPainters = screenPainterFactory.createScreenPainters();
     new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
+  }
+
+  public boolean isScreenOn() {
+    Context context = getApplicationContext();
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+      DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);
+      boolean screenOn = false;
+      for (Display display : dm.getDisplays()) {
+        if (display.getState() != Display.STATE_OFF) {
+          screenOn = true;
+        }
+      }
+      return screenOn;
+    } else {
+      PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+      //noinspection deprecation
+      return pm.isScreenOn();
+    }
   }
 
 
