@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Display;
 import org.voegtle.weatherwidget.R;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
@@ -18,12 +17,14 @@ import org.voegtle.weatherwidget.system.WidgetUpdateManager;
 import org.voegtle.weatherwidget.util.NotificationTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class WidgetRefreshService extends Service implements SharedPreferences.OnSharedPreferenceChangeListener {
   private Resources res;
 
   private ApplicationSettings configuration;
   private ScreenPainterFactory screenPainterFactory;
+  private Long lastUpdate;
 
   @Override
   public void onCreate() {
@@ -39,8 +40,10 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
     registerReceiver(new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-        ensureResources();
-        updateWidget();
+        if (isLastUpdateOutdated()) {
+          ensureResources();
+          updateWidget();
+        }
       }
     }, filter);
   }
@@ -60,6 +63,7 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
   }
 
   private void updateWidget() {
+    lastUpdate = new Date().getTime();
     ArrayList<WidgetScreenPainter> screenPainters = screenPainterFactory.createScreenPainters();
     new WidgetUpdateTask(getApplicationContext(), configuration, screenPainters).execute();
   }
@@ -137,6 +141,11 @@ public class WidgetRefreshService extends Service implements SharedPreferences.O
       configuration = new ApplicationSettings();
       screenPainterFactory = new ScreenPainterFactory(this, configuration);
     }
+  }
+
+  static private long WAITING_PERIOD = 5 * 60 * 1000;
+  private boolean isLastUpdateOutdated() {
+    return lastUpdate == null || (new Date().getTime()-lastUpdate) > WAITING_PERIOD;
   }
 
 

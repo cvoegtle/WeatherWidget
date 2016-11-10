@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="420"
+          android:versionCode="425"
           android:versionName="1.27">
 
   <uses-permission android:name="android.permission.INTERNET"/>

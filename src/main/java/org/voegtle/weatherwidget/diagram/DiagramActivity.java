@@ -105,6 +105,8 @@ public abstract class DiagramActivity extends ThemedActivity {
       return;
     }
 
+    ensureWetterWolkeDirectory();
+
     clearImages();
 
     String filename = writeImageToFile(diagramIndex);
@@ -116,23 +118,34 @@ public abstract class DiagramActivity extends ThemedActivity {
     }
   }
 
+  private void ensureWetterWolkeDirectory() {
+    File folder = getWetterWolkeDirectory();
+    if (!folder.exists()) {
+      folder.mkdirs();
+    }
+  }
+
+  private File getWetterWolkeDirectory() {
+    return new File(Environment.getExternalStorageDirectory() + File.separator + "WetterWolke");
+  }
+
   private void clearImages() {
-    File storageDirectory = Environment.getExternalStorageDirectory();
-    String[] pngFiles = storageDirectory.list(new FilenameFilter() {
+    File wetterWolkeDir = getWetterWolkeDirectory();
+    String[] pngFiles = wetterWolkeDir.list(new FilenameFilter() {
       @Override
       public boolean accept(File dir, String filename) {
         return filename.toLowerCase().endsWith(".png");
       }
     });
     for (String filename : pngFiles) {
-      new File(filename).delete();
+      new File(wetterWolkeDir + File.separator + filename).delete();
     }
   }
 
   private String writeImageToFile(int diagramIndex) {
     DiagramEnum diagramEnum = diagramIdList.get(diagramIndex);
     byte[] image = diagramCache.asPNG(diagramEnum);
-    String filename = Environment.getExternalStorageDirectory() + File.separator + new Date().getTime() + "-" + diagramEnum.getFilename();
+    String filename = getWetterWolkeDirectory() + File.separator + new Date().getTime() + "-" + diagramEnum.getFilename();
     File f = new File(filename);
     try {
       if (f.exists()) {
