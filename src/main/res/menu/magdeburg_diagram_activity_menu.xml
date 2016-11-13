@@ -21,4 +21,8 @@
   <item android:id="@+id/action_md_30days"
         android:showAsAction="ifRoom"
         android:title="@string/action_30_days"/>
+  <item android:id="@+id/action_md_last_year"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_last_year"/>
+
 </menu>

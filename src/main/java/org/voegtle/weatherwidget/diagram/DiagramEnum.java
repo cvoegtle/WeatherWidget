@@ -54,8 +54,9 @@ public enum DiagramEnum {
   magdeburg_humidity(43, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
   magdeburg_paderborn_freiburg(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image"),
   magedburg_30days(45, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=446471860&format=image"),
+  magedburg_lastyear(46, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=968375379&format=image"),
 
-  shenzhen_7days(46, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image");
+  shenzhen_7days(47, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image");
 
   private String url;
   private int id;
