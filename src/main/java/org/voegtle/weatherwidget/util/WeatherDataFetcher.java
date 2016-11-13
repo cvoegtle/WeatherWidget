@@ -9,14 +9,12 @@ import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.location.WeatherLocation;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,7 +115,7 @@ public class WeatherDataFetcher {
     data.setTemperature(temperature.floatValue());
 
     if (weather.has("localtime")) {
-      data.setLocaltime((String)weather.get("localtime"));
+      data.setLocaltime((String) weather.get("localtime"));
     }
 
     if (weather.has("inside_temperature")) {
@@ -139,7 +137,7 @@ public class WeatherDataFetcher {
     }
 
     if (weather.has("rain")) {
-      Number rain = (Number)weather.get("rain");
+      Number rain = (Number) weather.get("rain");
       data.setRain(rain.floatValue());
     }
 
@@ -148,12 +146,12 @@ public class WeatherDataFetcher {
     }
 
     if (weather.has("rain_today")) {
-      Number rainToday = (Number)weather.get("rain_today");
+      Number rainToday = (Number) weather.get("rain_today");
       data.setRainToday(rainToday.floatValue());
     }
 
     if (weather.has("wind")) {
-      Number wind = (Number)weather.get("wind");
+      Number wind = (Number) weather.get("wind");
       data.setWind(wind.floatValue());
     }
     return data;
@@ -184,6 +182,7 @@ public class WeatherDataFetcher {
   }
 
   private int COMMUNICATION_TIMEOUT = 60000;
+
   private String getStringFromUrl(String uri) {
     String response = "";
     try {
