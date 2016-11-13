@@ -31,7 +31,7 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
     this.activity = activity;
 
     this.showToast = showToast;
-    this.weatherDataFetcher = new WeatherDataFetcher();
+    this.weatherDataFetcher = new WeatherDataFetcher(ContextUtil.getBuildNumber(activity));
   }
 
 

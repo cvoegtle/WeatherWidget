@@ -6,11 +6,11 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import org.voegtle.weatherwidget.R;
+import org.voegtle.weatherwidget.util.ContextUtil;
 
 public class WeatherPreferenceFragment extends PreferenceFragment {
   private static final String PLACEHOLDER_VERSION = "{v}";
   private static final String PLACEHOLDER_BUILD = "{b}";
-  private static final String KEY_FONTSIZE = "widget_font_size";
   private int buildNumber;
   private String versionName;
 
@@ -43,10 +43,8 @@ public class WeatherPreferenceFragment extends PreferenceFragment {
 
   private void readVersionInformationFromAndroidManifest() {
     try {
-      PackageManager packageManager = getActivity().getPackageManager();
-      String packageName = getActivity().getPackageName();
-      buildNumber = packageManager.getPackageInfo(packageName, 0).versionCode;
-      versionName = packageManager.getPackageInfo(packageName, 0).versionName;
+      buildNumber = ContextUtil.getBuildNumber(getActivity());
+      versionName = ContextUtil.getVersion(getActivity());
     } catch (Exception ignored) {
     }
   }

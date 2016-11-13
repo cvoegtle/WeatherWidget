@@ -6,6 +6,7 @@ import org.voegtle.weatherwidget.data.WeatherData;
 import org.voegtle.weatherwidget.location.LocationIdentifier;
 import org.voegtle.weatherwidget.notification.NotificationSystemManager;
 import org.voegtle.weatherwidget.preferences.ApplicationSettings;
+import org.voegtle.weatherwidget.util.ContextUtil;
 import org.voegtle.weatherwidget.util.WeatherDataFetcher;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
 
     this.context = context;
     this.configuration = configuration;
-    this.weatherDataFetcher = new WeatherDataFetcher();
+    this.weatherDataFetcher = new WeatherDataFetcher(ContextUtil.getBuildNumber(context));
   }
 
   protected WeatherData fetchWeatherData(String weatherServerUrl) {

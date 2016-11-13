@@ -22,7 +22,10 @@ import java.util.List;
 
 public class WeatherDataFetcher {
 
-  public WeatherDataFetcher() {
+  private Integer buildNumber;
+
+  public WeatherDataFetcher(Integer buildNumber) {
+    this.buildNumber = buildNumber;
   }
 
 
@@ -32,7 +35,8 @@ public class WeatherDataFetcher {
     String urlEncodedSecret = StringUtil.urlEncode(secret);
     String locationIdentifiers = concatenateLocations(locations);
 
-    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&new&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
+    String jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber  +
+        "&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -69,7 +73,7 @@ public class WeatherDataFetcher {
   @SuppressWarnings("deprecation")
   public WeatherData fetchWeatherDataFromUrl(String baseUrl) {
     WeatherData data = null;
-    String jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current&new");
+    String jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current&new&build=" + buildNumber);
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
@@ -171,7 +175,8 @@ public class WeatherDataFetcher {
       for (int i = 1; i < locationIds.size(); i++) {
         concatenatedLocationIds += "," + locationIds.get(i);
       }
-      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?utf8&new&locations=" + concatenatedLocationIds + "&type=stats");
+      String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
+          "&locations=" + concatenatedLocationIds + "&type=stats");
       try {
         return JsonTranslater.toStatistics(jsonStatistics);
       } catch (Throwable e) {

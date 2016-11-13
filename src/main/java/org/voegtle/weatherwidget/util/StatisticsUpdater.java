@@ -22,7 +22,7 @@ public class StatisticsUpdater {
   public StatisticsUpdater(Activity activity) {
     this.stateCache = new StateCache(activity);
 
-    this.weatherDataFetcher = new WeatherDataFetcher();
+    this.weatherDataFetcher = new WeatherDataFetcher(ContextUtil.getBuildNumber(activity));
 
   }
 
