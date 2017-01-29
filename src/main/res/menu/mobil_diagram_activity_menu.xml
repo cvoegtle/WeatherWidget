@@ -9,13 +9,7 @@
         android:icon="@drawable/ic_action_share"
         android:showAsAction="ifRoom"
         android:title="@string/action_share"/>
-  <item android:id="@+id/action_instant_paderborn"
+  <item android:id="@+id/action_instant_7days"
         android:showAsAction="ifRoom"
-        android:title="@string/action_compare_with_paderborn"/>
-  <item android:id="@+id/action_instant_rain"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_rain"/>
-  <item android:id="@+id/action_instant_wind"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_wind"/>
+        android:title="@string/action_instant_7_days"/>
 </menu>
