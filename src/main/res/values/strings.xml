@@ -124,4 +124,5 @@
   <string name="city_shenzhen_full">Shenzhen</string>
   <string name="city_shenzhen">SZ</string>
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
+  <string name="action_summer_days2016">Sommertage 2016</string>
 </resources>
