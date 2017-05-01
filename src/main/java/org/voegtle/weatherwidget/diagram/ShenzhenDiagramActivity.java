@@ -11,6 +11,7 @@ public class ShenzhenDiagramActivity extends DiagramActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.shenzhen_7days);
+    addDiagram(DiagramEnum.shenzhen_30days);
   }
 
 
@@ -27,6 +28,9 @@ public class ShenzhenDiagramActivity extends DiagramActivity {
     switch (item.getItemId()) {
       case R.id.action_7_days:
         viewPager.setCurrentItem(0, true);
+        return true;
+      case R.id.action_30_days:
+        viewPager.setCurrentItem(1, true);
         return true;
     }
     return false;
