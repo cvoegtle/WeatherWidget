@@ -2,10 +2,11 @@
 <resources>
 
   <string name="app_name">Wetter Wolke</string>
-  <string name="app_name_large">Wetter Wolke XL</string>
-  <string name="app_name_freiburg">Freiburger Temperatur</string>
-  <string name="app_name_paderborn">Paderborner Temperatur</string>
-  <string name="app_name_bonn">Bonner Temperatur</string>
+  <string name="app_name_large">1. Wetter Wolke XL</string>
+  <string name="app_name_small">2. Wetter Wolke kompakt</string>
+  <string name="app_name_freiburg">3. Freiburger Temperatur</string>
+  <string name="app_name_paderborn">4. Paderborner Temperatur</string>
+  <string name="app_name_bonn">5. Bonner Temperatur</string>
   <string name="city_paderborn">PB</string>
   <string name="city_freiburg">FR</string>
   <string name="city_bonn">BN</string>
