@@ -2,19 +2,19 @@
 <resources>
 
   <string name="app_name">Wetter Wolke</string>
-  <string name="app_name_large">1. Wetter Wolke XL</string>
+  <string name="app_name_large" translatable="false">1. Wetter Wolke XL</string>
   <string name="app_name_small">2. Wetter Wolke kompakt</string>
   <string name="app_name_freiburg">3. Freiburger Temperatur</string>
   <string name="app_name_paderborn">4. Paderborner Temperatur</string>
   <string name="app_name_bonn">5. Bonner Temperatur</string>
-  <string name="city_paderborn">PB</string>
-  <string name="city_freiburg">FR</string>
-  <string name="city_bonn">BN</string>
-  <string name="city_leo">Leo</string>
-  <string name="city_paderborn_full">Paderborn</string>
-  <string name="city_freiburg_full">Freiburg</string>
-  <string name="city_bonn_full">Bonn</string>
-  <string name="city_leo_full">Leopoldshöhe</string>
+  <string name="city_paderborn" translatable="false">PB</string>
+  <string name="city_freiburg" translatable="false">FR</string>
+  <string name="city_bonn" translatable="false">BN</string>
+  <string name="city_leo" translatable="false">Leo</string>
+  <string name="city_paderborn_full" translatable="false">Paderborn</string>
+  <string name="city_freiburg_full" translatable="false">Freiburg</string>
+  <string name="city_bonn_full" translatable="false">Bonn</string>
+  <string name="city_leo_full" translatable="false">Leopoldshöhe</string>
   <string name="temperature">Temperatur</string>
   <string name="humidity">Luftfeuchtigkeit</string>
   <string name="rain_last_hour">Regen 1h</string>
@@ -47,7 +47,7 @@
   <string name="message_diagram_update_failed">Diagram Abruf fehlgeschlagen</string>
   <string name="action_diagrams">Diagramme</string>
   <string name="settings">Einstellungen</string>
-  <string name="version">Version {v} Build {b}</string>
+  <string name="version" translatable="false">Version {v} Build {b}</string>
   <string name="version_info">Info zur App</string>
   <string name="rain_yesterday">Regen gestern:</string>
   <string name="rain_last_week">Regen letzte Woche:</string>
@@ -55,7 +55,7 @@
   <string name="action_2_days">2 Tage</string>
   <string name="action_year">Jahresverlauf</string>
   <string name="action_last_year">Letztes Jahr</string>
-  <string name="big_dot">●</string>
+  <string name="big_dot" translatable="false">●</string>
   <string name="intervall_changed">Update-Intervall:</string>
   <string name="update_deaktiviert">Widget wird nicht automatisch aktualisiert</string>
   <string name="action_winter_days">Wintertage</string>
@@ -72,16 +72,15 @@
   <string name="app_author">von Christian Vögtle</string>
   <string name="send_message">Nachricht an Christian</string>
   <string name="sourcecode">Sourcecode</string>
-  <string name="on_github">https://github.com/cvoegtle/WeatherWidget</string>
+  <string name="on_github" translatable="false">https://github.com/cvoegtle/WeatherWidget</string>
   <string name="send_mail">als E-Mail schicken</string>
-  <string name="view_website">Christians Website</string>
-  <string name="www_voegtle_org">http://www.voegtle.org/~christian</string>
+  <string name="view_website" translatable="false">Christians Website</string>
+  <string name="www_voegtle_org" translatable="false">https://www.voegtle.org/~christian</string>
   <string name="station_leo">Wetterstation in Leopoldshöhe</string>
-  <string name="action_instant_7_days">7 Tage</string>
   <string name="configure_stations">Messstationen einrichten</string>
   <string name="station_bali">Wetterstation in Bad Lippspringe</string>
-  <string name="city_bali_full">Bad Lippspringe</string>
-  <string name="city_bali">BaLi</string>
+  <string name="city_bali_full" translatable="false">Bad Lippspringe</string>
+  <string name="city_bali" translatable="false">BaLi</string>
   <string name="action_bali_7days">7 Tage Verlauf</string>
   <string name="action_bali_paderborn">Vergleich mit Paderborn</string>
   <string name="rain">Regen</string>
@@ -98,22 +97,21 @@
   <string name="action_solar">Solarleistung</string>
   <string name="solar_output">Solarleistung</string>
   <string name="kwh">Ertrag</string>
-  <string name="action_bali_wind">Wind</string>
-  <string name="city_mobil">MO</string>
+  <string name="city_mobil" translatable="false">MO</string>
   <string name="city_mobil_full">Mobil</string>
   <string name="station_mobil">Mobile Wetterstation</string>
-  <string name="city_herzo_full">Herzogenaurach</string>
+  <string name="city_herzo_full" translatable="false">Herzogenaurach</string>
   <string name="action_family_weather">Familienwetter</string>
-  <string name="city_herzo">HZA</string>
+  <string name="city_herzo" translatable="false">HZA</string>
   <string name="station_herzogenaurach">Wetterstation in Herzogenaurach</string>
   <string name="order_criteria">Sortierkriterium</string>
   <string name="order_summary">Bestimmt die Reihenfolge in der App</string>
   <string name="action_sort">sortieren</string>
   <string name="action_humidity">Luftfeuchtigkeit</string>
-  <string name="city_magdeburg_full">Magdeburg</string>
-  <string name="city_magdeburg">MD</string>
+  <string name="city_magdeburg_full" translatable="false">Magdeburg</string>
+  <string name="city_magdeburg" translatable="false">MD</string>
   <string name="station_magdeburg">Wetterstation in Magdeburg</string>
-  <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
+  <string name="action_compare_md_with_pb_fr" translatable="false">Magdeburg - Paderborn - Freiburg</string>
   <string name="action_30_days">30 Tage</string>
   <string name="wind_speed">Wind</string>
   <string name="action_solar_daily">Tagesproduktion Solaranlage</string>
@@ -122,8 +120,8 @@
   <string name="message_permission_required">Die Schreibrechte sind notwendig, um das Diagramm an andere Anwendungen
     weiterzugeben.
   </string>
-  <string name="city_shenzhen_full">Shenzhen</string>
-  <string name="city_shenzhen">SZ</string>
+  <string name="city_shenzhen_full" translatable="false">Shenzhen</string>
+  <string name="city_shenzhen" translatable="false">SZ</string>
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
   <string name="action_summer_days2016">Sommertage 2016</string>
 </resources>

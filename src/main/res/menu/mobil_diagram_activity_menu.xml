@@ -11,5 +11,5 @@
         android:title="@string/action_share"/>
   <item android:id="@+id/action_instant_7days"
         android:showAsAction="ifRoom"
-        android:title="@string/action_instant_7_days"/>
+        android:title="@string/action_7_days"/>
 </menu>
