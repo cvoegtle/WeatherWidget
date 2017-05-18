@@ -15,18 +15,16 @@ import org.voegtle.weatherwidget.preferences.ApplicationSettings;
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory;
 import org.voegtle.weatherwidget.widget.WidgetScreenPainter;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>> {
-  private WeatherActivity activity;
   private final WeatherDataFetcher weatherDataFetcher;
-
+  private WeatherActivity activity;
   private boolean showToast;
   private ApplicationSettings configuration;
 
-  public ActivityUpdateTask(WeatherActivity activity, ApplicationSettings configuration, boolean showToast) {
+  ActivityUpdateTask(WeatherActivity activity, ApplicationSettings configuration, boolean showToast) {
     this.configuration = configuration;
     this.activity = activity;
 
@@ -84,8 +82,6 @@ public class ActivityUpdateTask extends AsyncTask<Void, Void, HashMap<LocationId
 
     updateView(contentView, caption, data, color);
   }
-
-  private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
   private String getCaption(String locationName, WeatherData data) {
     return locationName + " - " + data.getLocaltime();
