@@ -46,7 +46,7 @@ public class DateUtil {
     return null;
   }
 
-  public static boolean isOutdated(Date timestamp) {
+  private static boolean isOutdated(Date timestamp) {
     return getAge(timestamp) > 20 * 60;
   }
 }

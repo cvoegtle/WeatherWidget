@@ -178,7 +178,7 @@ public class WeatherDataFetcher {
       String jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
           "&locations=" + concatenatedLocationIds + "&type=stats");
       try {
-        return JsonTranslater.toStatistics(jsonStatistics);
+        return JsonTranslator.toStatistics(jsonStatistics);
       } catch (Throwable e) {
         Log.e(WeatherDataFetcher.class.toString(), "Failed to parse JSON String <" + jsonStatistics + ">", e);
       }

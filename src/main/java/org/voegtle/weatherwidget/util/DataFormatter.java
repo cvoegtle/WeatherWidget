@@ -86,7 +86,7 @@ public class DataFormatter {
     }
   }
 
-  public String formatPercent(Float val) {
+  private String formatPercent(Float val) {
     if (val != null) {
       return numberFormat.format(val) + "%";
     } else {

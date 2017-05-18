@@ -82,7 +82,7 @@ public class StatisticsUpdater {
     for (LocationView locationView : updateCandidates.keySet()) {
       State state = stateCache.read(locationView.getId());
       if (!state.outdated()) {
-        updateView(locationView, JsonTranslater.toSingleStatistics(state.getStatistics()));
+        updateView(locationView, JsonTranslator.toSingleStatistics(state.getStatistics()));
       }
     }
   }
@@ -101,7 +101,7 @@ public class StatisticsUpdater {
     State state = new State(locationView.getId());
     state.setAge(new Date());
     state.setExpanded(locationView.isExpanded());
-    state.setStatistics(JsonTranslater.toString(statistics));
+    state.setStatistics(JsonTranslator.toString(statistics));
     stateCache.save(state);
   }
 

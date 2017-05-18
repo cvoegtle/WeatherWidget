@@ -21,7 +21,7 @@ public class ColorUtil {
     return Color.rgb(MAX_RGB_VALUE, notRed, notRed);
   }
 
-  public static int byAgeDark(Date lastUpdate) {
+  private static int byAgeDark(Date lastUpdate) {
     int age = DateUtil.getAge(lastUpdate);
     int red = Math.min(MAX_RGB_VALUE, Math.max(MIN_RGB_VALUE_DARK + (age - 420) / 10, MIN_RGB_VALUE_DARK));
     return Color.rgb(red, MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK);

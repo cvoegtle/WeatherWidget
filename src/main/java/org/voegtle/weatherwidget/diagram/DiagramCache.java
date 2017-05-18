@@ -13,25 +13,25 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Date;
 
-public class DiagramCache {
+class DiagramCache {
   private static String DIAGRAM_CACHE = "DIAGRAM_CACHE";
   private static String DIAGRAM_AGE = "_AGE";
   private static String CURRENT_DIAGRAM = "CURRENT_DIAGRAM";
   SharedPreferences diagramPreferences;
   private Context context;
 
-  public DiagramCache(Context context) {
+  DiagramCache(Context context) {
     this.context = context;
     diagramPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0);
   }
 
-  public void saveCurrentDiagram(String identifer, int currentIndex) {
+  void saveCurrentDiagram(String identifer, int currentIndex) {
     SharedPreferences.Editor editor = diagramPreferences.edit();
     editor.putInt(CURRENT_DIAGRAM + identifer, currentIndex);
     editor.commit();
   }
 
-  public int readCurrentDiagram(String identifier) {
+  int readCurrentDiagram(String identifier) {
     int diagramIndex = diagramPreferences.getInt(CURRENT_DIAGRAM + identifier, -1);
     return diagramIndex > 0 ? diagramIndex : 0;
   }
@@ -52,7 +52,7 @@ public class DiagramCache {
     return null;
   }
 
-  public byte[] asPNG(DiagramEnum diagramId) {
+  byte[] asPNG(DiagramEnum diagramId) {
     Diagram diagram = read(diagramId);
     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
     saveDrawableAsPng(diagram.getImage(), bytes);
@@ -60,7 +60,7 @@ public class DiagramCache {
   }
 
 
-  public void write(Diagram diagram) {
+  void write(Diagram diagram) {
     SharedPreferences.Editor editor = diagramPreferences.edit();
     editor.putLong(getAgeKey(diagram.getId()), diagram.getUpdateTimestamp().getTime());
     editor.commit();

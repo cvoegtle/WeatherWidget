@@ -10,11 +10,11 @@ import org.voegtle.weatherwidget.data.WeatherJSONObject;
 
 import java.util.HashMap;
 
-public class JsonTranslater {
+public class JsonTranslator {
 
-  private static Float toFloat(JSONObject json, String identifer) throws JSONException {
-    if (json.has(identifer)) {
-      Object value = json.get(identifer);
+  private static Float toFloat(JSONObject json, String identifier) throws JSONException {
+    if (json.has(identifier)) {
+      Object value = json.get(identifier);
       if (value instanceof Number) {
         return ((Number) value).floatValue();
       }
@@ -22,7 +22,7 @@ public class JsonTranslater {
     return null;
   }
 
-  public static HashMap<String, Statistics> toStatistics(String jsonStr) {
+  static HashMap<String, Statistics> toStatistics(String jsonStr) {
     HashMap<String, Statistics> statisticsMap = new HashMap<>();
     try {
       JSONArray jsonStatistics = new JSONArray(jsonStr);
@@ -35,7 +35,7 @@ public class JsonTranslater {
     return statisticsMap;
   }
 
-  public static Statistics toSingleStatistics(String jsonStr) {
+  static Statistics toSingleStatistics(String jsonStr) {
     try {
       JSONObject json = new JSONObject(jsonStr);
       return toStatistics(json);
