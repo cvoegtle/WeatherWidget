@@ -99,7 +99,7 @@ public class WeatherDataFetcher {
 
 
   private WeatherData getWeatherData(JSONObject weather) throws JSONException {
-    LocationIdentifier locationIdentifier = LocationIdentifier.getByString(weather.optString("id"));
+    LocationIdentifier locationIdentifier = LocationIdentifier.Companion.getByString(weather.optString("id"));
 
     if (locationIdentifier == null) {
       return null;

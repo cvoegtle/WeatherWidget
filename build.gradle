@@ -1,12 +1,15 @@
 buildscript {
+    ext.kotlin_version = '1.1.2-4'
     repositories {
         jcenter()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 repositories {
     jcenter()
 }
@@ -17,7 +20,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 24
         jackOptions {
-            enabled true
+            enabled false
         }
     }
     signingConfigs {
@@ -59,8 +62,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     productFlavors {
     }
@@ -68,6 +71,7 @@ android {
 
 dependencies {
     compile 'com.android.support:support-v13:24.2.1'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 import java.util.regex.Pattern

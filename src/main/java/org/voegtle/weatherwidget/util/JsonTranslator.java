@@ -67,7 +67,7 @@ public class JsonTranslator {
     StatisticsSet result = null;
 
     String rangeStr = json.getString("range");
-    Statistics.TimeRange range = Statistics.TimeRange.fromString(rangeStr);
+    Statistics.TimeRange range = Statistics.TimeRange.Companion.fromString(rangeStr);
     if (range != null) {
       result = new StatisticsSet(range);
 

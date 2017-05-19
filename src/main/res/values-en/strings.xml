@@ -44,7 +44,7 @@
   <string name="in_widget">show in widget</string>
   <string name="inside_temperature">Inside temperature:</string>
   <string name="intervall_changed">Update frequency:</string>
-  <string name="kwh">Yield</string>
+  <string name="kwh">Output</string>
   <string name="liter">l</string>
   <string name="max_temperature">T max</string>
   <string name="message_data_update_failed">Error fetching weather data</string>
@@ -73,7 +73,7 @@
   <string name="send_message">Message to Christian</string>
   <string name="settings">Settings</string>
   <string name="since">since</string>
-  <string name="solar_output">solar output</string>
+  <string name="solar_output">Solar output</string>
   <string name="sourcecode">Source code</string>
   <string name="station_bali">Weather station in Bad Lippspringe</string>
   <string name="station_bonn">Weather station in Bonn</string>
