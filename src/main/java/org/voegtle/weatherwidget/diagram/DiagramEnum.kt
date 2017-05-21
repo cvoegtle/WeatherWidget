@@ -1,6 +1,6 @@
-package org.voegtle.weatherwidget.diagram;
+package org.voegtle.weatherwidget.diagram
 
-public enum DiagramEnum {
+enum class DiagramEnum constructor(val id: Int, val url: String) {
   temperature7days(1, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=291472484&format=image"),
   average7days(2, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1780492499&format=image"),
   winterdays(3, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=252844556&format=image"),
@@ -58,32 +58,18 @@ public enum DiagramEnum {
   shenzhen_7days(46, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image"),
   shenzhen_30days(47, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1526059248&format=image");
 
-  private String url;
-  private int id;
+  val filename: String
+    get() = this.toString() + ".png"
 
-  DiagramEnum(int id, String url) {
-    this.id = id;
-    this.url = url;
-  }
+  companion object {
 
-  public int getId() {
-    return id;
-  }
-
-  public String getUrl() {
-    return url;
-  }
-
-  public String getFilename() {
-      return this.toString() + ".png";
-  }
-
-  public static DiagramEnum byId(int id) {
-    for (DiagramEnum diagramEnum : DiagramEnum.values()) {
-      if (diagramEnum.getId() == id) {
-        return diagramEnum;
+    fun byId(id: Int): DiagramEnum? {
+      for (diagramEnum in DiagramEnum.values()) {
+        if (diagramEnum.id == id) {
+          return diagramEnum
+        }
       }
+      return null
     }
-    return null;
   }
 }

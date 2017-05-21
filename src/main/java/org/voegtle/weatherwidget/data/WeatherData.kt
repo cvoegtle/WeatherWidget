@@ -22,7 +22,14 @@ class WeatherData(val location: LocationIdentifier) : Comparable<WeatherData> {
         if (outdated != null) {
             return outdated
         }
-
-        return Objects.compare(temperature, another.temperature)
+        val anotherTemperature = another.temperature
+        val temp = temperature
+        if (temp == null) {
+            return -1
+        } else if (anotherTemperature == null) {
+            return 1
+        } else {
+            return temp.compareTo(anotherTemperature)
+        }
     }
 }

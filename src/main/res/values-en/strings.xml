@@ -25,7 +25,7 @@
   <string name="action_winter_days">Winter days</string>
   <string name="action_wind">Wind</string>
   <string name="action_year">course of one year</string>
-  <string name="alert">Activate alarm</string>
+  <string name="alert">activate alarm</string>
   <string name="app_author">by Christian Vögtle</string>
   <string name="app_details">Details of Wetter Wolke</string>
   <string name="app_name_bonn">5. Temperature in Bonn</string>
@@ -41,7 +41,7 @@
   <string name="hours">Hours</string>
   <string name="humidity">Humidity</string>
   <string name="in_app">show in App</string>
-  <string name="in_widget">show in widget</string>
+  <string name="in_widget">show in Widget</string>
   <string name="inside_temperature">Inside temperature:</string>
   <string name="intervall_changed">Update frequency:</string>
   <string name="kwh">Output</string>
