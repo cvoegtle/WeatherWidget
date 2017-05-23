@@ -12,12 +12,12 @@ class DiagramFragment : Fragment() {
   private var diagramManager: DiagramManager? = null
   private var diagramId: DiagramEnum? = null
 
-  override fun onCreate(savedInstanceState: Bundle) {
+  override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     ensureResources()
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle): View {
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
     return inflater.inflate(R.layout.fragment_diagram, container, false)
   }
 
@@ -25,7 +25,7 @@ class DiagramFragment : Fragment() {
     super.onResume()
     ensureResources()
     diagramManager!!.onResume()
-    diagramManager!!.updateDiagram(diagramId)
+    diagramManager!!.updateDiagram(diagramId!!)
   }
 
   override fun onPause() {
@@ -42,7 +42,7 @@ class DiagramFragment : Fragment() {
 
 
   fun reload() {
-    diagramManager!!.updateDiagram(diagramId, true)
+    diagramManager!!.updateDiagram(diagramId!!, true)
   }
 
   companion object {

@@ -1,22 +1,16 @@
 package org.voegtle.weatherwidget.diagram
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.util.UserFeedback
 import uk.co.senab.photoview.PhotoViewAttacher
-
 import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 class DiagramManager(private val fragment: DiagramFragment) {
@@ -66,8 +60,8 @@ class DiagramManager(private val fragment: DiagramFragment) {
       inProgress = true
 
       var diagram = diagramCache.read(diagramId)
-      if (diagram == null || diagram.isOld || force) {
-        showDrawable(placeholderImage)
+      if (diagram == null || diagram.isOld() || force) {
+        showDrawable(placeholderImage!!)
         val image = fetchDrawable(diagramId)
         diagram = Diagram(diagramId, image)
 

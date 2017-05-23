@@ -10,6 +10,7 @@ class ShenzhenDiagramActivity : DiagramActivity() {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.shenzhen_7days)
     addDiagram(DiagramEnum.shenzhen_30days)
+    addDiagram(DiagramEnum.shenzhen_7days)
   }
 
 
@@ -24,6 +25,7 @@ class ShenzhenDiagramActivity : DiagramActivity() {
     when (item.itemId) {
       R.id.action_7_days -> return updateViewPager(0)
       R.id.action_30_days -> return updateViewPager(1)
+      R.id.action_last_year -> return updateViewPager(2)
     }
     return false
   }

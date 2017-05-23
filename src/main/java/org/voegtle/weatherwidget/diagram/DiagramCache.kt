@@ -9,7 +9,6 @@ import android.util.Log
 
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.io.OutputStream
 import java.util.Date
 
@@ -34,22 +33,25 @@ internal class DiagramCache(private val context: Context) {
   fun read(diagramId: DiagramEnum): Diagram? {
     val age = diagramPreferences.getLong(getAgeKey(diagramId), -1)
     if (age > 0) {
-      val filename = diagramId.filename
       try {
-        val inputStream = context.openFileInput(filename)
-        val image = Drawable.createFromStream(inputStream, "Local Cache")
-        inputStream.close()
-        return Diagram(diagramId, image, Date(age))
+        return readInternal(diagramId, age)
       } catch (ex: Throwable) {
-        Log.e(DiagramCache::class.java.name, "failed to read file " + filename, ex)
+        Log.e(DiagramCache::class.java.name, "failed to read file " + diagramId.filename, ex)
       }
-
     }
     return null
   }
 
+  fun readInternal(diagramId: DiagramEnum, age: Long): Diagram {
+    val filename = diagramId.filename
+    val inputStream = context.openFileInput(filename)
+    val image = Drawable.createFromStream(inputStream, "Local Cache")
+    inputStream.close()
+    return Diagram(diagramId, image, Date(age))
+  }
+
   fun asPNG(diagramId: DiagramEnum): ByteArray {
-    val diagram = read(diagramId)
+    val diagram = readInternal(diagramId, 1)
     val bytes = ByteArrayOutputStream()
     saveDrawableAsPng(diagram.image, bytes)
     return bytes.toByteArray()

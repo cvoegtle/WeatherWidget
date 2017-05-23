@@ -38,7 +38,7 @@ object LocationComparatorFactory {
         return@Comparator nullCheckResult
       }
 
-      lhs.rainToday!!.compareTo(rhs.rainToday)
+      lhs.rainToday!!.compareTo(rhs.rainToday!!)
     }
 
 
@@ -54,7 +54,7 @@ object LocationComparatorFactory {
         return@Comparator nullCheckResult
       }
 
-      lhs.humidity!!.compareTo(rhs.humidity)
+      lhs.humidity!!.compareTo(rhs.humidity!!)
     }
 
   private fun checkForNullValue(lhs: Float?, rhs: Float?): Int? {

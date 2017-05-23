@@ -13,7 +13,7 @@ class DiagramFetcher {
 
   private val COMMUNICATION_TIMEOUT = 60000
 
-  fun fetchImageFromUrl(diagramId: DiagramEnum): Drawable {
+  fun fetchImageFromUrl(diagramId: DiagramEnum): Drawable? {
     var image: Drawable? = null
     try {
       val url = URL(diagramId.url)

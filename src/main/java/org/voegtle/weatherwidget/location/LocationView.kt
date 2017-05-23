@@ -19,7 +19,7 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DataFormatter
 
-class LocationView(private val context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class LocationView(private val currentContext: Context, attrs: AttributeSet) : LinearLayout(currentContext, attrs) {
   private val captionView: TextView
   private var resizeButton: ImageButton? = null
   private var diagramButton: ImageButton? = null
@@ -46,7 +46,7 @@ class LocationView(private val context: Context, attrs: AttributeSet) : LinearLa
   init {
     formatter = DataFormatter()
 
-    val li = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val li = currentContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     li.inflate(R.layout.view_location, this, true)
 
     captionView = findViewById(R.id.caption) as TextView
@@ -55,10 +55,10 @@ class LocationView(private val context: Context, attrs: AttributeSet) : LinearLa
     rainCaptionView = findViewById(R.id.caption_rain) as TextView
 
 
-    imageCollapse = ContextCompat.getDrawable(context, R.drawable.ic_action_collapse)
-    imageExpand = ContextCompat.getDrawable(context, R.drawable.ic_action_expand)
+    imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
+    imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
 
-    val attributes = context.theme.obtainStyledAttributes(
+    val attributes = currentContext.theme.obtainStyledAttributes(
         attrs, R.styleable.LocationView, 0, 0)
 
     try {
@@ -149,7 +149,7 @@ class LocationView(private val context: Context, attrs: AttributeSet) : LinearLa
   private fun setSolarData(watt: Float?, labelId: Int, dataId: Int) {
     val solarLabel = findViewById(labelId) as TextView
     val solar = findViewById(dataId) as TextView
-    if (watt != null && watt !== 0.0) {
+    if (watt != null && watt.equals(0.0)) {
       solarLabel.visibility = View.VISIBLE
       solar.visibility = View.VISIBLE
       solar.text = formatter.formatWatt(watt)
@@ -231,12 +231,12 @@ class LocationView(private val context: Context, attrs: AttributeSet) : LinearLa
 
   fun configureSymbols(useDarkSymbols: Boolean) {
     if (useDarkSymbols) {
-      imageCollapse = ContextCompat.getDrawable(context, R.drawable.ic_action_collapse_dark)
-      imageExpand = ContextCompat.getDrawable(context, R.drawable.ic_action_expand_dark)
+      imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse_dark)
+      imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand_dark)
 
-      val imageForecastDark = ContextCompat.getDrawable(context, R.drawable.ic_action_forecast_dark)
+      val imageForecastDark = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_forecast_dark)
       forecastButton!!.setImageDrawable(imageForecastDark)
-      val imageDiagramDark = ContextCompat.getDrawable(context, R.drawable.ic_action_picture_dark)
+      val imageDiagramDark = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_picture_dark)
       diagramButton!!.setImageDrawable(imageDiagramDark)
     }
     isExpanded = isExpanded
