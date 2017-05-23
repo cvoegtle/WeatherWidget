@@ -12,6 +12,7 @@ public class ShenzhenDiagramActivity extends DiagramActivity {
     super.onCreate(savedInstanceState);
     addDiagram(DiagramEnum.shenzhen_7days);
     addDiagram(DiagramEnum.shenzhen_30days);
+    addDiagram(DiagramEnum.shenzhen_lastyear);
   }
 
 
@@ -31,6 +32,9 @@ public class ShenzhenDiagramActivity extends DiagramActivity {
         return true;
       case R.id.action_30_days:
         viewPager.setCurrentItem(1, true);
+        return true;
+      case R.id.action_last_year:
+        viewPager.setCurrentItem(2, true);
         return true;
     }
     return false;
