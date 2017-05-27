@@ -10,7 +10,7 @@ class ShenzhenDiagramActivity : DiagramActivity() {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.shenzhen_7days)
     addDiagram(DiagramEnum.shenzhen_30days)
-    addDiagram(DiagramEnum.shenzhen_7days)
+    addDiagram(DiagramEnum.shenzhen_lastyear)
   }
 
 

@@ -22,7 +22,7 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result> extends AsyncT
 
     this.context = context;
     this.configuration = configuration;
-    this.weatherDataFetcher = new WeatherDataFetcher(ContextUtil.getBuildNumber(context));
+    this.weatherDataFetcher = new WeatherDataFetcher(ContextUtil.INSTANCE.getBuildNumber(context));
   }
 
   protected WeatherData fetchWeatherData(String weatherServerUrl) {

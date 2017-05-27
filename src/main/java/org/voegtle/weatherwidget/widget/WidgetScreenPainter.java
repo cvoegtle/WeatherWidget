@@ -41,10 +41,10 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
     remoteViews.setViewVisibility(R.id.refresh_button, View.GONE);
 
     for (WeatherLocation location : locations) {
-      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.updateColor(colorScheme));
-      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.updateColor(colorScheme));
+      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.INSTANCE.updateColor(colorScheme));
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.INSTANCE.updateColor(colorScheme));
     }
-    remoteViews.setTextColor(R.id.update_time, ColorUtil.updateColor(colorScheme));
+    remoteViews.setTextColor(R.id.update_time, ColorUtil.INSTANCE.updateColor(colorScheme));
     updateAllWidgets();
   }
 
@@ -68,20 +68,20 @@ public class WidgetScreenPainter extends AbstractWidgetScreenPainter {
   private void updateUpdateTime() {
     DateFormat df = new SimpleDateFormat("HH:mm", Locale.GERMANY);
     remoteViews.setTextViewText(R.id.update_time, df.format(new Date()));
-    remoteViews.setTextColor(R.id.update_time, ColorUtil.byAge(colorScheme, new Date()));
+    remoteViews.setTextColor(R.id.update_time, ColorUtil.INSTANCE.byAge(colorScheme, new Date()));
   }
 
   private boolean visualizeData(WeatherLocation location, WeatherData data) {
     boolean updated;
     if (data == null) {
-      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.outdatedColor(colorScheme));
-      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.outdatedColor(colorScheme));
+      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.INSTANCE.outdatedColor(colorScheme));
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.INSTANCE.outdatedColor(colorScheme));
       updated = false;
     } else {
-      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.byAge(colorScheme, data.getTimestamp()));
+      remoteViews.setTextColor(location.getWeatherViewId(), ColorUtil.INSTANCE.byAge(colorScheme, data.getTimestamp()));
       remoteViews.setTextViewText(location.getWeatherViewId(), formatter.formatWidgetLine(location, data, detailed));
 
-      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.byRain(data.isRaining(), colorScheme, data.getTimestamp()));
+      remoteViews.setTextColor(location.getRainIndicatorId(), ColorUtil.INSTANCE.byRain(data.isRaining(), colorScheme, data.getTimestamp()));
       updated = true;
     }
     return updated;
