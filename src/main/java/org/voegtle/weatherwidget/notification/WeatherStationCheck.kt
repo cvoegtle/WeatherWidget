@@ -16,7 +16,7 @@ class WeatherStationCheck(private val configuration: ApplicationSettings) {
   fun checkForOverdueStations(data: HashMap<LocationIdentifier, WeatherData>): List<WeatherAlert> {
     alerts.clear()
     for (location in configuration.locations) {
-      if (location.preferences!!.isAlertActive) {
+      if (location.preferences!!.alertActive) {
         buildAlert(data[location.key])
       }
     }

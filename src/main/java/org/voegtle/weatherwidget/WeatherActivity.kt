@@ -124,7 +124,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun updateVisibility(location: WeatherLocation) {
-    val show = location.preferences!!.isShowInApp
+    val show = location.preferences!!.showInApp
     updateVisibility(location.weatherViewId, show)
   }
 
@@ -134,7 +134,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun updateTextSize(location: WeatherLocation, textSize: Int?) {
-    if (location.preferences!!.isShowInApp) {
+    if (location.preferences!!.showInApp) {
       val view = findViewById(location.weatherViewId) as LocationView
       view.setTextSize(textSize!!)
     }
@@ -195,7 +195,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         return true
       }
       R.id.action_sort -> {
-        val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this, updater)
+        val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this, updater!!)
         orderCriteriaDialog.show()
         return true
       }

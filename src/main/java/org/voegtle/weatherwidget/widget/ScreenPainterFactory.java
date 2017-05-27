@@ -58,7 +58,7 @@ public class ScreenPainterFactory {
 
     updateBackgroundColor(remoteViews);
     for (WeatherLocation location : configuration.getLocations()) {
-      boolean show = location.getPreferences().isShowInWidget();
+      boolean show = location.getPreferences().getShowInWidget();
       updateVisibility(remoteViews, location.getWeatherLineId(), show);
       if (SDK_INT >= 16) {
         remoteViews.setTextViewTextSize(location.getWeatherViewId(), TypedValue.COMPLEX_UNIT_SP, configuration.getWidgetTextSize());

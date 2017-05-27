@@ -123,7 +123,7 @@ class NotificationSystemManager(private val context: Context, private val config
     val weatherText = StringBuilder()
 
     for (location in configuration.locations) {
-      if (location.preferences!!.isShowInWidget) {
+      if (location.preferences!!.showInWidget) {
         val weatherData = data[location.key]
         if (weatherData != null) {
           describeLocation(weatherText, location, weatherData)
