@@ -43,7 +43,11 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     updater = WeatherDataUpdater(this, configuration)
 
     val scrollView = findViewById(R.id.scroll_view) as UpdatingScrollView
-    scrollView.register { updater!!.updateWeatherOnce(true) }
+    scrollView.register (object: UpdatingScrollView.Updater {
+      override fun update() {
+        updater!!.updateWeatherOnce(true)
+      }
+    })
 
   }
 

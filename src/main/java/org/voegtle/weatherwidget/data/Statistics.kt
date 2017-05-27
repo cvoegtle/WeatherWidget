@@ -4,34 +4,29 @@ import java.util.*
 
 class Statistics {
 
-    enum class TimeRange {
-        lastHour, today, yesterday, last7days, last30days;
+  enum class TimeRange {
+    lastHour, today, yesterday, last7days, last30days;
 
-        companion object {
-            fun fromString(rangeStr: String): TimeRange? {
-                for (range in values()) {
-                    if (range.toString() == rangeStr) {
-                        return range
-                    }
-                }
-                return null
-            }
-        }
+    companion object {
+      fun fromString(rangeStr: String): TimeRange? {
+        return values().firstOrNull { it.toString() == rangeStr }
+      }
     }
+  }
 
-    var id: String? = null
+  var id: String? = null
 
-    private val statistics = HashMap<TimeRange, StatisticsSet>()
+  private val statistics = HashMap<TimeRange, StatisticsSet>()
 
-    fun add(set: StatisticsSet) {
-        statistics.put(set.range, set)
-    }
+  fun add(set: StatisticsSet) {
+    statistics.put(set.range, set)
+  }
 
-    operator fun get(range: TimeRange): StatisticsSet? {
-        return statistics[range]
-    }
+  operator fun get(range: TimeRange): StatisticsSet? {
+    return statistics[range]
+  }
 
-    fun values(): Collection<StatisticsSet> {
-        return statistics.values
-    }
+  fun values(): Collection<StatisticsSet> {
+    return statistics.values
+  }
 }
