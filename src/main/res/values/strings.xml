@@ -2,7 +2,7 @@
 <resources>
 
   <string name="app_name">Wetter Wolke</string>
-  <string name="app_name_large" translatable="false">1. Wetter Wolke XL</string>
+  <string name="app_name_large">1. Wetter Wolke XL</string>
   <string name="app_name_small">2. Wetter Wolke kompakt</string>
   <string name="app_name_freiburg">3. Freiburger Temperatur</string>
   <string name="app_name_paderborn">4. Paderborner Temperatur</string>
@@ -111,7 +111,7 @@
   <string name="city_magdeburg_full" translatable="false">Magdeburg</string>
   <string name="city_magdeburg" translatable="false">MD</string>
   <string name="station_magdeburg">Wetterstation in Magdeburg</string>
-  <string name="action_compare_md_with_pb_fr" translatable="false">Magdeburg - Paderborn - Freiburg</string>
+  <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
   <string name="action_30_days">30 Tage</string>
   <string name="wind_speed">Wind</string>
   <string name="action_solar_daily">Tagesproduktion Solaranlage</string>
