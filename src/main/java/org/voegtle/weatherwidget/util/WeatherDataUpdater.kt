@@ -20,13 +20,13 @@ class WeatherDataUpdater(private val activity: WeatherActivity, private val conf
   fun startWeatherScheduler(interval: Int) {
     stopWeatherScheduler()
 
-    val updater = Runnable { ActivityUpdateTask(activity, configuration, false).execute() }
+    val updater = Runnable { ActivityUpdateTask(activity, configuration!!, false).execute() }
     val scheduler = Executors.newScheduledThreadPool(1)
     backgroundProcess = scheduler.scheduleAtFixedRate(updater, interval.toLong(), interval.toLong(), TimeUnit.SECONDS)
   }
 
   fun updateWeatherOnce(showToast: Boolean) {
-    ActivityUpdateTask(activity, configuration, showToast).execute()
+    ActivityUpdateTask(activity, configuration!!, showToast).execute()
   }
 
 }

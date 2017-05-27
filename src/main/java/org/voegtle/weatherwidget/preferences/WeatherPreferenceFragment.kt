@@ -40,7 +40,7 @@ class WeatherPreferenceFragment : PreferenceFragment() {
 
   private fun readVersionInformationFromAndroidManifest() {
     try {
-      buildNumber = ContextUtil.getBuildNumber(activity)!!
+      buildNumber = ContextUtil.getBuildNumber(activity)
       versionName = ContextUtil.getVersion(activity)
     } catch (ignored: Exception) {
     }

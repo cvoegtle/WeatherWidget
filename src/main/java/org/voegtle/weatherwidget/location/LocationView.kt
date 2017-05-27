@@ -187,12 +187,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
   }
 
-  fun setMoreData(statistics: Statistics?) {
-    var statistics = statistics
-    if (statistics == null) {
-      statistics = Statistics()
-    }
-
+  fun setMoreData(statistics: Statistics) {
     val today = statistics[Statistics.TimeRange.today]
     updateStatistics(today, R.id.today_rain, R.id.today_min_temperature, R.id.today_max_temperature, R.id.today_kwh)
 

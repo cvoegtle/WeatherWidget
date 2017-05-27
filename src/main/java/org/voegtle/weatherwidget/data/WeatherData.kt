@@ -18,7 +18,7 @@ class WeatherData(val location: LocationIdentifier) : Comparable<WeatherData> {
     var wind: Float? = null
 
     override fun compareTo(another: WeatherData): Int {
-        val outdated = DateUtil.checkIfOutdated(timestamp, another.timestamp)
+        val outdated = DateUtil.checkIfOutdated(timestamp!!, another.timestamp!!)
         if (outdated != null) {
             return outdated
         }
