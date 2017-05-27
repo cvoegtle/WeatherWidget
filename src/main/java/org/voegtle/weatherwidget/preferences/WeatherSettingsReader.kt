@@ -24,7 +24,7 @@ class WeatherSettingsReader {
     configuration.locations = locations
     configuration.secret = getString(preferences, "secret")
     configuration.isShowInfoNotification = getBoolean(preferences, "info_notification", false)
-    configuration.updateIntervall = getInteger(preferences, "update_interval", 30)
+    configuration.updateInterval = getInteger(preferences, "update_interval", 30)
     configuration.setTextSize(getInteger(preferences, "text_size", 11))
     configuration.colorScheme = getColorScheme(preferences, "color_scheme", ColorScheme.dark)
 
@@ -55,7 +55,7 @@ class WeatherSettingsReader {
   }
 
 
-  private fun getInteger(preferences: SharedPreferences, key: String, defaultValue: Int): Int? {
+  private fun getInteger(preferences: SharedPreferences, key: String, defaultValue: Int): Int {
     val value = preferences.getString(key, Integer.toString(defaultValue))
     return Integer.valueOf(value)
   }

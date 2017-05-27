@@ -43,7 +43,7 @@ public abstract class AbstractWidgetUpdateManager {
   private void processPreferences(SharedPreferences preferences, Context context) {
     WeatherSettingsReader weatherSettingsReader = new WeatherSettingsReader(context);
     ApplicationSettings configuration = weatherSettingsReader.read(preferences);
-    interval = configuration.getUpdateIntervall();
+    interval = configuration.getUpdateInterval();
   }
 
 
