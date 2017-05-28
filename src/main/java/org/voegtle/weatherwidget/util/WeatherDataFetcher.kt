@@ -104,13 +104,11 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
 
   @Throws(JSONException::class)
   private fun parseWeatherData(locationIdentifier: LocationIdentifier, weather: JSONObject): WeatherData {
-    val data = WeatherData(locationIdentifier)
 
     val timestamp = weather.getString("timestamp")
-    data.timestamp = Date(timestamp)
-
     val temperature = weather.get("temperature") as Number
-    data.temperature = temperature.toFloat()
+    val humidity = weather.get("humidity") as Number
+    val data = WeatherData(locationIdentifier, Date(timestamp), temperature.toFloat(), humidity.toFloat())
 
     if (weather.has("localtime")) {
       data.localtime = weather.get("localtime") as String
@@ -120,9 +118,6 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
       val insideTemperature = weather.get("inside_temperature") as Number
       data.insideTemperature = insideTemperature.toFloat()
     }
-
-    val humidity = weather.get("humidity") as Number
-    data.humidity = humidity.toFloat()
 
     if (weather.has("inside_humidity")) {
       val insideHumidity = weather.get("inside_humidity") as Number
@@ -157,11 +152,8 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
 
   @Throws(JSONException::class)
   private fun parseLocationData(location: WeatherLocation, weather: JSONObject) {
-    val locationName = weather.getString("location")
-    location.name = locationName
-
-    val locationShort = weather.getString("location_short")
-    location.shortName = locationShort
+    location.name = weather.getString("location")
+    location.shortName = weather.getString("location_short")
   }
 
   fun fetchStatisticsFromUrl(locationIds: ArrayList<String>): HashMap<String, Statistics> {
