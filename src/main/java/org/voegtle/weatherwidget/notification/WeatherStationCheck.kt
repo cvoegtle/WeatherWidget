@@ -11,7 +11,7 @@ import java.util.HashMap
 
 class WeatherStationCheck(private val configuration: ApplicationSettings) {
 
-  internal var alerts: MutableList<WeatherAlert> = ArrayList()
+  private var alerts: MutableList<WeatherAlert> = ArrayList()
 
   fun checkForOverdueStations(data: HashMap<LocationIdentifier, WeatherData>): List<WeatherAlert> {
     alerts.clear()

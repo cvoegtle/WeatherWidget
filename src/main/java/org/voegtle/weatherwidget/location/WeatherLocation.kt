@@ -3,7 +3,7 @@ package org.voegtle.weatherwidget.location
 import android.net.Uri
 import org.voegtle.weatherwidget.preferences.LocationPreferences
 
-class WeatherLocation(val key: LocationIdentifier) {
+data class WeatherLocation(val key: LocationIdentifier) {
   var name: String = ""
   var shortName: String = ""
   var identifier: String? = null
