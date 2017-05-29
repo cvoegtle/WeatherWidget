@@ -8,6 +8,9 @@ import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.ContextUtil
 
 class WeatherPreferenceFragment : PreferenceFragment() {
+  private val PLACEHOLDER_VERSION = "{v}"
+  private val PLACEHOLDER_BUILD = "{b}"
+
   private var buildNumber: Int = 0
   private var versionName: String = ""
 
@@ -46,10 +49,4 @@ class WeatherPreferenceFragment : PreferenceFragment() {
     }
 
   }
-
-  companion object {
-    private val PLACEHOLDER_VERSION = "{v}"
-    private val PLACEHOLDER_BUILD = "{b}"
-  }
-
 }

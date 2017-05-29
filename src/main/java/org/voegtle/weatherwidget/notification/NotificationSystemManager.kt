@@ -20,23 +20,20 @@ import java.text.NumberFormat
 import java.util.*
 
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
+  private val ALERT_ID = 1
+  private val INFO_ID = 2
 
-  private val res: Resources
-  private val notificationManager: NotificationManager
-  private val stationCheck: WeatherStationCheck
-  private val numberFormat: DecimalFormat
-
+  private val res: Resources = context.resources
+  private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+  private val stationCheck: WeatherStationCheck = WeatherStationCheck(configuration)
+  private val numberFormat: DecimalFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
 
   init {
-    this.res = context.resources
-    this.notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-    this.stationCheck = WeatherStationCheck(configuration)
-    this.numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
     this.numberFormat.applyPattern("###.#")
   }
 
   fun checkDataForAlert(data: HashMap<LocationIdentifier, WeatherData>) {
-    if (data.size > 0) {
+    if (data.isNotEmpty()) {
       showAlertNotification(stationCheck.checkForOverdueStations(data))
       showInfoNotifcation(data)
     }
@@ -146,11 +143,5 @@ class NotificationSystemManager(private val context: Context, private val config
       weatherText.append(", ").append(numberFormat.format(weatherData.rainToday)).append("l")
     }
   }
-
-  companion object {
-    private val ALERT_ID = 1
-    private val INFO_ID = 2
-  }
-
 
 }

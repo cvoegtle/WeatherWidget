@@ -10,16 +10,15 @@ import java.util.Date
 import java.util.HashMap
 
 class WeatherStationCheck(private val configuration: ApplicationSettings) {
+  private val THRESHOLD = 20 * 60 * 1000 // 20 min
 
-  private var alerts: MutableList<WeatherAlert> = ArrayList()
+  private val alerts: MutableList<WeatherAlert> = ArrayList()
 
   fun checkForOverdueStations(data: HashMap<LocationIdentifier, WeatherData>): List<WeatherAlert> {
     alerts.clear()
-    for (location in configuration.locations) {
-      if (location.preferences.alertActive) {
-        buildAlert(data[location.key])
-      }
-    }
+    configuration.locations
+        .filter { it.preferences.alertActive }
+        .forEach { buildAlert(data[it.key]) }
 
     return alerts
   }
@@ -33,7 +32,4 @@ class WeatherStationCheck(private val configuration: ApplicationSettings) {
     }
   }
 
-  companion object {
-    private val THRESHOLD = 20 * 60 * 1000 // 20 min
-  }
 }

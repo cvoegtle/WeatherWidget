@@ -19,6 +19,8 @@ import org.voegtle.weatherwidget.util.NotificationTask
 import java.util.Date
 
 class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChangeListener {
+  private val WAITING_PERIOD = (5 * 60 * 1000).toLong()
+
   private var res: Resources? = null
 
   private var configuration: ApplicationSettings? = null
@@ -144,9 +146,5 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
     return null
   }
 
-  companion object {
-
-    private val WAITING_PERIOD = (5 * 60 * 1000).toLong()
-  }
 
 }

@@ -6,12 +6,7 @@ enum class OrderCriteria constructor(private val key: String) {
   companion object {
 
     fun byKey(key: String): OrderCriteria {
-      for (orderCriteria in values()) {
-        if (orderCriteria.key == key) {
-          return orderCriteria
-        }
-      }
-      return location
+      return values().firstOrNull { it.key == key } ?: location
     }
 
     fun byIndex(which: Int): OrderCriteria {

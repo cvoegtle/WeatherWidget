@@ -10,7 +10,7 @@ class NotificationTask(private val context: Context, private val message: String
     return null
   }
 
-  override fun onPostExecute(aVoid: Void) {
+  override fun onPostExecute(aVoid: Void?) {
     val duration = Toast.LENGTH_SHORT
     val toast = Toast.makeText(context, message, duration)
     toast.show()

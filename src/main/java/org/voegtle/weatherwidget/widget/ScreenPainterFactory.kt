@@ -1,11 +1,11 @@
 package org.voegtle.weatherwidget.widget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.Build.VERSION.SDK_INT
 import android.support.v4.content.ContextCompat
 import android.util.TypedValue
 import android.view.View
@@ -13,14 +13,10 @@ import android.widget.RemoteViews
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherWidgetProvider
 import org.voegtle.weatherwidget.WeatherWidgetProviderLarge
-import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.system.IntentFactory
-
-import java.util.ArrayList
-
-import android.os.Build.VERSION.SDK_INT
+import java.util.*
 
 class ScreenPainterFactory(context: Context, private val configuration: ApplicationSettings) {
 

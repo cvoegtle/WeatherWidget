@@ -46,9 +46,9 @@ class WeatherSettingsReader {
       val visibleInWidgetByDefault = location.isVisibleInWidgetByDefault
       val visibleInAppByDefault = location.isVisibleInAppByDefault
       val locationPreferences = LocationPreferences(
-          getBoolean(preferences, location.prefShowInWidget, visibleInWidgetByDefault),
-          getBoolean(preferences, location.prefShowInApp, visibleInAppByDefault),
-          getBoolean(preferences, location.prefAlert, false))
+          showInWidget = getBoolean(preferences, location.prefShowInWidget, visibleInWidgetByDefault),
+          showInApp = getBoolean(preferences, location.prefShowInApp, visibleInAppByDefault),
+          alertActive = getBoolean(preferences, location.prefAlert, false))
       location.preferences = locationPreferences
     }
     return locations
@@ -60,12 +60,10 @@ class WeatherSettingsReader {
     return Integer.valueOf(value)
   }
 
-  private fun getBoolean(preferences: SharedPreferences, key: String, defaultValue: Boolean): Boolean {
-    return preferences.getBoolean(key, defaultValue)
-  }
+  private fun getBoolean(preferences: SharedPreferences, key: String, defaultValue: Boolean)
+      = preferences.getBoolean(key, defaultValue)
 
-  private fun getString(preferences: SharedPreferences, key: String): String {
-    return preferences.getString(key, "")
-  }
+  private fun getString(preferences: SharedPreferences, key: String) = preferences.getString(key, "")
+
 
 }

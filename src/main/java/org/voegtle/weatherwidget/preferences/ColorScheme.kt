@@ -8,15 +8,7 @@ enum class ColorScheme constructor(private val key: String, val theme: Int) {
 
 
   companion object {
-
-    fun byKey(key: String): ColorScheme? {
-      for (colorScheme in values()) {
-        if (colorScheme.key == key) {
-          return colorScheme
-        }
-      }
-      return null
-    }
+    fun byKey(key: String) = values().firstOrNull { it.key == key }
   }
 
 }
