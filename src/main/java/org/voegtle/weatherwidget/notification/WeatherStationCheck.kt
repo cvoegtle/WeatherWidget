@@ -27,8 +27,8 @@ class WeatherStationCheck(private val configuration: ApplicationSettings) {
   private fun buildAlert(data: WeatherData?) {
     if (data != null) {
       val now = Date()
-      if (now.time - data.timestamp!!.time > THRESHOLD) {
-        alerts.add(WeatherAlert(data.location, data.timestamp!!))
+      if (now.time - data.timestamp.time > THRESHOLD) {
+        alerts.add(WeatherAlert(data.location, data.timestamp))
       }
     }
   }

@@ -79,7 +79,7 @@ class StatisticsUpdater(activity: Activity) {
     for (locationView in updateCandidates.keys) {
       val state = stateCache.read(locationView.id)
       if (!state.outdated()) {
-        updateView(locationView, JsonTranslator.toSingleStatistics(state.statistics!!))
+        updateView(locationView, JsonTranslator.toSingleStatistics(state.statistics))
       }
     }
   }

@@ -28,7 +28,7 @@ object LocationComparatorFactory {
 
   private val rainTodayComparator: Comparator<WeatherData>
     get() = Comparator { lhs, rhs ->
-      val outdated = DateUtil.checkIfOutdated(lhs.timestamp!!, rhs.timestamp!!)
+      val outdated = DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)
       if (outdated != null) {
         return@Comparator outdated
       }
@@ -44,7 +44,7 @@ object LocationComparatorFactory {
 
   private val humidityComparator: Comparator<WeatherData>
     get() = Comparator { lhs, rhs ->
-      val outdated = DateUtil.checkIfOutdated(lhs.timestamp!!, rhs.timestamp!!)
+      val outdated = DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)
       if (outdated != null) {
         return@Comparator outdated
       }
@@ -54,7 +54,7 @@ object LocationComparatorFactory {
         return@Comparator nullCheckResult
       }
 
-      lhs.humidity!!.compareTo(rhs.humidity!!)
+      lhs.humidity.compareTo(rhs.humidity)
     }
 
   private fun checkForNullValue(lhs: Float?, rhs: Float?): Int? {

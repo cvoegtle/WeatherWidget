@@ -69,7 +69,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   private fun updateWeatherLocation(locationId: Int, locationName: String, data: WeatherData) {
     val contentView = activity.findViewById(locationId) as LocationView
 
-    val color = ColorUtil.byAge(configuration.colorScheme, data.timestamp!!)
+    val color = ColorUtil.byAge(configuration.colorScheme, data.timestamp)
     val caption = getCaption(locationName, data)
 
     updateView(contentView, caption, data, color)

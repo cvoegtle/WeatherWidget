@@ -20,7 +20,7 @@ class SmallWidgetScreenPainter(appWidgetManager: AppWidgetManager, widgetIds: In
   fun updateData(data: WeatherData?) {
     if (data != null) {
       remoteViews.setTextViewText(R.id.weather_small, formatter.formatTemperature(data))
-      remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.timestamp!!))
+      remoteViews.setTextColor(R.id.weather_small, ColorUtil.byAge(data.timestamp))
     } else {
       remoteViews.setTextColor(R.id.weather_small, ColorUtil.outdatedColor(ColorScheme.dark))
     }

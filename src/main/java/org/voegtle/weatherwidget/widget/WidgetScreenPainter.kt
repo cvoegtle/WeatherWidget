@@ -69,10 +69,10 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager, widgetIds: IntArra
       remoteViews.setTextColor(location.rainIndicatorId, ColorUtil.outdatedColor(colorScheme))
       updated = false
     } else {
-      remoteViews.setTextColor(location.weatherViewId, ColorUtil.byAge(colorScheme, data.timestamp!!))
+      remoteViews.setTextColor(location.weatherViewId, ColorUtil.byAge(colorScheme, data.timestamp))
       remoteViews.setTextViewText(location.weatherViewId, formatter.formatWidgetLine(location, data, detailed))
 
-      remoteViews.setTextColor(location.rainIndicatorId, ColorUtil.byRain(data.isRaining, colorScheme, data.timestamp!!))
+      remoteViews.setTextColor(location.rainIndicatorId, ColorUtil.byRain(data.isRaining, colorScheme, data.timestamp))
       updated = true
     }
     return updated

@@ -2,10 +2,9 @@ package org.voegtle.weatherwidget.util
 
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.WeatherLocation
-
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.Locale
+import java.util.*
 
 class DataFormatter {
   private val numberFormat: DecimalFormat
@@ -52,14 +51,7 @@ class DataFormatter {
   }
 
   fun formatTemperature(data: WeatherData): String {
-    val formattedTemperature: String
-    val temperature = data.temperature
-    if (temperature != null) {
-      formattedTemperature = formatTemperature(temperature)
-    } else {
-      formattedTemperature = "-"
-    }
-    return formattedTemperature
+    return formatTemperature(data.temperature)
   }
 
   fun formatTemperature(temperature: Float?): String {

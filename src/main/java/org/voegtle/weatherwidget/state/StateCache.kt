@@ -5,11 +5,15 @@ import android.content.SharedPreferences
 
 import java.util.Date
 
-class StateCache(context: Context) {
-
+class StateCache {
   private val statePreferences: SharedPreferences
 
-  init {
+  private val STATE_CACHE = "STATE"
+  private val STATE_AGE = "AGE"
+  private val STATE = "STATE"
+  private val STATISTICS = "STATISTICS"
+
+  constructor(context: Context) {
     statePreferences = context.getSharedPreferences(STATE_CACHE, 0)
   }
 
@@ -33,15 +37,5 @@ class StateCache(context: Context) {
     editor.commit()
   }
 
-  private fun getKey(prefix: String, id: Int): String {
-    return prefix + id
-  }
-
-  companion object {
-    private val STATE_CACHE = "STATE"
-    private val STATE_AGE = "AGE"
-    private val STATE = "STATE"
-    private val STATISTICS = "STATISTICS"
-  }
-
+  private fun getKey(prefix: String, id: Int) = prefix + id
 }
