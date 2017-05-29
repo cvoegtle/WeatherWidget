@@ -1,9 +1,7 @@
 package org.voegtle.weatherwidget.data
 
-class StatisticsSet(val range: Statistics.TimeRange) {
-    var rain: Float? = null
-    var maxTemperature: Float? = null
-    var minTemperature: Float? = null
-    var kwh: Float? = null
-
-}
+data class StatisticsSet(val range: Statistics.TimeRange,
+                         val rain: Float?,
+                         val minTemperature: Float?,
+                         val maxTemperature: Float?,
+                         val kwh: Float?)

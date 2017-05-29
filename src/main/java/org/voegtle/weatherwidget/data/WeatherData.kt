@@ -4,7 +4,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.util.DateUtil
 import java.util.*
 
-class WeatherData(val location: LocationIdentifier,
+data class WeatherData(val location: LocationIdentifier,
                   val timestamp: Date,
                   val temperature: Float,
                   var humidity: Float) : Comparable<WeatherData> {

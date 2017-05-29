@@ -1,14 +1,12 @@
 package org.voegtle.weatherwidget.util
 
-import android.util.Log
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherJSONObject
-
-import java.util.HashMap
+import java.util.*
 
 object JsonTranslator {
 
@@ -29,7 +27,9 @@ object JsonTranslator {
       val jsonStatistics = JSONArray(jsonStr)
       for (i in 0..jsonStatistics.length() - 1) {
         val stats = toStatistics(jsonStatistics.getJSONObject(i))
-        statisticsMap.put(stats.id!!, stats)
+        if (stats != null) {
+          statisticsMap.put(stats.id, stats)
+        }
       }
     } catch (ignore: JSONException) {
     }
@@ -38,48 +38,31 @@ object JsonTranslator {
   }
 
   internal fun toSingleStatistics(jsonStr: String): Statistics {
-    try {
-      val json = JSONObject(jsonStr)
-      return toStatistics(json)
-    } catch (ignore: JSONException) {
-    }
-
-    return Statistics()
+    val json = JSONObject(jsonStr)
+    return toStatistics(json)
   }
 
   private fun toStatistics(jsonStatistics: JSONObject): Statistics {
-    val result = Statistics()
-    try {
-      result.id = jsonStatistics.optString("id")
-      val jsonStats = jsonStatistics.getJSONArray("stats")
-      for (i in 0..jsonStats.length() - 1) {
-        val json = jsonStats.get(i) as JSONObject
-        val statisticsSet = toStatisticsSet(json)
-        if (statisticsSet != null) {
-          result.add(statisticsSet)
-        }
-
+    val result = Statistics(jsonStatistics.optString("id"))
+    val jsonStats = jsonStatistics.getJSONArray("stats")
+    for (i in 0..jsonStats.length() - 1) {
+      val statisticsSet = toStatisticsSet(jsonStats.get(i) as JSONObject)
+      if (statisticsSet != null) {
+        result.add(statisticsSet)
       }
-    } catch (ignore: JSONException) {
-      Log.e("Problem", "Exception parsing server response:", ignore)
     }
-
     return result
   }
 
-  @Throws(JSONException::class)
   private fun toStatisticsSet(json: JSONObject): StatisticsSet? {
     var result: StatisticsSet? = null
 
     val rangeStr = json.getString("range")
     val range = Statistics.TimeRange.fromString(rangeStr)
     if (range != null) {
-      result = StatisticsSet(range)
-
-      result.rain = toFloat(json, "rain")
-      result.minTemperature = toFloat(json, "minTemperature")
-      result.maxTemperature = toFloat(json, "maxTemperature")
-      result.kwh = toFloat(json, "kwh")
+      result = StatisticsSet(range = range, rain = toFloat(json, "rain"),
+          minTemperature = toFloat(json, "minTemperature"), maxTemperature = toFloat(json, "maxTemperature"),
+          kwh = toFloat(json, "kwh"))
     }
     return result
   }

@@ -2,7 +2,7 @@ package org.voegtle.weatherwidget.data
 
 import java.util.*
 
-class Statistics {
+data class Statistics(val id: String) {
 
   enum class TimeRange {
     lastHour, today, yesterday, last7days, last30days;
@@ -14,9 +14,7 @@ class Statistics {
     }
   }
 
-  var id: String? = null
-
-  private val statistics = HashMap<TimeRange, StatisticsSet>()
+  private val statistics = HashMap<Statistics.TimeRange, StatisticsSet>()
 
   fun add(set: StatisticsSet) {
     statistics.put(set.range, set)
