@@ -8,7 +8,7 @@ import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
+import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.base.ThemedActivity
 import org.voegtle.weatherwidget.base.UpdatingScrollView
 import org.voegtle.weatherwidget.diagram.*
@@ -20,6 +20,7 @@ import org.voegtle.weatherwidget.util.StatisticsUpdater
 import org.voegtle.weatherwidget.util.WeatherDataUpdater
 import java.util.*
 
+
 class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
   private var updater: WeatherDataUpdater? = null
   private var statisticsUpdater: StatisticsUpdater? = null
@@ -29,7 +30,11 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.activity_weather)
-    initButton(R.id.button_google_docs, Uri.parse("https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"))
+    button_google_docs.setOnClickListener {
+      val browserIntent = Intent(Intent.ACTION_VIEW,
+          Uri.parse("https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"))
+      startActivity(browserIntent)
+    }
 
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     readConfiguration(preferences)
@@ -42,17 +47,16 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
 
     updater = WeatherDataUpdater(this, configuration)
 
-    val scrollView = findViewById(R.id.scroll_view) as UpdatingScrollView
-    scrollView.register (object: UpdatingScrollView.Updater {
+    scroll_view.register(object : UpdatingScrollView.Updater {
       override fun update() {
-        updater!!.updateWeatherOnce(true)
+        updater?.updateWeatherOnce(true)
       }
     })
 
   }
 
   private fun startWeatherUpdater() {
-    updater!!.startWeatherScheduler(180)
+    updater?.startWeatherScheduler(180)
   }
 
   private fun setupLocations() {
@@ -79,7 +83,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
       }
     }
 
-    locationView.setDiagramsOnClickListener(object: View.OnClickListener {
+    locationView.setDiagramsOnClickListener(object : View.OnClickListener {
       override fun onClick(view: View) {
         when (view.id) {
           R.id.weather_paderborn -> startActivity(Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java))
@@ -103,7 +107,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     })
 
 
-    locationView.setForecastOnClickListener(object: View.OnClickListener {
+    locationView.setForecastOnClickListener(object : View.OnClickListener {
       override fun onClick(view: View) {
         val browserIntent = Intent(Intent.ACTION_VIEW, location.forecastUrl)
         startActivity(browserIntent)
@@ -153,16 +157,6 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   private fun updateState(location: WeatherLocation) {
     val locationView = findViewById(location.weatherViewId) as LocationView
     statisticsUpdater!!.setupStatistics(locationView)
-  }
-
-
-  private fun initButton(buttonId: Int, uri: Uri) {
-    val button = findViewById(buttonId) as Button
-
-    button.setOnClickListener {
-      val browserIntent = Intent(Intent.ACTION_VIEW, uri)
-      startActivity(browserIntent)
-    }
   }
 
   override fun onResume() {

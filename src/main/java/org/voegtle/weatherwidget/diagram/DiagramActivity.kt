@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
 import android.util.Log
 import android.view.MenuItem
 import org.voegtle.weatherwidget.R
@@ -19,6 +18,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import kotlinx.android.synthetic.main.activity_digrams.*
+
 
 abstract class DiagramActivity : ThemedActivity() {
   protected var diagramIdList = ArrayList<DiagramEnum>()
@@ -36,19 +37,17 @@ abstract class DiagramActivity : ThemedActivity() {
     val diagramCache = DiagramCache(this)
 
     this.pagerAdapter = createPageAdapter()
-    val viewPager = findViewById(R.id.pager) as ViewPager
-    viewPager.adapter = pagerAdapter
+    pager.adapter = pagerAdapter
 
     val currentItem = diagramCache.readCurrentDiagram(this.javaClass.name)
-    viewPager.currentItem = currentItem
+    pager.currentItem = currentItem
   }
 
   override fun onPause() {
-    val viewPager = findViewById(R.id.pager) as ViewPager
     val diagramCache = DiagramCache(this)
 
-    diagramCache.saveCurrentDiagram(this.javaClass.name, viewPager.currentItem)
-    viewPager.removeAllViews()
+    diagramCache.saveCurrentDiagram(this.javaClass.name, pager.currentItem)
+    pager.removeAllViews()
     cleanupFragments()
     super.onPause()
   }
@@ -75,16 +74,15 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    val viewPager = findViewById(R.id.pager) as ViewPager
     when (item.itemId) {
       R.id.action_reload -> {
-        val index = viewPager.currentItem
+        val index = pager.currentItem
         val fragment = pagerAdapter!!.getItem(index)
         fragment.reload()
         return true
       }
       R.id.action_share -> {
-        shareCurrentImage(viewPager.currentItem)
+        shareCurrentImage(pager.currentItem)
         return true
       }
 
@@ -171,8 +169,7 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   protected fun updateViewPager(index: Int): Boolean {
-    val viewPager = findViewById(R.id.pager) as ViewPager
-    viewPager.setCurrentItem(index, true)
+    pager.setCurrentItem(index, true)
     return true
   }
 
