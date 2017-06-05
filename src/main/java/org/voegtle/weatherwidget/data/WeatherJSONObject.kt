@@ -5,14 +5,9 @@ import org.json.JSONObject
 
 class WeatherJSONObject : JSONObject() {
 
-    @Throws(JSONException::class)
-    override fun put(key: String, value: Any?): JSONObject {
-        if (value == null) {
-            super.put(key, "")
-        } else {
-            return super.put(key, value)
-        }
-        return this
-    }
+  @Throws(JSONException::class)
+  override fun put(key: String, value: Any?): JSONObject {
+    return super.put(key, value?: "")
+  }
 
 }

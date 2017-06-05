@@ -96,9 +96,9 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
           R.id.weather_shenzhen -> startActivity(Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java))
           R.id.weather_mobil -> {
             val intent = Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
-            val location = configuration!!.findLocation(LocationIdentifier.Mobil)
-            if (location != null) {
-              intent.putExtra(MobilDiagramActivity::class.java.name, location.name)
+            val mobileLocation = configuration!!.findLocation(LocationIdentifier.Mobil)
+            if (mobileLocation != null) {
+              intent.putExtra(MobilDiagramActivity::class.java.name, mobileLocation.name)
             }
             startActivity(intent)
           }

@@ -27,9 +27,7 @@ object JsonTranslator {
       val jsonStatistics = JSONArray(jsonStr)
       for (i in 0..jsonStatistics.length() - 1) {
         val stats = toStatistics(jsonStatistics.getJSONObject(i))
-        if (stats != null) {
-          statisticsMap.put(stats.id, stats)
-        }
+        statisticsMap.put(stats.id, stats)
       }
     } catch (ignore: JSONException) {
     }
@@ -73,10 +71,7 @@ object JsonTranslator {
       json.put("id", statistics.id)
 
       val jsonStats = JSONArray()
-      for (set in statistics.values()) {
-        val jsonObject = toJson(set)
-        jsonStats.put(jsonObject)
-      }
+      statistics.values().forEach { jsonStats.put(toJson(it)) }
       json.put("stats", jsonStats)
     } catch (ignore: JSONException) {
     }

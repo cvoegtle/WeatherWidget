@@ -60,8 +60,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
     for (location in configuration.locations) {
       val locationData = data[location.key]
       if (locationData != null) {
-        updateWeatherLocation(location.weatherViewId,
-            location.name, locationData)
+        updateWeatherLocation(location.weatherViewId, location.name, locationData)
       }
     }
   }
