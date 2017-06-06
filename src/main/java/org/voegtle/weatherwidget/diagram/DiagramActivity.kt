@@ -124,7 +124,7 @@ abstract class DiagramActivity : ThemedActivity() {
 
   private fun clearImages() {
     val wetterWolkeDir = wetterWolkeDirectory
-    val pngFiles = wetterWolkeDir.list { dir, filename -> filename.toLowerCase().endsWith(".png") }
+    val pngFiles = wetterWolkeDir.list { _, filename -> filename.toLowerCase().endsWith(".png") }
     for (filename in pngFiles) {
       File(wetterWolkeDir.toString() + File.separator + filename).delete()
     }

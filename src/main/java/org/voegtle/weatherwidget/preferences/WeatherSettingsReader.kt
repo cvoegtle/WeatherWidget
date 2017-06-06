@@ -8,7 +8,7 @@ import org.voegtle.weatherwidget.location.WeatherLocation
 
 class WeatherSettingsReader {
 
-  private var resources: Resources? = null
+  private val resources: Resources
 
   constructor(context: Context) {
     this.resources = context.resources
@@ -19,29 +19,23 @@ class WeatherSettingsReader {
   }
 
   fun read(preferences: SharedPreferences): ApplicationSettings {
-    val configuration = ApplicationSettings()
-    val locations = readLocations(preferences)
-    configuration.locations = locations
-    configuration.secret = getString(preferences, "secret")
-    configuration.isShowInfoNotification = getBoolean(preferences, "info_notification", false)
-    configuration.updateInterval = getInteger(preferences, "update_interval", 30)
-    configuration.setTextSize(getInteger(preferences, "text_size", 11))
-    configuration.colorScheme = getColorScheme(preferences, "color_scheme", ColorScheme.dark)
+    val configuration = ApplicationSettings(locations = readLocations(preferences),
+        secret = getString(preferences, "secret"),
+        isShowInfoNotification = getBoolean(preferences, "info_notification", false),
+        updateInterval = getInteger(preferences, "update_interval", 30),
+        widgetTextSize = getInteger(preferences, "text_size", 11),
+        colorScheme = getColorScheme(preferences, "color_scheme", ColorScheme.dark))
 
     return configuration
   }
 
   private fun getColorScheme(preferences: SharedPreferences, key: String, defaultScheme: ColorScheme): ColorScheme {
-    val value = getString(preferences, key)
-    var scheme = ColorScheme.byKey(value)
-    if (scheme == null) {
-      scheme = defaultScheme
-    }
-    return scheme
+    val schemeKey = getString(preferences, key)
+    return ColorScheme.byKey(schemeKey) ?: defaultScheme
   }
 
   private fun readLocations(preferences: SharedPreferences): List<WeatherLocation> {
-    val locations = LocationFactory.buildWeatherLocations(resources!!)
+    val locations = LocationFactory.buildWeatherLocations(resources)
     for (location in locations) {
       val visibleInWidgetByDefault = location.isVisibleInWidgetByDefault
       val visibleInAppByDefault = location.isVisibleInAppByDefault
@@ -56,7 +50,7 @@ class WeatherSettingsReader {
 
 
   private fun getInteger(preferences: SharedPreferences, key: String, defaultValue: Int): Int {
-    val value = preferences.getString(key, Integer.toString(defaultValue))
+    val value = preferences.getString(key, defaultValue.toString())
     return Integer.valueOf(value)
   }
 

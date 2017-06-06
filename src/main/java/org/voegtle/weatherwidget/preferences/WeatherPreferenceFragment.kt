@@ -23,10 +23,15 @@ class WeatherPreferenceFragment : PreferenceFragment() {
 
   }
 
+  private fun readVersionInformationFromAndroidManifest() {
+    buildNumber = ContextUtil.getBuildNumber(activity)
+    versionName = ContextUtil.getVersion(activity)
+  }
+
   private fun addBuildInformation(appInfoScreen: PreferenceScreen) {
     var versionInfo = appInfoScreen.summary.toString()
     versionInfo = versionInfo.replace(PLACEHOLDER_VERSION, versionName)
-    versionInfo = versionInfo.replace(PLACEHOLDER_BUILD, Integer.toString(buildNumber))
+    versionInfo = versionInfo.replace(PLACEHOLDER_BUILD, buildNumber.toString())
     appInfoScreen.summary = versionInfo
 
     appInfoScreen.getPreference(0).title = versionInfo
@@ -40,13 +45,4 @@ class WeatherPreferenceFragment : PreferenceFragment() {
       val versionCategory = preferenceScreen.getPreference(lastIndex) as PreferenceCategory
       return versionCategory.getPreference(0) as PreferenceScreen
     }
-
-  private fun readVersionInformationFromAndroidManifest() {
-    try {
-      buildNumber = ContextUtil.getBuildNumber(activity)
-      versionName = ContextUtil.getVersion(activity)
-    } catch (ignored: Exception) {
-    }
-
-  }
 }

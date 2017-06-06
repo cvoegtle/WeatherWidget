@@ -137,10 +137,10 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
   }
 
-  private fun updateTextSize(location: WeatherLocation, textSize: Int?) {
+  private fun updateTextSize(location: WeatherLocation, textSize: Int) {
     if (location.preferences.showInApp) {
       val view = findViewById(location.weatherViewId) as LocationView
-      view.setTextSize(textSize!!)
+      view.setTextSize(textSize)
     }
   }
 
