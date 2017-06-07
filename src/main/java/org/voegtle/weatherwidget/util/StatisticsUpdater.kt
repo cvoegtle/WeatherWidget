@@ -27,8 +27,8 @@ class StatisticsUpdater(activity: Activity) {
   }
 
   fun setupStatistics(locationView: LocationView) {
-    val (_, isExpanded) = stateCache.read(locationView.id)
-    locationView.isExpanded = isExpanded
+    val state = stateCache.read(locationView.id)
+    locationView.isExpanded = state.isExpanded
   }
 
   fun updateStatistics(locationView: LocationView, location: WeatherLocation) {
