@@ -17,7 +17,7 @@ object LocationComparatorFactory {
       else -> naturalComparator
     }
 
-  val naturalComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.location.compareTo(rhs.location) }
+  val naturalComparator: Comparator<WeatherData> = Comparator { (location), rhs -> location.compareTo(rhs.location) }
 
   val defaultComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.compareTo(rhs) }
 
@@ -42,11 +42,6 @@ object LocationComparatorFactory {
       val outdated = DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)
       if (outdated != null) {
         return@Comparator outdated
-      }
-
-      val nullCheckResult = checkForNullValue(lhs.humidity, rhs.humidity)
-      if (nullCheckResult != null) {
-        return@Comparator nullCheckResult
       }
 
       lhs.humidity.compareTo(rhs.humidity)
