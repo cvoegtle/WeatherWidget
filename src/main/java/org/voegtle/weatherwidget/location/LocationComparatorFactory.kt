@@ -8,25 +8,20 @@ import java.util.Collections
 import java.util.Comparator
 
 object LocationComparatorFactory {
-  fun createComparator(criteria: OrderCriteria): Comparator<WeatherData> {
-    var comparator: Comparator<WeatherData>
+  fun createComparator(criteria: OrderCriteria): Comparator<WeatherData> =
     when (criteria) {
-      OrderCriteria.location -> comparator = naturalComparator
-      OrderCriteria.temperature -> comparator = Collections.reverseOrder(defaultComparator)
-      OrderCriteria.rain -> comparator = Collections.reverseOrder(rainTodayComparator)
-      OrderCriteria.humidity -> comparator = Collections.reverseOrder(humidityComparator)
-      else -> comparator = naturalComparator
+      OrderCriteria.location -> naturalComparator
+      OrderCriteria.temperature -> Collections.reverseOrder(defaultComparator)
+      OrderCriteria.rain -> Collections.reverseOrder(rainTodayComparator)
+      OrderCriteria.humidity -> Collections.reverseOrder(humidityComparator)
+      else -> naturalComparator
     }
-    return comparator
-  }
 
-  private val naturalComparator: Comparator<WeatherData>
-    get() = Comparator { lhs, rhs -> lhs.location.compareTo(rhs.location) }
+  val naturalComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.location.compareTo(rhs.location) }
 
-  private val defaultComparator: Comparator<WeatherData>
-    get() = Comparator { lhs, rhs -> lhs.compareTo(rhs) }
+  val defaultComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.compareTo(rhs) }
 
-  private val rainTodayComparator: Comparator<WeatherData>
+  val rainTodayComparator: Comparator<WeatherData>
     get() = Comparator { lhs, rhs ->
       val outdated = DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)
       if (outdated != null) {
@@ -42,8 +37,8 @@ object LocationComparatorFactory {
     }
 
 
-  private val humidityComparator: Comparator<WeatherData>
-    get() = Comparator { lhs, rhs ->
+  val humidityComparator: Comparator<WeatherData>
+    = Comparator { lhs, rhs ->
       val outdated = DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)
       if (outdated != null) {
         return@Comparator outdated
