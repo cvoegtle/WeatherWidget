@@ -7,10 +7,9 @@ import java.text.NumberFormat
 import java.util.*
 
 class DataFormatter {
-  private val numberFormat: DecimalFormat
+  private val numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
 
   init {
-    this.numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
     this.numberFormat.applyPattern("###.#")
   }
 
@@ -55,51 +54,26 @@ class DataFormatter {
   }
 
   fun formatTemperature(temperature: Float?): String {
-    if (temperature != null) {
-      return numberFormat.format(temperature) + "°C"
-    } else {
-      return ""
-    }
+    return if (temperature != null) numberFormat.format(temperature) + "°C" else ""
   }
 
   fun formatKwh(kwh: Float?): String {
-    if (kwh != null) {
-      return numberFormat.format(kwh) + "kWh"
-    } else {
-      return ""
-    }
+    return if (kwh != null) numberFormat.format(kwh) + "kWh" else ""
   }
 
   fun formatRain(rain: Float?): String {
-    if (rain != null) {
-      return numberFormat.format(rain) + "l"
-    } else {
-      return ""
-    }
+    return if (rain != null) numberFormat.format(rain) + "l" else ""
   }
 
-  private fun formatPercent(`val`: Float?): String {
-    if (`val` != null) {
-      return numberFormat.format(`val`) + "%"
-    } else {
-      return ""
-    }
+  private fun formatPercent(value: Float?): String {
+    return if (value != null) numberFormat.format(value) + "%" else ""
   }
 
-  fun formatWind(`val`: Float?): String {
-    if (`val` != null) {
-      return numberFormat.format(`val`) + "km/h"
-    } else {
-      return ""
-    }
-
+  fun formatWind(value: Float?): String {
+    return if (value != null) numberFormat.format(value) + "km/h" else ""
   }
 
   fun formatWatt(watt: Float?): String {
-    if (watt != null) {
-      return numberFormat.format(watt) + "W"
-    } else {
-      return ""
-    }
+    return if (watt != null) numberFormat.format(watt) + "W" else ""
   }
 }

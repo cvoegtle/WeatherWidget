@@ -22,28 +22,9 @@ import kotlinx.android.synthetic.main.view_location.view.*
 
 class LocationView(private val currentContext: Context, attrs: AttributeSet) : LinearLayout(currentContext, attrs) {
 
-  var isExpanded: Boolean = false
-    set(expanded) {
-      field = expanded
-      resize_button.setImageDrawable(if (expanded) imageCollapse else imageExpand)
-      more_data.visibility = if (expanded) View.VISIBLE else View.GONE
-    }
-
-  private var imageExpand: Drawable? = null
-  private var imageCollapse: Drawable? = null
-  private var externalClickListener: View.OnClickListener? = null
-  private var diagramListener: View.OnClickListener? = null
-  private var forecastListener: View.OnClickListener? = null
-
-  private val formatter: DataFormatter = DataFormatter()
-
-
   init {
     val li = currentContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     li.inflate(R.layout.view_location, this, true)
-
-    imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
-    imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
 
     val attributes = currentContext.theme.obtainStyledAttributes(
         attrs, R.styleable.LocationView, 0, 0)
@@ -55,6 +36,23 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       attributes.recycle()
     }
   }
+
+  private var imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
+  private var imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
+  private var externalClickListener: View.OnClickListener? = null
+  private var diagramListener: View.OnClickListener? = null
+  private var forecastListener: View.OnClickListener? = null
+
+  private val formatter: DataFormatter = DataFormatter()
+
+  var isExpanded: Boolean = false
+    set(expanded) {
+      field = expanded
+      resize_button.setImageDrawable(if (expanded) imageCollapse else imageExpand)
+      more_data.visibility = if (expanded) View.VISIBLE else View.GONE
+    }
+
+
 
   private fun initializeButtons(attributes: TypedArray) {
     resize_button.setOnClickListener { arg0 ->
@@ -134,14 +132,9 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   private fun setRainData(value: Float?, labelId: Int, dataId: Int) {
     val rainLabel = findViewById(labelId) as TextView
     val rain = findViewById(dataId) as TextView
-    if (value != null) {
-      rainLabel.visibility = View.VISIBLE
-      rain.visibility = View.VISIBLE
-      rain.text = formatter.formatRain(value)
-    } else {
-      rainLabel.visibility = View.GONE
-      rain.visibility = View.GONE
-    }
+    rainLabel.visibility = if (value != null) View.VISIBLE else View.GONE
+    rain.visibility = if (value != null) View.VISIBLE else View.GONE
+    rain.text = if (value != null) formatter.formatRain(value) else ""
   }
 
   private fun setWind(value: Float?) {

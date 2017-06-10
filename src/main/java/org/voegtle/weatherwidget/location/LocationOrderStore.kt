@@ -16,13 +16,13 @@ class LocationOrderStore(context: Context) {
   fun writeIndexOf(viewId: Int, index: Int) {
     val editor = locationStore.edit()
     editor.putInt(INDEX_OF + viewId, index)
-    editor.commit()
+    editor.apply()
   }
 
   fun writeOrderCriteria(orderCriteria: OrderCriteria) {
     val editor = locationStore.edit()
     editor.putString(ORDER_CRITERIA, orderCriteria.toString())
-    editor.commit()
+    editor.apply()
   }
 
   fun readOrderCriteria(): OrderCriteria {

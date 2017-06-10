@@ -147,10 +147,9 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   private fun configureLocationSymbolColor() {
     // Dunkle Symbole wenn der Hintergrund hell ist
     val darkSymbols = colorScheme == ColorScheme.light
-    for (location in configuration!!.locations) {
-      val locationView = findViewById(location.weatherViewId) as LocationView
-      locationView.configureSymbols(darkSymbols)
-    }
+    configuration!!.locations
+        .map { findViewById(it.weatherViewId) as LocationView }
+        .forEach { it.configureSymbols(darkSymbols) }
 
   }
 

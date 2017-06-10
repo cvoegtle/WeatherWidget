@@ -3,20 +3,20 @@ package org.voegtle.weatherwidget.location
 import android.net.Uri
 import org.voegtle.weatherwidget.preferences.LocationPreferences
 
-data class WeatherLocation(val key: LocationIdentifier) {
-  var name: String = ""
-  var shortName: String = ""
-  var identifier: String? = null
-  var forecastUrl: Uri? = null
-  var weatherViewId: Int = 0
-  var rainIndicatorId: Int = 0
-  var prefShowInWidget: String = ""
-  var prefShowInApp: String = ""
-  var prefAlert: String = ""
-  var isVisibleInAppByDefault = true
-  var isVisibleInWidgetByDefault = true
-  var preferences: LocationPreferences = LocationPreferences()
-  var weatherLineId: Int = 0
+data class WeatherLocation(val key: LocationIdentifier,
+                           var name: String,
+                           var shortName: String,
+                           val identifier: String,
+                           val forecastUrl: Uri,
+                           val weatherViewId: Int,
+                           val rainIndicatorId: Int,
+                           val prefShowInWidget: String,
+                           val prefShowInApp: String,
+                           val prefAlert: String,
+                           val isVisibleInAppByDefault: Boolean = true,
+                           val isVisibleInWidgetByDefault: Boolean = true,
+                           var preferences: LocationPreferences = LocationPreferences(),
+                           val weatherLineId: Int) {
 
   val isActive: Boolean
     get() = preferences.showInApp || preferences.showInWidget || preferences.alertActive
