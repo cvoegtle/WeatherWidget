@@ -14,6 +14,5 @@ class NotificationTask(private val context: Context, private val message: String
     val duration = Toast.LENGTH_SHORT
     val toast = Toast.makeText(context, message, duration)
     toast.show()
-
   }
 }

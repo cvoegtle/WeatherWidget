@@ -35,7 +35,6 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
   override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
     ensureResources(context)
 
-
     for (widgetId in appWidgetIds) {
       val pendingOpenApp = IntentFactory.createOpenAppIntent(context.applicationContext)
       for (location in configuration!!.locations) {

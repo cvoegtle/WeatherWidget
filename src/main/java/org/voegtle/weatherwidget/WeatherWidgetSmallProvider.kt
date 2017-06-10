@@ -30,7 +30,7 @@ open class WeatherWidgetSmallProvider(private val weatherDataUrl: String, privat
 
     SmallWidgetUpdateTask(context, configuration, screenPainter).execute(weatherDataUrl)
 
-    for (widgetId in appWidgetIds) {
+    appWidgetIds.forEach { widgetId ->
       val intentRefresh = Intent(context, this.javaClass)
       intentRefresh.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
       intentRefresh.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
@@ -39,7 +39,6 @@ open class WeatherWidgetSmallProvider(private val weatherDataUrl: String, privat
       remoteViews.setOnClickPendingIntent(R.id.weather_small, pendingRefresh)
 
       appWidgetManager.updateAppWidget(widgetId, remoteViews)
-
     }
 
     super.onUpdate(context, appWidgetManager, appWidgetIds)

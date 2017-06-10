@@ -19,12 +19,7 @@ import java.util.ArrayList
 import java.util.HashMap
 
 class ActivityUpdateTask internal constructor(private val activity: WeatherActivity, private val configuration: ApplicationSettings, private val showToast: Boolean) : AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>() {
-  private val weatherDataFetcher: WeatherDataFetcher
-
-  init {
-    this.weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
-  }
-
+  private val weatherDataFetcher: WeatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
 
   override fun doInBackground(vararg voids: Void): HashMap<LocationIdentifier, WeatherData> {
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
@@ -57,7 +52,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   }
 
   private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {
-    for (location in configuration.locations) {
+    configuration.locations.forEach { location ->
       val locationData = data[location.key]
       if (locationData != null) {
         updateWeatherLocation(location.weatherViewId, location.name, locationData)
@@ -75,7 +70,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   }
 
   private fun getCaption(locationName: String, data: WeatherData): String {
-    return locationName + " - " + data.localtime
+    return "$locationName - ${data.localtime}"
   }
 
   private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {

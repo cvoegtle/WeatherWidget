@@ -3,22 +3,20 @@ package org.voegtle.weatherwidget.location
 import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.GridLayout
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import kotlinx.android.synthetic.main.view_location.view.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DataFormatter
-import kotlinx.android.synthetic.main.view_location.view.*
 
 class LocationView(private val currentContext: Context, attrs: AttributeSet) : LinearLayout(currentContext, attrs) {
 
@@ -40,8 +38,8 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   private var imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
   private var imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
   private var externalClickListener: View.OnClickListener? = null
-  private var diagramListener: View.OnClickListener? = null
-  private var forecastListener: View.OnClickListener? = null
+  var diagramListener: View.OnClickListener? = null
+  var forecastListener: View.OnClickListener? = null
 
   private val formatter: DataFormatter = DataFormatter()
 
@@ -51,7 +49,6 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       resize_button.setImageDrawable(if (expanded) imageCollapse else imageExpand)
       more_data.visibility = if (expanded) View.VISIBLE else View.GONE
     }
-
 
 
   private fun initializeButtons(attributes: TypedArray) {
@@ -68,27 +65,15 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
     val forecast = attributes.getBoolean(R.styleable.LocationView_forecast, true)
     forecast_button.visibility = if (forecast) View.VISIBLE else View.GONE
-    forecast_button.setOnClickListener {
-        forecastListener?.onClick(this@LocationView)
-    }
-
+    forecast_button.setOnClickListener { forecastListener?.onClick(this@LocationView) }
   }
 
   override fun setOnClickListener(listener: View.OnClickListener) {
     externalClickListener = listener
   }
 
-  fun setDiagramsOnClickListener(listener: View.OnClickListener) {
-    diagramListener = listener
-  }
-
-  fun setForecastOnClickListener(listener: View.OnClickListener) {
-    forecastListener = listener
-  }
-
   private fun initializeTextViews(attributes: TypedArray) {
     caption.text = attributes.getString(R.styleable.LocationView_caption)
-
   }
 
   fun setTextSize(textSize: Int) {
@@ -112,8 +97,8 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     temperature.text = formatter.formatTemperatureForActivity(data)
     humidity.text = formatter.formatHumidityForActivity(data)
 
-    setRainData(data.rain, R.id.label_rain_last_hour, R.id.rain_last_hour)
-    setRainData(data.rainToday, R.id.label_rain_today, R.id.rain_today)
+    setRainData(data.rain, label_rain_last_hour, rain_last_hour)
+    setRainData(data.rainToday, label_rain_today, rain_today)
     setWind(data.wind)
     setSolarData(data.watt)
   }
@@ -129,9 +114,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     }
   }
 
-  private fun setRainData(value: Float?, labelId: Int, dataId: Int) {
-    val rainLabel = findViewById(labelId) as TextView
-    val rain = findViewById(dataId) as TextView
+  private fun setRainData(value: Float?, rainLabel: TextView, rain: TextView) {
     rainLabel.visibility = if (value != null) View.VISIBLE else View.GONE
     rain.visibility = if (value != null) View.VISIBLE else View.GONE
     rain.text = if (value != null) formatter.formatRain(value) else ""
@@ -150,23 +133,20 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
   fun setMoreData(statistics: Statistics) {
     val today = statistics[Statistics.TimeRange.today]
-    updateStatistics(today, R.id.today_rain, R.id.today_min_temperature, R.id.today_max_temperature, R.id.today_kwh)
+    updateStatistics(today, today_rain, today_min_temperature, today_max_temperature, today_kwh)
 
     val yesterday = statistics[Statistics.TimeRange.yesterday]
-    updateStatistics(yesterday, R.id.yesterday_rain, R.id.yesterday_min_temperature, R.id.yesterday_max_temperature, R.id.yesterday_kwh)
+    updateStatistics(yesterday, yesterday_rain, yesterday_min_temperature, yesterday_max_temperature, yesterday_kwh)
 
     val week = statistics[Statistics.TimeRange.last7days]
-    updateStatistics(week, R.id.week_rain, R.id.week_min_temperature, R.id.week_max_temperature, R.id.week_kwh)
+    updateStatistics(week, week_rain, week_min_temperature, week_max_temperature, week_kwh)
 
     val month = statistics[Statistics.TimeRange.last30days]
-    updateStatistics(month, R.id.month_rain, R.id.month_min_temperature, R.id.month_max_temperature, R.id.month_kwh)
+    updateStatistics(month, month_rain, month_min_temperature, month_max_temperature, month_kwh)
   }
 
-  private fun updateStatistics(stats: StatisticsSet?, rainId: Int, minTemperatureId: Int, maxTemperatureId: Int, kwhId: Int) {
-    val rainView = findViewById(rainId) as TextView
-    val minView = findViewById(minTemperatureId) as TextView
-    val maxView = findViewById(maxTemperatureId) as TextView
-    val kwhView = findViewById(kwhId) as TextView
+  private fun updateStatistics(stats: StatisticsSet?, rainView: TextView, minView: TextView, maxView: TextView,
+                               kwhView: TextView) {
     rainView.text = ""
     minView.text = ""
     maxView.text = ""
@@ -195,7 +175,6 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       val imageDiagramDark = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_picture_dark)
       diagram_button.setImageDrawable(imageDiagramDark)
     }
-    isExpanded = isExpanded
   }
 
   fun setTextColor(color: Int) {

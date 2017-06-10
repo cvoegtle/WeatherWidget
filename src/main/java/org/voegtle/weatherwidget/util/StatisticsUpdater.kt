@@ -15,16 +15,8 @@ import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
 
 class StatisticsUpdater(activity: Activity) {
-  private val stateCache: StateCache
-
-  private val weatherDataFetcher: WeatherDataFetcher
-
-  init {
-    this.stateCache = StateCache(activity)
-
-    this.weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
-
-  }
+  private val stateCache = StateCache(activity)
+  private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
 
   fun setupStatistics(locationView: LocationView) {
     val state = stateCache.read(locationView.id)

@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.util
 
 
-import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
 object StringUtil {
@@ -14,12 +13,6 @@ object StringUtil {
   }
 
   fun urlEncode(str: String): String {
-    var urlencoded: String = ""
-    try {
-      urlencoded = URLEncoder.encode(str, "UTF-8")
-    } catch (ignore: UnsupportedEncodingException) {
-    }
-
-    return urlencoded
+    return URLEncoder.encode(str, "UTF-8")
   }
 }

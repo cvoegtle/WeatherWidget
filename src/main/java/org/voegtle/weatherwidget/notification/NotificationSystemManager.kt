@@ -133,14 +133,12 @@ class NotificationSystemManager(private val context: Context, private val config
   }
 
   private fun describeLocation(weatherText: StringBuilder, location: WeatherLocation, weatherData: WeatherData) {
-    weatherText.append(location.shortName)
-    weatherText.append(": ")
-    weatherText.append(numberFormat.format(weatherData.temperature)).append("°C")
+    weatherText.append("${location.shortName}: ${numberFormat.format(weatherData.temperature)}°C")
     if (weatherData.insideTemperature != null) {
-      weatherText.append(", ").append(numberFormat.format(weatherData.insideTemperature)).append("°C")
+      weatherText.append(", ${numberFormat.format(weatherData.insideTemperature)}°C")
     }
     if (weatherData.rainToday != null) {
-      weatherText.append(", ").append(numberFormat.format(weatherData.rainToday)).append("l")
+      weatherText.append(", ${numberFormat.format(weatherData.rainToday)}l")
     }
   }
 

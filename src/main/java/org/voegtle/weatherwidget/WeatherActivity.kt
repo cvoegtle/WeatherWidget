@@ -83,37 +83,32 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
       }
     }
 
-    locationView.setDiagramsOnClickListener(object : View.OnClickListener {
-      override fun onClick(view: View) {
-        when (view.id) {
-          R.id.weather_paderborn -> startActivity(Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java))
-          R.id.weather_bali -> startActivity(Intent(this@WeatherActivity, BaliDiagramActivity::class.java))
-          R.id.weather_bonn -> startActivity(Intent(this@WeatherActivity, BonnDiagramActivity::class.java))
-          R.id.weather_freiburg -> startActivity(Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java))
-          R.id.weather_leo -> startActivity(Intent(this@WeatherActivity, LeoDiagramActivity::class.java))
-          R.id.weather_herzogenaurach -> startActivity(Intent(this@WeatherActivity, HerzoDiagramActivity::class.java))
-          R.id.weather_magdeburg -> startActivity(Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java))
-          R.id.weather_shenzhen -> startActivity(Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java))
-          R.id.weather_mobil -> {
-            val intent = Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
-            val mobileLocation = configuration!!.findLocation(LocationIdentifier.Mobil)
-            if (mobileLocation != null) {
-              intent.putExtra(MobilDiagramActivity::class.java.name, mobileLocation.name)
-            }
-            startActivity(intent)
+    locationView.diagramListener = View.OnClickListener { view ->
+      when (view.id) {
+        R.id.weather_paderborn -> startActivity(Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java))
+        R.id.weather_bali -> startActivity(Intent(this@WeatherActivity, BaliDiagramActivity::class.java))
+        R.id.weather_bonn -> startActivity(Intent(this@WeatherActivity, BonnDiagramActivity::class.java))
+        R.id.weather_freiburg -> startActivity(Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java))
+        R.id.weather_leo -> startActivity(Intent(this@WeatherActivity, LeoDiagramActivity::class.java))
+        R.id.weather_herzogenaurach -> startActivity(Intent(this@WeatherActivity, HerzoDiagramActivity::class.java))
+        R.id.weather_magdeburg -> startActivity(Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java))
+        R.id.weather_shenzhen -> startActivity(Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java))
+        R.id.weather_mobil -> {
+          val intent = Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
+          val mobileLocation = configuration!!.findLocation(LocationIdentifier.Mobil)
+          if (mobileLocation != null) {
+            intent.putExtra(MobilDiagramActivity::class.java.name, mobileLocation.name)
           }
+          startActivity(intent)
         }
       }
-    })
+    }
 
 
-    locationView.setForecastOnClickListener(object : View.OnClickListener {
-      override fun onClick(view: View) {
-        val browserIntent = Intent(Intent.ACTION_VIEW, location.forecastUrl)
-        startActivity(browserIntent)
-      }
-    })
-
+    locationView.forecastListener = View.OnClickListener {
+      val browserIntent = Intent(Intent.ACTION_VIEW, location.forecastUrl)
+      startActivity(browserIntent)
+    }
   }
 
   private fun updateStatistics() {
