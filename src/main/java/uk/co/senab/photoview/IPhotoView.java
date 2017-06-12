@@ -25,10 +25,10 @@ import android.widget.ImageView;
 
 public interface IPhotoView {
 
-    public static final float DEFAULT_MAX_SCALE = 3.0f;
-    public static final float DEFAULT_MID_SCALE = 1.75f;
-    public static final float DEFAULT_MIN_SCALE = 1.0f;
-    public static final int DEFAULT_ZOOM_DURATION = 200;
+    float DEFAULT_MAX_SCALE = 3.0f;
+    float DEFAULT_MID_SCALE = 1.75f;
+    float DEFAULT_MIN_SCALE = 1.0f;
+    int DEFAULT_ZOOM_DURATION = 200;
 
     /**
      * Returns true if the PhotoView is set to allow zooming of Photos.
@@ -53,14 +53,6 @@ public interface IPhotoView {
      * @return - true if rectangle was applied successfully
      */
     boolean setDisplayMatrix(Matrix finalMatrix);
-
-    /**
-     * Gets the Display Matrix of the currently displayed Drawable. The Rectangle is considered
-     * relative to this View and includes all scaling and translations.
-     *
-     * @return - true if rectangle was applied successfully
-     */
-    Matrix getDisplayMatrix();
 
     /**
      * Use {@link #getMinimumScale()} instead, this will be removed in future release
@@ -315,18 +307,10 @@ public interface IPhotoView {
     void setZoomTransitionDuration(int milliseconds);
 
     /**
-     * Will return instance of IPhotoView (eg. PhotoViewAttacher), can be used to provide better
-     * integration
-     *
-     * @return IPhotoView implementation instance if available, null if not
-     */
-    IPhotoView getIPhotoViewImplementation();
-
-    /**
      * Sets custom double tap listener, to intercept default given functions. To reset behavior to
      * default, you can just pass in "null" or public field of PhotoViewAttacher.defaultOnDoubleTapListener
      *
      * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
      */
-    public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
+    void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener newOnDoubleTapListener);
 }

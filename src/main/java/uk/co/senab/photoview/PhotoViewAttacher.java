@@ -642,11 +642,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     }
   }
 
-  @Override
-  public Matrix getDisplayMatrix() {
-    return new Matrix(getDrawMatrix());
-  }
-
   public Matrix getDrawMatrix() {
     mDrawMatrix.set(mBaseMatrix);
     mDrawMatrix.postConcat(mSuppMatrix);
@@ -777,11 +772,6 @@ public class PhotoViewAttacher implements IPhotoView, View.OnTouchListener,
     if (milliseconds < 0)
       milliseconds = DEFAULT_ZOOM_DURATION;
     this.ZOOM_DURATION = milliseconds;
-  }
-
-  @Override
-  public IPhotoView getIPhotoViewImplementation() {
-    return this;
   }
 
   /**

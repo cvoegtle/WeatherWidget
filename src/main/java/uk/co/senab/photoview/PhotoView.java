@@ -83,11 +83,6 @@ public class PhotoView extends ImageView implements IPhotoView {
     }
 
     @Override
-    public Matrix getDisplayMatrix() {
-        return mAttacher.getDrawMatrix();
-    }
-
-    @Override
     public boolean setDisplayMatrix(Matrix finalRectangle) {
         return mAttacher.setDisplayMatrix(finalRectangle);
     }
@@ -265,11 +260,6 @@ public class PhotoView extends ImageView implements IPhotoView {
     @Override
     public void setZoomTransitionDuration(int milliseconds) {
         mAttacher.setZoomTransitionDuration(milliseconds);
-    }
-
-    @Override
-    public IPhotoView getIPhotoViewImplementation() {
-        return mAttacher;
     }
 
     @Override
