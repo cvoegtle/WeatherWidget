@@ -19,6 +19,11 @@ import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DataFormatter
 
 class LocationView(private val currentContext: Context, attrs: AttributeSet) : LinearLayout(currentContext, attrs) {
+  private var imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
+  private var imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
+  private var externalClickListener: View.OnClickListener? = null
+  var diagramListener: View.OnClickListener? = null
+  var forecastListener: View.OnClickListener? = null
 
   init {
     val li = currentContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -35,27 +40,25 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     }
   }
 
-  private var imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
-  private var imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
-  private var externalClickListener: View.OnClickListener? = null
-  var diagramListener: View.OnClickListener? = null
-  var forecastListener: View.OnClickListener? = null
-
   private val formatter: DataFormatter = DataFormatter()
 
   var isExpanded: Boolean = false
     set(expanded) {
       field = expanded
-      resize_button.setImageDrawable(if (expanded) imageCollapse else imageExpand)
-      more_data.visibility = if (expanded) View.VISIBLE else View.GONE
+      repaintExpandButton()
     }
 
+  private fun repaintExpandButton() {
+    resize_button.setImageDrawable(if (isExpanded) imageCollapse else imageExpand)
+    more_data.visibility = if (isExpanded) View.VISIBLE else View.GONE
+  }
 
   private fun initializeButtons(attributes: TypedArray) {
     resize_button.setOnClickListener { arg0 ->
       isExpanded = !isExpanded
       externalClickListener?.onClick(arg0)
     }
+    repaintExpandButton()
 
     val diagrams = attributes.getBoolean(R.styleable.LocationView_diagrams, false)
     diagram_button.visibility = if (diagrams) View.VISIBLE else View.GONE
@@ -169,6 +172,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     if (useDarkSymbols) {
       imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse_dark)
       imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand_dark)
+      repaintExpandButton()
 
       val imageForecastDark = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_forecast_dark)
       forecast_button.setImageDrawable(imageForecastDark)

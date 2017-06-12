@@ -60,17 +60,12 @@ enum class DiagramEnum constructor(val id: Int, val url: String) {
   shenzhen_lastyear(48, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2094649277&format=image");
 
   val filename: String
-    get() = this.toString() + ".png"
+    get() = "$this.png"
 
   companion object {
 
     fun byId(id: Int): DiagramEnum? {
-      for (diagramEnum in DiagramEnum.values()) {
-        if (diagramEnum.id == id) {
-          return diagramEnum
-        }
-      }
-      return null
+      return DiagramEnum.values().firstOrNull { it.id == id }
     }
   }
 }

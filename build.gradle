@@ -21,18 +21,14 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        jackOptions {
-            enabled false
-        }
     }
     signingConfigs {
         cvoegtle {
             storeFile file("/Users/cv/Google Developer/cvoegtle.signing.jks")
             storePassword "insecure"
-            keyAlias "cvoegtle"
+            keyAlias 'cvoegtle'
             keyPassword "insecure"
         }
-
     }
     lintOptions {
         checkReleaseBuilds true
@@ -59,7 +55,7 @@ android {
         variant.outputs.each { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                output.outputFile = new File(outputFile.parent, "ww3.apk")
+                output.outputFile = new File(outputFile.parent, "wetterwolke.apk")
             }
         }
     }

@@ -5,24 +5,23 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.util.Log
-
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 import java.io.OutputStream
-import java.util.Date
+import java.util.*
 
 internal class DiagramCache(private val context: Context) {
-  var diagramPreferences: SharedPreferences
+  val diagramPreferences: SharedPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0)
 
-  init {
-    diagramPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0)
+  companion object {
+    private val DIAGRAM_CACHE = "DIAGRAM_CACHE"
+    private val DIAGRAM_AGE = "_AGE"
+    private val CURRENT_DIAGRAM = "CURRENT_DIAGRAM"
   }
 
-  fun saveCurrentDiagram(identifer: String, currentIndex: Int) {
+  fun saveCurrentDiagram(identifier: String, currentIndex: Int) {
     val editor = diagramPreferences.edit()
-    editor.putInt(CURRENT_DIAGRAM + identifer, currentIndex)
-    editor.commit()
+    editor.putInt(CURRENT_DIAGRAM + identifier, currentIndex)
+    editor.apply()
   }
 
   fun readCurrentDiagram(identifier: String): Int {
@@ -32,22 +31,14 @@ internal class DiagramCache(private val context: Context) {
 
   fun read(diagramId: DiagramEnum): Diagram? {
     val age = diagramPreferences.getLong(getAgeKey(diagramId), -1)
-    if (age > 0) {
-      try {
-        return readInternal(diagramId, age)
-      } catch (ex: Throwable) {
-        Log.e(DiagramCache::class.java.name, "failed to read file " + diagramId.filename, ex)
-      }
-    }
-    return null
+    return if (age > 0) readInternal(diagramId, age) else null
   }
 
   fun readInternal(diagramId: DiagramEnum, age: Long): Diagram {
-    val filename = diagramId.filename
-    val inputStream = context.openFileInput(filename)
-    val image = Drawable.createFromStream(inputStream, "Local Cache")
-    inputStream.close()
-    return Diagram(diagramId, image, Date(age))
+    context.openFileInput(diagramId.filename).use {
+      val image = Drawable.createFromStream(it, "Local Cache")
+      return Diagram(diagramId, image, Date(age))
+    }
   }
 
   fun asPNG(diagramId: DiagramEnum): ByteArray {
@@ -61,20 +52,15 @@ internal class DiagramCache(private val context: Context) {
   fun write(diagram: Diagram) {
     val editor = diagramPreferences.edit()
     editor.putLong(getAgeKey(diagram.id), diagram.updateTimestamp.time)
-    editor.commit()
+    editor.apply()
 
     saveAsPngFile(diagram)
   }
 
   private fun saveAsPngFile(diagram: Diagram) {
-    try {
-      val outputStream = context.openFileOutput(diagram.id.filename, Context.MODE_PRIVATE)
-      saveDrawableAsPng(diagram.image, outputStream)
-      outputStream.close()
-    } catch (ex: IOException) {
-      Log.e(DiagramCache::class.java.name, "failed to write Diagram " + diagram.id)
+    context.openFileOutput(diagram.id.filename, Context.MODE_PRIVATE).use {
+      saveDrawableAsPng(diagram.image, it)
     }
-
   }
 
   private fun saveDrawableAsPng(image: Drawable, outputStream: OutputStream) {
@@ -83,13 +69,6 @@ internal class DiagramCache(private val context: Context) {
   }
 
   private fun getAgeKey(diagramId: DiagramEnum): String {
-    return diagramId.toString() + DIAGRAM_AGE
+    return "$diagramId$DIAGRAM_AGE"
   }
-
-  companion object {
-    private val DIAGRAM_CACHE = "DIAGRAM_CACHE"
-    private val DIAGRAM_AGE = "_AGE"
-    private val CURRENT_DIAGRAM = "CURRENT_DIAGRAM"
-  }
-
 }
