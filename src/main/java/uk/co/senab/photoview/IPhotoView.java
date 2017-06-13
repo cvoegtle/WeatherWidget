@@ -302,9 +302,9 @@ public interface IPhotoView {
      * Allows to change zoom transition speed, default value is 200 (PhotoViewAttacher.DEFAULT_ZOOM_DURATION).
      * Will default to 200 if provided negative value
      *
-     * @param milliseconds duration of zoom interpolation
+     * @param duration duration of zoom interpolation
      */
-    void setZoomTransitionDuration(int milliseconds);
+    void setZoomTransitionDuration(int duration);
 
     /**
      * Sets custom double tap listener, to intercept default given functions. To reset behavior to

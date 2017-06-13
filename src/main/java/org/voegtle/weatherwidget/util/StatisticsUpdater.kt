@@ -60,7 +60,7 @@ class StatisticsUpdater(activity: Activity) {
       val state = stateCache.read(locationView.id)
       if (state.outdated() || forceUpdate) {
         val outdatedLocation: WeatherLocation? = updateCandidates[locationView]
-        outdatedLocations.add(outdatedLocation!!.identifier!!)
+        outdatedLocations.add(outdatedLocation!!.identifier)
       }
 
     }
