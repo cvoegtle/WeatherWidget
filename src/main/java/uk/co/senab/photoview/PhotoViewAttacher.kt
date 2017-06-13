@@ -259,7 +259,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   }
 
   override fun onDrag(dx: Float, dy: Float) {
-    if (mScaleDragDetector!!.isScaling) {
+    if (mScaleDragDetector!!.isScaling()) {
       return  // Do not drag if we are already scaling
     }
 
@@ -282,7 +282,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
      * the edge, aka 'overscrolling', let the parent take over).
      */
     val parent = imageView!!.parent
-    if (mAllowParentInterceptOnEdge && !mScaleDragDetector!!.isScaling) {
+    if (mAllowParentInterceptOnEdge && !mScaleDragDetector!!.isScaling()) {
       if (mScrollEdge == EDGE_BOTH
           || mScrollEdge == EDGE_LEFT && dx >= 1f
           || mScrollEdge == EDGE_RIGHT && dx <= -1f) {
