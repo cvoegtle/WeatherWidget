@@ -69,7 +69,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   // Listeners
   private var mMatrixChangeListener: OnMatrixChangedListener? = null
   private var mPhotoTapListener: OnPhotoTapListener? = null
-  private var mViewTapListener: OnViewTapListener? = null
   private var mLongClickListener: OnLongClickListener? = null
 
   private var mIvTop: Int = 0
@@ -162,7 +161,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     // Clear listeners too
     mMatrixChangeListener = null
     mPhotoTapListener = null
-    mViewTapListener = null
 
     // Finally, clear ImageView
     mImageView = null
@@ -444,14 +442,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   override fun getOnPhotoTapListener(): OnPhotoTapListener? {
     return mPhotoTapListener
-  }
-
-  override fun setOnViewTapListener(listener: OnViewTapListener) {
-    mViewTapListener = listener
-  }
-
-  override fun getOnViewTapListener(): OnViewTapListener? {
-    return mViewTapListener
   }
 
   override fun setScale(scale: Float) {

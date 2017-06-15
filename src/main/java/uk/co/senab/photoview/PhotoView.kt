@@ -170,14 +170,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     return mAttacher!!.getOnPhotoTapListener()
   }
 
-  override fun setOnViewTapListener(listener: OnViewTapListener) {
-    mAttacher!!.setOnViewTapListener(listener)
-  }
-
-  override fun getOnViewTapListener(): OnViewTapListener? {
-    return mAttacher!!.getOnViewTapListener()
-  }
-
   override fun setScale(scale: Float) {
     mAttacher!!.setScale(scale)
   }

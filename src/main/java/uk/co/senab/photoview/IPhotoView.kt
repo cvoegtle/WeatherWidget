@@ -226,19 +226,6 @@ interface IPhotoView {
   fun setRotationBy(rotationDegree: Float)
 
   /**
-   * Returns a callback listener to be invoked when the View is tapped with a single tap.
-
-   * @return PhotoViewAttacher.OnViewTapListener currently set, may be null
-   */
-  /**
-   * Register a callback to be invoked when the View is tapped with a single tap.
-
-   * @param listener - Listener to be registered.
-   */
-  fun getOnViewTapListener(): PhotoViewAttacher.OnViewTapListener?
-  fun setOnViewTapListener(listener: PhotoViewAttacher.OnViewTapListener)
-
-  /**
    * Changes the current scale to the specified value.
 
    * @param scale   - Value to scale to
