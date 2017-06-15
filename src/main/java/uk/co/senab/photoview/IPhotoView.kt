@@ -138,22 +138,6 @@ interface IPhotoView {
   fun setOnMatrixChangeListener(listener: PhotoViewAttacher.OnMatrixChangedListener)
 
   /**
-   * Returns a listener to be invoked when the Photo displayed by this View is tapped with a
-   * single tap.
-
-   * @return PhotoViewAttacher.OnPhotoTapListener currently set, may be null
-   */
-  /**
-   * Register a callback to be invoked when the Photo displayed by this View is tapped with a
-   * single tap.
-
-   * @param listener - Listener to be registered.
-   */
-  fun getOnPhotoTapListener(): PhotoViewAttacher.OnPhotoTapListener?
-  fun setOnPhotoTapListener(listener: PhotoViewAttacher.OnPhotoTapListener)
-
-
-  /**
    * Enables rotation via PhotoView internal functions.
 
    * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360

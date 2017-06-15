@@ -23,10 +23,12 @@ import uk.co.senab.photoview.Compat
 
 @TargetApi(5)
 open class EclairGestureDetector(context: Context) : CupcakeGestureDetector(context) {
+  private val INVALID_POINTER_ID = -1
+
   private var mActivePointerId = INVALID_POINTER_ID
   private var mActivePointerIndex = 0
 
-  internal override fun getActiveX(ev: MotionEvent): Float {
+  override fun getActiveX(ev: MotionEvent): Float {
     try {
       return ev.getX(mActivePointerIndex)
     } catch (e: Exception) {
@@ -35,7 +37,7 @@ open class EclairGestureDetector(context: Context) : CupcakeGestureDetector(cont
 
   }
 
-  internal override fun getActiveY(ev: MotionEvent): Float {
+  override fun getActiveY(ev: MotionEvent): Float {
     try {
       return ev.getY(mActivePointerIndex)
     } catch (e: Exception) {
@@ -66,16 +68,8 @@ open class EclairGestureDetector(context: Context) : CupcakeGestureDetector(cont
       }
     }
 
-    mActivePointerIndex = ev
-        .findPointerIndex(if (mActivePointerId != INVALID_POINTER_ID)
-          mActivePointerId
-        else
-          0)
+    mActivePointerIndex = ev.findPointerIndex(if (mActivePointerId != INVALID_POINTER_ID) mActivePointerId else 0)
     return super.onTouchEvent(ev)
   }
 
-  companion object {
-
-    private val INVALID_POINTER_ID = -1
-  }
 }

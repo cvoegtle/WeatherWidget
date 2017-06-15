@@ -23,7 +23,7 @@ import android.view.ScaleGestureDetector
 @TargetApi(8)
 class FroyoGestureDetector(context: Context) : EclairGestureDetector(context) {
 
-  protected val mDetector: ScaleGestureDetector
+  private val mDetector: ScaleGestureDetector
 
   init {
     val mScaleListener = object : ScaleGestureDetector.OnScaleGestureListener {

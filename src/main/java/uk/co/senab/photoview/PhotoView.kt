@@ -31,147 +31,128 @@ import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener
 
 class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? = null, defStyle: Int = 0) : ImageView(context, attr, defStyle), IPhotoView {
 
-  private val mAttacher: PhotoViewAttacher?
-
-  private var mPendingScaleType: ImageView.ScaleType? = null
+  private val mAttacher: PhotoViewAttacher
 
   init {
     super.setScaleType(ImageView.ScaleType.MATRIX)
     mAttacher = PhotoViewAttacher(this)
-
-    if (null != mPendingScaleType) {
-      scaleType = mPendingScaleType!!
-      mPendingScaleType = null
-    }
   }
 
 
   override fun setRotationTo(rotationDegree: Float) {
-    mAttacher!!.setRotationTo(rotationDegree)
+    mAttacher.setRotationTo(rotationDegree)
   }
 
   override fun setRotationBy(rotationDegree: Float) {
-    mAttacher!!.setRotationBy(rotationDegree)
+    mAttacher.setRotationBy(rotationDegree)
   }
 
   override fun canZoom(): Boolean {
-    return mAttacher!!.canZoom()
+    return mAttacher.canZoom()
   }
 
   override fun getDisplayRect(): RectF? {
-    return mAttacher!!.getDisplayRect()
+    return mAttacher.getDisplayRect()
   }
 
   override fun setDisplayMatrix(finalRectangle: Matrix): Boolean {
-    return mAttacher!!.setDisplayMatrix(finalRectangle)
+    return mAttacher.setDisplayMatrix(finalRectangle)
   }
 
   override fun getMinimumScale(): Float {
-    return mAttacher!!.getMinimumScale()
+    return mAttacher.getMinimumScale()
   }
 
   override fun getMediumScale(): Float {
-    return mAttacher!!.getMediumScale()
+    return mAttacher.getMediumScale()
   }
 
   override fun getMaximumScale(): Float {
-    return mAttacher!!.getMaximumScale()
+    return mAttacher.getMaximumScale()
   }
 
   override fun getScale(): Float {
-    return mAttacher!!.getScale()
+    return mAttacher.getScale()
   }
 
   override fun getScaleType(): ImageView.ScaleType {
-    return mAttacher!!.getScaleType()
+    return mAttacher.getScaleType()
   }
 
   override fun setAllowParentInterceptOnEdge(allow: Boolean) {
-    mAttacher!!.setAllowParentInterceptOnEdge(allow)
+    mAttacher.setAllowParentInterceptOnEdge(allow)
   }
 
   override fun setMinimumScale(scale: Float) {
-    mAttacher!!.setMinimumScale(scale)
+    mAttacher.setMinimumScale(scale)
   }
 
   override fun setMediumScale(scale: Float) {
-    mAttacher!!.setMediumScale(scale)
+    mAttacher.setMediumScale(scale)
   }
 
   override fun setMaximumScale(scale: Float) {
-    mAttacher!!.setMaximumScale(scale)
+    mAttacher.setMaximumScale(scale)
   }
 
   override // setImageBitmap calls through to this method
   fun setImageDrawable(drawable: Drawable) {
     super.setImageDrawable(drawable)
-    mAttacher?.update()
+    mAttacher.update()
   }
 
   override fun setImageResource(resId: Int) {
     super.setImageResource(resId)
-    mAttacher?.update()
+    mAttacher.update()
   }
 
   override fun setImageURI(uri: Uri) {
     super.setImageURI(uri)
-    mAttacher?.update()
+    mAttacher.update()
   }
 
   override fun setOnMatrixChangeListener(listener: OnMatrixChangedListener) {
-    mAttacher!!.setOnMatrixChangeListener(listener)
+    mAttacher.setOnMatrixChangeListener(listener)
   }
 
   override fun setOnLongClickListener(l: View.OnLongClickListener) {
-    mAttacher!!.setOnLongClickListener(l)
-  }
-
-  override fun setOnPhotoTapListener(listener: OnPhotoTapListener) {
-    mAttacher!!.setOnPhotoTapListener(listener)
-  }
-
-  override fun getOnPhotoTapListener(): OnPhotoTapListener? {
-    return mAttacher!!.getOnPhotoTapListener()
+    mAttacher.setOnLongClickListener(l)
   }
 
   override fun setScale(scale: Float) {
-    mAttacher!!.setScale(scale)
+    mAttacher.setScale(scale)
   }
 
   override fun setScale(scale: Float, animate: Boolean) {
-    mAttacher!!.setScale(scale, animate)
+    mAttacher.setScale(scale, animate)
   }
 
   override fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
-    mAttacher!!.setScale(scale, focalX, focalY, animate)
+    mAttacher.setScale(scale, focalX, focalY, animate)
   }
 
   override fun setScaleType(scaleType: ImageView.ScaleType) {
-    if (null != mAttacher) {
       mAttacher.setScaleType(scaleType)
-    } else {
-      mPendingScaleType = scaleType
-    }
   }
 
   override fun setZoomable(zoomable: Boolean) {
-    mAttacher!!.setZoomable(zoomable)
+    mAttacher.setZoomable(zoomable)
   }
 
   override fun getVisibleRectangleBitmap(): Bitmap? {
-    return mAttacher!!.getVisibleRectangleBitmap()
+    return mAttacher.getVisibleRectangleBitmap()
   }
 
   override fun setZoomTransitionDuration(duration: Int) {
-    mAttacher!!.setZoomTransitionDuration(duration)
+    mAttacher.setZoomTransitionDuration(duration)
   }
 
   override fun setOnDoubleTapListener(newOnDoubleTapListener: GestureDetector.OnDoubleTapListener?) {
-    mAttacher!!.setOnDoubleTapListener(newOnDoubleTapListener)
+    mAttacher.setOnDoubleTapListener(newOnDoubleTapListener)
   }
 
   override fun onDetachedFromWindow() {
-    mAttacher!!.cleanup()
+    mAttacher.cleanup()
     super.onDetachedFromWindow()
   }
 

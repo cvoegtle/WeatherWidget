@@ -198,15 +198,11 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   // If we don't have an ImageView, call cleanup()
   val imageView: ImageView?
     get() {
-      var imageView: ImageView? = null
+      val imageView: ImageView? = mImageView?.get()
 
-      if (null != mImageView) {
-        imageView = mImageView!!.get()
-      }
       if (null == imageView) {
         cleanup()
-        Log.i(LOG_TAG,
-            "ImageView no longer exists. You should not use this PhotoViewAttacher any more.")
+        Log.i(LOG_TAG, "ImageView no longer exists. You should not use this PhotoViewAttacher any more.")
       }
 
       return imageView
@@ -238,8 +234,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
 
     if (DEBUG) {
-      LogManager.logger.d(LOG_TAG,
-          String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy))
+      LogManager.logger.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy))
     }
 
     val imageView = imageView
@@ -270,10 +265,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   override fun onFling(startX: Float, startY: Float, velocityX: Float,
                        velocityY: Float) {
     if (DEBUG) {
-      LogManager.logger.d(
-          LOG_TAG,
-          "onFling. sX: " + startX + " sY: " + startY + " Vx: "
-              + velocityX + " Vy: " + velocityY)
+      LogManager.logger.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX +
+          " Vy: " + velocityY)
     }
     val imageView = imageView
     mCurrentFlingRunnable = FlingRunnable(imageView!!.context)
@@ -318,10 +311,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
     if (DEBUG) {
-      LogManager.logger.d(
-          LOG_TAG,
-          String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f",
-              scaleFactor, focusX, focusY))
+      LogManager.logger.d(LOG_TAG,
+          String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY))
     }
 
     if (getScale() < mMaxScale || scaleFactor < 1f) {
@@ -400,14 +391,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     mMatrixChangeListener = listener
   }
 
-  override fun setOnPhotoTapListener(listener: OnPhotoTapListener) {
-    mPhotoTapListener = listener
-  }
-
-  override fun getOnPhotoTapListener(): OnPhotoTapListener? {
-    return mPhotoTapListener
-  }
-
   override fun setScale(scale: Float) {
     setScale(scale, false)
   }
@@ -423,8 +406,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
   }
 
-  override fun setScale(scale: Float, focalX: Float, focalY: Float,
-                        animate: Boolean) {
+  override fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
     val imageView = imageView
 
     if (null != imageView) {
@@ -435,8 +417,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       }
 
       if (animate) {
-        imageView.post(AnimatedZoomRunnable(getScale(), scale,
-            focalX, focalY))
+        imageView.post(AnimatedZoomRunnable(getScale(), scale, focalX, focalY))
       } else {
         mSuppMatrix.setScale(scale, scale, focalX, focalY)
         checkAndDisplayMatrix()
@@ -655,8 +636,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     val heightScale = viewHeight / drawableHeight
 
     if (mScaleType == ScaleType.CENTER) {
-      mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2f,
-          (viewHeight - drawableHeight) / 2f)
+      mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2f, (viewHeight - drawableHeight) / 2f)
 
     } else if (mScaleType == ScaleType.CENTER_CROP) {
       val scale = Math.max(widthScale, heightScale)
@@ -766,11 +746,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   private inner class AnimatedZoomRunnable(private val mZoomStart: Float, private val mZoomEnd: Float,
                                            private val mFocalX: Float, private val mFocalY: Float) : Runnable {
-    private val mStartTime: Long
-
-    init {
-      mStartTime = System.currentTimeMillis()
-    }
+    private val mStartTime: Long = System.currentTimeMillis()
 
     override fun run() {
       val imageView = imageView ?: return
@@ -798,13 +774,9 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   private inner class FlingRunnable(context: Context) : Runnable {
 
-    private val mScroller: ScrollerProxy
+    private val mScroller: ScrollerProxy = ScrollerProxy.getScroller(context)
     private var mCurrentX: Int = 0
     private var mCurrentY: Int = 0
-
-    init {
-      mScroller = ScrollerProxy.getScroller(context)
-    }
 
     fun cancelFling() {
       if (DEBUG) {
@@ -844,9 +816,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       mCurrentY = startY
 
       if (DEBUG) {
-        LogManager.logger.d(
-            LOG_TAG,
-            "fling. StartX:" + startX + " StartY:" + startY
+        LogManager.logger.d( LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY
                 + " MaxX:" + maxX + " MaxY:" + maxY)
       }
 
@@ -869,11 +839,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         val newY = mScroller.currY
 
         if (DEBUG) {
-          LogManager.logger.d(
-              LOG_TAG,
-              "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-                  + mCurrentY + " NewX:" + newX + " NewY:"
-                  + newY)
+          LogManager.logger.d( LOG_TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
+                  + mCurrentY + " NewX:" + newX + " NewY:" + newY)
         }
 
         mSuppMatrix.postTranslate((mCurrentX - newX).toFloat(), (mCurrentY - newY).toFloat())
@@ -903,8 +870,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     internal val EDGE_RIGHT = 1
     internal val EDGE_BOTH = 2
 
-    private fun checkZoomLevels(minZoom: Float, midZoom: Float,
-                                maxZoom: Float) {
+    private fun checkZoomLevels(minZoom: Float, midZoom: Float, maxZoom: Float) {
       if (minZoom >= midZoom) {
         throw IllegalArgumentException(
             "MinZoom has to be less than MidZoom")
