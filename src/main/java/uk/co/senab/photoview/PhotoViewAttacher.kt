@@ -173,10 +173,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     return getDisplayRect(drawMatrix)
   }
 
-  override fun setDisplayMatrix(finalMatrix: Matrix?): Boolean {
-    if (finalMatrix == null)
-      throw IllegalArgumentException("Matrix cannot be null")
-
+  override fun setDisplayMatrix(finalMatrix: Matrix): Boolean {
     val imageView = imageView ?: return false
 
     if (null == imageView.drawable)
@@ -225,7 +222,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   @Deprecated("")
   override fun getMinScale(): Float {
-    return minimumScale
+    return  getMinimumScale()
   }
 
   override fun getMinimumScale(): Float {
@@ -234,7 +231,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   @Deprecated("")
   override fun getMidScale(): Float {
-    return mediumScale
+    return getMediumScale()
   }
 
   override fun getMediumScale(): Float {
@@ -243,7 +240,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   @Deprecated("")
   override fun getMaxScale(): Float {
-    return maximumScale
+    return getMaximumScale()
   }
 
   override fun getMaximumScale(): Float {
@@ -350,7 +347,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
               scaleFactor, focusX, focusY))
     }
 
-    if (scale < mMaxScale || scaleFactor < 1f) {
+    if (getScale() < mMaxScale || scaleFactor < 1f) {
       mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY)
       checkAndDisplayMatrix()
     }
@@ -375,10 +372,10 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         ACTION_CANCEL, ACTION_UP ->
           // If the user has zoomed less than min scale, zoom back
           // to min scale
-          if (scale < mMinScale) {
-            val rect = displayRect
+          if (getScale() < mMinScale) {
+            val rect = getDisplayRect()
             if (null != rect) {
-              v.post(AnimatedZoomRunnable(scale, mMinScale,
+              v.post(AnimatedZoomRunnable(getScale(), mMinScale,
                   rect.centerX(), rect.centerY()))
               handled = true
             }
@@ -405,7 +402,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   @Deprecated("")
   override fun setMinScale(minScale: Float) {
-    minimumScale = minScale
+    setMinimumScale(minScale)
   }
 
   override fun setMinimumScale(minimumScale: Float) {
@@ -415,7 +412,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   @Deprecated("")
   override fun setMidScale(midScale: Float) {
-    mediumScale = midScale
+    setMediumScale(midScale)
   }
 
   override fun setMediumScale(mediumScale: Float) {
@@ -425,7 +422,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   @Deprecated("")
   override fun setMaxScale(maxScale: Float) {
-    maximumScale = maxScale
+    setMaximumScale(maxScale)
   }
 
   override fun setMaximumScale(maximumScale: Float) {
@@ -867,7 +864,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     fun fling(viewWidth: Int, viewHeight: Int, velocityX: Int,
               velocityY: Int) {
-      val rect = displayRect ?: return
+      val rect = getDisplayRect() ?: return
 
       val startX = Math.round(-rect.left)
       val minX: Int

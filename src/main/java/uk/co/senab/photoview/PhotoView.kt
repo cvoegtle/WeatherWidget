@@ -65,7 +65,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
   }
 
   override fun getDisplayRect(): RectF? {
-    return mAttacher!!.displayRect
+    return mAttacher!!.getDisplayRect()
   }
 
   override fun setDisplayMatrix(finalRectangle: Matrix): Boolean {
@@ -74,37 +74,37 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
   @Deprecated("")
   override fun getMinScale(): Float {
-    return minimumScale
+    return getMinimumScale()
   }
 
   override fun getMinimumScale(): Float {
-    return mAttacher!!.minimumScale
+    return mAttacher!!.getMinimumScale()
   }
 
   @Deprecated("")
   override fun getMidScale(): Float {
-    return mediumScale
+    return getMediumScale()
   }
 
   override fun getMediumScale(): Float {
-    return mAttacher!!.mediumScale
+    return mAttacher!!.getMediumScale()
   }
 
   @Deprecated("")
   override fun getMaxScale(): Float {
-    return maximumScale
+    return getMaximumScale()
   }
 
   override fun getMaximumScale(): Float {
-    return mAttacher!!.maximumScale
+    return mAttacher!!.getMaximumScale()
   }
 
   override fun getScale(): Float {
-    return mAttacher!!.scale
+    return mAttacher!!.getScale()
   }
 
   override fun getScaleType(): ImageView.ScaleType {
-    return mAttacher!!.scaleType
+    return mAttacher!!.getScaleType()
   }
 
   override fun setAllowParentInterceptOnEdge(allow: Boolean) {
@@ -113,29 +113,29 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
   @Deprecated("")
   override fun setMinScale(minScale: Float) {
-    minimumScale = minScale
+    setMinimumScale(minScale)
   }
 
   override fun setMinimumScale(minimumScale: Float) {
-    mAttacher!!.minimumScale = minimumScale
+    mAttacher!!.setMinimumScale(minimumScale)
   }
 
   @Deprecated("")
   override fun setMidScale(midScale: Float) {
-    mediumScale = midScale
+    setMediumScale(midScale)
   }
 
   override fun setMediumScale(mediumScale: Float) {
-    mAttacher!!.mediumScale = mediumScale
+    mAttacher!!.setMediumScale(mediumScale)
   }
 
   @Deprecated("")
   override fun setMaxScale(maxScale: Float) {
-    maximumScale = maxScale
+    setMaximumScale(maxScale)
   }
 
   override fun setMaximumScale(maximumScale: Float) {
-    mAttacher!!.maximumScale = maximumScale
+    mAttacher!!.setMaximumScale(maximumScale)
   }
 
   override // setImageBitmap calls through to this method
@@ -167,7 +167,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
   }
 
   override fun getOnPhotoTapListener(): OnPhotoTapListener? {
-    return mAttacher!!.onPhotoTapListener
+    return mAttacher!!.getOnPhotoTapListener()
   }
 
   override fun setOnViewTapListener(listener: OnViewTapListener) {
@@ -175,11 +175,11 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
   }
 
   override fun getOnViewTapListener(): OnViewTapListener? {
-    return mAttacher!!.onViewTapListener
+    return mAttacher!!.getOnViewTapListener()
   }
 
   override fun setScale(scale: Float) {
-    mAttacher!!.scale = scale
+    mAttacher!!.setScale(scale)
   }
 
   override fun setScale(scale: Float, animate: Boolean) {
@@ -192,7 +192,7 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
   override fun setScaleType(scaleType: ImageView.ScaleType) {
     if (null != mAttacher) {
-      mAttacher.scaleType = scaleType
+      mAttacher.setScaleType(scaleType)
     } else {
       mPendingScaleType = scaleType
     }
@@ -203,14 +203,14 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
   }
 
   override fun getVisibleRectangleBitmap(): Bitmap? {
-    return mAttacher!!.visibleRectangleBitmap
+    return mAttacher!!.getVisibleRectangleBitmap()
   }
 
   override fun setZoomTransitionDuration(duration: Int) {
     mAttacher!!.setZoomTransitionDuration(duration)
   }
 
-  override fun setOnDoubleTapListener(newOnDoubleTapListener: GestureDetector.OnDoubleTapListener) {
+  override fun setOnDoubleTapListener(newOnDoubleTapListener: GestureDetector.OnDoubleTapListener?) {
     mAttacher!!.setOnDoubleTapListener(newOnDoubleTapListener)
   }
 
