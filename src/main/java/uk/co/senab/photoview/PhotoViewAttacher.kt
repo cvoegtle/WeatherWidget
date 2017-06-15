@@ -21,7 +21,6 @@
 package uk.co.senab.photoview
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.Matrix.ScaleToFit
 import android.graphics.RectF
@@ -31,7 +30,6 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.view.ViewTreeObserver
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
@@ -66,11 +64,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private val mDisplayRect = RectF()
   private val mMatrixValues = FloatArray(9)
 
-  // Listeners
-  private var mMatrixChangeListener: OnMatrixChangedListener? = null
-  private var mPhotoTapListener: OnPhotoTapListener? = null
-  private var mLongClickListener: OnLongClickListener? = null
-
   private var mIvTop: Int = 0
   private var mIvRight: Int = 0
   private var mIvBottom: Int = 0
@@ -78,7 +71,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private var mCurrentFlingRunnable: FlingRunnable? = null
   private var mScrollEdge = EDGE_BOTH
 
-  private var mZoomEnabled: Boolean = false
   private var mScaleType = ScaleType.FIT_CENTER
 
   init {
@@ -104,21 +96,12 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
             // forward long click listener
             override fun onLongPress(e: MotionEvent) {
-              if (null != mLongClickListener) {
-                mLongClickListener!!.onLongClick(imageView)
-              }
             }
           })
 
       mGestureDetector!!.setOnDoubleTapListener(DefaultOnDoubleTapListener(this))
-
-      // Finally, update the UI so that we're zoomable
-      setZoomable(true)
+      update()
     }
-  }
-
-  override fun canZoom(): Boolean {
-    return mZoomEnabled
   }
 
   /**
@@ -151,10 +134,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     mGestureDetector?.setOnDoubleTapListener(null)
 
-    // Clear listeners too
-    mMatrixChangeListener = null
-    mPhotoTapListener = null
-
     // Finally, clear ImageView
     mImageView = null
   }
@@ -175,17 +154,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     checkMatrixBounds()
 
     return true
-  }
-
-
-  override fun setRotationTo(rotationDegree: Float) {
-    mSuppMatrix.setRotate(rotationDegree % 360)
-    checkAndDisplayMatrix()
-  }
-
-  override fun setRotationBy(rotationDegree: Float) {
-    mSuppMatrix.postRotate(rotationDegree % 360)
-    checkAndDisplayMatrix()
   }
 
   // If we don't have an ImageView, call cleanup()
@@ -272,32 +240,27 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     val imageView = imageView
 
     if (null != imageView) {
-      if (mZoomEnabled) {
-        val top = imageView.top
-        val right = imageView.right
-        val bottom = imageView.bottom
-        val left = imageView.left
+      val top = imageView.top
+      val right = imageView.right
+      val bottom = imageView.bottom
+      val left = imageView.left
 
-        /**
-         * We need to check whether the ImageView's bounds have changed.
-         * This would be easier if we targeted API 11+ as we could just use
-         * View.OnLayoutChangeListener. Instead we have to replicate the
-         * work, keeping track of the ImageView's bounds and then checking
-         * if the values change.
-         */
-        if (top != mIvTop || bottom != mIvBottom || left != mIvLeft
-            || right != mIvRight) {
-          // Update our base matrix, as the bounds have changed
-          updateBaseMatrix(imageView.drawable)
-
-          // Update values as something has changed
-          mIvTop = top
-          mIvRight = right
-          mIvBottom = bottom
-          mIvLeft = left
-        }
-      } else {
+      /**
+       * We need to check whether the ImageView's bounds have changed.
+       * This would be easier if we targeted API 11+ as we could just use
+       * View.OnLayoutChangeListener. Instead we have to replicate the
+       * work, keeping track of the ImageView's bounds and then checking
+       * if the values change.
+       */
+      if (top != mIvTop || bottom != mIvBottom || left != mIvLeft || right != mIvRight) {
+        // Update our base matrix, as the bounds have changed
         updateBaseMatrix(imageView.drawable)
+
+        // Update values as something has changed
+        mIvTop = top
+        mIvRight = right
+        mIvBottom = bottom
+        mIvLeft = left
       }
     }
   }
@@ -317,7 +280,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   override fun onTouch(v: View, ev: MotionEvent): Boolean {
     var handled = false
 
-    if (mZoomEnabled && hasDrawable(v as ImageView)) {
+    if (hasDrawable(v as ImageView)) {
       val parent = v.getParent()
       when (ev.action) {
         ACTION_DOWN -> {
@@ -376,14 +339,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     mMaxScale = scale
   }
 
-  override fun setOnLongClickListener(listener: OnLongClickListener) {
-    mLongClickListener = listener
-  }
-
-  override fun setOnMatrixChangeListener(listener: OnMatrixChangedListener) {
-    mMatrixChangeListener = listener
-  }
-
   override fun setScale(scale: Float) {
     setScale(scale, false)
   }
@@ -427,25 +382,15 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
   }
 
-  override fun setZoomable(zoomable: Boolean) {
-    mZoomEnabled = zoomable
-    update()
-  }
-
   fun update() {
     val imageView = imageView
 
     if (null != imageView) {
-      if (mZoomEnabled) {
-        // Make sure we using MATRIX Scale Type
-        setImageViewScaleTypeMatrix(imageView)
+      // Make sure we using MATRIX Scale Type
+      setImageViewScaleTypeMatrix(imageView)
 
-        // Update the base matrix using the current drawable
-        updateBaseMatrix(imageView.drawable)
-      } else {
-        // Reset the Matrix...
-        resetMatrix()
-      }
+      // Update the base matrix using the current drawable
+      updateBaseMatrix(imageView.drawable)
     }
   }
 
@@ -555,11 +500,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     return null
   }
 
-  override fun getVisibleRectangleBitmap(): Bitmap? {
-    val imageView = imageView
-    return imageView?.drawingCache
-  }
-
   /**
    * Helper method that 'unpacks' a Matrix and returns the required value
 
@@ -589,14 +529,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
       checkImageViewScaleType()
       imageView.imageMatrix = matrix
-
-      // Call MatrixChangedListener if needed
-      if (null != mMatrixChangeListener) {
-        val displayRect = getDisplayRect(matrix)
-        if (null != displayRect) {
-          mMatrixChangeListener!!.onMatrixChanged(displayRect)
-        }
-      }
     }
   }
 
@@ -801,8 +733,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       mCurrentY = startY
 
       if (DEBUG) {
-        LogManager.logger.d( LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY
-                + " MaxX:" + maxX + " MaxY:" + maxY)
+        LogManager.logger.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY
+            + " MaxX:" + maxX + " MaxY:" + maxY)
       }
 
       // If we actually can move, fling the scroller
@@ -824,8 +756,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         val newY = mScroller.currY
 
         if (DEBUG) {
-          LogManager.logger.d( LOG_TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-                  + mCurrentY + " NewX:" + newX + " NewY:" + newY)
+          LogManager.logger.d(LOG_TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
+              + mCurrentY + " NewX:" + newX + " NewY:" + newY)
         }
 
         mSuppMatrix.postTranslate((mCurrentX - newX).toFloat(), (mCurrentY - newY).toFloat())

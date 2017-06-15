@@ -26,13 +26,6 @@ import android.widget.ImageView
 interface IPhotoView {
 
   /**
-   * Returns true if the PhotoView is set to allow zooming of Photos.
-
-   * @return true if the PhotoView allows zooming.
-   */
-  fun canZoom(): Boolean
-
-  /**
    * Gets the Display Rectangle of the currently displayed Drawable. The Rectangle is relative to
    * this View and includes all scaling and translations.
 
@@ -123,35 +116,6 @@ interface IPhotoView {
   fun setAllowParentInterceptOnEdge(allow: Boolean)
 
   /**
-   * Register a callback to be invoked when the Photo displayed by this view is long-pressed.
-
-   * @param listener - Listener to be registered.
-   */
-  fun setOnLongClickListener(listener: View.OnLongClickListener)
-
-  /**
-   * Register a callback to be invoked when the Matrix has changed for this View. An example would
-   * be the user panning or scaling the Photo.
-
-   * @param listener - Listener to be registered.
-   */
-  fun setOnMatrixChangeListener(listener: PhotoViewAttacher.OnMatrixChangedListener)
-
-  /**
-   * Enables rotation via PhotoView internal functions.
-
-   * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360
-   */
-  fun setRotationTo(rotationDegree: Float)
-
-  /**
-   * Enables rotation via PhotoView internal functions.
-
-   * @param rotationDegree - Degree to rotate PhotoView by, should be in range 0 to 360
-   */
-  fun setRotationBy(rotationDegree: Float)
-
-  /**
    * Changes the current scale to the specified value.
 
    * @param scale   - Value to scale to
@@ -172,22 +136,6 @@ interface IPhotoView {
    * @param animate - Whether to animate the scale
    */
   fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean)
-
-  /**
-   * Allows you to enable/disable the zoom functionality on the ImageView. When disable the
-   * ImageView reverts to using the FIT_CENTER matrix.
-
-   * @param zoomable - Whether the zoom functionality is enabled.
-   */
-  fun setZoomable(zoomable: Boolean)
-
-  /**
-   * Extracts currently visible area to Bitmap object, if there is no image loaded yet or the
-   * ImageView is already destroyed, returns `null`
-
-   * @return currently visible area as bitmap or null
-   */
-  fun getVisibleRectangleBitmap(): Bitmap?
 
   companion object {
 

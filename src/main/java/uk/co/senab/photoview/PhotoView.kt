@@ -38,18 +38,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
   }
 
 
-  override fun setRotationTo(rotationDegree: Float) {
-    mAttacher.setRotationTo(rotationDegree)
-  }
-
-  override fun setRotationBy(rotationDegree: Float) {
-    mAttacher.setRotationBy(rotationDegree)
-  }
-
-  override fun canZoom(): Boolean {
-    return mAttacher.canZoom()
-  }
-
   override fun getDisplayRect(): RectF? {
     return mAttacher.getDisplayRect()
   }
@@ -110,14 +98,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     mAttacher.update()
   }
 
-  override fun setOnMatrixChangeListener(listener: OnMatrixChangedListener) {
-    mAttacher.setOnMatrixChangeListener(listener)
-  }
-
-  override fun setOnLongClickListener(l: View.OnLongClickListener) {
-    mAttacher.setOnLongClickListener(l)
-  }
-
   override fun setScale(scale: Float) {
     mAttacher.setScale(scale)
   }
@@ -132,14 +112,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
   override fun setScaleType(scaleType: ImageView.ScaleType) {
       mAttacher.setScaleType(scaleType)
-  }
-
-  override fun setZoomable(zoomable: Boolean) {
-    mAttacher.setZoomable(zoomable)
-  }
-
-  override fun getVisibleRectangleBitmap(): Bitmap? {
-    return mAttacher.getVisibleRectangleBitmap()
   }
 
   override fun onDetachedFromWindow() {
