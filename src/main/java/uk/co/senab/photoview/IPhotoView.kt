@@ -189,22 +189,6 @@ interface IPhotoView {
    */
   fun getVisibleRectangleBitmap(): Bitmap?
 
-  /**
-   * Allows to change zoom transition speed, default value is 200 (PhotoViewAttacher.DEFAULT_ZOOM_DURATION).
-   * Will default to 200 if provided negative value
-
-   * @param duration duration of zoom interpolation
-   */
-  fun setZoomTransitionDuration(duration: Int)
-
-  /**
-   * Sets custom double tap listener, to intercept default given functions. To reset behavior to
-   * default, you can just pass in "null" or public field of PhotoViewAttacher.defaultOnDoubleTapListener
-
-   * @param newOnDoubleTapListener custom OnDoubleTapListener to be set on ImageView
-   */
-  fun setOnDoubleTapListener(newOnDoubleTapListener: GestureDetector.OnDoubleTapListener?)
-
   companion object {
 
     val DEFAULT_MAX_SCALE = 3.0f

@@ -21,33 +21,29 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 
 @TargetApi(8)
-class FroyoGestureDetector(context: Context) : EclairGestureDetector(context) {
+class FroyoGestureDetector(context: Context, mListener: OnGestureListener) : EclairGestureDetector(context, mListener) {
 
-  private val mDetector: ScaleGestureDetector
+  private val mDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.OnScaleGestureListener {
 
-  init {
-    val mScaleListener = object : ScaleGestureDetector.OnScaleGestureListener {
+    override fun onScale(detector: ScaleGestureDetector): Boolean {
+      val scaleFactor = detector.scaleFactor
 
-      override fun onScale(detector: ScaleGestureDetector): Boolean {
-        val scaleFactor = detector.scaleFactor
+      if (java.lang.Float.isNaN(scaleFactor) || java.lang.Float.isInfinite(scaleFactor))
+        return false
 
-        if (java.lang.Float.isNaN(scaleFactor) || java.lang.Float.isInfinite(scaleFactor))
-          return false
-
-        mListener!!.onScale(scaleFactor, detector.focusX, detector.focusY)
-        return true
-      }
-
-      override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
-        return true
-      }
-
-      override fun onScaleEnd(detector: ScaleGestureDetector) {
-        // NO-OP
-      }
+      mListener.onScale(scaleFactor, detector.focusX, detector.focusY)
+      return true
     }
-    mDetector = ScaleGestureDetector(context, mScaleListener)
-  }
+
+    override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+      return true
+    }
+
+    override fun onScaleEnd(detector: ScaleGestureDetector) {
+      // NO-OP
+    }
+  })
+
 
   override fun isScaling(): Boolean {
     return mDetector.isInProgress

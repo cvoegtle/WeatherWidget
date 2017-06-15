@@ -27,7 +27,6 @@ import android.view.View
 import android.widget.ImageView
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener
-import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener
 
 class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? = null, defStyle: Int = 0) : ImageView(context, attr, defStyle), IPhotoView {
 
@@ -55,8 +54,8 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     return mAttacher.getDisplayRect()
   }
 
-  override fun setDisplayMatrix(finalRectangle: Matrix): Boolean {
-    return mAttacher.setDisplayMatrix(finalRectangle)
+  override fun setDisplayMatrix(finalMatrix: Matrix): Boolean {
+    return mAttacher.setDisplayMatrix(finalMatrix)
   }
 
   override fun getMinimumScale(): Float {
@@ -141,14 +140,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
   override fun getVisibleRectangleBitmap(): Bitmap? {
     return mAttacher.getVisibleRectangleBitmap()
-  }
-
-  override fun setZoomTransitionDuration(duration: Int) {
-    mAttacher.setZoomTransitionDuration(duration)
-  }
-
-  override fun setOnDoubleTapListener(newOnDoubleTapListener: GestureDetector.OnDoubleTapListener?) {
-    mAttacher.setOnDoubleTapListener(newOnDoubleTapListener)
   }
 
   override fun onDetachedFromWindow() {

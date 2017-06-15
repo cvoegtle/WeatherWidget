@@ -22,7 +22,4 @@ interface GestureDetector {
   fun onTouchEvent(ev: MotionEvent): Boolean
 
   fun isScaling(): Boolean
-
-  fun setOnGestureListener(listener: OnGestureListener)
-
 }

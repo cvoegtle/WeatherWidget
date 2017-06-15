@@ -21,20 +21,17 @@ import android.os.Build
 
 object VersionedGestureDetector {
 
-  fun newInstance(context: Context,
-                  listener: OnGestureListener): GestureDetector {
+  fun newInstance(context: Context, listener: OnGestureListener): GestureDetector {
     val sdkVersion = Build.VERSION.SDK_INT
     val detector: GestureDetector
 
     if (sdkVersion < Build.VERSION_CODES.ECLAIR) {
-      detector = CupcakeGestureDetector(context)
+      detector = CupcakeGestureDetector(context, listener)
     } else if (sdkVersion < Build.VERSION_CODES.FROYO) {
-      detector = EclairGestureDetector(context)
+      detector = EclairGestureDetector(context, listener)
     } else {
-      detector = FroyoGestureDetector(context)
+      detector = FroyoGestureDetector(context, listener)
     }
-
-    detector.setOnGestureListener(listener)
 
     return detector
   }

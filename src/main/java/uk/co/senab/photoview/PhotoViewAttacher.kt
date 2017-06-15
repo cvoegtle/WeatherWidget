@@ -117,13 +117,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
   }
 
-  override fun setOnDoubleTapListener(newOnDoubleTapListener: GestureDetector.OnDoubleTapListener?) {
-    if (newOnDoubleTapListener != null)
-      this.mGestureDetector!!.setOnDoubleTapListener(newOnDoubleTapListener)
-    else
-      this.mGestureDetector!!.setOnDoubleTapListener(DefaultOnDoubleTapListener(this))
-  }
-
   override fun canZoom(): Boolean {
     return mZoomEnabled
   }
@@ -567,13 +560,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     return imageView?.drawingCache
   }
 
-  override fun setZoomTransitionDuration(duration: Int) {
-    var milliseconds = duration
-    if (milliseconds < 0)
-      milliseconds = IPhotoView.DEFAULT_ZOOM_DURATION
-    this.ZOOM_DURATION = milliseconds
-  }
-
   /**
    * Helper method that 'unpacks' a Matrix and returns the required value
 
@@ -785,8 +771,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       mScroller.forceFinished(true)
     }
 
-    fun fling(viewWidth: Int, viewHeight: Int, velocityX: Int,
-              velocityY: Int) {
+    fun fling(viewWidth: Int, viewHeight: Int, velocityX: Int, velocityY: Int) {
       val rect = getDisplayRect() ?: return
 
       val startX = Math.round(-rect.left)
@@ -883,17 +868,14 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     /**
      * @return true if the ImageView exists, and it's Drawable existss
      */
-    private fun hasDrawable(imageView: ImageView?): Boolean {
-      return null != imageView && null != imageView.drawable
+    private fun hasDrawable(imageView: ImageView): Boolean {
+      return null != imageView.drawable
     }
 
     /**
      * @return true if the ScaleType is supported.
      */
-    private fun isSupportedScaleType(scaleType: ScaleType?): Boolean {
-      if (null == scaleType) {
-        return false
-      }
+    private fun isSupportedScaleType(scaleType: ScaleType): Boolean {
 
       when (scaleType) {
         ImageView.ScaleType.MATRIX -> throw IllegalArgumentException(scaleType.name + " is not supported in PhotoView")
@@ -905,12 +887,12 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     /**
      * Set's the ImageView's ScaleType to Matrix.
      */
-    private fun setImageViewScaleTypeMatrix(imageView: ImageView?) {
+    private fun setImageViewScaleTypeMatrix(imageView: ImageView) {
       /**
        * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
        * setScaleType to this.setScaleType automatically.
        */
-      if (null != imageView && imageView !is IPhotoView) {
+      if (imageView !is IPhotoView) {
         if (ScaleType.MATRIX != imageView.scaleType) {
           imageView.scaleType = ScaleType.MATRIX
         }

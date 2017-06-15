@@ -22,7 +22,7 @@ import android.view.MotionEvent
 import uk.co.senab.photoview.Compat
 
 @TargetApi(5)
-open class EclairGestureDetector(context: Context) : CupcakeGestureDetector(context) {
+open class EclairGestureDetector(context: Context, mListener: OnGestureListener) : CupcakeGestureDetector(context, mListener) {
   private val INVALID_POINTER_ID = -1
 
   private var mActivePointerId = INVALID_POINTER_ID
@@ -34,7 +34,6 @@ open class EclairGestureDetector(context: Context) : CupcakeGestureDetector(cont
     } catch (e: Exception) {
       return ev.x
     }
-
   }
 
   override fun getActiveY(ev: MotionEvent): Float {
@@ -43,7 +42,6 @@ open class EclairGestureDetector(context: Context) : CupcakeGestureDetector(cont
     } catch (e: Exception) {
       return ev.y
     }
-
   }
 
   override fun onTouchEvent(ev: MotionEvent): Boolean {

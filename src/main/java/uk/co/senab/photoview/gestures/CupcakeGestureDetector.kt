@@ -24,17 +24,13 @@ import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
 
-open class CupcakeGestureDetector(context: Context) : GestureDetector {
+open class CupcakeGestureDetector(context: Context, val mListener: OnGestureListener) : GestureDetector {
+  private val LOG_TAG = "CupcakeGestureDetector"
 
-  protected var mListener: OnGestureListener? = null
   internal var mLastTouchX: Float = 0.toFloat()
   internal var mLastTouchY: Float = 0.toFloat()
   internal val mTouchSlop: Float
   internal val mMinimumVelocity: Float
-
-  override fun setOnGestureListener(listener: OnGestureListener) {
-    this.mListener = listener
-  }
 
   init {
     val configuration = ViewConfiguration.get(context)
@@ -61,11 +57,7 @@ open class CupcakeGestureDetector(context: Context) : GestureDetector {
     when (ev.action) {
       MotionEvent.ACTION_DOWN -> {
         mVelocityTracker = VelocityTracker.obtain()
-        if (null != mVelocityTracker) {
-          mVelocityTracker!!.addMovement(ev)
-        } else {
-          Log.i(LOG_TAG, "Velocity tracker is null")
-        }
+        mVelocityTracker?.addMovement(ev) ?: Log.i(LOG_TAG, "Velocity tracker is null")
 
         mLastTouchX = getActiveX(ev)
         mLastTouchY = getActiveY(ev)
@@ -85,22 +77,18 @@ open class CupcakeGestureDetector(context: Context) : GestureDetector {
         }
 
         if (mIsDragging) {
-          mListener!!.onDrag(dx, dy)
+          mListener.onDrag(dx, dy)
           mLastTouchX = x
           mLastTouchY = y
 
-          if (null != mVelocityTracker) {
-            mVelocityTracker!!.addMovement(ev)
-          }
+          mVelocityTracker?.addMovement(ev)
         }
       }
 
       MotionEvent.ACTION_CANCEL -> {
         // Recycle Velocity Tracker
-        if (null != mVelocityTracker) {
-          mVelocityTracker!!.recycle()
-          mVelocityTracker = null
-        }
+        mVelocityTracker?.recycle()
+        mVelocityTracker = null
       }
 
       MotionEvent.ACTION_UP -> {
@@ -114,30 +102,22 @@ open class CupcakeGestureDetector(context: Context) : GestureDetector {
             mVelocityTracker!!.computeCurrentVelocity(1000)
 
             val vX = mVelocityTracker!!.xVelocity
-            val vY = mVelocityTracker!!
-                .yVelocity
+            val vY = mVelocityTracker!!.yVelocity
 
             // If the velocity is greater than minVelocity, call
             // listener
             if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-              mListener!!.onFling(mLastTouchX, mLastTouchY, -vX,
-                  -vY)
+              mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY)
             }
           }
         }
 
         // Recycle Velocity Tracker
-        if (null != mVelocityTracker) {
-          mVelocityTracker!!.recycle()
-          mVelocityTracker = null
-        }
+        mVelocityTracker?.recycle()
+        mVelocityTracker = null
       }
     }
 
     return true
-  }
-
-  companion object {
-    private val LOG_TAG = "CupcakeGestureDetector"
   }
 }
