@@ -28,7 +28,6 @@ import android.widget.ImageView
 
 import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener
 import uk.co.senab.photoview.PhotoViewAttacher.OnPhotoTapListener
-import uk.co.senab.photoview.PhotoViewAttacher.OnViewTapListener
 
 class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? = null, defStyle: Int = 0) : ImageView(context, attr, defStyle), IPhotoView {
 
@@ -46,11 +45,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     }
   }
 
-
-  @Deprecated("use {@link #setRotationTo(float)}")
-  override fun setPhotoViewRotation(rotationDegree: Float) {
-    mAttacher!!.setRotationTo(rotationDegree)
-  }
 
   override fun setRotationTo(rotationDegree: Float) {
     mAttacher!!.setRotationTo(rotationDegree)
@@ -72,27 +66,12 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     return mAttacher!!.setDisplayMatrix(finalRectangle)
   }
 
-  @Deprecated("")
-  override fun getMinScale(): Float {
-    return getMinimumScale()
-  }
-
   override fun getMinimumScale(): Float {
     return mAttacher!!.getMinimumScale()
   }
 
-  @Deprecated("")
-  override fun getMidScale(): Float {
-    return getMediumScale()
-  }
-
   override fun getMediumScale(): Float {
     return mAttacher!!.getMediumScale()
-  }
-
-  @Deprecated("")
-  override fun getMaxScale(): Float {
-    return getMaximumScale()
   }
 
   override fun getMaximumScale(): Float {
@@ -111,31 +90,16 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     mAttacher!!.setAllowParentInterceptOnEdge(allow)
   }
 
-  @Deprecated("")
-  override fun setMinScale(minScale: Float) {
-    setMinimumScale(minScale)
+  override fun setMinimumScale(scale: Float) {
+    mAttacher!!.setMinimumScale(scale)
   }
 
-  override fun setMinimumScale(minimumScale: Float) {
-    mAttacher!!.setMinimumScale(minimumScale)
+  override fun setMediumScale(scale: Float) {
+    mAttacher!!.setMediumScale(scale)
   }
 
-  @Deprecated("")
-  override fun setMidScale(midScale: Float) {
-    setMediumScale(midScale)
-  }
-
-  override fun setMediumScale(mediumScale: Float) {
-    mAttacher!!.setMediumScale(mediumScale)
-  }
-
-  @Deprecated("")
-  override fun setMaxScale(maxScale: Float) {
-    setMaximumScale(maxScale)
-  }
-
-  override fun setMaximumScale(maximumScale: Float) {
-    mAttacher!!.setMaximumScale(maximumScale)
+  override fun setMaximumScale(scale: Float) {
+    mAttacher!!.setMaximumScale(scale)
   }
 
   override // setImageBitmap calls through to this method

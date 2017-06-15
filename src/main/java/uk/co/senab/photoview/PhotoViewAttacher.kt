@@ -185,19 +185,13 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   }
 
 
-  @Deprecated("use {@link #setRotationTo(float)}")
-  override fun setPhotoViewRotation(degrees: Float) {
-    mSuppMatrix.setRotate(degrees % 360)
+  override fun setRotationTo(rotationDegree: Float) {
+    mSuppMatrix.setRotate(rotationDegree % 360)
     checkAndDisplayMatrix()
   }
 
-  override fun setRotationTo(degrees: Float) {
-    mSuppMatrix.setRotate(degrees % 360)
-    checkAndDisplayMatrix()
-  }
-
-  override fun setRotationBy(degrees: Float) {
-    mSuppMatrix.postRotate(degrees % 360)
+  override fun setRotationBy(rotationDegree: Float) {
+    mSuppMatrix.postRotate(rotationDegree % 360)
     checkAndDisplayMatrix()
   }
 
@@ -218,27 +212,12 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       return imageView
     }
 
-  @Deprecated("")
-  override fun getMinScale(): Float {
-    return  getMinimumScale()
-  }
-
   override fun getMinimumScale(): Float {
     return mMinScale
   }
 
-  @Deprecated("")
-  override fun getMidScale(): Float {
-    return getMediumScale()
-  }
-
   override fun getMediumScale(): Float {
     return mMidScale
-  }
-
-  @Deprecated("")
-  override fun getMaxScale(): Float {
-    return getMaximumScale()
   }
 
   override fun getMaximumScale(): Float {
@@ -398,34 +377,19 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     mAllowParentInterceptOnEdge = allow
   }
 
-  @Deprecated("")
-  override fun setMinScale(minScale: Float) {
-    setMinimumScale(minScale)
+  override fun setMinimumScale(scale: Float) {
+    checkZoomLevels(scale, mMidScale, mMaxScale)
+    mMinScale = scale
   }
 
-  override fun setMinimumScale(minimumScale: Float) {
-    checkZoomLevels(minimumScale, mMidScale, mMaxScale)
-    mMinScale = minimumScale
+  override fun setMediumScale(scale: Float) {
+    checkZoomLevels(mMinScale, scale, mMaxScale)
+    mMidScale = scale
   }
 
-  @Deprecated("")
-  override fun setMidScale(midScale: Float) {
-    setMediumScale(midScale)
-  }
-
-  override fun setMediumScale(mediumScale: Float) {
-    checkZoomLevels(mMinScale, mediumScale, mMaxScale)
-    mMidScale = mediumScale
-  }
-
-  @Deprecated("")
-  override fun setMaxScale(maxScale: Float) {
-    setMaximumScale(maxScale)
-  }
-
-  override fun setMaximumScale(maximumScale: Float) {
-    checkZoomLevels(mMinScale, mMidScale, maximumScale)
-    mMaxScale = maximumScale
+  override fun setMaximumScale(scale: Float) {
+    checkZoomLevels(mMinScale, mMidScale, scale)
+    mMaxScale = scale
   }
 
   override fun setOnLongClickListener(listener: OnLongClickListener) {
@@ -466,10 +430,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     if (null != imageView) {
       // Check to see if the scale is within bounds
       if (scale < mMinScale || scale > mMaxScale) {
-        LogManager
-            .logger
-            .i(LOG_TAG,
-                "Scale must be within the range of minScale and maxScale")
+        LogManager.logger.i(LOG_TAG, "Scale must be within the range of minScale and maxScale")
         return
       }
 

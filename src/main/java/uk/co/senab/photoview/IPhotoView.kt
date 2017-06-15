@@ -52,24 +52,6 @@ interface IPhotoView {
   fun setDisplayMatrix(finalMatrix: Matrix): Boolean
 
   /**
-   * Use [.getMinimumScale] instead, this will be removed in future release
-
-   * @return The current minimum scale level. What this value represents depends on the current
-   * * [android.widget.ImageView.ScaleType].
-   */
-  /**
-   * Use [.setMinimumScale] instead, this will be removed in future
-   * release
-   *
-   * &nbsp;
-   * Sets the minimum scale level. What this value represents depends on the current [ ].
-
-   * @param minScale minimum allowed scale
-   */
-  fun getMinScale(): Float
-  fun setMinScale(scale: Float)
-
-  /**
    * @return The current minimum scale level. What this value represents depends on the current
    * * [android.widget.ImageView.ScaleType].
    */
@@ -82,56 +64,16 @@ interface IPhotoView {
   fun setMinimumScale(scale: Float)
 
   /**
-   * Use [.getMediumScale] instead, this will be removed in future release
-
-   * @return The current middle scale level. What this value represents depends on the current
-   * * [android.widget.ImageView.ScaleType].
-   */
-  /**
-   * Use [.setMediumScale] instead, this will be removed in future
-   * release
-   *
-   * &nbsp;
-   * Sets the middle scale level. What this value represents depends on the current [ ].
-
-   * @param midScale medium scale preset
-   */
-  @Deprecated("")
-  fun getMidScale(): Float
-  @Deprecated("")
-  fun setMidScale(scale: Float)
-
-  /**
    * @return The current medium scale level. What this value represents depends on the current
    * * [android.widget.ImageView.ScaleType].
    */
-  /*
+  /**
      * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
      *
      * @param mediumScale medium scale preset
      */
   fun getMediumScale(): Float
   fun setMediumScale(scale: Float)
-
-  /**
-   * Use [.getMaximumScale] instead, this will be removed in future release
-
-   * @return The current maximum scale level. What this value represents depends on the current
-   * * [android.widget.ImageView.ScaleType].
-   */
-  /**
-   * Use [.setMaximumScale] instead, this will be removed in future
-   * release
-   *
-   * &nbsp;
-   * Sets the maximum scale level. What this value represents depends on the current [ ].
-
-   * @param maxScale maximum allowed scale preset
-   */
-  @Deprecated("")
-  fun getMaxScale(): Float
-  @Deprecated("")
-  fun setMaxScale(scale: Float)
 
   /**
    * @return The current maximum scale level. What this value represents depends on the current
@@ -254,16 +196,6 @@ interface IPhotoView {
    * @param zoomable - Whether the zoom functionality is enabled.
    */
   fun setZoomable(zoomable: Boolean)
-
-  /**
-   * Enables rotation via PhotoView internal functions. Name is chosen so it won't collide with
-   * View.setRotation(float) in API since 11
-
-   * @param rotationDegree - Degree to rotate PhotoView to, should be in range 0 to 360
-   * *
-   */
-  @Deprecated("use {@link #setRotationTo(float)}")
-  fun setPhotoViewRotation(rotationDegree: Float)
 
   /**
    * Extracts currently visible area to Bitmap object, if there is no image loaded yet or the
