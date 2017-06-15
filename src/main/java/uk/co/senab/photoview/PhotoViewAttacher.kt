@@ -71,7 +71,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private var mCurrentFlingRunnable: FlingRunnable? = null
   private var mScrollEdge = EDGE_BOTH
 
-  private var mScaleType = ScaleType.FIT_CENTER
+  private val mScaleType = ScaleType.FIT_CENTER
 
   init {
     mImageView = WeakReference(imageView)
@@ -183,10 +183,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   override fun getScale(): Float {
     return Math.sqrt(Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X).toDouble(), 2.0) + Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y).toDouble(), 2.0)).toFloat()
-  }
-
-  override fun getScaleType(): ScaleType {
-    return mScaleType
   }
 
   override fun onDrag(dx: Float, dy: Float) {
@@ -373,15 +369,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
   }
 
-  override fun setScaleType(scaleType: ScaleType) {
-    if (isSupportedScaleType(scaleType) && scaleType != mScaleType) {
-      mScaleType = scaleType
-
-      // Finally update
-      update()
-    }
-  }
-
   fun update() {
     val imageView = imageView
 
@@ -444,11 +431,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     val viewHeight = getImageViewHeight(imageView)
     if (height <= viewHeight) {
-      when (mScaleType) {
-        ImageView.ScaleType.FIT_START -> deltaY = -rect.top
-        ImageView.ScaleType.FIT_END -> deltaY = viewHeight.toFloat() - height - rect.top
-        else -> deltaY = (viewHeight - height) / 2 - rect.top
-      }
+      deltaY = (viewHeight - height) / 2 - rect.top
     } else if (rect.top > 0) {
       deltaY = -rect.top
     } else if (rect.bottom < viewHeight) {
@@ -550,42 +533,10 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     mBaseMatrix.reset()
 
-    val widthScale = viewWidth / drawableWidth
-    val heightScale = viewHeight / drawableHeight
+    val mTempSrc = RectF(0f, 0f, drawableWidth.toFloat(), drawableHeight.toFloat())
+    val mTempDst = RectF(0f, 0f, viewWidth, viewHeight)
 
-    if (mScaleType == ScaleType.CENTER) {
-      mBaseMatrix.postTranslate((viewWidth - drawableWidth) / 2f, (viewHeight - drawableHeight) / 2f)
-
-    } else if (mScaleType == ScaleType.CENTER_CROP) {
-      val scale = Math.max(widthScale, heightScale)
-      mBaseMatrix.postScale(scale, scale)
-      mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2f,
-          (viewHeight - drawableHeight * scale) / 2f)
-
-    } else if (mScaleType == ScaleType.CENTER_INSIDE) {
-      val scale = Math.min(1.0f, Math.min(widthScale, heightScale))
-      mBaseMatrix.postScale(scale, scale)
-      mBaseMatrix.postTranslate((viewWidth - drawableWidth * scale) / 2f,
-          (viewHeight - drawableHeight * scale) / 2f)
-
-    } else {
-      val mTempSrc = RectF(0f, 0f, drawableWidth.toFloat(), drawableHeight.toFloat())
-      val mTempDst = RectF(0f, 0f, viewWidth, viewHeight)
-
-      when (mScaleType) {
-        ImageView.ScaleType.FIT_CENTER -> mBaseMatrix
-            .setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER)
-
-        ImageView.ScaleType.FIT_START -> mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.START)
-
-        ImageView.ScaleType.FIT_END -> mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.END)
-
-        ImageView.ScaleType.FIT_XY -> mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.FILL)
-
-        else -> {
-        }
-      }
-    }
+    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER)
 
     resetMatrix()
   }

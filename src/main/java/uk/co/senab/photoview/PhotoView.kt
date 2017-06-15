@@ -62,10 +62,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     return mAttacher.getScale()
   }
 
-  override fun getScaleType(): ImageView.ScaleType {
-    return mAttacher.getScaleType()
-  }
-
   override fun setAllowParentInterceptOnEdge(allow: Boolean) {
     mAttacher.setAllowParentInterceptOnEdge(allow)
   }
@@ -108,10 +104,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
 
   override fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
     mAttacher.setScale(scale, focalX, focalY, animate)
-  }
-
-  override fun setScaleType(scaleType: ImageView.ScaleType) {
-      mAttacher.setScaleType(scaleType)
   }
 
   override fun onDetachedFromWindow() {

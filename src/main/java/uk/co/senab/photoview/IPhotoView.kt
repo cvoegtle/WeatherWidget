@@ -94,20 +94,6 @@ interface IPhotoView {
   fun setScale(scale: Float)
 
   /**
-   * Return the current scale type in use by the ImageView.
-
-   * @return current ImageView.ScaleType
-   */
-  /**
-   * Controls how the image should be resized or moved to match the size of the ImageView. Any
-   * scaling or panning will happen within the confines of this [ ].
-
-   * @param scaleType - The desired scaling mode.
-   */
-  fun getScaleType(): ImageView.ScaleType
-  fun setScaleType(scaleType: ImageView.ScaleType)
-
-  /**
    * Whether to allow the ImageView's parent to intercept the touch event when the photo is scroll
    * to it's horizontal edge.
 
