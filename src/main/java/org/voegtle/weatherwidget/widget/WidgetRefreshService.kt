@@ -47,7 +47,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
     }, filter)
   }
 
-  override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+  override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     val result: Int
     try {
       if (isScreenOn) {
