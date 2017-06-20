@@ -24,7 +24,7 @@ android {
     }
     signingConfigs {
         cvoegtle {
-            storeFile file("/Users/cv/Google Developer/cvoegtle.signing.jks")
+            storeFile file("/Users/cv/Google_Developer/cvoegtle.signing.jks")
             storePassword "insecure"
             keyAlias 'cvoegtle'
             keyPassword "insecure"

@@ -67,6 +67,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
   }
 
   val isScreenOn: Boolean
+    @SuppressWarnings()
     get() {
       val context = applicationContext
       if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
@@ -80,6 +81,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
         return screenOn
       } else {
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        // notwendig solange wir noch API Level 16 unterstützen
         return pm.isScreenOn
       }
     }
