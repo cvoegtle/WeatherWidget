@@ -35,8 +35,8 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import uk.co.senab.photoview.gestures.PhotoGestureDetector
 import uk.co.senab.photoview.gestures.OnGestureListener
-import uk.co.senab.photoview.gestures.VersionedGestureDetector
 import uk.co.senab.photoview.scrollerproxy.ScrollerProxy
 import java.lang.ref.WeakReference
 
@@ -87,8 +87,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     if (!imageView.isInEditMode) {
       // Create Gesture Detectors...
-      mScaleDragDetector = VersionedGestureDetector.newInstance(
-          imageView.context, this)
+      mScaleDragDetector = PhotoGestureDetector(imageView.context, this)
 
       mGestureDetector = GestureDetector(imageView.context,
           object : GestureDetector.SimpleOnGestureListener() {

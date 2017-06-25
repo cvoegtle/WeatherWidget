@@ -1,15 +1,12 @@
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.
- *
- *
+
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *
+
  * http://www.apache.org/licenses/LICENSE-2.0
- *
- *
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,14 +15,21 @@
  */
 package uk.co.senab.photoview.gestures
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.util.Log
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
+import uk.co.senab.photoview.Compat
 
-open class CupcakeGestureDetector(context: Context, val mListener: OnGestureListener) : GestureDetector {
-  private val LOG_TAG = "CupcakeGestureDetector"
+@TargetApi(8)
+class PhotoGestureDetector(context: Context, val mListener: OnGestureListener) : GestureDetector {
+  private val LOG_TAG: String = "PhotoGestureDetector"
+
+  private var mActivePointerId: Int? = null
+  private var mActivePointerIndex = 0
 
   internal var mLastTouchX: Float = 0.toFloat()
   internal var mLastTouchY: Float = 0.toFloat()
@@ -41,21 +45,36 @@ open class CupcakeGestureDetector(context: Context, val mListener: OnGestureList
   private var mVelocityTracker: VelocityTracker? = null
   private var mIsDragging: Boolean = false
 
-  open internal fun getActiveX(ev: MotionEvent): Float {
-    return ev.x
+  fun getActiveX(ev: MotionEvent): Float {
+    return ev.getX(mActivePointerIndex)
   }
 
-  open internal fun getActiveY(ev: MotionEvent): Float {
-    return ev.y
-  }
-
-  override fun isScaling(): Boolean {
-    return false
+  fun getActiveY(ev: MotionEvent): Float {
+    return ev.getY(mActivePointerIndex)
   }
 
   override fun onTouchEvent(ev: MotionEvent): Boolean {
-    when (ev.action) {
+    mDetector.onTouchEvent(ev)
+
+    val action = ev.action
+    when (action and MotionEvent.ACTION_MASK) {
+      MotionEvent.ACTION_POINTER_UP -> {
+        // Ignore deprecation, ACTION_POINTER_ID_MASK and
+        // ACTION_POINTER_ID_SHIFT has same value and are deprecated
+        // You can have either deprecation or lint target api warning
+        val pointerIndex = Compat.getPointerIndex(ev.action)
+        val pointerId = ev.getPointerId(pointerIndex)
+        if (pointerId == mActivePointerId) {
+          // This was our active pointer going up. Choose a new
+          // active pointer and adjust accordingly.
+          val newPointerIndex = if (pointerIndex == 0) 1 else 0
+          mActivePointerId = ev.getPointerId(newPointerIndex)
+          mLastTouchX = ev.getX(newPointerIndex)
+          mLastTouchY = ev.getY(newPointerIndex)
+        }
+      }
       MotionEvent.ACTION_DOWN -> {
+        mActivePointerId = ev.getPointerId(0)
         mVelocityTracker = VelocityTracker.obtain()
         mVelocityTracker?.addMovement(ev) ?: Log.i(LOG_TAG, "Velocity tracker is null")
 
@@ -63,7 +82,6 @@ open class CupcakeGestureDetector(context: Context, val mListener: OnGestureList
         mLastTouchY = getActiveY(ev)
         mIsDragging = false
       }
-
       MotionEvent.ACTION_MOVE -> {
         val x = getActiveX(ev)
         val y = getActiveY(ev)
@@ -89,7 +107,9 @@ open class CupcakeGestureDetector(context: Context, val mListener: OnGestureList
         // Recycle Velocity Tracker
         mVelocityTracker?.recycle()
         mVelocityTracker = null
+        mActivePointerId = null
       }
+
 
       MotionEvent.ACTION_UP -> {
         if (mIsDragging) {
@@ -115,9 +135,40 @@ open class CupcakeGestureDetector(context: Context, val mListener: OnGestureList
         // Recycle Velocity Tracker
         mVelocityTracker?.recycle()
         mVelocityTracker = null
+        mActivePointerId = null
       }
-    }
 
+    }
+    mActivePointerIndex = ev.findPointerIndex(mActivePointerId ?: 0)
     return true
   }
+
+
+  private val mDetector = ScaleGestureDetector(context, object : ScaleGestureDetector.OnScaleGestureListener {
+
+    override fun onScale(detector: ScaleGestureDetector): Boolean {
+      val scaleFactor = detector.scaleFactor
+
+      if (java.lang.Float.isNaN(scaleFactor) || java.lang.Float.isInfinite(scaleFactor)) {
+        return false
+      }
+
+      mListener.onScale(scaleFactor, detector.focusX, detector.focusY)
+      return true
+    }
+
+    override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
+      return true
+    }
+
+    override fun onScaleEnd(detector: ScaleGestureDetector) {
+      // NO-OP
+    }
+  })
+
+
+  override fun isScaling(): Boolean {
+    return mDetector.isInProgress
+  }
+
 }
