@@ -37,7 +37,6 @@ import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import uk.co.senab.photoview.gestures.OnGestureListener
 import uk.co.senab.photoview.gestures.VersionedGestureDetector
-import uk.co.senab.photoview.log.LogManager
 import uk.co.senab.photoview.scrollerproxy.ScrollerProxy
 import java.lang.ref.WeakReference
 
@@ -191,7 +190,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
 
     if (DEBUG) {
-      LogManager.logger.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy))
+      Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy))
     }
 
     val imageView = imageView
@@ -222,8 +221,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   override fun onFling(startX: Float, startY: Float, velocityX: Float,
                        velocityY: Float) {
     if (DEBUG) {
-      LogManager.logger.d(LOG_TAG, "onFling. sX: " + startX + " sY: " + startY + " Vx: " + velocityX +
-          " Vy: " + velocityY)
+      Log.d(LOG_TAG, "onFling. sX: $startX sY: $startY Vx: $velocityX Vy: $velocityY")
     }
     val imageView = imageView
     mCurrentFlingRunnable = FlingRunnable(imageView!!.context)
@@ -263,8 +261,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
     if (DEBUG) {
-      LogManager.logger.d(LOG_TAG,
-          String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY))
+      Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY))
     }
 
     if (getScale() < mMaxScale || scaleFactor < 1f) {
@@ -356,7 +353,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     if (null != imageView) {
       // Check to see if the scale is within bounds
       if (scale < mMinScale || scale > mMaxScale) {
-        LogManager.logger.i(LOG_TAG, "Scale must be within the range of minScale and maxScale")
+        Log.i(LOG_TAG, "Scale must be within the range of minScale and maxScale")
         return
       }
 
@@ -649,7 +646,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     fun cancelFling() {
       if (DEBUG) {
-        LogManager.logger.d(LOG_TAG, "Cancel Fling")
+        Log.d(LOG_TAG, "Cancel Fling")
       }
       mScroller.forceFinished(true)
     }
@@ -684,8 +681,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       mCurrentY = startY
 
       if (DEBUG) {
-        LogManager.logger.d(LOG_TAG, "fling. StartX:" + startX + " StartY:" + startY
-            + " MaxX:" + maxX + " MaxY:" + maxY)
+        Log.d(LOG_TAG, "fling. StartX: $startX StartY: $startY MaxX: $maxX MaxY: $maxY")
       }
 
       // If we actually can move, fling the scroller
@@ -707,8 +703,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         val newY = mScroller.currY
 
         if (DEBUG) {
-          LogManager.logger.d(LOG_TAG, "fling run(). CurrentX:" + mCurrentX + " CurrentY:"
-              + mCurrentY + " NewX:" + newX + " NewY:" + newY)
+          Log.d(LOG_TAG, "fling run(). CurrentX: $mCurrentX CurrentY: $mCurrentY NewX: $newX NewY: $newY")
         }
 
         mSuppMatrix.postTranslate((mCurrentX - newX).toFloat(), (mCurrentY - newY).toFloat())
@@ -753,18 +748,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
      */
     private fun hasDrawable(imageView: ImageView): Boolean {
       return null != imageView.drawable
-    }
-
-    /**
-     * @return true if the ScaleType is supported.
-     */
-    private fun isSupportedScaleType(scaleType: ScaleType): Boolean {
-
-      when (scaleType) {
-        ImageView.ScaleType.MATRIX -> throw IllegalArgumentException(scaleType.name + " is not supported in PhotoView")
-
-        else -> return true
-      }
     }
 
     /**
