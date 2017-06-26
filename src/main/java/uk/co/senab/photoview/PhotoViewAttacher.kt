@@ -35,10 +35,10 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
+import android.widget.OverScroller
 import uk.co.senab.photoview.gestures.IGestureDetector
 import uk.co.senab.photoview.gestures.OnGestureListener
 import uk.co.senab.photoview.gestures.PhotoGestureDetector
-import uk.co.senab.photoview.scrollerproxy.ScrollerProxy
 import java.lang.ref.WeakReference
 
 class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener, OnGestureListener, ViewTreeObserver.OnGlobalLayoutListener {
@@ -48,7 +48,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private val midScale = IPhotoView.DEFAULT_MID_SCALE
   private val maxScale = IPhotoView.DEFAULT_MAX_SCALE
 
-  private var mImageView: WeakReference<ImageView>? = null
+  private var weakImageView: WeakReference<ImageView>? = null
   private var observer: ViewTreeObserver? = null
 
   // Gesture Detectors
@@ -72,7 +72,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private val mScaleType = ScaleType.FIT_CENTER
 
   init {
-    mImageView = WeakReference(imageView)
+    weakImageView = WeakReference(imageView)
 
     imageView.isDrawingCacheEnabled = true
     imageView.setOnTouchListener(this)
@@ -108,31 +108,25 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
    * [uk.co.senab.photoview.PhotoView].
    */
   fun cleanup() {
-    if (null == mImageView) {
+    if (null == weakImageView) {
       return  // cleanup already done
     }
 
-    val imageView = mImageView!!.get()
     // Remove this as a global layout listener
-    if (null != observer) {
-      observer!!.removeGlobalOnLayoutListener(this)
-      observer = null
-    }
+    observer?.removeGlobalOnLayoutListener(this)
+    observer = null
 
+    val imageView = weakImageView?.get()
+    // Remove the ImageView's reference to this
+    imageView?.setOnTouchListener(null)
 
-    if (null != imageView) {
-
-      // Remove the ImageView's reference to this
-      imageView.setOnTouchListener(null)
-
-      // make sure a pending fling runnable won't be run
-      cancelFling()
-    }
+    // make sure a pending fling runnable won't be run
+    cancelFling()
 
     gestureDetector?.setOnDoubleTapListener(null)
 
     // Finally, clear ImageView
-    mImageView = null
+    weakImageView = null
   }
 
   override fun getDisplayRect(): RectF? {
@@ -156,7 +150,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   // If we don't have an ImageView, call cleanup()
   val imageView: ImageView?
     get() {
-      val imageView: ImageView? = mImageView?.get()
+      val imageView: ImageView? = weakImageView?.get()
 
       if (null == imageView) {
         cleanup()
@@ -344,10 +338,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
 
   private fun cancelFling() {
-    if (null != mCurrentFlingRunnable) {
-      mCurrentFlingRunnable!!.cancelFling()
-      mCurrentFlingRunnable = null
-    }
+    mCurrentFlingRunnable?.cancelFling()
+    mCurrentFlingRunnable = null
   }
 
   /**
@@ -508,66 +500,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     return imageView.height - imageView.paddingTop - imageView.paddingBottom
   }
 
-  /**
-   * Interface definition for a callback to be invoked when the internal Matrix has changed for
-   * this View.
-
-   * @author Chris Banes
-   */
-  interface OnMatrixChangedListener {
-    /**
-     * Callback for when the Matrix displaying the Drawable has changed. This could be because
-     * the View's bounds have changed, or the user has zoomed.
-
-     * @param rect - Rectangle displaying the Drawable's new bounds.
-     */
-    fun onMatrixChanged(rect: RectF)
-  }
-
-  /**
-   * Interface definition for a callback to be invoked when the Photo is tapped with a single
-   * tap.
-
-   * @author Chris Banes
-   */
-  interface OnPhotoTapListener {
-
-    /**
-     * A callback to receive where the user taps on a photo. You will only receive a callback if
-     * the user taps on the actual photo, tapping on 'whitespace' will be ignored.
-
-     * @param view - View the user tapped.
-     * *
-     * @param x    - where the user tapped from the of the Drawable, as percentage of the
-     * *             Drawable width.
-     * *
-     * @param y    - where the user tapped from the top of the Drawable, as percentage of the
-     * *             Drawable height.
-     */
-    fun onPhotoTap(view: View, x: Float, y: Float)
-  }
-
-  /**
-   * Interface definition for a callback to be invoked when the ImageView is tapped with a single
-   * tap.
-
-   * @author Chris Banes
-   */
-  interface OnViewTapListener {
-
-    /**
-     * A callback to receive where the user taps on a ImageView. You will receive a callback if
-     * the user taps anywhere on the view, tapping on 'whitespace' will not be ignored.
-
-     * @param view - View the user tapped.
-     * *
-     * @param x    - where the user tapped from the left of the View.
-     * *
-     * @param y    - where the user tapped from the top of the View.
-     */
-    fun onViewTap(view: View, x: Float, y: Float)
-  }
-
   private inner class AnimatedZoomRunnable(private val mZoomStart: Float, private val mZoomEnd: Float,
                                            private val mFocalX: Float, private val mFocalY: Float) : Runnable {
     private val mStartTime: Long = System.currentTimeMillis()
@@ -598,7 +530,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   private inner class FlingRunnable(context: Context) : Runnable {
 
-    private val mScroller: ScrollerProxy = ScrollerProxy.getScroller(context)
+    private val scroller: OverScroller = OverScroller(context)
     private var mCurrentX: Int = 0
     private var mCurrentY: Int = 0
 
@@ -606,7 +538,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       if (DEBUG) {
         Log.d(LOG_TAG, "Cancel Fling")
       }
-      mScroller.forceFinished(true)
+      scroller.forceFinished(true)
     }
 
     fun fling(viewWidth: Int, viewHeight: Int, velocityX: Int, velocityY: Int) {
@@ -644,21 +576,21 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
       // If we actually can move, fling the scroller
       if (startX != maxX || startY != maxY) {
-        mScroller.fling(startX, startY, velocityX, velocityY, minX,
+        scroller.fling(startX, startY, velocityX, velocityY, minX,
             maxX, minY, maxY, 0, 0)
       }
     }
 
     override fun run() {
-      if (mScroller.isFinished) {
+      if (scroller.isFinished) {
         return  // remaining post that should not be handled
       }
 
       val imageView = imageView
-      if (null != imageView && mScroller.computeScrollOffset()) {
+      if (null != imageView && scroller.computeScrollOffset()) {
 
-        val newX = mScroller.currX
-        val newY = mScroller.currY
+        val newX = scroller.currX
+        val newY = scroller.currY
 
         if (DEBUG) {
           Log.d(LOG_TAG, "fling run(). CurrentX: $mCurrentX CurrentY: $mCurrentY NewX: $newX NewY: $newY")
