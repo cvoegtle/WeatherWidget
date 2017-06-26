@@ -17,7 +17,7 @@ package uk.co.senab.photoview.gestures
 
 import android.view.MotionEvent
 
-interface GestureDetector {
+interface IGestureDetector {
 
   fun onTouchEvent(ev: MotionEvent): Boolean
 

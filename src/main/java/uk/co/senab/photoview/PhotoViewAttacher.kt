@@ -35,26 +35,25 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
-import uk.co.senab.photoview.gestures.PhotoGestureDetector
+import uk.co.senab.photoview.gestures.IGestureDetector
 import uk.co.senab.photoview.gestures.OnGestureListener
+import uk.co.senab.photoview.gestures.PhotoGestureDetector
 import uk.co.senab.photoview.scrollerproxy.ScrollerProxy
 import java.lang.ref.WeakReference
 
 class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener, OnGestureListener, ViewTreeObserver.OnGlobalLayoutListener {
   internal var ZOOM_DURATION = IPhotoView.DEFAULT_ZOOM_DURATION
 
-  private var mMinScale = IPhotoView.DEFAULT_MIN_SCALE
-  private var mMidScale = IPhotoView.DEFAULT_MID_SCALE
-  private var mMaxScale = IPhotoView.DEFAULT_MAX_SCALE
-
-  private var mAllowParentInterceptOnEdge = true
+  private val minScale = IPhotoView.DEFAULT_MIN_SCALE
+  private val midScale = IPhotoView.DEFAULT_MID_SCALE
+  private val maxScale = IPhotoView.DEFAULT_MAX_SCALE
 
   private var mImageView: WeakReference<ImageView>? = null
   private var observer: ViewTreeObserver? = null
 
   // Gesture Detectors
-  private var mGestureDetector: GestureDetector? = null
-  private var mScaleDragDetector: uk.co.senab.photoview.gestures.GestureDetector? = null
+  private var gestureDetector: GestureDetector? = null
+  private var scaleDragDetector: IGestureDetector? = null
 
   // These are set so we don't keep allocating them on the heap
   private val mBaseMatrix = Matrix()
@@ -87,9 +86,9 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
     if (!imageView.isInEditMode) {
       // Create Gesture Detectors...
-      mScaleDragDetector = PhotoGestureDetector(imageView.context, this)
+      scaleDragDetector = PhotoGestureDetector(imageView.context, this)
 
-      mGestureDetector = GestureDetector(imageView.context,
+      gestureDetector = GestureDetector(imageView.context,
           object : GestureDetector.SimpleOnGestureListener() {
 
             // forward long click listener
@@ -97,7 +96,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
             }
           })
 
-      mGestureDetector!!.setOnDoubleTapListener(DefaultOnDoubleTapListener(this))
+      gestureDetector!!.setOnDoubleTapListener(DefaultOnDoubleTapListener(this))
       update()
     }
   }
@@ -130,7 +129,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       cancelFling()
     }
 
-    mGestureDetector?.setOnDoubleTapListener(null)
+    gestureDetector?.setOnDoubleTapListener(null)
 
     // Finally, clear ImageView
     mImageView = null
@@ -168,15 +167,15 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
 
   override fun getMinimumScale(): Float {
-    return mMinScale
+    return minScale
   }
 
   override fun getMediumScale(): Float {
-    return mMidScale
+    return midScale
   }
 
   override fun getMaximumScale(): Float {
-    return mMaxScale
+    return maxScale
   }
 
   override fun getScale(): Float {
@@ -184,7 +183,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   }
 
   override fun onDrag(dx: Float, dy: Float) {
-    if (mScaleDragDetector!!.isScaling()) {
+    if (scaleDragDetector!!.isScaling()) {
       return  // Do not drag if we are already scaling
     }
 
@@ -206,7 +205,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
      * the edge, aka 'overscrolling', let the parent take over).
      */
     val parent = imageView!!.parent
-    if (mAllowParentInterceptOnEdge && !mScaleDragDetector!!.isScaling()) {
+    if (!scaleDragDetector!!.isScaling()) {
       if (mScrollEdge == EDGE_BOTH
           || mScrollEdge == EDGE_LEFT && dx >= 1f
           || mScrollEdge == EDGE_RIGHT && dx <= -1f) {
@@ -263,7 +262,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY))
     }
 
-    if (getScale() < mMaxScale || scaleFactor < 1f) {
+    if (getScale() < maxScale || scaleFactor < 1f) {
       mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY)
       checkAndDisplayMatrix()
     }
@@ -288,23 +287,22 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         ACTION_CANCEL, ACTION_UP ->
           // If the user has zoomed less than min scale, zoom back
           // to min scale
-          if (getScale() < mMinScale) {
+          if (getScale() < minScale) {
             val rect = getDisplayRect()
             if (null != rect) {
-              v.post(AnimatedZoomRunnable(getScale(), mMinScale,
-                  rect.centerX(), rect.centerY()))
+              v.post(AnimatedZoomRunnable(getScale(), minScale, rect.centerX(), rect.centerY()))
               handled = true
             }
           }
       }
 
       // Try the Scale/Drag detector
-      if (null != mScaleDragDetector && mScaleDragDetector!!.onTouchEvent(ev)) {
+      if (scaleDragDetector?.onTouchEvent(ev) ?: false) {
         handled = true
       }
 
       // Check to see if the user double tapped
-      if (null != mGestureDetector && mGestureDetector!!.onTouchEvent(ev)) {
+      if (gestureDetector?.onTouchEvent(ev) ?: false) {
         handled = true
       }
     }
@@ -312,56 +310,17 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     return handled
   }
 
-  override fun setAllowParentInterceptOnEdge(allow: Boolean) {
-    mAllowParentInterceptOnEdge = allow
-  }
-
-  override fun setMinimumScale(scale: Float) {
-    checkZoomLevels(scale, mMidScale, mMaxScale)
-    mMinScale = scale
-  }
-
-  override fun setMediumScale(scale: Float) {
-    checkZoomLevels(mMinScale, scale, mMaxScale)
-    mMidScale = scale
-  }
-
-  override fun setMaximumScale(scale: Float) {
-    checkZoomLevels(mMinScale, mMidScale, scale)
-    mMaxScale = scale
-  }
-
-  override fun setScale(scale: Float) {
-    setScale(scale, false)
-  }
-
-  override fun setScale(scale: Float, animate: Boolean) {
-    val imageView = imageView
-
-    if (null != imageView) {
-      setScale(scale,
-          (imageView.right / 2).toFloat(),
-          (imageView.bottom / 2).toFloat(),
-          animate)
-    }
-  }
-
-  override fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
+  override fun setScale(scale: Float, focalX: Float, focalY: Float) {
     val imageView = imageView
 
     if (null != imageView) {
       // Check to see if the scale is within bounds
-      if (scale < mMinScale || scale > mMaxScale) {
+      if (scale < minScale || scale > maxScale) {
         Log.i(LOG_TAG, "Scale must be within the range of minScale and maxScale")
         return
       }
 
-      if (animate) {
-        imageView.post(AnimatedZoomRunnable(getScale(), scale, focalX, focalY))
-      } else {
-        mSuppMatrix.setScale(scale, scale, focalX, focalY)
-        checkAndDisplayMatrix()
-      }
+      imageView.post(AnimatedZoomRunnable(getScale(), scale, focalX, focalY))
     }
   }
 

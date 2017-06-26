@@ -48,36 +48,18 @@ interface IPhotoView {
    * @return The current minimum scale level. What this value represents depends on the current
    * * [android.widget.ImageView.ScaleType].
    */
-  /**
-   * Sets the minimum scale level. What this value represents depends on the current [ ].
-
-   * @param minimumScale minimum allowed scale
-   */
   fun getMinimumScale(): Float
-  fun setMinimumScale(scale: Float)
 
   /**
    * @return The current medium scale level. What this value represents depends on the current
    * * [android.widget.ImageView.ScaleType].
    */
-  /**
-     * Sets the medium scale level. What this value represents depends on the current {@link android.widget.ImageView.ScaleType}.
-     *
-     * @param mediumScale medium scale preset
-     */
   fun getMediumScale(): Float
-  fun setMediumScale(scale: Float)
 
   /**
    * @return The current maximum scale level. What this value represents depends on the current
    * * [android.widget.ImageView.ScaleType].
    */
-  /**
-   * Sets the maximum scale level. What this value represents depends on the current [ ].
-
-   * @param maximumScale maximum allowed scale preset
-   */
-  fun setMaximumScale(scale: Float)
   fun getMaximumScale(): Float
 
   /**
@@ -85,30 +67,7 @@ interface IPhotoView {
 
    * @return float - current scale value
    */
-  /**
-   * Changes the current scale to the specified value.
-
-   * @param scale - Value to scale to
-   */
   fun getScale(): Float
-  fun setScale(scale: Float)
-
-  /**
-   * Whether to allow the ImageView's parent to intercept the touch event when the photo is scroll
-   * to it's horizontal edge.
-
-   * @param allow whether to allow intercepting by parent element or not
-   */
-  fun setAllowParentInterceptOnEdge(allow: Boolean)
-
-  /**
-   * Changes the current scale to the specified value.
-
-   * @param scale   - Value to scale to
-   * *
-   * @param animate - Whether to animate the scale
-   */
-  fun setScale(scale: Float, animate: Boolean)
 
   /**
    * Changes the current scale to the specified value, around the given focal point.
@@ -118,10 +77,8 @@ interface IPhotoView {
    * @param focalX  - X Focus Point
    * *
    * @param focalY  - Y Focus Point
-   * *
-   * @param animate - Whether to animate the scale
    */
-  fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean)
+  fun setScale(scale: Float, focalX: Float, focalY: Float)
 
   companion object {
 

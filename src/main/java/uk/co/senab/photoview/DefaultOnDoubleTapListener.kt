@@ -21,12 +21,10 @@ class DefaultOnDoubleTapListener(val photoViewAttacher: PhotoViewAttacher) : Ges
       val x = ev.x
       val y = ev.y
 
-      if (scale < photoViewAttacher.getMediumScale()) {
-        photoViewAttacher.setScale(photoViewAttacher.getMediumScale(), x, y, true)
-      } else if (scale >= photoViewAttacher.getMediumScale() && scale < photoViewAttacher.getMaximumScale()) {
-        photoViewAttacher.setScale(photoViewAttacher.getMaximumScale(), x, y, true)
-      } else {
-        photoViewAttacher.setScale(photoViewAttacher.getMinimumScale(), x, y, true)
+      when  {
+        scale < photoViewAttacher.getMediumScale() -> photoViewAttacher.setScale(photoViewAttacher.getMediumScale(), x, y)
+        scale < photoViewAttacher.getMaximumScale() -> photoViewAttacher.setScale(photoViewAttacher.getMaximumScale(), x, y)
+        else -> photoViewAttacher.setScale(photoViewAttacher.getMinimumScale(), x, y)
       }
     } catch (e: ArrayIndexOutOfBoundsException) {
       // Can sometimes happen when getX() and getY() is called

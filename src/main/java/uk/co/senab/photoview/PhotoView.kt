@@ -62,22 +62,6 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     return mAttacher.getScale()
   }
 
-  override fun setAllowParentInterceptOnEdge(allow: Boolean) {
-    mAttacher.setAllowParentInterceptOnEdge(allow)
-  }
-
-  override fun setMinimumScale(scale: Float) {
-    mAttacher.setMinimumScale(scale)
-  }
-
-  override fun setMediumScale(scale: Float) {
-    mAttacher.setMediumScale(scale)
-  }
-
-  override fun setMaximumScale(scale: Float) {
-    mAttacher.setMaximumScale(scale)
-  }
-
   override // setImageBitmap calls through to this method
   fun setImageDrawable(drawable: Drawable) {
     super.setImageDrawable(drawable)
@@ -94,16 +78,8 @@ class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? 
     mAttacher.update()
   }
 
-  override fun setScale(scale: Float) {
-    mAttacher.setScale(scale)
-  }
-
-  override fun setScale(scale: Float, animate: Boolean) {
-    mAttacher.setScale(scale, animate)
-  }
-
-  override fun setScale(scale: Float, focalX: Float, focalY: Float, animate: Boolean) {
-    mAttacher.setScale(scale, focalX, focalY, animate)
+  override fun setScale(scale: Float, focalX: Float, focalY: Float) {
+    mAttacher.setScale(scale, focalX, focalY)
   }
 
   override fun onDetachedFromWindow() {

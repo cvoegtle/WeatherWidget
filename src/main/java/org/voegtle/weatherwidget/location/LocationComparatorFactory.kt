@@ -14,7 +14,6 @@ object LocationComparatorFactory {
       OrderCriteria.temperature -> Collections.reverseOrder(defaultComparator)
       OrderCriteria.rain -> Collections.reverseOrder(rainTodayComparator)
       OrderCriteria.humidity -> Collections.reverseOrder(humidityComparator)
-      else -> naturalComparator
     }
 
   val naturalComparator: Comparator<WeatherData> = Comparator { (location), rhs -> location.compareTo(rhs.location) }

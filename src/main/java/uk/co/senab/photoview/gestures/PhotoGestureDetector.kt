@@ -25,32 +25,35 @@ import android.view.ViewConfiguration
 import uk.co.senab.photoview.Compat
 
 @TargetApi(8)
-class PhotoGestureDetector(context: Context, val mListener: OnGestureListener) : GestureDetector {
+class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : IGestureDetector {
   private val LOG_TAG: String = "PhotoGestureDetector"
 
-  private var mActivePointerId: Int? = null
-  private var mActivePointerIndex = 0
+  private var activePointerId: Int? = null
+  private var activePointerIndex = 0
 
-  internal var mLastTouchX: Float = 0.toFloat()
-  internal var mLastTouchY: Float = 0.toFloat()
-  internal val mTouchSlop: Float
-  internal val mMinimumVelocity: Float
+  internal var lastTouch = Position(0.0F, 0.0F )
+  internal val touchSlop: Float
+  internal val minimumVelocity: Float
 
   init {
     val configuration = ViewConfiguration.get(context)
-    mMinimumVelocity = configuration.scaledMinimumFlingVelocity.toFloat()
-    mTouchSlop = configuration.scaledTouchSlop.toFloat()
+    minimumVelocity = configuration.scaledMinimumFlingVelocity.toFloat()
+    touchSlop = configuration.scaledTouchSlop.toFloat()
   }
 
-  private var mVelocityTracker: VelocityTracker? = null
-  private var mIsDragging: Boolean = false
+  private var velocityTracker: VelocityTracker? = null
+  private var isDragging: Boolean = false
 
-  fun getActiveX(ev: MotionEvent): Float {
-    return ev.getX(mActivePointerIndex)
-  }
+  fun getActivePosition(ev: MotionEvent): Position = getPosition(ev, activePointerIndex)
 
-  fun getActiveY(ev: MotionEvent): Float {
-    return ev.getY(mActivePointerIndex)
+  fun getPosition(ev: MotionEvent, pointerIndex: Int): Position {
+    try {
+      return Position(x = ev.getX(pointerIndex), y = ev.getY(pointerIndex))
+    } catch (ex: Exception) {
+      Log.w(LOG_TAG, "Exception accessing pointer index $pointerIndex")
+      return Position(x = ev.x, y = ev.y)
+    }
+
   }
 
   override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -64,82 +67,77 @@ class PhotoGestureDetector(context: Context, val mListener: OnGestureListener) :
         // You can have either deprecation or lint target api warning
         val pointerIndex = Compat.getPointerIndex(ev.action)
         val pointerId = ev.getPointerId(pointerIndex)
-        if (pointerId == mActivePointerId) {
+        if (pointerId == activePointerId) {
           // This was our active pointer going up. Choose a new
           // active pointer and adjust accordingly.
           val newPointerIndex = if (pointerIndex == 0) 1 else 0
-          mActivePointerId = ev.getPointerId(newPointerIndex)
-          mLastTouchX = ev.getX(newPointerIndex)
-          mLastTouchY = ev.getY(newPointerIndex)
+          activePointerId = ev.getPointerId(newPointerIndex)
+          lastTouch = getPosition(ev, newPointerIndex)
         }
       }
       MotionEvent.ACTION_DOWN -> {
-        mActivePointerId = ev.getPointerId(0)
-        mVelocityTracker = VelocityTracker.obtain()
-        mVelocityTracker?.addMovement(ev) ?: Log.i(LOG_TAG, "Velocity tracker is null")
+        activePointerId = ev.getPointerId(0)
+        velocityTracker = VelocityTracker.obtain()
+        velocityTracker?.addMovement(ev) ?: Log.i(LOG_TAG, "Velocity tracker is null")
 
-        mLastTouchX = getActiveX(ev)
-        mLastTouchY = getActiveY(ev)
-        mIsDragging = false
+        lastTouch = getActivePosition(ev)
+        isDragging = false
       }
       MotionEvent.ACTION_MOVE -> {
-        val x = getActiveX(ev)
-        val y = getActiveY(ev)
-        val dx = x - mLastTouchX
-        val dy = y - mLastTouchY
+        val position = getActivePosition(ev)
+        val dx = position.x - lastTouch.x
+        val dy = position.y - lastTouch.y
 
-        if (!mIsDragging) {
+        if (!isDragging) {
           // Use Pythagoras to see if drag length is larger than
           // touch slop
-          mIsDragging = Math.sqrt((dx * dx + dy * dy).toDouble()) >= mTouchSlop
+          isDragging = Math.sqrt((dx * dx + dy * dy).toDouble()) >= touchSlop
         }
 
-        if (mIsDragging) {
-          mListener.onDrag(dx, dy)
-          mLastTouchX = x
-          mLastTouchY = y
+        if (isDragging) {
+          listener.onDrag(dx, dy)
+          lastTouch = position
 
-          mVelocityTracker?.addMovement(ev)
+          velocityTracker?.addMovement(ev)
         }
       }
 
       MotionEvent.ACTION_CANCEL -> {
         // Recycle Velocity Tracker
-        mVelocityTracker?.recycle()
-        mVelocityTracker = null
-        mActivePointerId = null
+        velocityTracker?.recycle()
+        velocityTracker = null
+        activePointerId = null
       }
 
 
       MotionEvent.ACTION_UP -> {
-        if (mIsDragging) {
-          if (null != mVelocityTracker) {
-            mLastTouchX = getActiveX(ev)
-            mLastTouchY = getActiveY(ev)
+        if (isDragging) {
+          if (null != velocityTracker) {
+            lastTouch = getActivePosition(ev)
 
             // Compute velocity within the last 1000ms
-            mVelocityTracker!!.addMovement(ev)
-            mVelocityTracker!!.computeCurrentVelocity(1000)
+            velocityTracker!!.addMovement(ev)
+            velocityTracker!!.computeCurrentVelocity(1000)
 
-            val vX = mVelocityTracker!!.xVelocity
-            val vY = mVelocityTracker!!.yVelocity
+            val vX = velocityTracker!!.xVelocity
+            val vY = velocityTracker!!.yVelocity
 
             // If the velocity is greater than minVelocity, call
             // listener
-            if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-              mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY)
+            if (Math.max(Math.abs(vX), Math.abs(vY)) >= minimumVelocity) {
+              listener.onFling(lastTouch.x, lastTouch.y, -vX, -vY)
             }
           }
         }
 
         // Recycle Velocity Tracker
-        mVelocityTracker?.recycle()
-        mVelocityTracker = null
-        mActivePointerId = null
+        velocityTracker?.recycle()
+        velocityTracker = null
+        activePointerId = null
       }
 
     }
-    mActivePointerIndex = ev.findPointerIndex(mActivePointerId ?: 0)
+    activePointerIndex = ev.findPointerIndex(activePointerId ?: 0)
     return true
   }
 
@@ -153,7 +151,7 @@ class PhotoGestureDetector(context: Context, val mListener: OnGestureListener) :
         return false
       }
 
-      mListener.onScale(scaleFactor, detector.focusX, detector.focusY)
+      listener.onScale(scaleFactor, detector.focusX, detector.focusY)
       return true
     }
 
