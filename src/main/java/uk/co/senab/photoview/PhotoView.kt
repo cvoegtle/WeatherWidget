@@ -16,17 +16,12 @@
 package uk.co.senab.photoview
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.AttributeSet
-import android.view.GestureDetector
-import android.view.View
 import android.widget.ImageView
-
-import uk.co.senab.photoview.PhotoViewAttacher.OnMatrixChangedListener
 
 class PhotoView @JvmOverloads constructor(context: Context, attr: AttributeSet? = null, defStyle: Int = 0) : ImageView(context, attr, defStyle), IPhotoView {
 
