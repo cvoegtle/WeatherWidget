@@ -104,8 +104,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   /**
    * Clean-up the resources attached to this object. This needs to be called when the ImageView is
    * no longer used. A good example is from [android.view.View.onDetachedFromWindow] or
-   * from [android.app.Activity.onDestroy]. This is automatically called if you are using
-   * [uk.co.senab.photoview.PhotoView].
+   * from [android.app.Activity.onDestroy].
    */
   fun cleanup() {
     if (null == weakImageView) {
@@ -129,22 +128,9 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     weakImageView = null
   }
 
-  override fun getDisplayRect(): RectF? {
+  fun getDisplayRect(): RectF? {
     checkMatrixBounds()
     return getDisplayRect(drawMatrix)
-  }
-
-  override fun setDisplayMatrix(finalMatrix: Matrix): Boolean {
-    val imageView = imageView ?: return false
-
-    if (null == imageView.drawable)
-      return false
-
-    mSuppMatrix.set(finalMatrix)
-    setImageViewMatrix(drawMatrix)
-    checkMatrixBounds()
-
-    return true
   }
 
   // If we don't have an ImageView, call cleanup()

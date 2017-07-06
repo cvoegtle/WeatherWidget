@@ -26,25 +26,6 @@ import android.widget.ImageView
 interface IPhotoView {
 
   /**
-   * Gets the Display Rectangle of the currently displayed Drawable. The Rectangle is relative to
-   * this View and includes all scaling and translations.
-
-   * @return - RectF of Displayed Drawable
-   */
-  fun getDisplayRect(): RectF?
-
-
-  /**
-   * Sets the Display Matrix of the currently displayed Drawable. The Rectangle is considered
-   * relative to this View and includes all scaling and translations.
-
-   * @param finalMatrix target matrix to set PhotoView to
-   * *
-   * @return - true if rectangle was applied successfully
-   */
-  fun setDisplayMatrix(finalMatrix: Matrix): Boolean
-
-  /**
    * @return The current minimum scale level. What this value represents depends on the current
    * * [android.widget.ImageView.ScaleType].
    */
