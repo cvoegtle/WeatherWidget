@@ -58,8 +58,10 @@ object JsonTranslator {
     val rangeStr = json.getString("range")
     val range = Statistics.TimeRange.fromString(rangeStr)
     if (range != null) {
-      result = StatisticsSet(range = range, rain = toFloat(json, "rain"),
-          minTemperature = toFloat(json, "minTemperature"), maxTemperature = toFloat(json, "maxTemperature"),
+      result = StatisticsSet(range = range,
+          rain = toFloat(json, "rain"),
+          minTemperature = toFloat(json, "minTemperature"),
+          maxTemperature = toFloat(json, "maxTemperature"),
           kwh = toFloat(json, "kwh"))
     }
     return result
