@@ -7,10 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import org.voegtle.weatherwidget.R
 
-class DiagramFragment : Fragment() {
+class DiagramFragment : Fragment {
 
   private var diagramManager: DiagramManager? = null
   private var diagramId: DiagramEnum? = null
+
+  constructor() : super()
+
+  constructor(diagramId: DiagramEnum) {
+    val bundle = Bundle()
+    bundle.putInt(DiagramEnum::class.java.name, diagramId.id)
+    this.arguments = bundle
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -40,21 +48,8 @@ class DiagramFragment : Fragment() {
     }
   }
 
-
   fun reload() {
     diagramManager!!.updateDiagram(diagramId!!, true)
   }
 
-  companion object {
-
-    fun newInstance(diagramId: DiagramEnum): DiagramFragment {
-      val newFragment = DiagramFragment()
-
-      val bundle = Bundle()
-      bundle.putInt(DiagramEnum::class.java.name, diagramId.id)
-      newFragment.arguments = bundle
-
-      return newFragment
-    }
-  }
 }

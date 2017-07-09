@@ -28,10 +28,10 @@ class UpdatingScrollView : ScrollView {
 
   override fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) {
     super.onOverScrolled(scrollX, scrollY, clampedX, clampedY)
-    if (updater != null) {
+    updater?.let {
       if (scrollY == 0 && clampedY && DateUtil.getAge(lastUpdate) > 5) {
         lastUpdate = Date()
-        updater!!.update()
+        it.update()
       }
     }
   }

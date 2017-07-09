@@ -20,12 +20,8 @@ class DiagramFetcher {
       val connection = url.openConnection() as HttpURLConnection
       connection.connectTimeout = COMMUNICATION_TIMEOUT
       connection.readTimeout = COMMUNICATION_TIMEOUT
-      val input = connection.inputStream
-      try {
-        image = createImageFromResponse(input)
-      } finally {
-        input.close()
-        connection.disconnect()
+      connection.inputStream.use {
+        image = createImageFromResponse(it)
       }
     } catch (e: Throwable) {
       Log.e(DiagramFetcher::class.java.toString(), "Failed to download image", e)

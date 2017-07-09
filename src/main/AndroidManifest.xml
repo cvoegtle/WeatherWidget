@@ -84,7 +84,7 @@
     </activity>
 
     <activity android:name=".diagram.MobilDiagramActivity"
-              android:label="@string/city_leo_full"
+              android:label="@string/city_mobil_full"
               android:logo="@drawable/wetterlogo"
               android:parentActivityName=".WeatherActivity">
     </activity>

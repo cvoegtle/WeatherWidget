@@ -44,7 +44,7 @@ class DiagramManager(private val fragment: DiagramFragment) {
     active = false
   }
 
-  @JvmOverloads fun updateDiagram(diagramId: DiagramEnum, force: Boolean = false) {
+  fun updateDiagram(diagramId: DiagramEnum, force: Boolean = false) {
     val updater = Runnable { updateWeatherDiagram(diagramId, force) }
     val scheduler = Executors.newScheduledThreadPool(1)
     scheduler.schedule(updater, 0, TimeUnit.SECONDS)
@@ -93,14 +93,10 @@ class DiagramManager(private val fragment: DiagramFragment) {
   private fun showDrawable(newImage: Drawable) {
     if (active) {
       fragment.activity.runOnUiThread {
-        val view = fragment.view
-        if (view != null) {
-          val imageView = view.findViewById(R.id.diagram_view) as ImageView
+        fragment.view?.let {
+          val imageView = it.findViewById(R.id.diagram_view) as ImageView
           imageView.setImageDrawable(newImage)
-          val attacher = PhotoViewAttacher(imageView)
-          attacher.update()
-        } else {
-          Log.e("DiagramManager", "View is null")
+          PhotoViewAttacher(imageView).update()
         }
       }
     }

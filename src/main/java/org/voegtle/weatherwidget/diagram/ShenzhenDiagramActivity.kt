@@ -13,20 +13,17 @@ class ShenzhenDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.shenzhen_lastyear)
   }
 
-
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
     val inflater = menuInflater
     inflater.inflate(R.menu.shenzhen_diagram_activity_menu, menu)
     return super.onCreateOptionsMenu(menu)
   }
 
-
-  override fun onCustomItemSelected(item: MenuItem): Boolean {
+  override fun onCustomItemSelected(item: MenuItem): Boolean =
     when (item.itemId) {
-      R.id.action_7_days -> return updateViewPager(0)
-      R.id.action_30_days -> return updateViewPager(1)
-      R.id.action_last_year -> return updateViewPager(2)
+      R.id.action_7_days -> updateViewPager(0)
+      R.id.action_30_days -> updateViewPager(1)
+      R.id.action_last_year -> updateViewPager(2)
+      else -> false
     }
-    return false
-  }
 }

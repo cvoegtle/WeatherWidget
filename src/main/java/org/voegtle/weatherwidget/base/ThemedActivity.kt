@@ -18,7 +18,7 @@ abstract class ThemedActivity : Activity() {
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
     val configuration = weatherSettingsReader.read(preferences)
-    colorScheme = configuration.colorScheme
+    this.colorScheme = configuration.colorScheme
     setTheme(colorScheme.theme)
   }
 }

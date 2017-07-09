@@ -10,13 +10,11 @@ import java.io.OutputStream
 import java.util.*
 
 internal class DiagramCache(private val context: Context) {
-  val diagramPreferences: SharedPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0)
+  private val DIAGRAM_CACHE = "DIAGRAM_CACHE"
+  private val DIAGRAM_AGE = "_AGE"
+  private val CURRENT_DIAGRAM = "CURRENT_DIAGRAM"
 
-  companion object {
-    private val DIAGRAM_CACHE = "DIAGRAM_CACHE"
-    private val DIAGRAM_AGE = "_AGE"
-    private val CURRENT_DIAGRAM = "CURRENT_DIAGRAM"
-  }
+  val diagramPreferences: SharedPreferences = context.getSharedPreferences(DIAGRAM_CACHE, 0)
 
   fun saveCurrentDiagram(identifier: String, currentIndex: Int) {
     val editor = diagramPreferences.edit()

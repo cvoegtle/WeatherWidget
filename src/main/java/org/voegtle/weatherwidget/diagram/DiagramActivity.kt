@@ -64,7 +64,7 @@ abstract class DiagramActivity : ThemedActivity() {
   private fun createPageAdapter(): DiagramFragmentPagerAdapter {
     val pagerAdapter = DiagramFragmentPagerAdapter(fragmentManager)
     for (diagramId in diagramIdList) {
-      pagerAdapter.add(DiagramFragment.newInstance(diagramId))
+      pagerAdapter.add(DiagramFragment(diagramId))
     }
     return pagerAdapter
   }
@@ -134,15 +134,16 @@ abstract class DiagramActivity : ThemedActivity() {
     val diagramEnum = diagramIdList[diagramIndex]
     val diagramCache = DiagramCache(this)
     val image = diagramCache.asPNG(diagramEnum)
-    var filename: String? = wetterWolkeDirectory.toString() + File.separator + Date().time + "-" + diagramEnum.filename
+    var filename: String? = "$wetterWolkeDirectory${File.separator}${Date().time}-${diagramEnum.filename}"
     val f = File(filename)
     try {
       if (f.exists()) {
         f.delete()
       }
       f.createNewFile()
-      val fo = FileOutputStream(f)
-      fo.write(image)
+      FileOutputStream(f).use {
+        it.write(image)
+      }
     } catch (e: IOException) {
       Log.e(DiagramActivity::class.java.toString(), "failed to write image", e)
       filename = null
