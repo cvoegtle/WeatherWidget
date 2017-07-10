@@ -57,9 +57,7 @@ class LocationContainer(context: Context, private val container: LinearLayout, c
 
   private fun sort(weatherData: HashMap<LocationIdentifier, WeatherData>): ArrayList<WeatherData> {
     val sortedWeatherData = ArrayList<WeatherData>()
-    for (data in weatherData.values) {
-      sortedWeatherData.add(data)
-    }
+    sortedWeatherData.addAll(weatherData.values)
     val comparator = LocationComparatorFactory.createComparator(locationOrderStore.readOrderCriteria())
     Collections.sort(sortedWeatherData, comparator)
     return sortedWeatherData

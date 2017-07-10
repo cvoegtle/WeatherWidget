@@ -8,11 +8,5 @@ object StringUtil {
     return str != null && "" != str
   }
 
-  fun isEmpty(str: String?): Boolean {
-    return str == null || "" == str
-  }
-
-  fun urlEncode(str: String): String {
-    return URLEncoder.encode(str, "UTF-8")
-  }
+  fun urlEncode(str: String): String = URLEncoder.encode(str, "UTF-8")
 }

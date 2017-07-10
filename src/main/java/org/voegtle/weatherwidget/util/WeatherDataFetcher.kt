@@ -35,24 +35,22 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
         val weatherList = JSONArray(jsonWeather)
         for (i in 0..weatherList.length() - 1) {
           val weather = weatherList.getJSONObject(i)
-          val location = getLocation(locations, weather)
-          if (location != null) {
-            val data = parseWeatherData(location.key, weather)
-            parseLocationData(location, weather)
+          getLocation(locations, weather)?.let {
+            val data = parseWeatherData(it.key, weather)
+            parseLocationData(it, weather)
             resultList.put(data.location, data)
           }
         }
       } catch (e: Throwable) {
         Log.e(WeatherDataFetcher::class.java.toString(), "Failed to parse JSON String <$jsonWeather>", e)
       }
-
     }
     return resultList
   }
 
   private fun concatenateLocations(locations: List<WeatherLocation>): String {
     val sb = StringBuilder()
-    for (location in locations) {
+    locations.forEach { location ->
       if (location.isActive) {
         if (sb.length > 0) {
           sb.append(",")
@@ -64,30 +62,22 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
   }
 
   fun fetchWeatherDataFromUrl(baseUrl: String): WeatherData? {
-    var data: WeatherData? = null
     val jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current&new&build=" + buildNumber)
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
         val weather = JSONObject(jsonWeather)
-        data = getWeatherData(weather)
+        return getWeatherData(weather)
       } catch (e: Throwable) {
         Log.e(WeatherDataFetcher::class.java.toString(), "Failed to parse JSON String <$jsonWeather>", e)
       }
-
     }
-
-    return data
+    return null
   }
 
   private fun getLocation(locations: List<WeatherLocation>, weather: JSONObject): WeatherLocation? {
     val id = weather.optString("id")
-    for (location in locations) {
-      if (location.identifier == id) {
-        return location
-      }
-    }
-    return null
+    return locations.firstOrNull { it.identifier == id }
   }
 
 
@@ -95,11 +85,7 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
   private fun getWeatherData(weather: JSONObject): WeatherData? {
     val locationIdentifier = LocationIdentifier.getByString(weather.optString("id"))
 
-    if (locationIdentifier == null) {
-      return null
-    } else {
-      return parseWeatherData(locationIdentifier, weather)
-    }
+    return if (locationIdentifier == null) null else parseWeatherData(locationIdentifier, weather)
   }
 
   @Throws(JSONException::class)
@@ -108,46 +94,22 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
     val timestamp = weather.getString("timestamp")
     val temperature = weather.get("temperature") as Number
     val humidity = weather.get("humidity") as Number
-    val data = WeatherData(locationIdentifier, Date(timestamp), temperature.toFloat(), humidity.toFloat())
+    return WeatherData(location = locationIdentifier,
+        timestamp = Date(timestamp),
+        temperature = temperature.toFloat(),
+        humidity = humidity.toFloat(),
+        localtime = if (weather.has("localtime")) weather.get("localtime") as String else "",
+        insideTemperature = getOptionalNumber(weather, "inside_temperature"),
+        insideHumidity = getOptionalNumber(weather, "inside_humidity"),
+        watt = getOptionalNumber(weather, "watt"),
+        rain = getOptionalNumber(weather, "rain"),
+        rainToday = getOptionalNumber(weather, "rain_today"),
+        wind = getOptionalNumber(weather, "wind"),
+        isRaining = weather.has("raining") && weather.getBoolean("raining"))
+  }
 
-    if (weather.has("localtime")) {
-      data.localtime = weather.get("localtime") as String
-    }
-
-    if (weather.has("inside_temperature")) {
-      val insideTemperature = weather.get("inside_temperature") as Number
-      data.insideTemperature = insideTemperature.toFloat()
-    }
-
-    if (weather.has("inside_humidity")) {
-      val insideHumidity = weather.get("inside_humidity") as Number
-      data.insideHumidity = insideHumidity.toFloat()
-    }
-
-    if (weather.has("watt")) {
-      val watt = weather.get("watt") as Number
-      data.watt = watt.toFloat()
-    }
-
-    if (weather.has("rain")) {
-      val rain = weather.get("rain") as Number
-      data.rain = rain.toFloat()
-    }
-
-    if (weather.has("raining")) {
-      data.isRaining = weather.getBoolean("raining")
-    }
-
-    if (weather.has("rain_today")) {
-      val rainToday = weather.get("rain_today") as Number
-      data.rainToday = rainToday.toFloat()
-    }
-
-    if (weather.has("wind")) {
-      val wind = weather.get("wind") as Number
-      data.wind = wind.toFloat()
-    }
-    return data
+  private fun getOptionalNumber(json: JSONObject, name: String): Float? {
+    return if (json.has(name)) (json.get(name) as Number).toFloat() else null
   }
 
   @Throws(JSONException::class)

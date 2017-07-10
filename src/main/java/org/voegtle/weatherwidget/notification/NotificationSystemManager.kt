@@ -121,9 +121,8 @@ class NotificationSystemManager(private val context: Context, private val config
 
     for (location in configuration.locations) {
       if (location.preferences.showInWidget) {
-        val weatherData = data[location.key]
-        if (weatherData != null) {
-          describeLocation(weatherText, location, weatherData)
+        data[location.key]?.let {
+          describeLocation(weatherText, location, it)
           weatherText.append(" | ")
         }
       }
@@ -134,10 +133,10 @@ class NotificationSystemManager(private val context: Context, private val config
 
   private fun describeLocation(weatherText: StringBuilder, location: WeatherLocation, weatherData: WeatherData) {
     weatherText.append("${location.shortName}: ${numberFormat.format(weatherData.temperature)}°C")
-    if (weatherData.insideTemperature != null) {
+    weatherData.insideTemperature?.let {
       weatherText.append(", ${numberFormat.format(weatherData.insideTemperature)}°C")
     }
-    if (weatherData.rainToday != null) {
+    weatherData.rainToday?.let {
       weatherText.append(", ${numberFormat.format(weatherData.rainToday)}l")
     }
   }

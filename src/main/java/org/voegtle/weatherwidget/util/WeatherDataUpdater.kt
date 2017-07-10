@@ -11,8 +11,8 @@ class WeatherDataUpdater(private val activity: WeatherActivity, private val conf
   private var backgroundProcess: ScheduledFuture<*>? = null
 
   fun stopWeatherScheduler() {
-    if (backgroundProcess != null) {
-      backgroundProcess!!.cancel(true)
+    backgroundProcess?.let {
+      it.cancel(true)
       backgroundProcess = null
     }
   }

@@ -9,18 +9,14 @@ enum class OrderCriteria constructor(private val key: String) {
       return values().firstOrNull { it.key == key } ?: location
     }
 
-    fun byIndex(which: Int): OrderCriteria {
-      if (which == 0) {
-        return OrderCriteria.location
-      } else if (which == 1) {
-        return OrderCriteria.temperature
-      } else if (which == 2) {
-        return OrderCriteria.rain
-      } else if (which == 3) {
-        return OrderCriteria.humidity
-      }
-      return OrderCriteria.location
-    }
+    fun byIndex(which: Int): OrderCriteria =
+        when (which) {
+          0 -> OrderCriteria.location
+          1 -> OrderCriteria.temperature
+          2 -> OrderCriteria.rain
+          3 -> OrderCriteria.humidity
+          else -> OrderCriteria.location
+        }
 
     fun index(find: OrderCriteria): Int {
       return values().indexOf(find)

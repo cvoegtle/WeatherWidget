@@ -6,9 +6,7 @@ import android.widget.Toast
 
 class NotificationTask(private val context: Context, private val message: String) : AsyncTask<Void, Void, Void>() {
 
-  override fun doInBackground(vararg voids: Void): Void? {
-    return null
-  }
+  override fun doInBackground(vararg voids: Void): Void? = null
 
   override fun onPostExecute(aVoid: Void?) {
     val duration = Toast.LENGTH_SHORT

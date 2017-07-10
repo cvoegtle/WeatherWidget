@@ -8,14 +8,14 @@ data class WeatherData(val location: LocationIdentifier,
                        val timestamp: Date,
                        val temperature: Float,
                        val humidity: Float,
-                       var localtime: String? = null,
-                       var insideTemperature: Float? = null,
-                       var insideHumidity: Float? = null,
-                       var rain: Float? = null,
-                       var rainToday: Float? = null,
-                       var isRaining: Boolean = false,
-                       var watt: Float? = null,
-                       var wind: Float? = null) : Comparable<WeatherData> {
+                       val localtime: String,
+                       val insideTemperature: Float?,
+                       val insideHumidity: Float?,
+                       val rain: Float?,
+                       val rainToday: Float?,
+                       val isRaining: Boolean,
+                       val watt: Float?,
+                       val wind: Float?) : Comparable<WeatherData> {
 
 
   override fun compareTo(other: WeatherData): Int {

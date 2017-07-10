@@ -11,14 +11,11 @@ import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 
 abstract class AbstractWidgetUpdateManager protected constructor(context: Context, cls: Class<*>) {
 
-  private val alarmManager: AlarmManager
-  private val refreshService: PendingIntent
+  private val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+  private val refreshService: PendingIntent = IntentFactory.createRefreshIntent(context, cls)
   private var interval: Int? = null
 
   init {
-    alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    refreshService = IntentFactory.createRefreshIntent(context, cls)
-
     val preferences = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
     processPreferences(preferences, context)
   }
@@ -39,12 +36,9 @@ abstract class AbstractWidgetUpdateManager protected constructor(context: Contex
     alarmManager.cancel(refreshService)
   }
 
-
   private fun processPreferences(preferences: SharedPreferences, context: Context) {
     val weatherSettingsReader = WeatherSettingsReader(context)
     val (_, _, updateInterval) = weatherSettingsReader.read(preferences)
     interval = updateInterval
   }
-
-
 }

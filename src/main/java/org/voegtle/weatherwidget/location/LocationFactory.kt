@@ -21,7 +21,6 @@ object LocationFactory {
         prefShowInWidget = "widget_show_paderborn",
         prefAlert = "alert_paderborn"))
 
-
     locations.add(WeatherLocation(LocationIdentifier.BadLippspringe,
         name = res.getString(R.string.city_bali_full),
         shortName = res.getString(R.string.city_bali),

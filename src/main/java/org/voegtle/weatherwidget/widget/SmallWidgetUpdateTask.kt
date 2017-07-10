@@ -14,7 +14,6 @@ class SmallWidgetUpdateTask(context: Context, configuration: ApplicationSettings
     screenPainter.updateAllWidgets()
   }
 
-
   override fun doInBackground(vararg weatherServerUrl: String): WeatherData? {
     return fetchWeatherData(weatherServerUrl[0])
   }

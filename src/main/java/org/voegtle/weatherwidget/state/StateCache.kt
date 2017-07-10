@@ -5,16 +5,12 @@ import android.content.SharedPreferences
 import java.util.*
 
 class StateCache(context: Context) {
-  private val statePreferences: SharedPreferences
-
   private val STATE_CACHE = "STATE"
   private val STATE_AGE = "AGE"
   private val STATE = "STATE"
   private val STATISTICS = "STATISTICS"
 
-  init {
-    statePreferences = context.getSharedPreferences(STATE_CACHE, 0)
-  }
+  private val statePreferences: SharedPreferences = context.getSharedPreferences(STATE_CACHE, 0)
 
   fun read(id: Int): State = State(id = id,
       age = readAge(id),

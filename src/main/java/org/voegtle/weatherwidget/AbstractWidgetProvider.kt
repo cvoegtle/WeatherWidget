@@ -35,11 +35,9 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
   override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
     ensureResources(context)
 
-    for (widgetId in appWidgetIds) {
+    appWidgetIds.forEach { widgetId ->
       val pendingOpenApp = IntentFactory.createOpenAppIntent(context.applicationContext)
-      for (location in configuration!!.locations) {
-        remoteViews!!.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp)
-      }
+      configuration?.locations?.forEach { location -> remoteViews!!.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp) }
 
       remoteViews!!.setOnClickPendingIntent(R.id.refresh_button,
           IntentFactory.createRefreshIntent(context.applicationContext, getWidgetServiceClass()))
@@ -50,7 +48,7 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
 
   override fun onDisabled(context: Context) {
     ensureResources(context)
-    updateManager!!.cancelAlarmService()
+    updateManager?.cancelAlarmService()
   }
 
   private fun ensureResources(context: Context) {

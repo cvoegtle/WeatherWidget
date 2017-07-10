@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.location
 
 import android.content.Context
-import android.content.SharedPreferences
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 
 class LocationOrderStore(context: Context) {

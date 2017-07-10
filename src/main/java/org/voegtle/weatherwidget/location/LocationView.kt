@@ -29,8 +29,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     val li = currentContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     li.inflate(R.layout.view_location, this, true)
 
-    val attributes = currentContext.theme.obtainStyledAttributes(
-        attrs, R.styleable.LocationView, 0, 0)
+    val attributes = currentContext.theme.obtainStyledAttributes(attrs, R.styleable.LocationView, 0, 0)
 
     try {
       initializeTextViews(attributes)

@@ -13,7 +13,7 @@ class WeatherPreferences : ThemedActivity() {
         .replace(android.R.id.content, WeatherPreferenceFragment())
         .commit()
 
-    actionBar!!.setDisplayHomeAsUpEnabled(true)
+    actionBar?.setDisplayHomeAsUpEnabled(true)
   }
 
 }

@@ -18,8 +18,7 @@ class UserFeedback(private val activity: Activity) {
     val context = activity.applicationContext
 
     activity.runOnUiThread {
-      val duration = Toast.LENGTH_SHORT
-      val toast = Toast.makeText(context, message, duration)
+      val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
       toast.show()
     }
   }

@@ -13,11 +13,7 @@ import java.util.HashMap
 
 abstract class AbstractWidgetUpdateTask<Params, Progress, Result>(private val context: Context,
                                                                            protected var configuration: ApplicationSettings) : AsyncTask<Params, Progress, Result>() {
-  protected val weatherDataFetcher: WeatherDataFetcher
-
-  init {
-    this.weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(context))
-  }
+  protected val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(context))
 
   protected fun fetchWeatherData(weatherServerUrl: String): WeatherData? {
     return weatherDataFetcher.fetchWeatherDataFromUrl(weatherServerUrl)

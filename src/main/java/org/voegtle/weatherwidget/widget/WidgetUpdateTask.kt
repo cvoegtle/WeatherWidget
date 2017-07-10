@@ -12,7 +12,7 @@ import java.util.HashMap
 class WidgetUpdateTask(context: Context, configuration: ApplicationSettings, private val screenPainters: ArrayList<WidgetScreenPainter>) : AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>(context, configuration) {
 
   override fun onPreExecute() {
-    for (screenPainter in screenPainters) {
+    screenPainters.forEach { screenPainter ->
       screenPainter.showDataIsInvalid()
       screenPainter.updateAllWidgets()
     }
@@ -37,9 +37,7 @@ class WidgetUpdateTask(context: Context, configuration: ApplicationSettings, pri
 
   override fun onPostExecute(data: HashMap<LocationIdentifier, WeatherData>) {
     try {
-      for (screenPainter in screenPainters) {
-        screenPainter.updateWidgetData(data)
-      }
+      screenPainters.forEach { screenPainter -> screenPainter.updateWidgetData(data) }
       checkDataForAlert(data)
     } catch (th: Throwable) {
       Log.e(WidgetUpdateTask::class.java.toString(), "Failed to update View", th)
@@ -50,9 +48,7 @@ class WidgetUpdateTask(context: Context, configuration: ApplicationSettings, pri
 
   private fun showDataIsValid() {
     try {
-      for (screenPainter in screenPainters) {
-        screenPainter.showDataIsValid()
-      }
+      screenPainters.forEach { screenPainter -> screenPainter.showDataIsValid() }
     } catch (th: Throwable) {
       Log.e(WidgetUpdateTask::class.java.toString(), "Failed to repaint view", th)
     }

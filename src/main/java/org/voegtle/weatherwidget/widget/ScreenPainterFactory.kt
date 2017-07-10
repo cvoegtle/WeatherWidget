@@ -20,11 +20,7 @@ import java.util.*
 
 class ScreenPainterFactory(context: Context, private val configuration: ApplicationSettings) {
 
-  private val context: Context
-
-  init {
-    this.context = context.applicationContext
-  }
+  private val context = context.applicationContext
 
   fun createScreenPainters(): ArrayList<WidgetScreenPainter> {
     val screenPainters = ArrayList<WidgetScreenPainter>()
@@ -50,7 +46,7 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     val remoteViews = RemoteViews(context.packageName, R.layout.widget_weather)
 
     updateBackgroundColor(remoteViews)
-    for (location in configuration.locations) {
+    configuration.locations.forEach { location ->
       val show = location.preferences.showInWidget
       updateVisibility(remoteViews, location.weatherLineId, show)
       if (SDK_INT >= 16) {
@@ -78,10 +74,7 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
 
   private fun setWidgetIntents(remoteViews: RemoteViews) {
     val pendingOpenApp = IntentFactory.createOpenAppIntent(context)
-    for (location in configuration.locations) {
-      remoteViews.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp)
-    }
-
+    configuration.locations.forEach { location -> remoteViews.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp) }
     remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java))
   }
 

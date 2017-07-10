@@ -53,9 +53,8 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
 
   private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {
     configuration.locations.forEach { location ->
-      val locationData = data[location.key]
-      if (locationData != null) {
-        updateWeatherLocation(location.weatherViewId, location.name, locationData)
+      data[location.key]?.let {
+        updateWeatherLocation(location.weatherViewId, location.name, it)
       }
     }
   }

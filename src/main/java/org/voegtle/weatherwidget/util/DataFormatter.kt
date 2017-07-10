@@ -13,13 +13,11 @@ class DataFormatter {
     this.numberFormat.applyPattern("###.#")
   }
 
-
   fun formatTemperatureForActivity(data: WeatherData): String {
     val builder = StringBuilder()
     builder.append(formatTemperature(data.temperature))
     if (data.insideTemperature != null) {
-      builder.append(" / ")
-      builder.append(formatTemperature(data.insideTemperature))
+      builder.append(" / ").append(formatTemperature(data.insideTemperature))
     }
     return builder.toString()
   }
@@ -28,21 +26,18 @@ class DataFormatter {
     val builder = StringBuilder()
     builder.append(formatPercent(data.humidity))
     if (data.insideHumidity != null) {
-      builder.append(" / ")
-      builder.append(formatPercent(data.insideHumidity))
+      builder.append(" / ").append(formatPercent(data.insideHumidity))
     }
     return builder.toString()
   }
 
   fun formatWidgetLine(location: WeatherLocation, data: WeatherData, detailed: Boolean): String {
-    val weatherData = StringBuilder(location.shortName + " "
-        + formatTemperature(data))
+    val weatherData = StringBuilder(location.shortName + " " + formatTemperature(data))
     if (detailed) {
       weatherData.append(" | ")
       weatherData.append(formatPercent(data.humidity))
       if (data.rainToday != null) {
-        weatherData.append(" | ")
-        weatherData.append(formatRain(data.rainToday))
+        weatherData.append(" | ").append(formatRain(data.rainToday))
       }
     }
 
@@ -53,27 +48,15 @@ class DataFormatter {
     return formatTemperature(data.temperature)
   }
 
-  fun formatTemperature(temperature: Float?): String {
-    return if (temperature != null) numberFormat.format(temperature) + "°C" else ""
-  }
+  fun formatTemperature(temperature: Float?): String = if (temperature != null) numberFormat.format(temperature) + "°C" else ""
 
-  fun formatKwh(kwh: Float?): String {
-    return if (kwh != null) numberFormat.format(kwh) + "kWh" else ""
-  }
+  fun formatKwh(kwh: Float?): String = if (kwh != null) numberFormat.format(kwh) + "kWh" else ""
 
-  fun formatRain(rain: Float?): String {
-    return if (rain != null) numberFormat.format(rain) + "l" else ""
-  }
+  fun formatRain(rain: Float?): String = if (rain != null) numberFormat.format(rain) + "l" else ""
 
-  private fun formatPercent(value: Float?): String {
-    return if (value != null) numberFormat.format(value) + "%" else ""
-  }
+  private fun formatPercent(value: Float?): String = if (value != null) numberFormat.format(value) + "%" else ""
 
-  fun formatWind(value: Float?): String {
-    return if (value != null) numberFormat.format(value) + "km/h" else ""
-  }
+  fun formatWind(value: Float?): String = if (value != null) numberFormat.format(value) + "km/h" else ""
 
-  fun formatWatt(watt: Float?): String {
-    return if (watt != null) numberFormat.format(watt) + "W" else ""
-  }
+  fun formatWatt(watt: Float?): String = if (watt != null) numberFormat.format(watt) + "W" else ""
 }

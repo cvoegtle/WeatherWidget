@@ -29,11 +29,10 @@ class WeatherPreferenceFragment : PreferenceFragment() {
   }
 
   private fun addBuildInformation(appInfoScreen: PreferenceScreen) {
-    var versionInfo = appInfoScreen.summary.toString()
-    versionInfo = versionInfo.replace(PLACEHOLDER_VERSION, versionName)
-    versionInfo = versionInfo.replace(PLACEHOLDER_BUILD, buildNumber.toString())
+    val versionInfo = appInfoScreen.summary.toString()
+        .replace(PLACEHOLDER_VERSION, versionName)
+        .replace(PLACEHOLDER_BUILD, buildNumber.toString())
     appInfoScreen.summary = versionInfo
-
     appInfoScreen.getPreference(0).title = versionInfo
   }
 

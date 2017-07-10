@@ -1,8 +1,6 @@
 package org.voegtle.weatherwidget.util
 
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
+import java.util.*
 
 object DateUtil {
 
@@ -16,7 +14,7 @@ object DateUtil {
       return cal.time
     }
 
-  val oneHoureBefore: Date
+  val oneHouerBefore: Date
     get() {
       val cal = Calendar.getInstance(Locale.GERMANY)
       cal.add(Calendar.HOUR, -1)
@@ -37,18 +35,12 @@ object DateUtil {
     return ((Date().time - lastUpdate.time) / 1000).toInt()
   }
 
-  fun checkIfOutdated(d1: Date, d2: Date): Int? {
-    if (isOutdated(d1)) {
-      return -1
-    }
+  fun checkIfOutdated(d1: Date, d2: Date): Int? =
+      when {
+        isOutdated(d1) -> -1
+        isOutdated(d2) -> 1
+        else -> null
+      }
 
-    if (isOutdated(d2)) {
-      return 1
-    }
-    return null
-  }
-
-  private fun isOutdated(timestamp: Date): Boolean {
-    return getAge(timestamp) > 20 * 60
-  }
+  private fun isOutdated(timestamp: Date): Boolean = getAge(timestamp) > 20 * 60
 }

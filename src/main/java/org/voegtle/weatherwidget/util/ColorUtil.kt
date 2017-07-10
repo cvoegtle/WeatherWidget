@@ -10,9 +10,8 @@ object ColorUtil {
   private val MIN_RGB_VALUE = 20
   private val MIN_RGB_VALUE_DARK = 80
 
-  fun byAge(colorScheme: ColorScheme, lastUpdate: Date): Int {
-    return if (colorScheme === ColorScheme.light) byAgeDark(lastUpdate) else byAge(lastUpdate)
-  }
+  fun byAge(colorScheme: ColorScheme, lastUpdate: Date): Int =
+    if (colorScheme === ColorScheme.light) byAgeDark(lastUpdate) else byAge(lastUpdate)
 
   fun byAge(lastUpdate: Date): Int {
     val age = DateUtil.getAge(lastUpdate)
@@ -36,16 +35,9 @@ object ColorUtil {
     }
   }
 
+  fun updateColor(scheme: ColorScheme): Int = if (scheme === ColorScheme.dark) Color.DKGRAY else Color.GRAY
 
-  fun updateColor(scheme: ColorScheme): Int {
-    return if (scheme === ColorScheme.dark) Color.DKGRAY else Color.GRAY
-  }
+  fun outdatedColor(scheme: ColorScheme): Int = if (scheme === ColorScheme.dark) Color.GRAY else Color.DKGRAY
 
-  fun outdatedColor(scheme: ColorScheme): Int {
-    return if (scheme === ColorScheme.dark) Color.GRAY else Color.DKGRAY
-  }
-
-  fun highlight(): Int {
-    return Color.argb(64, 128, 64, 64)
-  }
+  fun highlight(): Int = Color.argb(64, 128, 64, 64)
 }

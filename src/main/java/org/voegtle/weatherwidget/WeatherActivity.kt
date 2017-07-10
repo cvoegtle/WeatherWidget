@@ -60,11 +60,13 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun setupLocations() {
-    for (location in configuration!!.locations) {
-      addClickHandler(location)
-      updateVisibility(location)
-      updateState(location)
-      updateTextSize(location, configuration!!.appTextSize)
+    configuration?.let {
+      it.locations.forEach { location ->
+        addClickHandler(location)
+        updateVisibility(location)
+        updateState(location)
+        updateTextSize(location, it.appTextSize)
+      }
     }
   }
 
@@ -104,7 +106,6 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
       }
     }
 
-
     locationView.forecastListener = View.OnClickListener {
       val browserIntent = Intent(Intent.ACTION_VIEW, location.forecastUrl)
       startActivity(browserIntent)
@@ -113,13 +114,15 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
 
   private fun updateStatistics() {
     val updateCandidates = HashMap<LocationView, WeatherLocation>()
-    for (location in configuration!!.locations) {
-      val locationView = findViewById(location.weatherViewId) as LocationView
-      if (locationView.isExpanded) {
-        updateCandidates.put(locationView, location)
+    configuration?.let {
+      it.locations.forEach { location ->
+        val locationView = findViewById(location.weatherViewId) as LocationView
+        if (locationView.isExpanded) {
+          updateCandidates.put(locationView, location)
+        }
       }
     }
-    statisticsUpdater!!.updateStatistics(updateCandidates, false)
+    statisticsUpdater?.updateStatistics(updateCandidates, false)
   }
 
   private fun updateVisibility(location: WeatherLocation) {
@@ -142,9 +145,11 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   private fun configureLocationSymbolColor() {
     // Dunkle Symbole wenn der Hintergrund hell ist
     val darkSymbols = colorScheme == ColorScheme.light
-    configuration!!.locations
-        .map { findViewById(it.weatherViewId) as LocationView }
-        .forEach { it.configureSymbols(darkSymbols) }
+    configuration?.let {
+      it.locations
+          .map { findViewById(it.weatherViewId) as LocationView }
+          .forEach { it.configureSymbols(darkSymbols) }
+    }
 
   }
 
@@ -156,13 +161,13 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   override fun onResume() {
     super.onResume()
     updateStatistics()
-    updater!!.updateWeatherOnce(false)
+    updater?.updateWeatherOnce(false)
     startWeatherUpdater()
   }
 
   override fun onPause() {
     super.onPause()
-    updater!!.stopWeatherScheduler()
+    updater?.stopWeatherScheduler()
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -175,7 +180,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.action_reload -> {
-        updater!!.updateWeatherOnce(true)
+        updater?.updateWeatherOnce(true)
         return true
       }
       R.id.action_diagrams -> {
@@ -198,7 +203,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
     readConfiguration(preferences)
     setupLocations()
-    updater!!.stopWeatherScheduler()
+    updater?.stopWeatherScheduler()
     updater = WeatherDataUpdater(this, configuration)
   }
 }

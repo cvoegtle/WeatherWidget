@@ -32,7 +32,7 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager, widgetIds: IntArra
   override fun showDataIsInvalid() {
     remoteViews.setViewVisibility(R.id.refresh_button, View.GONE)
 
-    for (location in locations) {
+    locations.forEach { location ->
       remoteViews.setTextColor(location.weatherViewId, ColorUtil.updateColor(colorScheme))
       remoteViews.setTextColor(location.rainIndicatorId, ColorUtil.updateColor(colorScheme))
     }
@@ -47,7 +47,7 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager, widgetIds: IntArra
 
   fun updateWidgetData(data: HashMap<LocationIdentifier, WeatherData>) {
     var updated = false
-    for (location in locations) {
+    locations.forEach { location ->
       val weatherData = data[location.key]
       updated = updated or visualizeData(location, weatherData)
     }

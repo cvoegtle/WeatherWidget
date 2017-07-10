@@ -73,7 +73,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
       if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
         val dm = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
         var screenOn = false
-        for (display in dm.displays) {
+        dm.displays.forEach { display ->
           if (display.state != Display.STATE_OFF) {
             screenOn = true
           }
