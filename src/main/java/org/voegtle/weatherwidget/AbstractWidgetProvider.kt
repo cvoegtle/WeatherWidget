@@ -1,6 +1,5 @@
 package org.voegtle.weatherwidget
 
-import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -8,7 +7,6 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
-import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.system.AbstractWidgetUpdateManager
@@ -37,12 +35,12 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
 
     appWidgetIds.forEach { widgetId ->
       val pendingOpenApp = IntentFactory.createOpenAppIntent(context.applicationContext)
-      configuration?.locations?.forEach { location -> remoteViews!!.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp) }
-
-      remoteViews!!.setOnClickPendingIntent(R.id.refresh_button,
-          IntentFactory.createRefreshIntent(context.applicationContext, getWidgetServiceClass()))
-
-      appWidgetManager.updateAppWidget(widgetId, remoteViews)
+      configuration?.let {
+        it.locations.forEach { location -> remoteViews?.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp) }
+        remoteViews?.setOnClickPendingIntent(R.id.refresh_button,
+            IntentFactory.createRefreshIntent(context.applicationContext, getWidgetServiceClass()))
+        appWidgetManager.updateAppWidget(widgetId, remoteViews)
+      }
     }
   }
 
