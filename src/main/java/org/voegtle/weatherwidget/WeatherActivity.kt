@@ -177,28 +177,27 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
 
   }
 
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    when (item.itemId) {
-      R.id.action_reload -> {
-        updater?.updateWeatherOnce(true)
-        return true
+  override fun onOptionsItemSelected(item: MenuItem): Boolean =
+      when (item.itemId) {
+        R.id.action_reload -> {
+          updater?.updateWeatherOnce(true)
+          true
+        }
+        R.id.action_diagrams -> {
+          startActivity(Intent(this, MainDiagramActivity::class.java))
+          true
+        }
+        R.id.action_sort -> {
+          val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this, updater!!)
+          orderCriteriaDialog.show()
+          true
+        }
+        R.id.action_perferences -> {
+          startActivity(Intent(this, WeatherPreferences::class.java))
+          true
+        }
+        else -> false
       }
-      R.id.action_diagrams -> {
-        startActivity(Intent(this, MainDiagramActivity::class.java))
-        return true
-      }
-      R.id.action_sort -> {
-        val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this, updater!!)
-        orderCriteriaDialog.show()
-        return true
-      }
-      R.id.action_perferences -> {
-        startActivity(Intent(this, WeatherPreferences::class.java))
-        return true
-      }
-    }
-    return false
-  }
 
   override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
     readConfiguration(preferences)

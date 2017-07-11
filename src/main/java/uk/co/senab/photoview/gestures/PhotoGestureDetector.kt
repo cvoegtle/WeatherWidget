@@ -53,7 +53,6 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
       Log.w(LOG_TAG, "Exception accessing pointer index $pointerIndex")
       return Position(x = ev.x, y = ev.y)
     }
-
   }
 
   override fun onTouchEvent(ev: MotionEvent): Boolean {
@@ -104,23 +103,21 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
 
       MotionEvent.ACTION_CANCEL -> {
         // Recycle Velocity Tracker
-        velocityTracker?.recycle()
-        velocityTracker = null
-        activePointerId = null
+        cleanUpVelocityTracker()
       }
 
 
       MotionEvent.ACTION_UP -> {
         if (isDragging) {
-          if (null != velocityTracker) {
+          velocityTracker?.let {
             lastTouch = getActivePosition(ev)
 
             // Compute velocity within the last 1000ms
-            velocityTracker!!.addMovement(ev)
-            velocityTracker!!.computeCurrentVelocity(1000)
+            it.addMovement(ev)
+            it.computeCurrentVelocity(1000)
 
-            val vX = velocityTracker!!.xVelocity
-            val vY = velocityTracker!!.yVelocity
+            val vX = it.xVelocity
+            val vY = it.yVelocity
 
             // If the velocity is greater than minVelocity, call
             // listener
@@ -131,14 +128,18 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
         }
 
         // Recycle Velocity Tracker
-        velocityTracker?.recycle()
-        velocityTracker = null
-        activePointerId = null
+        cleanUpVelocityTracker()
       }
 
     }
     activePointerIndex = ev.findPointerIndex(activePointerId ?: 0)
     return true
+  }
+
+  private fun cleanUpVelocityTracker() {
+    velocityTracker?.recycle()
+    velocityTracker = null
+    activePointerId = null
   }
 
 

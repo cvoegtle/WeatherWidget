@@ -40,20 +40,6 @@ object Compat {
   }
 
   fun getPointerIndex(action: Int): Int {
-    if (VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB)
-      return getPointerIndexHoneyComb(action)
-    else
-      return getPointerIndexEclair(action)
-  }
-
-  @TargetApi(Build.VERSION_CODES.ECLAIR)
-  private fun getPointerIndexEclair(action: Int): Int {
-    return action and MotionEvent.ACTION_POINTER_ID_MASK shr MotionEvent.ACTION_POINTER_ID_SHIFT
-  }
-
-  @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-  private fun getPointerIndexHoneyComb(action: Int): Int {
     return action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
   }
-
 }

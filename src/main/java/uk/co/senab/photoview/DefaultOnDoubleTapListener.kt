@@ -4,10 +4,9 @@ import android.view.GestureDetector
 import android.view.MotionEvent
 
 /**
- * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overriden with custom behavior, if needed
+ * Provided default implementation of GestureDetector.OnDoubleTapListener, to be overridden with custom behavior,
+ * if needed
  *
- * &nbsp;
- * To be used via [uk.co.senab.photoview.PhotoViewAttacher.setOnDoubleTapListener]
  */
 class DefaultOnDoubleTapListener(val photoViewAttacher: PhotoViewAttacher) : GestureDetector.OnDoubleTapListener {
 

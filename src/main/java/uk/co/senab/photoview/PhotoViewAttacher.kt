@@ -39,6 +39,7 @@ import android.widget.OverScroller
 import uk.co.senab.photoview.gestures.IGestureDetector
 import uk.co.senab.photoview.gestures.OnGestureListener
 import uk.co.senab.photoview.gestures.PhotoGestureDetector
+import uk.co.senab.photoview.gestures.Position
 import java.lang.ref.WeakReference
 
 class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener, OnGestureListener, ViewTreeObserver.OnGlobalLayoutListener {
@@ -48,12 +49,12 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private val midScale = IPhotoView.DEFAULT_MID_SCALE
   private val maxScale = IPhotoView.DEFAULT_MAX_SCALE
 
-  private var weakImageView: WeakReference<ImageView>? = null
+  private var weakImageView: WeakReference<ImageView>? = WeakReference(imageView)
   private var observer: ViewTreeObserver? = null
 
   // Gesture Detectors
-  private var gestureDetector: GestureDetector? = null
-  private var scaleDragDetector: IGestureDetector? = null
+  private val gestureDetector: GestureDetector
+  private val scaleDragDetector: IGestureDetector
 
   // These are set so we don't keep allocating them on the heap
   private val mBaseMatrix = Matrix()
@@ -72,8 +73,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private val mScaleType = ScaleType.FIT_CENTER
 
   init {
-    weakImageView = WeakReference(imageView)
-
     imageView.isDrawingCacheEnabled = true
     imageView.setOnTouchListener(this)
 
@@ -84,21 +83,13 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     // Make sure we using MATRIX Scale Type
     setImageViewScaleTypeMatrix(imageView)
 
-    if (!imageView.isInEditMode) {
-      // Create Gesture Detectors...
-      scaleDragDetector = PhotoGestureDetector(imageView.context, this)
+    // Create Gesture Detectors...
+    scaleDragDetector = PhotoGestureDetector(imageView.context, this)
 
-      gestureDetector = GestureDetector(imageView.context,
-          object : GestureDetector.SimpleOnGestureListener() {
+    gestureDetector = GestureDetector(imageView.context, GestureDetector.SimpleOnGestureListener())
 
-            // forward long click listener
-            override fun onLongPress(e: MotionEvent) {
-            }
-          })
-
-      gestureDetector!!.setOnDoubleTapListener(DefaultOnDoubleTapListener(this))
-      update()
-    }
+    gestureDetector.setOnDoubleTapListener(DefaultOnDoubleTapListener(this))
+    update()
   }
 
   /**
@@ -122,7 +113,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     // make sure a pending fling runnable won't be run
     cancelFling()
 
-    gestureDetector?.setOnDoubleTapListener(null)
+    gestureDetector.setOnDoubleTapListener(null)
 
     // Finally, clear ImageView
     weakImageView = null
@@ -163,7 +154,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   }
 
   override fun onDrag(dx: Float, dy: Float) {
-    if (scaleDragDetector!!.isScaling()) {
+    if (scaleDragDetector.isScaling()) {
       return  // Do not drag if we are already scaling
     }
 
@@ -185,7 +176,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
      * the edge, aka 'overscrolling', let the parent take over).
      */
     val parent = imageView!!.parent
-    if (!scaleDragDetector!!.isScaling()) {
+    if (!scaleDragDetector.isScaling()) {
       if (mScrollEdge == EDGE_BOTH
           || mScrollEdge == EDGE_LEFT && dx >= 1f
           || mScrollEdge == EDGE_RIGHT && dx <= -1f) {
@@ -277,12 +268,12 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       }
 
       // Try the Scale/Drag detector
-      if (scaleDragDetector?.onTouchEvent(ev) ?: false) {
+      if (scaleDragDetector.onTouchEvent(ev)) {
         handled = true
       }
 
       // Check to see if the user double tapped
-      if (gestureDetector?.onTouchEvent(ev) ?: false) {
+      if (gestureDetector.onTouchEvent(ev)) {
         handled = true
       }
     }
@@ -517,8 +508,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private inner class FlingRunnable(context: Context) : Runnable {
 
     private val scroller: OverScroller = OverScroller(context)
-    private var mCurrentX: Int = 0
-    private var mCurrentY: Int = 0
+    private var currentPosition = IntPosition(0, 0)
 
     fun cancelFling() {
       if (DEBUG) {
@@ -553,8 +543,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         minY = maxY
       }
 
-      mCurrentX = startX
-      mCurrentY = startY
+      currentPosition = IntPosition(startX, startY)
 
       if (DEBUG) {
         Log.d(LOG_TAG, "fling. StartX: $startX StartY: $startY MaxX: $maxX MaxY: $maxY")
@@ -575,18 +564,17 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       val imageView = imageView
       if (null != imageView && scroller.computeScrollOffset()) {
 
-        val newX = scroller.currX
-        val newY = scroller.currY
+        val newPosition = IntPosition(scroller.currX, scroller.currY)
 
         if (DEBUG) {
-          Log.d(LOG_TAG, "fling run(). CurrentX: $mCurrentX CurrentY: $mCurrentY NewX: $newX NewY: $newY")
+          Log.d(LOG_TAG, "fling run(). ${currentPosition} $newPosition")
         }
 
-        mSuppMatrix.postTranslate((mCurrentX - newX).toFloat(), (mCurrentY - newY).toFloat())
+        mSuppMatrix.postTranslate((currentPosition.x - newPosition.x).toFloat(),
+            (currentPosition.y - newPosition.y).toFloat())
         setImageViewMatrix(drawMatrix)
 
-        mCurrentX = newX
-        mCurrentY = newY
+        currentPosition = newPosition
 
         // Post On animation
         Compat.postOnAnimation(imageView, this)
@@ -608,16 +596,6 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     internal val EDGE_LEFT = 0
     internal val EDGE_RIGHT = 1
     internal val EDGE_BOTH = 2
-
-    private fun checkZoomLevels(minZoom: Float, midZoom: Float, maxZoom: Float) {
-      if (minZoom >= midZoom) {
-        throw IllegalArgumentException(
-            "MinZoom has to be less than MidZoom")
-      } else if (midZoom >= maxZoom) {
-        throw IllegalArgumentException(
-            "MidZoom has to be less than MaxZoom")
-      }
-    }
 
     /**
      * @return true if the ImageView exists, and it's Drawable existss

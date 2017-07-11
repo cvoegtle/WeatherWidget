@@ -37,8 +37,8 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
       val pendingOpenApp = IntentFactory.createOpenAppIntent(context.applicationContext)
       configuration?.let {
         it.locations.forEach { location -> remoteViews?.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp) }
-        remoteViews?.setOnClickPendingIntent(R.id.refresh_button,
-            IntentFactory.createRefreshIntent(context.applicationContext, getWidgetServiceClass()))
+        val intent = IntentFactory.createRefreshIntent(context.applicationContext, getWidgetServiceClass())
+        remoteViews?.setOnClickPendingIntent(R.id.refresh_button, intent)
         appWidgetManager.updateAppWidget(widgetId, remoteViews)
       }
     }
@@ -55,7 +55,6 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
       this.res = appContext.resources
 
       this.remoteViews = RemoteViews(appContext.packageName, R.layout.widget_weather)
-
       this.updateManager = getUpdateManager(appContext)
 
       val preferences = PreferenceManager.getDefaultSharedPreferences(appContext)
@@ -67,5 +66,4 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
     val weatherSettingsReader = WeatherSettingsReader(context)
     configuration = weatherSettingsReader.read(preferences)
   }
-
 }
