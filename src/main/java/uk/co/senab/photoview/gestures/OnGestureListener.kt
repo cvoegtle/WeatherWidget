@@ -15,13 +15,13 @@
  */
 package uk.co.senab.photoview.gestures
 
+import uk.co.senab.photoview.data.FloatPosition
+
 interface OnGestureListener {
 
-  fun onDrag(dx: Float, dy: Float)
+  fun onDrag(position: FloatPosition)
 
-  fun onFling(startX: Float, startY: Float, velocityX: Float,
-              velocityY: Float)
+  fun onFling(start: FloatPosition, velocityX: Float, velocityY: Float)
 
-  fun onScale(scaleFactor: Float, focusX: Float, focusY: Float)
-
+  fun onScale(scaleFactor: Float, focus: FloatPosition)
 }

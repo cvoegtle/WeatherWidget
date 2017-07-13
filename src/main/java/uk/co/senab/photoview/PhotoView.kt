@@ -36,18 +36,21 @@ import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.OverScroller
+import uk.co.senab.photoview.data.FloatPosition
+import uk.co.senab.photoview.data.IntPosition
+import uk.co.senab.photoview.data.Rectangle
 import uk.co.senab.photoview.gestures.IGestureDetector
 import uk.co.senab.photoview.gestures.OnGestureListener
 import uk.co.senab.photoview.gestures.PhotoGestureDetector
-import uk.co.senab.photoview.gestures.Position
 import java.lang.ref.WeakReference
 
-class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener, OnGestureListener, ViewTreeObserver.OnGlobalLayoutListener {
-  internal var ZOOM_DURATION = IPhotoView.DEFAULT_ZOOM_DURATION
+class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener, ViewTreeObserver.OnGlobalLayoutListener {
+  internal val MAX_SCALE = 3.0f
+  internal val MID_SCALE = 1.75f
+  internal val MIN_SCALE = 1.0f
+  val DEFAULT_ZOOM_DURATION = 200
 
-  private val minScale = IPhotoView.DEFAULT_MIN_SCALE
-  private val midScale = IPhotoView.DEFAULT_MID_SCALE
-  private val maxScale = IPhotoView.DEFAULT_MAX_SCALE
+  internal var ZOOM_DURATION = DEFAULT_ZOOM_DURATION
 
   private var weakImageView: WeakReference<ImageView>? = WeakReference(imageView)
   private var observer: ViewTreeObserver? = null
@@ -57,17 +60,20 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   private val scaleDragDetector: IGestureDetector
 
   // These are set so we don't keep allocating them on the heap
-  private val mBaseMatrix = Matrix()
-  private val mDrawMatrix = Matrix()
-  private val mSuppMatrix = Matrix()
-  private val mDisplayRect = RectF()
-  private val mMatrixValues = FloatArray(9)
+  private val baseMatrix = Matrix()
+  private val drawMatrix = Matrix()
+    get() {
+      field.set(baseMatrix)
+      field.postConcat(suppMatrix)
+      return field
+    }
 
-  private var mIvTop: Int = 0
-  private var mIvRight: Int = 0
-  private var mIvBottom: Int = 0
-  private var mIvLeft: Int = 0
-  private var mCurrentFlingRunnable: FlingRunnable? = null
+  private val suppMatrix = Matrix()
+  private val displayRect = RectF()
+  private val matrixValues = FloatArray(9)
+
+  private var imageViewRect = Rectangle(0, 0, 0, 0)
+  private var currentFlingRunnable: FlingRunnable? = null
   private var mScrollEdge = EDGE_BOTH
 
   private val mScaleType = ScaleType.FIT_CENTER
@@ -137,33 +143,21 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       return imageView
     }
 
-  override fun getMinimumScale(): Float {
-    return minScale
+  fun getScale(): Float {
+    return Math.sqrt(Math.pow(getValue(suppMatrix, Matrix.MSCALE_X).toDouble(), 2.0) + Math.pow(getValue(suppMatrix, Matrix.MSKEW_Y).toDouble(), 2.0)).toFloat()
   }
 
-  override fun getMediumScale(): Float {
-    return midScale
-  }
-
-  override fun getMaximumScale(): Float {
-    return maxScale
-  }
-
-  override fun getScale(): Float {
-    return Math.sqrt(Math.pow(getValue(mSuppMatrix, Matrix.MSCALE_X).toDouble(), 2.0) + Math.pow(getValue(mSuppMatrix, Matrix.MSKEW_Y).toDouble(), 2.0)).toFloat()
-  }
-
-  override fun onDrag(dx: Float, dy: Float) {
+  override fun onDrag(drag: FloatPosition) {
     if (scaleDragDetector.isScaling()) {
       return  // Do not drag if we are already scaling
     }
 
     if (DEBUG) {
-      Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", dx, dy))
+      Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", drag.x, drag.y))
     }
 
     val imageView = imageView
-    mSuppMatrix.postTranslate(dx, dy)
+    suppMatrix.postTranslate(drag.x, drag.y)
     checkAndDisplayMatrix()
 
     /**
@@ -178,8 +172,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     val parent = imageView!!.parent
     if (!scaleDragDetector.isScaling()) {
       if (mScrollEdge == EDGE_BOTH
-          || mScrollEdge == EDGE_LEFT && dx >= 1f
-          || mScrollEdge == EDGE_RIGHT && dx <= -1f) {
+          || mScrollEdge == EDGE_LEFT && drag.x >= 1f
+          || mScrollEdge == EDGE_RIGHT && drag.x <= -1f) {
         parent?.requestDisallowInterceptTouchEvent(false)
       }
     } else {
@@ -187,26 +181,20 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
   }
 
-  override fun onFling(startX: Float, startY: Float, velocityX: Float,
-                       velocityY: Float) {
+  override fun onFling(start: FloatPosition, velocityX: Float, velocityY: Float) {
     if (DEBUG) {
-      Log.d(LOG_TAG, "onFling. sX: $startX sY: $startY Vx: $velocityX Vy: $velocityY")
+      Log.d(LOG_TAG, "onFling. sX: ${start.y} sY: ${start.y} Vx: $velocityX Vy: $velocityY")
     }
     val imageView = imageView
-    mCurrentFlingRunnable = FlingRunnable(imageView!!.context)
-    mCurrentFlingRunnable!!.fling(getImageViewWidth(imageView),
+    currentFlingRunnable = FlingRunnable(imageView!!.context)
+    currentFlingRunnable!!.fling(getImageViewWidth(imageView),
         getImageViewHeight(imageView), velocityX.toInt(), velocityY.toInt())
-    imageView.post(mCurrentFlingRunnable)
+    imageView.post(currentFlingRunnable)
   }
 
   override fun onGlobalLayout() {
-    val imageView = imageView
-
-    if (null != imageView) {
-      val top = imageView.top
-      val right = imageView.right
-      val bottom = imageView.bottom
-      val left = imageView.left
+    imageView?.let {
+      val currentRectangle = Rectangle(top = it.top, right = it.right, bottom = it.bottom, left = it.left)
 
       /**
        * We need to check whether the ImageView's bounds have changed.
@@ -215,26 +203,23 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
        * work, keeping track of the ImageView's bounds and then checking
        * if the values change.
        */
-      if (top != mIvTop || bottom != mIvBottom || left != mIvLeft || right != mIvRight) {
+      if (currentRectangle != imageViewRect) {
         // Update our base matrix, as the bounds have changed
-        updateBaseMatrix(imageView.drawable)
+        updateBaseMatrix(it.drawable)
 
         // Update values as something has changed
-        mIvTop = top
-        mIvRight = right
-        mIvBottom = bottom
-        mIvLeft = left
+        imageViewRect = currentRectangle
       }
     }
   }
 
-  override fun onScale(scaleFactor: Float, focusX: Float, focusY: Float) {
+  override fun onScale(scaleFactor: Float, focus: FloatPosition) {
     if (DEBUG) {
-      Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focusX, focusY))
+      Log.d(LOG_TAG, String.format("onScale: scale: %.2f. fX: %.2f. fY: %.2f", scaleFactor, focus.x, focus.y))
     }
 
-    if (getScale() < maxScale || scaleFactor < 1f) {
-      mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY)
+    if (getScale() < MAX_SCALE || scaleFactor < 1f) {
+      suppMatrix.postScale(scaleFactor, scaleFactor, focus.x, focus.y)
       checkAndDisplayMatrix()
     }
   }
@@ -258,10 +243,10 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
         ACTION_CANCEL, ACTION_UP ->
           // If the user has zoomed less than min scale, zoom back
           // to min scale
-          if (getScale() < minScale) {
+          if (getScale() < MIN_SCALE) {
             val rect = getDisplayRect()
             if (null != rect) {
-              v.post(AnimatedZoomRunnable(getScale(), minScale, rect.centerX(), rect.centerY()))
+              v.post(AnimatedZoomRunnable(getScale(), MIN_SCALE, FloatPosition(rect.centerX(), rect.centerY())))
               handled = true
             }
           }
@@ -281,17 +266,17 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     return handled
   }
 
-  override fun setScale(scale: Float, focalX: Float, focalY: Float) {
+  fun setScale(scale: Float, position: FloatPosition) {
     val imageView = imageView
 
     if (null != imageView) {
       // Check to see if the scale is within bounds
-      if (scale < minScale || scale > maxScale) {
+      if (scale < MIN_SCALE || scale > MAX_SCALE) {
         Log.i(LOG_TAG, "Scale must be within the range of minScale and maxScale")
         return
       }
 
-      imageView.post(AnimatedZoomRunnable(getScale(), scale, focalX, focalY))
+      imageView.post(AnimatedZoomRunnable(getScale(), scale, position))
     }
   }
 
@@ -307,16 +292,9 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
   }
 
-  val drawMatrix: Matrix
-    get() {
-      mDrawMatrix.set(mBaseMatrix)
-      mDrawMatrix.postConcat(mSuppMatrix)
-      return mDrawMatrix
-    }
-
   private fun cancelFling() {
-    mCurrentFlingRunnable?.cancelFling()
-    mCurrentFlingRunnable = null
+    currentFlingRunnable?.cancelFling()
+    currentFlingRunnable = null
   }
 
   /**
@@ -329,16 +307,14 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   }
 
   private fun checkImageViewScaleType() {
-    val imageView = imageView
-
     /**
      * PhotoView's getScaleType() will just divert to this.getScaleType() so
      * only call if we're not attached to a PhotoView.
      */
-    if (null != imageView && imageView !is IPhotoView) {
-      if (ScaleType.MATRIX != imageView.scaleType) {
+    imageView?.let {
+      if (ScaleType.MATRIX != it.scaleType) {
         throw IllegalStateException(
-            "The ImageView's ScaleType has been changed since attaching a PhotoViewAttacher")
+            "The ImageView's ScaleType has been changed since attaching a PhotoView")
       }
     }
   }
@@ -381,7 +357,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     }
 
     // Finally actually translate the matrix
-    mSuppMatrix.postTranslate(deltaX, deltaY)
+    suppMatrix.postTranslate(deltaX, deltaY)
     return true
   }
 
@@ -393,16 +369,10 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
    * @return RectF - Displayed Rectangle
    */
   private fun getDisplayRect(matrix: Matrix): RectF? {
-    val imageView = imageView
-
-    if (null != imageView) {
-      val d = imageView.drawable
-      if (null != d) {
-        mDisplayRect.set(0f, 0f, d.intrinsicWidth.toFloat(),
-            d.intrinsicHeight.toFloat())
-        matrix.mapRect(mDisplayRect)
-        return mDisplayRect
-      }
+    imageView?.drawable?.let {
+      displayRect.set(0f, 0f, it.intrinsicWidth.toFloat(), it.intrinsicHeight.toFloat())
+      matrix.mapRect(displayRect)
+      return displayRect
     }
     return null
   }
@@ -417,25 +387,23 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
    * @return float - returned value
    */
   private fun getValue(matrix: Matrix, whichValue: Int): Float {
-    matrix.getValues(mMatrixValues)
-    return mMatrixValues[whichValue]
+    matrix.getValues(matrixValues)
+    return matrixValues[whichValue]
   }
 
   /**
    * Resets the Matrix back to FIT_CENTER, and then displays it.s
    */
   private fun resetMatrix() {
-    mSuppMatrix.reset()
+    suppMatrix.reset()
     setImageViewMatrix(drawMatrix)
     checkMatrixBounds()
   }
 
   private fun setImageViewMatrix(matrix: Matrix) {
-    val imageView = imageView
-    if (null != imageView) {
-
+    imageView?.let {
       checkImageViewScaleType()
-      imageView.imageMatrix = matrix
+      it.imageMatrix = matrix
     }
   }
 
@@ -455,12 +423,12 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
     val drawableWidth = d.intrinsicWidth
     val drawableHeight = d.intrinsicHeight
 
-    mBaseMatrix.reset()
+    baseMatrix.reset()
 
     val mTempSrc = RectF(0f, 0f, drawableWidth.toFloat(), drawableHeight.toFloat())
     val mTempDst = RectF(0f, 0f, viewWidth, viewHeight)
 
-    mBaseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER)
+    baseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER)
 
     resetMatrix()
   }
@@ -478,7 +446,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
   }
 
   private inner class AnimatedZoomRunnable(private val mZoomStart: Float, private val mZoomEnd: Float,
-                                           private val mFocalX: Float, private val mFocalY: Float) : Runnable {
+                                           private val focal: FloatPosition) : Runnable {
     private val mStartTime: Long = System.currentTimeMillis()
 
     override fun run() {
@@ -488,7 +456,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
       val scale = mZoomStart + t * (mZoomEnd - mZoomStart)
       val deltaScale = scale / getScale()
 
-      mSuppMatrix.postScale(deltaScale, deltaScale, mFocalX, mFocalY)
+      suppMatrix.postScale(deltaScale, deltaScale, focal.x, focal.y)
       checkAndDisplayMatrix()
 
       // We haven't hit our target scale yet, so post ourselves again
@@ -570,7 +538,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
           Log.d(LOG_TAG, "fling run(). ${currentPosition} $newPosition")
         }
 
-        mSuppMatrix.postTranslate((currentPosition.x - newPosition.x).toFloat(),
+        suppMatrix.postTranslate((currentPosition.x - newPosition.x).toFloat(),
             (currentPosition.y - newPosition.y).toFloat())
         setImageViewMatrix(drawMatrix)
 
@@ -584,7 +552,7 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
 
   companion object {
 
-    private val LOG_TAG = "PhotoViewAttacher"
+    private val LOG_TAG = "PhotoView"
 
     // let debug flag be dynamic, but still Proguard can be used to remove from
     // release builds
@@ -612,10 +580,8 @@ class PhotoViewAttacher(imageView: ImageView) : IPhotoView, View.OnTouchListener
        * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
        * setScaleType to this.setScaleType automatically.
        */
-      if (imageView !is IPhotoView) {
-        if (ScaleType.MATRIX != imageView.scaleType) {
-          imageView.scaleType = ScaleType.MATRIX
-        }
+      if (ScaleType.MATRIX != imageView.scaleType) {
+        imageView.scaleType = ScaleType.MATRIX
       }
     }
   }

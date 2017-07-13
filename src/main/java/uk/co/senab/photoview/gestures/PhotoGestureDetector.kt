@@ -23,6 +23,7 @@ import android.view.ScaleGestureDetector
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
 import uk.co.senab.photoview.Compat
+import uk.co.senab.photoview.data.FloatPosition
 
 @TargetApi(8)
 class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : IGestureDetector {
@@ -31,7 +32,7 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
   private var activePointerId: Int? = null
   private var activePointerIndex = 0
 
-  internal var lastTouch = Position(0.0F, 0.0F )
+  internal var lastTouch = FloatPosition(0.0F, 0.0F)
   internal val touchSlop: Float
   internal val minimumVelocity: Float
 
@@ -44,14 +45,14 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
   private var velocityTracker: VelocityTracker? = null
   private var isDragging: Boolean = false
 
-  fun getActivePosition(ev: MotionEvent): Position = getPosition(ev, activePointerIndex)
+  fun getActivePosition(ev: MotionEvent): FloatPosition = getPosition(ev, activePointerIndex)
 
-  fun getPosition(ev: MotionEvent, pointerIndex: Int): Position {
+  fun getPosition(ev: MotionEvent, pointerIndex: Int): FloatPosition {
     try {
-      return Position(x = ev.getX(pointerIndex), y = ev.getY(pointerIndex))
+      return FloatPosition(x = ev.getX(pointerIndex), y = ev.getY(pointerIndex))
     } catch (ex: Exception) {
       Log.w(LOG_TAG, "Exception accessing pointer index $pointerIndex")
-      return Position(x = ev.x, y = ev.y)
+      return FloatPosition(x = ev.x, y = ev.y)
     }
   }
 
@@ -84,17 +85,14 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
       }
       MotionEvent.ACTION_MOVE -> {
         val position = getActivePosition(ev)
-        val dx = position.x - lastTouch.x
-        val dy = position.y - lastTouch.y
+        val dragPosition = position - lastTouch
 
         if (!isDragging) {
-          // Use Pythagoras to see if drag length is larger than
-          // touch slop
-          isDragging = Math.sqrt((dx * dx + dy * dy).toDouble()) >= touchSlop
+          isDragging = dragPosition.distance() >= touchSlop
         }
 
         if (isDragging) {
-          listener.onDrag(dx, dy)
+          listener.onDrag(dragPosition)
           lastTouch = position
 
           velocityTracker?.addMovement(ev)
@@ -105,7 +103,6 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
         // Recycle Velocity Tracker
         cleanUpVelocityTracker()
       }
-
 
       MotionEvent.ACTION_UP -> {
         if (isDragging) {
@@ -122,7 +119,7 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
             // If the velocity is greater than minVelocity, call
             // listener
             if (Math.max(Math.abs(vX), Math.abs(vY)) >= minimumVelocity) {
-              listener.onFling(lastTouch.x, lastTouch.y, -vX, -vY)
+              listener.onFling(lastTouch, -vX, -vY)
             }
           }
         }
@@ -152,7 +149,7 @@ class PhotoGestureDetector(context: Context, val listener: OnGestureListener) : 
         return false
       }
 
-      listener.onScale(scaleFactor, detector.focusX, detector.focusY)
+      listener.onScale(scaleFactor, FloatPosition(detector.focusX, detector.focusY))
       return true
     }
 

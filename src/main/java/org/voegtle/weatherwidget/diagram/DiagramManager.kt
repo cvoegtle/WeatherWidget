@@ -9,7 +9,7 @@ import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.util.UserFeedback
-import uk.co.senab.photoview.PhotoViewAttacher
+import uk.co.senab.photoview.PhotoView
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -96,7 +96,7 @@ class DiagramManager(private val fragment: DiagramFragment) {
         fragment.view?.let {
           val imageView = it.findViewById(R.id.diagram_view) as ImageView
           imageView.setImageDrawable(newImage)
-          PhotoViewAttacher(imageView).update()
+          PhotoView(imageView).update()
         }
       }
     }
