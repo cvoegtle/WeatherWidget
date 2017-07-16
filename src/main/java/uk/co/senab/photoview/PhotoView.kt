@@ -36,6 +36,7 @@ import android.view.animation.Interpolator
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType
 import android.widget.OverScroller
+import uk.co.senab.photoview.data.Edge
 import uk.co.senab.photoview.data.FloatPosition
 import uk.co.senab.photoview.data.IntPosition
 import uk.co.senab.photoview.data.Rectangle
@@ -53,7 +54,6 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
   internal var ZOOM_DURATION = DEFAULT_ZOOM_DURATION
 
   private var weakImageView: WeakReference<ImageView>? = WeakReference(imageView)
-  private var observer: ViewTreeObserver? = null
 
   // Gesture Detectors
   private val gestureDetector: GestureDetector
@@ -74,7 +74,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
 
   private var imageViewRect = Rectangle(0, 0, 0, 0)
   private var currentFlingRunnable: FlingRunnable? = null
-  private var mScrollEdge = EDGE_BOTH
+  private var scrollEdge = Edge.BOTH
 
   private val mScaleType = ScaleType.FIT_CENTER
 
@@ -82,9 +82,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     imageView.isDrawingCacheEnabled = true
     imageView.setOnTouchListener(this)
 
-    observer = imageView.viewTreeObserver
-    if (null != observer)
-      observer!!.addOnGlobalLayoutListener(this)
+    imageView.viewTreeObserver?.addOnGlobalLayoutListener(this)
 
     // Make sure we using MATRIX Scale Type
     setImageViewScaleTypeMatrix(imageView)
@@ -109,8 +107,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     }
 
     // Remove this as a global layout listener
-    observer?.removeGlobalOnLayoutListener(this)
-    observer = null
+    imageView?.viewTreeObserver?.removeGlobalOnLayoutListener(this)
 
     val imageView = weakImageView?.get()
     // Remove the ImageView's reference to this
@@ -156,7 +153,6 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
       Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", drag.x, drag.y))
     }
 
-    val imageView = imageView
     suppMatrix.postTranslate(drag.x, drag.y)
     checkAndDisplayMatrix()
 
@@ -169,15 +165,17 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
      * on, and the direction of the scroll (i.e. if we're pulling against
      * the edge, aka 'overscrolling', let the parent take over).
      */
-    val parent = imageView!!.parent
-    if (!scaleDragDetector.isScaling()) {
-      if (mScrollEdge == EDGE_BOTH
-          || mScrollEdge == EDGE_LEFT && drag.x >= 1f
-          || mScrollEdge == EDGE_RIGHT && drag.x <= -1f) {
-        parent?.requestDisallowInterceptTouchEvent(false)
+    imageView?.let {
+      val parent = it.parent
+      if (!scaleDragDetector.isScaling()) {
+        if (scrollEdge == Edge.BOTH
+            || scrollEdge == Edge.LEFT && drag.x >= 1f
+            || scrollEdge == Edge.RIGHT && drag.x <= -1f) {
+          parent.requestDisallowInterceptTouchEvent(false)
+        }
+      } else {
+        parent.requestDisallowInterceptTouchEvent(true)
       }
-    } else {
-      parent?.requestDisallowInterceptTouchEvent(true)
     }
   }
 
@@ -267,28 +265,24 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
   }
 
   fun setScale(scale: Float, position: FloatPosition) {
-    val imageView = imageView
-
-    if (null != imageView) {
+    imageView?.let {
       // Check to see if the scale is within bounds
       if (scale < MIN_SCALE || scale > MAX_SCALE) {
         Log.i(LOG_TAG, "Scale must be within the range of minScale and maxScale")
         return
       }
 
-      imageView.post(AnimatedZoomRunnable(getScale(), scale, position))
+      it.post(AnimatedZoomRunnable(getScale(), scale, position))
     }
   }
 
   fun update() {
-    val imageView = imageView
-
-    if (null != imageView) {
+    imageView?.let {
       // Make sure we using MATRIX Scale Type
-      setImageViewScaleTypeMatrix(imageView)
+      setImageViewScaleTypeMatrix(it)
 
       // Update the base matrix using the current drawable
-      updateBaseMatrix(imageView.drawable)
+      updateBaseMatrix(it.drawable)
     }
   }
 
@@ -326,34 +320,41 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
 
     val height = rect.height()
     val width = rect.width()
-    var deltaX = 0f
-    var deltaY = 0f
 
     val viewHeight = getImageViewHeight(imageView)
-    if (height <= viewHeight) {
-      deltaY = (viewHeight - height) / 2 - rect.top
-    } else if (rect.top > 0) {
-      deltaY = -rect.top
-    } else if (rect.bottom < viewHeight) {
-      deltaY = viewHeight - rect.bottom
+    val viewWidth = getImageViewWidth(imageView)
+
+    val deltaY = when {
+      height <= viewHeight -> (viewHeight - height) / 2 - rect.top
+      rect.top > 0 -> -rect.top
+      rect.bottom < viewHeight -> viewHeight - rect.bottom
+      else -> 0f
     }
 
-    val viewWidth = getImageViewWidth(imageView)
-    if (width <= viewWidth) {
-      when (mScaleType) {
-        ImageView.ScaleType.FIT_START -> deltaX = -rect.left
-        ImageView.ScaleType.FIT_END -> deltaX = viewWidth.toFloat() - width - rect.left
-        else -> deltaX = (viewWidth - width) / 2 - rect.left
+    val deltaX = when {
+      width <= viewWidth -> {
+        scrollEdge = Edge.BOTH
+        when (mScaleType) {
+          ImageView.ScaleType.FIT_START -> -rect.left
+          ImageView.ScaleType.FIT_END -> viewWidth.toFloat() - width - rect.left
+          else -> (viewWidth - width) / 2 - rect.left
+        }
       }
-      mScrollEdge = EDGE_BOTH
-    } else if (rect.left > 0) {
-      mScrollEdge = EDGE_LEFT
-      deltaX = -rect.left
-    } else if (rect.right < viewWidth) {
-      deltaX = viewWidth - rect.right
-      mScrollEdge = EDGE_RIGHT
-    } else {
-      mScrollEdge = EDGE_NONE
+
+      rect . left > 0 -> {
+        scrollEdge = Edge.LEFT
+        -rect.left
+      }
+
+      rect.right < viewWidth -> {
+        scrollEdge = Edge.RIGHT
+        viewWidth - rect.right
+      }
+
+      else -> {
+        scrollEdge = Edge.NONE
+        0f
+      }
     }
 
     // Finally actually translate the matrix
@@ -433,15 +434,11 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     resetMatrix()
   }
 
-  private fun getImageViewWidth(imageView: ImageView?): Int {
-    if (null == imageView)
-      return 0
+  private fun getImageViewWidth(imageView: ImageView): Int {
     return imageView.width - imageView.paddingLeft - imageView.paddingRight
   }
 
-  private fun getImageViewHeight(imageView: ImageView?): Int {
-    if (null == imageView)
-      return 0
+  private fun getImageViewHeight(imageView: ImageView): Int {
     return imageView.height - imageView.paddingTop - imageView.paddingBottom
   }
 
@@ -559,11 +556,6 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     private val DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG)
 
     internal val sInterpolator: Interpolator = AccelerateDecelerateInterpolator()
-
-    internal val EDGE_NONE = -1
-    internal val EDGE_LEFT = 0
-    internal val EDGE_RIGHT = 1
-    internal val EDGE_BOTH = 2
 
     /**
      * @return true if the ImageView exists, and it's Drawable existss
