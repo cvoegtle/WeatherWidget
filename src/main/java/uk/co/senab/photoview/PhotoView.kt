@@ -417,17 +417,18 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
       return
     }
 
-    val viewWidth = getImageViewWidth(imageView).toFloat()
-    val viewHeight = getImageViewHeight(imageView).toFloat()
-    val drawableWidth = d.intrinsicWidth
-    val drawableHeight = d.intrinsicHeight
 
     baseMatrix.reset()
 
-    val mTempSrc = RectF(0f, 0f, drawableWidth.toFloat(), drawableHeight.toFloat())
-    val mTempDst = RectF(0f, 0f, viewWidth, viewHeight)
+    val drawableWidth = d.intrinsicWidth
+    val drawableHeight = d.intrinsicHeight
+    val sourceRectangle = RectF(0f, 0f, drawableWidth.toFloat(), drawableHeight.toFloat())
 
-    baseMatrix.setRectToRect(mTempSrc, mTempDst, ScaleToFit.CENTER)
+    val viewWidth = getImageViewWidth(imageView).toFloat()
+    val viewHeight = getImageViewHeight(imageView).toFloat()
+    val destinationRectangle = RectF(0f, 0f, viewWidth, viewHeight)
+
+    baseMatrix.setRectToRect(sourceRectangle, destinationRectangle, ScaleToFit.CENTER)
 
     resetMatrix()
   }
