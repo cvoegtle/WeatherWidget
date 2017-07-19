@@ -46,6 +46,12 @@ import uk.co.senab.photoview.gestures.PhotoGestureDetector
 import java.lang.ref.WeakReference
 
 class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener, ViewTreeObserver.OnGlobalLayoutListener {
+  private val LOG_TAG = "PhotoView"
+
+  // let debug flag be dynamic, but still Proguard can be used to remove from
+  // release builds
+  private val DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG)
+
   internal val MAX_SCALE = 3.0f
   internal val MID_SCALE = 1.75f
   internal val MIN_SCALE = 1.0f
@@ -76,8 +82,6 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
   private var currentFlingRunnable: FlingRunnable? = null
   private var scrollEdge = Edge.BOTH
 
-  private val mScaleType = ScaleType.FIT_CENTER
-
   init {
     imageView.isDrawingCacheEnabled = true
     imageView.setOnTouchListener(this)
@@ -85,7 +89,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     imageView.viewTreeObserver?.addOnGlobalLayoutListener(this)
 
     // Make sure we using MATRIX Scale Type
-    setImageViewScaleTypeMatrix(imageView)
+    imageView.scaleType = ScaleType.MATRIX
 
     // Create Gesture Detectors...
     scaleDragDetector = PhotoGestureDetector(imageView.context, this)
@@ -144,16 +148,16 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     return Math.sqrt(Math.pow(getValue(suppMatrix, Matrix.MSCALE_X).toDouble(), 2.0) + Math.pow(getValue(suppMatrix, Matrix.MSKEW_Y).toDouble(), 2.0)).toFloat()
   }
 
-  override fun onDrag(drag: FloatPosition) {
+  override fun onDrag(position: FloatPosition) {
     if (scaleDragDetector.isScaling()) {
-      return  // Do not drag if we are already scaling
+      return  // Do not position if we are already scaling
     }
 
     if (DEBUG) {
-      Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", drag.x, drag.y))
+      Log.d(LOG_TAG, String.format("onDrag: dx: %.2f. dy: %.2f", position.x, position.y))
     }
 
-    suppMatrix.postTranslate(drag.x, drag.y)
+    suppMatrix.postTranslate(position.x, position.y)
     checkAndDisplayMatrix()
 
     /**
@@ -169,8 +173,8 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
       val parent = it.parent
       if (!scaleDragDetector.isScaling()) {
         if (scrollEdge == Edge.BOTH
-            || scrollEdge == Edge.LEFT && drag.x >= 1f
-            || scrollEdge == Edge.RIGHT && drag.x <= -1f) {
+            || scrollEdge == Edge.LEFT && position.x >= 1f
+            || scrollEdge == Edge.RIGHT && position.x <= -1f) {
           parent.requestDisallowInterceptTouchEvent(false)
         }
       } else {
@@ -183,11 +187,12 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     if (DEBUG) {
       Log.d(LOG_TAG, "onFling. sX: ${start.y} sY: ${start.y} Vx: $velocityX Vy: $velocityY")
     }
-    val imageView = imageView
-    currentFlingRunnable = FlingRunnable(imageView!!.context)
-    currentFlingRunnable!!.fling(getImageViewWidth(imageView),
-        getImageViewHeight(imageView), velocityX.toInt(), velocityY.toInt())
-    imageView.post(currentFlingRunnable)
+    imageView?.let {
+      val newFlingRunnable = FlingRunnable(it.context)
+      newFlingRunnable.fling(getImageViewWidth(it), getImageViewHeight(it), velocityX.toInt(), velocityY.toInt())
+      it.post(newFlingRunnable)
+      currentFlingRunnable = newFlingRunnable
+    }
   }
 
   override fun onGlobalLayout() {
@@ -279,7 +284,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
   fun update() {
     imageView?.let {
       // Make sure we using MATRIX Scale Type
-      setImageViewScaleTypeMatrix(it)
+      it.scaleType = ScaleType.MATRIX
 
       // Update the base matrix using the current drawable
       updateBaseMatrix(it.drawable)
@@ -318,30 +323,23 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
 
     val rect = getDisplayRect(drawMatrix) ?: return false
 
-    val height = rect.height()
-    val width = rect.width()
-
     val viewHeight = getImageViewHeight(imageView)
     val viewWidth = getImageViewWidth(imageView)
 
     val deltaY = when {
-      height <= viewHeight -> (viewHeight - height) / 2 - rect.top
+      rect.height() <= viewHeight -> (viewHeight - rect.height()) / 2 - rect.top
       rect.top > 0 -> -rect.top
       rect.bottom < viewHeight -> viewHeight - rect.bottom
       else -> 0f
     }
 
     val deltaX = when {
-      width <= viewWidth -> {
+      rect.width() <= viewWidth -> {
         scrollEdge = Edge.BOTH
-        when (mScaleType) {
-          ImageView.ScaleType.FIT_START -> -rect.left
-          ImageView.ScaleType.FIT_END -> viewWidth.toFloat() - width - rect.left
-          else -> (viewWidth - width) / 2 - rect.left
-        }
+        (viewWidth - rect.width()) / 2 - rect.left
       }
 
-      rect . left > 0 -> {
+      rect.left > 0 -> {
         scrollEdge = Edge.LEFT
         -rect.left
       }
@@ -465,7 +463,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     private fun interpolate(): Float {
       var t = 1f * (System.currentTimeMillis() - mStartTime) / ZOOM_DURATION
       t = Math.min(1f, t)
-      t = sInterpolator.getInterpolation(t)
+      t = interpolator.getInterpolation(t)
       return t
     }
   }
@@ -547,34 +545,15 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     }
   }
 
+  /**
+   * @return true if the ImageView's Drawable exists
+   */
+  private fun hasDrawable(imageView: ImageView): Boolean {
+    return null != imageView.drawable
+  }
+
+
   companion object {
-
-    private val LOG_TAG = "PhotoView"
-
-    // let debug flag be dynamic, but still Proguard can be used to remove from
-    // release builds
-    private val DEBUG = Log.isLoggable(LOG_TAG, Log.DEBUG)
-
-    internal val sInterpolator: Interpolator = AccelerateDecelerateInterpolator()
-
-    /**
-     * @return true if the ImageView exists, and it's Drawable existss
-     */
-    private fun hasDrawable(imageView: ImageView): Boolean {
-      return null != imageView.drawable
-    }
-
-    /**
-     * Set's the ImageView's ScaleType to Matrix.
-     */
-    private fun setImageViewScaleTypeMatrix(imageView: ImageView) {
-      /**
-       * PhotoView sets it's own ScaleType to Matrix, then diverts all calls
-       * setScaleType to this.setScaleType automatically.
-       */
-      if (ScaleType.MATRIX != imageView.scaleType) {
-        imageView.scaleType = ScaleType.MATRIX
-      }
-    }
+    internal val interpolator: Interpolator = AccelerateDecelerateInterpolator()
   }
 }
