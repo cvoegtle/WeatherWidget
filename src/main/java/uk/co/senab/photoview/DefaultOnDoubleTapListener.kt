@@ -11,9 +11,7 @@ import uk.co.senab.photoview.data.FloatPosition
  */
 class DefaultOnDoubleTapListener(val photoView: PhotoView) : GestureDetector.OnDoubleTapListener {
 
-  override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-    return false
-  }
+  override fun onSingleTapConfirmed(e: MotionEvent) = false
 
   override fun onDoubleTap(ev: MotionEvent): Boolean {
     try {
@@ -32,9 +30,7 @@ class DefaultOnDoubleTapListener(val photoView: PhotoView) : GestureDetector.OnD
     return true
   }
 
-  override fun onDoubleTapEvent(e: MotionEvent): Boolean {
-    // Wait for the confirmed onDoubleTap() instead
-    return false
-  }
+  // Wait for the confirmed onDoubleTap() instead
+  override fun onDoubleTapEvent(e: MotionEvent) = false
 
 }

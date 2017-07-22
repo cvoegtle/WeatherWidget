@@ -16,7 +16,6 @@
 package uk.co.senab.photoview
 
 import android.annotation.TargetApi
-import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.view.MotionEvent
@@ -24,13 +23,13 @@ import android.view.View
 
 object Compat {
 
-  private val SIXTY_FPS_INTERVAL = 1000 / 60
+  private val SIXTY_FPS_INTERVAL: Long = 1000 / 60
 
   fun postOnAnimation(view: View, runnable: Runnable) {
     if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
       postOnAnimationJellyBean(view, runnable)
     } else {
-      view.postDelayed(runnable, SIXTY_FPS_INTERVAL.toLong())
+      view.postDelayed(runnable, SIXTY_FPS_INTERVAL)
     }
   }
 
