@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.util
 
+import android.net.Uri
 import android.util.Log
 import org.json.JSONArray
 import org.json.JSONException
@@ -7,6 +8,7 @@ import org.json.JSONObject
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.location.Position
 import org.voegtle.weatherwidget.location.WeatherLocation
 
 import java.io.BufferedReader
@@ -14,6 +16,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
+import java.net.URI
 import java.net.URL
 import java.util.ArrayList
 import java.util.Date
@@ -116,6 +119,11 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
   private fun parseLocationData(location: WeatherLocation, weather: JSONObject) {
     location.name = weather.getString("location")
     location.shortName = weather.getString("location_short")
+    if (weather.has("forecast")) {
+      location.forecastUrl = Uri.parse(weather.getString("forecast"))
+    }
+    location.position = Position(latitude = getOptionalNumber(weather, "latitude") ?: 0.0F,
+        longitude = getOptionalNumber(weather, "longitude") ?: 0.0F)
   }
 
   fun fetchStatisticsFromUrl(locationIds: ArrayList<String>): HashMap<String, Statistics> {
