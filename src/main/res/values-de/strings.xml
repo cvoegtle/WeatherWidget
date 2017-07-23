@@ -97,8 +97,9 @@
   <string name="action_solar_daily">Tagesproduktion Solaranlage</string>
   <string name="action_solar_monthly">Monatsproduktion Solaranlage</string>
   <string name="action_share">Teilen</string>
-  <string name="message_permission_required">Die Schreibrechte sind notwendig, um das Diagramm an andere Anwendungen
-    weiterzugeben.
+  <string name="message_permission_required">Die Schreibrechte sind notwendig, um das Diagramm an andere Anwendungen weiterzugeben.</string>
+  <string name="message_location_permission_required">"Statt des aktuellen Standorts wird der letzte Standord verwendet
+    bzw. Paderborn "
   </string>
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
   <string name="action_summer_days2016">Sommertage 2016</string>

@@ -1,22 +1,28 @@
 package org.voegtle.weatherwidget
 
+import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.base.ThemedActivity
 import org.voegtle.weatherwidget.base.UpdatingScrollView
 import org.voegtle.weatherwidget.diagram.*
 import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.*
 import org.voegtle.weatherwidget.util.StatisticsUpdater
+import org.voegtle.weatherwidget.util.UserFeedback
 import org.voegtle.weatherwidget.util.WeatherDataUpdater
 import java.util.*
 
@@ -73,6 +79,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   private fun readConfiguration(preferences: SharedPreferences) {
     val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
     configuration = weatherSettingsReader.read(preferences)
+    requestLocationPermission()
   }
 
   private fun addClickHandler(location: WeatherLocation) {
@@ -205,4 +212,26 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     updater?.stopWeatherScheduler()
     updater = WeatherDataUpdater(this, configuration)
   }
+
+  private fun requestLocationPermission() {
+    val locationOrderStore = LocationOrderStore(applicationContext)
+    val askForLocationAccess = locationOrderStore.askForLocationAccess()
+
+    val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+    if (permissionCheck != PackageManager.PERMISSION_GRANTED && askForLocationAccess) {
+      ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 0)
+    }
+  }
+
+  override fun onRequestPermissionsResult(requestId: Int, permissions: Array<String>, grantResults: IntArray) {
+    if (grantResults.isNotEmpty()) {
+      if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+        UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
+      }
+      val locationOrderStore = LocationOrderStore(applicationContext)
+      locationOrderStore.resetAskForLocationAccess()
+    }
+  }
+
+
 }
