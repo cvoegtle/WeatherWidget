@@ -3,13 +3,11 @@ package org.voegtle.weatherwidget.util
 import android.os.AsyncTask
 import android.util.Log
 import android.widget.LinearLayout
+import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.location.LocationContainer
-import org.voegtle.weatherwidget.location.LocationIdentifier
-import org.voegtle.weatherwidget.location.LocationView
-import org.voegtle.weatherwidget.location.WeatherLocation
+import org.voegtle.weatherwidget.location.*
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory
@@ -19,9 +17,11 @@ import java.util.ArrayList
 import java.util.HashMap
 
 class ActivityUpdateTask internal constructor(private val activity: WeatherActivity, private val configuration: ApplicationSettings, private val showToast: Boolean) : AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>() {
-  private val weatherDataFetcher: WeatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
+  private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
+  private val userLocationUpdater = UserLocationUpdater(activity.applicationContext)
 
   override fun doInBackground(vararg voids: Void): HashMap<LocationIdentifier, WeatherData> {
+    userLocationUpdater.updateLocation()
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
   }
 
@@ -79,7 +79,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   }
 
   private fun sortViews(data: HashMap<LocationIdentifier, WeatherData>) {
-    val container = activity.findViewById(R.id.location_container) as LinearLayout
+    val container = activity.location_container
     val locationContainer = LocationContainer(activity.applicationContext, container, configuration)
     locationContainer.updateLocationOrder(data)
   }
