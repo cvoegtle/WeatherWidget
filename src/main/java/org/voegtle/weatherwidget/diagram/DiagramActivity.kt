@@ -153,9 +153,7 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   private fun requestStoragePermission(diagramId: Int) {
-    ActivityCompat.requestPermissions(this,
-        arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-        diagramId)
+    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), diagramId)
   }
 
 

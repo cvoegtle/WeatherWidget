@@ -1,22 +1,31 @@
 package org.voegtle.weatherwidget.location
 
+import android.location.Location
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.util.DateUtil
 import java.util.*
 
 object LocationComparatorFactory {
-  fun createComparator(criteria: OrderCriteria): Comparator<WeatherData> =
+  fun createComparator(criteria: OrderCriteria, userPosition: Position): Comparator<WeatherData> =
       when (criteria) {
-        OrderCriteria.location -> naturalComparator
-        OrderCriteria.temperature -> Collections.reverseOrder(defaultComparator)
+        OrderCriteria.location -> locationComparator(userPosition)
+        OrderCriteria.temperature -> Collections.reverseOrder(temperatureComparator)
         OrderCriteria.rain -> Collections.reverseOrder(rainTodayComparator)
         OrderCriteria.humidity -> Collections.reverseOrder(humidityComparator)
+        OrderCriteria.default -> defaultComparator
       }
 
-  val naturalComparator: Comparator<WeatherData> = Comparator { (location), rhs -> location.compareTo(rhs.location) }
+  val defaultComparator: Comparator<WeatherData> = Comparator { (location), rhs -> location.compareTo(rhs.location) }
 
-  val defaultComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.compareTo(rhs) }
+  val temperatureComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.compareTo(rhs) }
+
+  fun locationComparator(userPosition: Position): Comparator<WeatherData>
+     = Comparator<WeatherData> { lhs, rhs ->
+    val lhsDistance = userPosition.distanceTo(lhs.position)
+    val rhsDistance = userPosition.distanceTo(rhs.position)
+    lhsDistance.compareTo(rhsDistance)
+  }
 
   val rainTodayComparator: Comparator<WeatherData>
     get() = Comparator { lhs, rhs ->

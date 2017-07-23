@@ -1,7 +1,7 @@
 package org.voegtle.weatherwidget.preferences
 
 enum class OrderCriteria constructor(private val key: String) {
-  location("location"), temperature("temperature"), rain("rain"), humidity("humidity");
+  location("location"), temperature("temperature"), rain("rain"), humidity("humidity"), default("default");
 
   companion object {
 
@@ -15,7 +15,7 @@ enum class OrderCriteria constructor(private val key: String) {
           1 -> OrderCriteria.temperature
           2 -> OrderCriteria.rain
           3 -> OrderCriteria.humidity
-          else -> OrderCriteria.location
+          else -> OrderCriteria.default
         }
 
     fun index(find: OrderCriteria): Int {

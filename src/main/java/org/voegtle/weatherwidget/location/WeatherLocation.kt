@@ -6,7 +6,6 @@ import org.voegtle.weatherwidget.preferences.LocationPreferences
 data class WeatherLocation(val key: LocationIdentifier,
                            var name: String,
                            var shortName: String,
-                           var position: Position,
                            val identifier: String,
                            var forecastUrl: Uri,
                            val weatherViewId: Int,

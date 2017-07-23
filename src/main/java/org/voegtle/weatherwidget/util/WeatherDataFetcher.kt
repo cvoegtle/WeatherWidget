@@ -97,6 +97,8 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
     val timestamp = weather.getString("timestamp")
     val temperature = weather.get("temperature") as Number
     val humidity = weather.get("humidity") as Number
+    val position = Position(latitude = getOptionalNumber(weather, "latitude") ?: 0.0F,
+        longitude = getOptionalNumber(weather, "longitude") ?: 0.0F)
     return WeatherData(location = locationIdentifier,
         timestamp = Date(timestamp),
         temperature = temperature.toFloat(),
@@ -108,11 +110,8 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
         rain = getOptionalNumber(weather, "rain"),
         rainToday = getOptionalNumber(weather, "rain_today"),
         wind = getOptionalNumber(weather, "wind"),
-        isRaining = weather.has("raining") && weather.getBoolean("raining"))
-  }
-
-  private fun getOptionalNumber(json: JSONObject, name: String): Float? {
-    return if (json.has(name)) (json.get(name) as Number).toFloat() else null
+        isRaining = weather.has("raining") && weather.getBoolean("raining"),
+        position = position)
   }
 
   @Throws(JSONException::class)
@@ -122,8 +121,10 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
     if (weather.has("forecast")) {
       location.forecastUrl = Uri.parse(weather.getString("forecast"))
     }
-    location.position = Position(latitude = getOptionalNumber(weather, "latitude") ?: 0.0F,
-        longitude = getOptionalNumber(weather, "longitude") ?: 0.0F)
+  }
+
+  private fun getOptionalNumber(json: JSONObject, name: String): Float? {
+    return if (json.has(name)) (json.get(name) as Number).toFloat() else null
   }
 
   fun fetchStatisticsFromUrl(locationIds: ArrayList<String>): HashMap<String, Statistics> {
