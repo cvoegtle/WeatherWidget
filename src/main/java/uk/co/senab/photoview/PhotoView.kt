@@ -125,7 +125,7 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
     get() {
       val imageView: ImageView? = weakImageView?.get()
 
-      if (null == imageView) {
+      if (null == imageView && weakImageView != null) {
         cleanup()
         Log.i(LOG_TAG, "ImageView no longer exists. You should not use this PhotoViewAttacher any more.")
       }
