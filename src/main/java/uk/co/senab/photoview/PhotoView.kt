@@ -106,17 +106,6 @@ class PhotoView(imageView: ImageView) : View.OnTouchListener, OnGestureListener,
    * from [android.app.Activity.onDestroy].
    */
   fun cleanup() {
-    if (null == weakImageView) {
-      return  // cleanup already done
-    }
-
-    // Remove this as a global layout listener
-    imageView?.viewTreeObserver?.removeGlobalOnLayoutListener(this)
-
-    val imageView = weakImageView?.get()
-    // Remove the ImageView's reference to this
-    imageView?.setOnTouchListener(null)
-
     // make sure a pending fling runnable won't be run
     cancelFling()
 
