@@ -42,6 +42,7 @@
   </string-array>
 
   <string-array name="orderCriteria">
+    <item name="default">Standard (fest)</item>
     <item name="location">Ort</item>
     <item name="temperature">Temperatur</item>
     <item name="rain">Regen</item>
