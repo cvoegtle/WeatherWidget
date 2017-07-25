@@ -8,12 +8,12 @@ import java.util.*
 
 class LocationContainer(val context: Context, private val container: LinearLayout, configuration: ApplicationSettings) {
 
-  private val locationOrderStore: LocationOrderStore = LocationOrderStore(context)
+  private val locationOrderStore = LocationOrderStore(context)
   private val locations: List<WeatherLocation> = configuration.locations
-  private var userPosition: Position = locationOrderStore.readPosition()
+  private val locationSorter = LocationSorter(context)
 
   fun updateLocationOrder(weatherData: HashMap<LocationIdentifier, WeatherData>) {
-    val sortedWeatherData = sort(weatherData)
+    val sortedWeatherData = locationSorter.sort(weatherData)
 
     for (i in sortedWeatherData.indices) {
       val data = sortedWeatherData[i]
@@ -54,11 +54,4 @@ class LocationContainer(val context: Context, private val container: LinearLayou
     view.highlight(position < oldPosition)
   }
 
-
-  private fun sort(weatherData: HashMap<LocationIdentifier, WeatherData>): ArrayList<WeatherData> {
-    val sortedWeatherData = ArrayList<WeatherData>(weatherData.values)
-    val comparator = LocationComparatorFactory.createComparator(locationOrderStore.readOrderCriteria(), userPosition)
-    Collections.sort(sortedWeatherData, comparator)
-    return sortedWeatherData
-  }
 }

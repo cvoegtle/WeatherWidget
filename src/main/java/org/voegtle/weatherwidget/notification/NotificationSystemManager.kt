@@ -13,6 +13,7 @@ import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import java.text.DecimalFormat
@@ -24,6 +25,7 @@ class NotificationSystemManager(private val context: Context, private val config
   private val INFO_ID = 2
 
   private val res: Resources = context.resources
+  private val locationSorter = LocationSorter(context)
   private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
   private val stationCheck: WeatherStationCheck = WeatherStationCheck(configuration)
   private val numberFormat: DecimalFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
@@ -35,7 +37,7 @@ class NotificationSystemManager(private val context: Context, private val config
   fun checkDataForAlert(data: HashMap<LocationIdentifier, WeatherData>) {
     if (data.isNotEmpty()) {
       showAlertNotification(stationCheck.checkForOverdueStations(data))
-      showInfoNotifcation(data)
+      showInfoNotification(data)
     }
   }
 
@@ -89,7 +91,7 @@ class NotificationSystemManager(private val context: Context, private val config
     return (timeInMinutes / (24 * 60)).toString() + " " + res.getString(R.string.days)
   }
 
-  private fun showInfoNotifcation(data: HashMap<LocationIdentifier, WeatherData>) {
+  private fun showInfoNotification(data: HashMap<LocationIdentifier, WeatherData>) {
     if (!configuration.isShowInfoNotification) {
       notificationManager.cancel(INFO_ID)
     } else {
@@ -117,15 +119,21 @@ class NotificationSystemManager(private val context: Context, private val config
   }
 
   private fun buildCurrentWeather(data: HashMap<LocationIdentifier, WeatherData>): String {
+
+    val relevantData = HashMap<LocationIdentifier, WeatherData>()
+    configuration.locations
+        .filter { it.preferences.showInWidget }
+        .forEach { (key) ->
+          data[key]?.let { relevantData.put(key, it) }
+        }
+
     val weatherText = StringBuilder()
 
-    for (location in configuration.locations) {
-      if (location.preferences.showInWidget) {
-        data[location.key]?.let {
-          describeLocation(weatherText, location, it)
-          weatherText.append(" | ")
-        }
-      }
+    val sortedData = locationSorter.sort(relevantData)
+    sortedData.forEach {
+      val location = configuration.findLocation(it.location)
+      val weatherData = it
+      location?.let { describeLocation(weatherText, it, weatherData) }
     }
 
     return weatherText.substring(0, weatherText.length - 3)
@@ -139,6 +147,8 @@ class NotificationSystemManager(private val context: Context, private val config
     weatherData.rainToday?.let {
       weatherText.append(", ${numberFormat.format(weatherData.rainToday)}l")
     }
+
+    weatherText.append(" | ")
   }
 
 }
