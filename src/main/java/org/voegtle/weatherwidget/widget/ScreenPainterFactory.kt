@@ -16,11 +16,13 @@ import org.voegtle.weatherwidget.WeatherWidgetProviderLarge
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.system.IntentFactory
+import org.voegtle.weatherwidget.widget.view.ViewIdFactory
 import java.util.*
 
 class ScreenPainterFactory(context: Context, private val configuration: ApplicationSettings) {
 
   private val context = context.applicationContext
+  private val viewIds = ViewIdFactory.buildViewIds()
 
   fun createScreenPainters(): ArrayList<WidgetScreenPainter> {
     val screenPainters = ArrayList<WidgetScreenPainter>()
@@ -34,7 +36,7 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     val appWidgetManager = AppWidgetManager.getInstance(context)
     val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
     if (allWidgetIds.isNotEmpty()) {
-      screenPainters.add(WidgetScreenPainter(appWidgetManager, allWidgetIds, createRemoteViews(),
+      screenPainters.add(WidgetScreenPainter(appWidgetManager, allWidgetIds, createRemoteViews(), context,
           configuration, refreshImage, isDetailed))
     }
   }
@@ -46,11 +48,10 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     val remoteViews = RemoteViews(context.packageName, R.layout.widget_weather)
 
     updateBackgroundColor(remoteViews)
-    configuration.locations.forEach { location ->
-      val show = location.preferences.showInWidget
-      updateVisibility(remoteViews, location.weatherLineId, show)
+    viewIds.forEach() { viewId ->
+      updateVisibility(remoteViews, viewId.line, false)
       if (SDK_INT >= 16) {
-        remoteViews.setTextViewTextSize(location.weatherViewId, TypedValue.COMPLEX_UNIT_SP, configuration.widgetTextSize.toFloat())
+        remoteViews.setTextViewTextSize(viewId.weather, TypedValue.COMPLEX_UNIT_SP, configuration.widgetTextSize.toFloat())
       }
     }
 
@@ -74,7 +75,7 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
 
   private fun setWidgetIntents(remoteViews: RemoteViews) {
     val pendingOpenApp = IntentFactory.createOpenAppIntent(context)
-    configuration.locations.forEach { location -> remoteViews.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp) }
+    viewIds.forEach { viewId -> remoteViews.setOnClickPendingIntent(viewId.line, pendingOpenApp) }
     remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java))
   }
 
