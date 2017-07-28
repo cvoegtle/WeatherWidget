@@ -2,7 +2,6 @@ package org.voegtle.weatherwidget.util
 
 import android.os.AsyncTask
 import android.util.Log
-import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
@@ -11,14 +10,15 @@ import org.voegtle.weatherwidget.location.*
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory
-import org.voegtle.weatherwidget.widget.WidgetScreenPainter
+import java.util.*
 
-import java.util.ArrayList
-import java.util.HashMap
-
-class ActivityUpdateTask internal constructor(private val activity: WeatherActivity, private val configuration: ApplicationSettings, private val showToast: Boolean) : AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>() {
+class ActivityUpdateTask internal constructor(private val activity: WeatherActivity,
+                                              private val configuration: ApplicationSettings,
+                                              private val showToast: Boolean) : AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>() {
   private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
   private val userLocationUpdater = UserLocationUpdater(activity.applicationContext)
+  private val locationOrderStore: LocationOrderStore = LocationOrderStore(activity.applicationContext)
+  private val formatter = DataFormatter()
 
   override fun doInBackground(vararg voids: Void): HashMap<LocationIdentifier, WeatherData> {
     userLocationUpdater.updateLocation()
@@ -69,7 +69,9 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   }
 
   private fun getCaption(locationName: String, data: WeatherData): String {
-    return "$locationName - ${data.localtime}"
+    val userPosition = locationOrderStore.readPosition()
+    val distance = userPosition.distanceTo(data.position)
+    return "$locationName - ${data.localtime} - ${formatter.formatDistance(distance)}"
   }
 
   private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {
