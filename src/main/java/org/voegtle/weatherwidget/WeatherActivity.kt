@@ -232,9 +232,9 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     val locationOrderStore = LocationOrderStore(applicationContext)
     val askForLocationAccess = locationOrderStore.askForLocationAccess()
 
-    val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+    val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
     if (permissionCheck != PackageManager.PERMISSION_GRANTED && askForLocationAccess) {
-      ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION), 0)
+      ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
     }
   }
 
