@@ -104,4 +104,5 @@
   <string name="message_location_permission_required">"As fallback the last location or Paderborn is used to order the
     weather stations.\n "
   </string>
+  <string name="action_show_location">Assumed location</string>
 </resources>

@@ -125,4 +125,5 @@
   <string name="message_location_permission_required">"Statt des aktuellen Standorts wird der letzte Standord verwendet
     bzw. Paderborn\n "
   </string>
+  <string name="action_show_location">Vermutete Position</string>
 </resources>

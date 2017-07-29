@@ -190,6 +190,10 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
           updater?.updateWeatherOnce(true)
           true
         }
+        R.id.action_show_location -> {
+          startGoogleMapsWithLocation()
+          true
+        }
         R.id.action_diagrams -> {
           startActivity(Intent(this, MainDiagramActivity::class.java))
           true
@@ -205,6 +209,17 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         }
         else -> false
       }
+
+  private fun  startGoogleMapsWithLocation() {
+    val locationStore = LocationOrderStore(applicationContext)
+    val (latitude, longitude) = locationStore.readPosition()
+    val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
+    val intent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    intent.setPackage("com.google.android.apps.maps")
+    if (intent.resolveActivity(getPackageManager()) != null) {
+      startActivity(intent);
+    }
+  }
 
   override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
     readConfiguration(preferences)
