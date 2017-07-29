@@ -9,6 +9,7 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.*
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory
 import java.util.*
 
@@ -69,9 +70,15 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   }
 
   private fun getCaption(locationName: String, data: WeatherData): String {
-    val userPosition = locationOrderStore.readPosition()
-    val distance = userPosition.distanceTo(data.position)
-    return "$locationName - ${data.localtime} - ${formatter.formatDistance(distance)}"
+    var caption = "$locationName - ${data.localtime}"
+
+    if (locationOrderStore.readOrderCriteria() == OrderCriteria.location) {
+      val userPosition = locationOrderStore.readPosition()
+      val distance = userPosition.distanceTo(data.position)
+      caption += " - ${formatter.formatDistance(distance)}"
+    }
+
+    return caption
   }
 
   private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {
