@@ -28,7 +28,7 @@ import java.util.*
 
 
 class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-  private var updater: WeatherDataUpdater? = null
+  var updater: WeatherDataUpdater? = null
   private var statisticsUpdater: StatisticsUpdater? = null
   private var configuration: ApplicationSettings? = null
 
@@ -199,7 +199,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
           true
         }
         R.id.action_sort -> {
-          val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this, updater!!)
+          val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this)
           orderCriteriaDialog.show()
           true
         }
@@ -228,13 +228,14 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     updater = WeatherDataUpdater(this, configuration)
   }
 
-  private fun requestLocationPermission() {
+  fun requestLocationPermission() {
     val locationOrderStore = LocationOrderStore(applicationContext)
-    val askForLocationAccess = locationOrderStore.askForLocationAccess()
-
-    val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-    if (permissionCheck != PackageManager.PERMISSION_GRANTED && askForLocationAccess) {
-      ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
+    val orderCriteria = locationOrderStore.readOrderCriteria()
+    if (orderCriteria == OrderCriteria.location) {
+      val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+      if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
+      }
     }
   }
 
@@ -242,9 +243,10 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     if (grantResults.isNotEmpty()) {
       if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
         UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
+        val locationOrderStore = LocationOrderStore(applicationContext)
+        locationOrderStore.writeOrderCriteria(OrderCriteria.default)
+        updater?.updateWeatherOnce(false)
       }
-      val locationOrderStore = LocationOrderStore(applicationContext)
-      locationOrderStore.resetAskForLocationAccess()
     }
   }
 

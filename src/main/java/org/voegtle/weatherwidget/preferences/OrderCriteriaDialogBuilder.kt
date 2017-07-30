@@ -4,12 +4,14 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import org.voegtle.weatherwidget.R
+import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.util.WeatherDataUpdater
 
 object OrderCriteriaDialogBuilder {
 
-  fun createOrderCriteriaDialog(activity: Activity, updater: WeatherDataUpdater): AlertDialog {
+  fun createOrderCriteriaDialog(activity: WeatherActivity): AlertDialog {
+    val activity = activity
     val locationOrderStore = LocationOrderStore(activity.applicationContext)
     val currentOrder = locationOrderStore.readOrderCriteria()
 
@@ -19,7 +21,10 @@ object OrderCriteriaDialogBuilder {
       override fun onClick(dialog: DialogInterface, which: Int) {
         val orderCriteria = OrderCriteria.byIndex(which)
         store(orderCriteria)
-        updater.updateWeatherOnce(true)
+
+        activity.requestLocationPermission()
+        activity.updater!!.updateWeatherOnce(true)
+
         dialog.cancel()
       }
 

@@ -122,8 +122,6 @@
   <string name="city_shenzhen" translatable="false">SZ</string>
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
   <string name="action_summer_days2016">Sommertage 2016</string>
-  <string name="message_location_permission_required">"Statt des aktuellen Standorts wird der letzte Standord verwendet
-    bzw. Paderborn\n "
-  </string>
+  <string name="message_location_permission_required">Sortierung wird zurückgesetzt auf standard (fest)</string>
   <string name="action_show_location">Vermutete Position</string>
 </resources>
