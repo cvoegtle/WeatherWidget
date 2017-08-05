@@ -75,7 +75,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
     if (locationOrderStore.readOrderCriteria() == OrderCriteria.location) {
       val userPosition = locationOrderStore.readPosition()
       val distance = userPosition.distanceTo(data.position)
-      caption += " - ${formatter.formatDistance(distance)}"
+      caption += " - ${formatter.formatDistance(distance.toFloat())}"
     }
 
     return caption
