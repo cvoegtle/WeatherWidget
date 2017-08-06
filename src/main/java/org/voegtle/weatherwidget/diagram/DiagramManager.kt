@@ -94,7 +94,7 @@ class DiagramManager(private val fragment: DiagramFragment) {
     if (active) {
       fragment.activity.runOnUiThread {
         fragment.view?.let {
-          val imageView = it.findViewById(R.id.diagram_view) as ImageView
+          val imageView = it.findViewById<ImageView>(R.id.diagram_view)
           imageView.setImageDrawable(newImage)
           PhotoView(imageView).update()
         }

@@ -45,7 +45,7 @@ class LocationContainer(val context: Context, private val container: LinearLayou
 
   private fun findLocationView(data: WeatherData): LocationView {
     val location = findLocation(data)
-    return container.findViewById(location.weatherViewId) as LocationView
+    return container.findViewById<LocationView>(location.weatherViewId)
   }
 
   private fun manageViewPosition(view: LocationView, position: Int) {
