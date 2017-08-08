@@ -190,10 +190,6 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
           updater?.updateWeatherOnce(true)
           true
         }
-        R.id.action_show_location -> {
-          startGoogleMapsWithLocation()
-          true
-        }
         R.id.action_diagrams -> {
           startActivity(Intent(this, MainDiagramActivity::class.java))
           true
