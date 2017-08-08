@@ -83,7 +83,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun addClickHandler(location: WeatherLocation) {
-    val locationView = findViewById<LocationView>(location.weatherViewId)
+    val locationView = findViewById(location.weatherViewId) as LocationView
     locationView.setOnClickListener {
       if (locationView.isExpanded) {
         statisticsUpdater!!.updateStatistics(locationView, location)
@@ -123,7 +123,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     val updateCandidates = HashMap<LocationView, WeatherLocation>()
     configuration?.let {
       it.locations.forEach { location ->
-        val locationView = findViewById<LocationView>(location.weatherViewId)
+        val locationView = findViewById(location.weatherViewId) as LocationView
         if (locationView.isExpanded) {
           updateCandidates.put(locationView, location)
         }
@@ -138,13 +138,13 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun updateVisibility(viewId: Int, isVisible: Boolean) {
-    val view = findViewById<View>(viewId)
+    val view = findViewById(viewId)
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
   }
 
   private fun updateTextSize(location: WeatherLocation, textSize: Int) {
     if (location.preferences.showInApp) {
-      val view = findViewById<LocationView>(location.weatherViewId)
+      val view = findViewById(location.weatherViewId) as LocationView
       view.setTextSize(textSize)
     }
   }
@@ -154,14 +154,14 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     val darkSymbols = colorScheme == ColorScheme.light
     configuration?.let {
       it.locations
-          .map { findViewById<LocationView>(it.weatherViewId) }
+          .map { findViewById(it.weatherViewId) as LocationView }
           .forEach { it.configureSymbols(darkSymbols) }
     }
 
   }
 
   private fun updateState(location: WeatherLocation) {
-    val locationView = findViewById<LocationView>(location.weatherViewId)
+    val locationView = findViewById(location.weatherViewId) as LocationView
     statisticsUpdater!!.setupStatistics(locationView)
   }
 
