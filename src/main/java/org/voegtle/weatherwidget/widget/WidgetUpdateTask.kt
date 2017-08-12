@@ -5,11 +5,11 @@ import android.util.Log
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import java.util.*
 
-import java.util.ArrayList
-import java.util.HashMap
-
-class WidgetUpdateTask(context: Context, configuration: ApplicationSettings, private val screenPainters: ArrayList<WidgetScreenPainter>) : AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>(context, configuration) {
+class WidgetUpdateTask(context: Context, configuration: ApplicationSettings,
+                       private val screenPainters: ArrayList<WidgetScreenPainter>)
+  : AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>(context, configuration) {
 
   override fun onPreExecute() {
     screenPainters.forEach { screenPainter ->
