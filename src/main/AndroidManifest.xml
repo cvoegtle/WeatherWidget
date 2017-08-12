@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="511"
-          android:versionName="1.31">
+          android:versionCode="513"
+          android:versionName="1.32">
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -158,6 +158,16 @@
               android:name="android.appwidget.provider"
               android:resource="@xml/widget_small_info"/>
     </receiver>
+
+    <provider
+            android:name=".diagram.DiagramProvider"
+            android:authorities="${applicationId}.org.voegtle.weatherwidget.diagram.DiagramProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+      <meta-data
+              android:name="android.support.FILE_PROVIDER_PATHS"
+              android:resource="@xml/diagram_paths"/>
+    </provider>
 
   </application>
 

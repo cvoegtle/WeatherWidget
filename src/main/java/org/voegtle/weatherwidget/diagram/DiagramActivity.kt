@@ -8,8 +8,10 @@ import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_digrams.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.base.ThemedActivity
 import org.voegtle.weatherwidget.util.StringUtil
@@ -18,7 +20,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import kotlinx.android.synthetic.main.activity_digrams.*
 
 
 abstract class DiagramActivity : ThemedActivity() {
@@ -93,7 +94,7 @@ abstract class DiagramActivity : ThemedActivity() {
   protected fun shareCurrentImage(diagramIndex: Int) {
     // Assume thisActivity is the current activity
     val permissionCheck = ContextCompat.checkSelfPermission(this,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       requestStoragePermission(diagramIndex)
       return
@@ -103,11 +104,15 @@ abstract class DiagramActivity : ThemedActivity() {
 
     clearImages()
 
-    val filename = writeImageToFile(diagramIndex)
-    if (StringUtil.isNotEmpty(filename)) {
+    val file = writeImageToFile(diagramIndex)
+    file?.let {
       val share = Intent(Intent.ACTION_SEND)
       share.type = "image/png"
-      share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + filename))
+      val imageUri = FileProvider.getUriForFile(this,
+                                                this.getApplicationContext().getPackageName()
+                                                    + ".org.voegtle.weatherwidget.diagram.DiagramProvider",
+                                                 file)
+      share.putExtra(Intent.EXTRA_STREAM, imageUri)
       startActivity(Intent.createChooser(share, "Wetterwolke Diagramm teilen"))
     }
   }
@@ -130,11 +135,11 @@ abstract class DiagramActivity : ThemedActivity() {
     }
   }
 
-  private fun writeImageToFile(diagramIndex: Int): String? {
+  private fun writeImageToFile(diagramIndex: Int): File? {
     val diagramEnum = diagramIdList[diagramIndex]
     val diagramCache = DiagramCache(this)
     val image = diagramCache.asPNG(diagramEnum)
-    var filename: String? = "$wetterWolkeDirectory${File.separator}${Date().time}-${diagramEnum.filename}"
+    val filename: String = "$wetterWolkeDirectory${File.separator}${Date().time}-${diagramEnum.filename}"
     val f = File(filename)
     try {
       if (f.exists()) {
@@ -146,10 +151,10 @@ abstract class DiagramActivity : ThemedActivity() {
       }
     } catch (e: IOException) {
       Log.e(DiagramActivity::class.java.toString(), "failed to write image", e)
-      filename = null
+      return null
     }
 
-    return filename
+    return f
   }
 
   private fun requestStoragePermission(diagramId: Int) {
