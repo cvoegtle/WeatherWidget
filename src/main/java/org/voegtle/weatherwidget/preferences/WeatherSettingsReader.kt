@@ -22,7 +22,6 @@ class WeatherSettingsReader {
     val configuration = ApplicationSettings(locations = readLocations(preferences),
         secret = getString(preferences, "secret"),
         isShowInfoNotification = getBoolean(preferences, "info_notification", false),
-        updateInterval = getInteger(preferences, "update_interval", 30),
         widgetTextSize = getInteger(preferences, "text_size", 11),
         colorScheme = getColorScheme(preferences, "color_scheme", ColorScheme.dark))
 

@@ -10,13 +10,9 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.preference.PreferenceManager
 import android.view.Display
-import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
-import org.voegtle.weatherwidget.system.WidgetUpdateManager
-import org.voegtle.weatherwidget.util.NotificationTask
-
-import java.util.Date
+import java.util.*
 
 class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChangeListener {
   private val WAITING_PERIOD = (5 * 60 * 1000).toLong()
@@ -25,7 +21,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
 
   private var configuration: ApplicationSettings? = null
   private var screenPainterFactory: ScreenPainterFactory? = null
-  private var lastUpdate: Long? = null
+  private var lastUpdate: Long? = Date().time - WAITING_PERIOD
 
   override fun onCreate() {
     super.onCreate()
@@ -102,35 +98,11 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
   }
 
   private fun processPreferences(preferences: SharedPreferences) {
-    val oldInterval = configuration!!.updateInterval
-
     val weatherSettingsReader = WeatherSettingsReader(res!!)
     configuration = weatherSettingsReader.read(preferences)
 
-    val interval = configuration!!.updateInterval
-
-    if (oldInterval.compareTo(interval) != 0) {
-      WidgetUpdateManager(applicationContext).rescheduleService()
-    }
-
-    if (oldInterval.compareTo(interval) != 0) {
-      val message = getNotificationMessage(interval)
-      NotificationTask(applicationContext, message).execute()
-    }
-
     screenPainterFactory = ScreenPainterFactory(this, configuration!!)
   }
-
-  private fun getNotificationMessage(interval: Int): String {
-    val message: String
-    if (interval > 0) {
-      message = applicationContext.getString(R.string.intervall_changed) + " " + interval + "min"
-    } else {
-      message = applicationContext.getString(R.string.update_deaktiviert)
-    }
-    return message
-  }
-
 
   private fun ensureResources() {
     if (res == null) {
