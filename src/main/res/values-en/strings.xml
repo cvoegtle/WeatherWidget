@@ -84,7 +84,7 @@
   <string name="station_mobil">Mobile weather station</string>
   <string name="station_paderborn">Weather station in Paderborn</string>
   <string name="station_shenzhen">Weather station in Shenzhen</string>
-  <string name="stations">Monitoring station</string>
+  <string name="stations">Measurement station</string>
   <string name="temperature">Temperature</string>
   <string name="text_size">Font size</string>
   <string name="theme">Color scheme</string>
