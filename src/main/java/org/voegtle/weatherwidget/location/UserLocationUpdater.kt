@@ -12,7 +12,7 @@ class UserLocationUpdater(val context: Context) {
   private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
   fun updateLocation() {
-    val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+    val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       return
     }
