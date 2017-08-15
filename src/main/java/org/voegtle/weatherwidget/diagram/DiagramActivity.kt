@@ -110,8 +110,7 @@ abstract class DiagramActivity : ThemedActivity() {
       share.type = "image/png"
       val imageUri = FileProvider.getUriForFile(this,
                                                 this.getApplicationContext().getPackageName()
-                                                    + ".org.voegtle.weatherwidget.diagram.DiagramProvider",
-                                                 file)
+                                                    + ".org.voegtle.weatherwidget.diagram.DiagramProvider", it)
       share.putExtra(Intent.EXTRA_STREAM, imageUri)
       startActivity(Intent.createChooser(share, "Wetterwolke Diagramm teilen"))
     }
@@ -129,9 +128,8 @@ abstract class DiagramActivity : ThemedActivity() {
 
   private fun clearImages() {
     val wetterWolkeDir = wetterWolkeDirectory
-    val pngFiles = wetterWolkeDir.list { _, filename -> filename.toLowerCase().endsWith(".png") }
-    for (filename in pngFiles) {
-      File(wetterWolkeDir.toString() + File.separator + filename).delete()
+    wetterWolkeDir.list { _, filename -> filename.toLowerCase().endsWith(".png") }?.forEach {
+        File(wetterWolkeDir.toString() + File.separator + it).delete()
     }
   }
 
@@ -142,9 +140,6 @@ abstract class DiagramActivity : ThemedActivity() {
     val filename: String = "$wetterWolkeDirectory${File.separator}${Date().time}-${diagramEnum.filename}"
     val f = File(filename)
     try {
-      if (f.exists()) {
-        f.delete()
-      }
       f.createNewFile()
       FileOutputStream(f).use {
         it.write(image)
