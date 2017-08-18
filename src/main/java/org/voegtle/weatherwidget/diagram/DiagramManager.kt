@@ -13,7 +13,7 @@ import uk.co.senab.photoview.PhotoView
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
-class DiagramManager(private val fragment: DiagramFragment) {
+class DiagramManager(private val fragment: DiagramFragment, val placeHolderPreset: Int?) {
   private val diagramCache: DiagramCache
   private var placeholderImage: Drawable? = null
   private var active = false
@@ -33,11 +33,12 @@ class DiagramManager(private val fragment: DiagramFragment) {
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     val weatherSettingsReader = WeatherSettingsReader(context)
     val configuration = weatherSettingsReader.read(preferences)
-    if (configuration.colorScheme == ColorScheme.dark) {
-      placeholderImage = ContextCompat.getDrawable(context, R.drawable.ic_action_picture)
-    } else {
-      placeholderImage = ContextCompat.getDrawable(context, R.drawable.ic_action_picture_dark)
+    val placeHolderId = when {
+      placeHolderPreset != null -> placeHolderPreset
+      configuration.colorScheme == ColorScheme.dark -> R.drawable.ic_action_picture
+      else -> R.drawable.ic_action_picture_dark
     }
+    placeholderImage = ContextCompat.getDrawable(context, placeHolderId)
   }
 
   fun onPause() {

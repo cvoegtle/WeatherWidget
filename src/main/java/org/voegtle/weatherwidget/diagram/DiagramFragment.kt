@@ -11,13 +11,17 @@ class DiagramFragment : Fragment {
 
   private var diagramManager: DiagramManager? = null
   private var diagramId: DiagramEnum? = null
+  private val placeHolderId: Int?
 
-  constructor() : super()
+  constructor() : super() {
+    placeHolderId = null
+  }
 
-  constructor(diagramId: DiagramEnum) {
+  constructor(diagramId: DiagramEnum, placeHolderId: Int?) {
     val bundle = Bundle()
     bundle.putInt(DiagramEnum::class.java.name, diagramId.id)
     this.arguments = bundle
+    this.placeHolderId = placeHolderId
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +47,7 @@ class DiagramFragment : Fragment {
 
   private fun ensureResources() {
     if (diagramManager == null) {
-      this.diagramManager = DiagramManager(this)
+      this.diagramManager = DiagramManager(this, placeHolderId)
       diagramId = DiagramEnum.byId(arguments.getInt(DiagramEnum::class.java.name, -1))
     }
   }

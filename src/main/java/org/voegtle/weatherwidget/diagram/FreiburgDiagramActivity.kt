@@ -6,6 +6,8 @@ import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 
 class FreiburgDiagramActivity : DiagramActivity() {
+  override val placeHolderId: Int? = null
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.freiburg_2days)

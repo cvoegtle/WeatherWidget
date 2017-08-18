@@ -3,7 +3,6 @@ package org.voegtle.weatherwidget.diagram
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.app.ActivityCompat
@@ -14,7 +13,6 @@ import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_digrams.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.base.ThemedActivity
-import org.voegtle.weatherwidget.util.StringUtil
 import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.File
 import java.io.FileOutputStream
@@ -64,9 +62,7 @@ abstract class DiagramActivity : ThemedActivity() {
 
   private fun createPageAdapter(): DiagramFragmentPagerAdapter {
     val pagerAdapter = DiagramFragmentPagerAdapter(fragmentManager)
-    for (diagramId in diagramIdList) {
-      pagerAdapter.add(DiagramFragment(diagramId))
-    }
+    diagramIdList.forEach { diagramId -> pagerAdapter.add(DiagramFragment(diagramId, placeHolderId)) }
     return pagerAdapter
   }
 
@@ -129,7 +125,7 @@ abstract class DiagramActivity : ThemedActivity() {
   private fun clearImages() {
     val wetterWolkeDir = wetterWolkeDirectory
     wetterWolkeDir.list { _, filename -> filename.toLowerCase().endsWith(".png") }?.forEach {
-        File(wetterWolkeDir.toString() + File.separator + it).delete()
+      File(wetterWolkeDir.toString() + File.separator + it).delete()
     }
   }
 
@@ -173,5 +169,6 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   protected abstract fun onCustomItemSelected(item: MenuItem): Boolean
+  protected abstract val placeHolderId: Int?
 
 }
