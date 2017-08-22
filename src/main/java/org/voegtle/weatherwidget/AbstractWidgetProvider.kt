@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget
 
+import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
@@ -16,13 +17,16 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
   private var configuration: ApplicationSettings? = null
   private var res: Resources? = null
   private var remoteViews: RemoteViews? = null
-  internal abstract fun getWidgetServiceClass(): Class<*>
+  internal abstract val widgetServiceClass: Class<*>
 
   override fun onEnabled(context: Context) {
     ensureResources(context)
-
+    val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10,
+                     IntentFactory.createRefreshIntent(context, widgetServiceClass))
     super.onEnabled(context)
   }
+
 
   override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
     ensureResources(context)
@@ -33,7 +37,7 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
         it.locations.forEach { location ->
           remoteViews?.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp)
         }
-        val intent = IntentFactory.createRefreshIntent(context.applicationContext, getWidgetServiceClass())
+        val intent = IntentFactory.createRefreshIntent(context.applicationContext, widgetServiceClass)
         remoteViews?.setOnClickPendingIntent(R.id.refresh_button, intent)
         appWidgetManager.updateAppWidget(widgetId, remoteViews)
       }

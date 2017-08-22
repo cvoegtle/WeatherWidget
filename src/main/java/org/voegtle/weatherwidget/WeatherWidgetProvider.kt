@@ -4,8 +4,6 @@ import org.voegtle.weatherwidget.widget.WidgetRefreshService
 
 class WeatherWidgetProvider : AbstractWidgetProvider() {
 
-  override fun getWidgetServiceClass(): Class<*> {
-    return WidgetRefreshService::class.java
-  }
+  override val widgetServiceClass = WidgetRefreshService::class.java
 
 }
