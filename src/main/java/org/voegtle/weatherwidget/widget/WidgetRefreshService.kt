@@ -21,7 +21,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
 
   private var configuration: ApplicationSettings? = null
   private var screenPainterFactory: ScreenPainterFactory? = null
-  private var lastUpdate: Long? = Date().time - WAITING_PERIOD
+  private var lastUpdate: Long = Date().time - WAITING_PERIOD
 
   override fun onCreate() {
     super.onCreate()
@@ -113,7 +113,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
   }
 
   private val isLastUpdateOutdated: Boolean
-    get() = lastUpdate == null || Date().time - lastUpdate!! > WAITING_PERIOD
+    get() = Date().time - lastUpdate > WAITING_PERIOD
 
 
   override fun onBind(intent: Intent): IBinder? {
