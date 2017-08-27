@@ -102,4 +102,6 @@
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
   <string name="action_summer_days2016">Sommertage 2016</string>
   <string name="action_show_location">Vermutete Position</string>
+  <string name="channel_name">Wetter Wolke</string>
+  <string name="channel_description">Aktuelle Wetterdaten im Blick</string>
 </resources>

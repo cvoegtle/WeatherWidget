@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.notification
 
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
@@ -19,6 +20,9 @@ import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
+import android.graphics.Color
+
+
 
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
   private val ALERT_ID = 1
@@ -27,6 +31,8 @@ class NotificationSystemManager(private val context: Context, private val config
   private val res: Resources = context.resources
   private val locationSorter = LocationSorter(context)
   private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//  private val notificationChannel: NotificationChannel = setupNotificationChannel()
+
   private val stationCheck: WeatherStationCheck = WeatherStationCheck(configuration)
   private val numberFormat: DecimalFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
 
@@ -150,5 +156,25 @@ class NotificationSystemManager(private val context: Context, private val config
 
     weatherText.append(" | ")
   }
+
+/*
+  private fun setupNotificationChannel(): NotificationChannel {
+    // The id of the channel.
+    val id = "wetterwolke"
+    val name = res.getString(R.string.channel_name)
+    val description = res.getString(R.string.channel_description)
+    val importance = NotificationManager.IMPORTANCE_HIGH
+    val mChannel = NotificationChannel(id, name, importance)
+
+    mChannel.description = description
+    mChannel.enableLights(false)
+    mChannel.enableVibration(false)
+    mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+    notificationManager.createNotificationChannel(mChannel)
+
+  }
+*/
+
+
 
 }

@@ -7,11 +7,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.base.ThemedActivity
 import org.voegtle.weatherwidget.base.UpdatingScrollView
@@ -38,7 +38,8 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     setContentView(R.layout.activity_weather)
     button_google_docs.setOnClickListener {
       val browserIntent = Intent(Intent.ACTION_VIEW,
-          Uri.parse("https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"))
+                                 Uri.parse(
+                                     "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"))
       startActivity(browserIntent)
     }
 
@@ -83,7 +84,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun addClickHandler(location: WeatherLocation) {
-    val locationView = findViewById(location.weatherViewId) as LocationView
+    val locationView: LocationView = findViewById(location.weatherViewId)
     locationView.setOnClickListener {
       if (locationView.isExpanded) {
         statisticsUpdater!!.updateStatistics(locationView, location)
@@ -123,7 +124,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     val updateCandidates = HashMap<LocationView, WeatherLocation>()
     configuration?.let {
       it.locations.forEach { location ->
-        val locationView = findViewById(location.weatherViewId) as LocationView
+        val locationView: LocationView = findViewById(location.weatherViewId)
         if (locationView.isExpanded) {
           updateCandidates.put(locationView, location)
         }
@@ -138,13 +139,13 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   }
 
   private fun updateVisibility(viewId: Int, isVisible: Boolean) {
-    val view = findViewById(viewId)
+    val view: View = findViewById(viewId)
     view.visibility = if (isVisible) View.VISIBLE else View.GONE
   }
 
   private fun updateTextSize(location: WeatherLocation, textSize: Int) {
     if (location.preferences.showInApp) {
-      val view = findViewById(location.weatherViewId) as LocationView
+      val view: LocationView = findViewById(location.weatherViewId)
       view.setTextSize(textSize)
     }
   }
@@ -153,15 +154,15 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     // Dunkle Symbole wenn der Hintergrund hell ist
     val darkSymbols = colorScheme == ColorScheme.light
     configuration?.let {
-      it.locations
-          .map { findViewById(it.weatherViewId) as LocationView }
-          .forEach { it.configureSymbols(darkSymbols) }
+      it.locations.forEach {
+        val view: LocationView = findViewById(it.weatherViewId)
+        view.configureSymbols(darkSymbols) }
     }
 
   }
 
   private fun updateState(location: WeatherLocation) {
-    val locationView = findViewById(location.weatherViewId) as LocationView
+    val locationView: LocationView = findViewById(location.weatherViewId)
     statisticsUpdater!!.setupStatistics(locationView)
   }
 
@@ -206,7 +207,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         else -> false
       }
 
-  private fun  startGoogleMapsWithLocation() {
+  private fun startGoogleMapsWithLocation() {
     val locationStore = LocationOrderStore(applicationContext)
     val (latitude, longitude) = locationStore.readPosition()
     val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
