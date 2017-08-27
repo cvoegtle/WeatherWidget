@@ -1,6 +1,7 @@
 package org.voegtle.weatherwidget.notification
 
 
+import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,6 +11,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
+import android.support.v4.app.NotificationCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.data.WeatherData
@@ -20,8 +22,6 @@ import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
-import android.graphics.Color
-
 
 
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
@@ -30,7 +30,8 @@ class NotificationSystemManager(private val context: Context, private val config
 
   private val res: Resources = context.resources
   private val locationSorter = LocationSorter(context)
-  private val notificationManager: NotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+  private val notificationManager: NotificationManager = context.getSystemService(
+      Context.NOTIFICATION_SERVICE) as NotificationManager
 //  private val notificationChannel: NotificationChannel = setupNotificationChannel()
 
   private val stationCheck: WeatherStationCheck = WeatherStationCheck(configuration)
@@ -51,7 +52,7 @@ class NotificationSystemManager(private val context: Context, private val config
     if (alerts.isEmpty()) {
       notificationManager.cancel(ALERT_ID)
     } else {
-      val notificationBuilder = Notification.Builder(context)
+      val notificationBuilder = NotificationCompat.Builder(context)
       notificationBuilder.setSmallIcon(R.drawable.wetterlogo)
 
       val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo_alert)
@@ -157,7 +158,8 @@ class NotificationSystemManager(private val context: Context, private val config
     weatherText.append(" | ")
   }
 
-/*
+
+  @TargetApi(26)
   private fun setupNotificationChannel(): NotificationChannel {
     // The id of the channel.
     val id = "wetterwolke"
@@ -173,8 +175,6 @@ class NotificationSystemManager(private val context: Context, private val config
     notificationManager.createNotificationChannel(mChannel)
 
   }
-*/
-
 
 
 }
