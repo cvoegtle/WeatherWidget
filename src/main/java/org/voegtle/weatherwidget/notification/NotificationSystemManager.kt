@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
@@ -27,6 +28,7 @@ import java.util.*
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
   private val ALERT_ID = 1
   private val INFO_ID = 2
+  private val CHANNEL_ID = "wetterwolke"
 
   private val res: Resources = context.resources
   private val locationSorter = LocationSorter(context)
@@ -39,6 +41,9 @@ class NotificationSystemManager(private val context: Context, private val config
 
   init {
     this.numberFormat.applyPattern("###.#")
+    if (Build.VERSION.SDK_INT >= 26) {
+      setupNotificationChannel()
+    }
   }
 
   fun checkDataForAlert(data: HashMap<LocationIdentifier, WeatherData>) {
@@ -109,6 +114,9 @@ class NotificationSystemManager(private val context: Context, private val config
       notificationBuilder.setLargeIcon(bm)
 
       notificationBuilder.setContentTitle(res.getString(R.string.app_name))
+      if (Build.VERSION.SDK_INT >= 26) {
+        notificationBuilder.setChannelId(CHANNEL_ID)
+      }
 
       val contentText = buildCurrentWeather(data)
       notificationBuilder.setContentText(contentText)
@@ -160,20 +168,18 @@ class NotificationSystemManager(private val context: Context, private val config
 
 
   @TargetApi(26)
-  private fun setupNotificationChannel(): NotificationChannel {
+  private fun setupNotificationChannel() {
     // The id of the channel.
-    val id = "wetterwolke"
     val name = res.getString(R.string.channel_name)
     val description = res.getString(R.string.channel_description)
     val importance = NotificationManager.IMPORTANCE_HIGH
-    val mChannel = NotificationChannel(id, name, importance)
+    val channel = NotificationChannel(CHANNEL_ID, name, importance)
 
-    mChannel.description = description
-    mChannel.enableLights(false)
-    mChannel.enableVibration(false)
-    mChannel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
-    notificationManager.createNotificationChannel(mChannel)
-
+    channel.description = description
+    channel.enableLights(false)
+    channel.enableVibration(false)
+    channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+    return notificationManager.createNotificationChannel(channel)
   }
 
 
