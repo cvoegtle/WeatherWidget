@@ -172,13 +172,12 @@ class NotificationSystemManager(private val context: Context, private val config
     // The id of the channel.
     val name = res.getString(R.string.channel_name)
     val description = res.getString(R.string.channel_description)
-    val importance = NotificationManager.IMPORTANCE_HIGH
+    val importance = NotificationManager.IMPORTANCE_LOW
     val channel = NotificationChannel(CHANNEL_ID, name, importance)
 
     channel.description = description
     channel.enableLights(false)
     channel.enableVibration(false)
-    channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
     return notificationManager.createNotificationChannel(channel)
   }
 
