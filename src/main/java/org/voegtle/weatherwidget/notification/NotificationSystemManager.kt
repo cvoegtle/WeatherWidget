@@ -20,6 +20,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.util.DateUtil
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
@@ -112,7 +113,7 @@ class NotificationSystemManager(private val context: Context, private val config
     val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo)
     notificationBuilder.setLargeIcon(bm)
 
-    notificationBuilder.setContentTitle(res.getString(R.string.app_name))
+    notificationBuilder.setContentTitle("${res.getString(R.string.app_name)} - ${DateUtil.currentTime}")
     if (Build.VERSION.SDK_INT >= 26) {
       notificationBuilder.setChannelId(CHANNEL_ID)
     }
@@ -127,7 +128,6 @@ class NotificationSystemManager(private val context: Context, private val config
     val notification = notificationBuilder.build()
     notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
     notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
-    notification.priority = Notification.PRIORITY_HIGH
     notificationManager.notify(INFO_ID, notification)
   }
 

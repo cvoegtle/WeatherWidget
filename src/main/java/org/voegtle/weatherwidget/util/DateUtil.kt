@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.util
 
+import java.text.SimpleDateFormat
 import java.util.*
 
 object DateUtil {
@@ -19,6 +20,12 @@ object DateUtil {
       val cal = Calendar.getInstance(Locale.GERMANY)
       cal.add(Calendar.HOUR, -1)
       return cal.time
+    }
+
+  val currentTime: String
+    get(){
+      val df = SimpleDateFormat("HH:mm", Locale.GERMANY)
+      return df.format(Date())
     }
 
   private fun removeTimeFraction(cal: Calendar) {
