@@ -7,7 +7,7 @@ import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.StringUtil
 
 class MagdeburgDiagramActivity : DiagramActivity() {
-  override val placeHolderId: Int? = null
+  override val placeHolderId: Int? = R.drawable.station_magdeburg
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
