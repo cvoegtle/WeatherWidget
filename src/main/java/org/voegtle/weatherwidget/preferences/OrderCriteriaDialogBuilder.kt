@@ -1,12 +1,10 @@
 package org.voegtle.weatherwidget.preferences
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.location.LocationOrderStore
-import org.voegtle.weatherwidget.util.WeatherDataUpdater
 
 object OrderCriteriaDialogBuilder {
 
@@ -23,7 +21,7 @@ object OrderCriteriaDialogBuilder {
         store(orderCriteria)
 
         activity.requestLocationPermission()
-        activity.updater!!.updateWeatherOnce(true)
+        activity.updateWeatherOnce(true)
 
         dialog.cancel()
       }

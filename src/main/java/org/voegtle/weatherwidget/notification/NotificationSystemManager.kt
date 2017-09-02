@@ -27,14 +27,13 @@ import java.util.*
 
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
   private val ALERT_ID = 1
-  private val INFO_ID = 2
+  val INFO_ID = 2
   private val CHANNEL_ID = "wetterwolke"
 
   private val res: Resources = context.resources
   private val locationSorter = LocationSorter(context)
   private val notificationManager: NotificationManager = context.getSystemService(
       Context.NOTIFICATION_SERVICE) as NotificationManager
-//  private val notificationChannel: NotificationChannel = setupNotificationChannel()
 
   private val stationCheck: WeatherStationCheck = WeatherStationCheck(configuration)
   private val numberFormat: DecimalFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
@@ -64,6 +63,9 @@ class NotificationSystemManager(private val context: Context, private val config
       notificationBuilder.setLargeIcon(bm)
 
       notificationBuilder.setContentTitle(res.getString(R.string.data_overdue))
+      if (Build.VERSION.SDK_INT >= 26) {
+        notificationBuilder.setChannelId(CHANNEL_ID)
+      }
 
       val contentText = buildMessage(alerts)
       notificationBuilder.setContentText(contentText)
@@ -133,6 +135,31 @@ class NotificationSystemManager(private val context: Context, private val config
     }
   }
 
+  fun createActivityNotification(): Notification {
+    val notificationBuilder = Notification.Builder(context)
+    notificationBuilder.setSmallIcon(R.drawable.wetterlogo)
+
+    val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo)
+    notificationBuilder.setLargeIcon(bm)
+
+    notificationBuilder.setContentTitle(res.getString(R.string.app_name))
+    if (Build.VERSION.SDK_INT >= 26) {
+      notificationBuilder.setChannelId(CHANNEL_ID)
+    }
+
+    notificationBuilder.setContentText(res.getString(R.string.wetterwolke_in_background))
+
+    val intentOpenApp = Intent(context, WeatherActivity::class.java)
+    val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
+    notificationBuilder.setContentIntent(pendingOpenApp)
+
+    val notification = notificationBuilder.build()
+    notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
+    notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
+    notification.priority = Notification.PRIORITY_HIGH
+    return notification
+  }
+
   private fun buildCurrentWeather(data: HashMap<LocationIdentifier, WeatherData>): String {
 
     val relevantData = HashMap<LocationIdentifier, WeatherData>()
@@ -178,7 +205,7 @@ class NotificationSystemManager(private val context: Context, private val config
     channel.description = description
     channel.enableLights(false)
     channel.enableVibration(false)
-    return notificationManager.createNotificationChannel(channel)
+    notificationManager.createNotificationChannel(channel)
   }
 
 

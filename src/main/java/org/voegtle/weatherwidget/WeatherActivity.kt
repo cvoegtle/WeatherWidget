@@ -21,14 +21,13 @@ import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.*
+import org.voegtle.weatherwidget.util.ActivityUpdateTask
 import org.voegtle.weatherwidget.util.StatisticsUpdater
 import org.voegtle.weatherwidget.util.UserFeedback
-import org.voegtle.weatherwidget.util.WeatherDataUpdater
 import java.util.*
 
 
 class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-  var updater: WeatherDataUpdater? = null
   private var statisticsUpdater: StatisticsUpdater? = null
   private var configuration: ApplicationSettings? = null
 
@@ -52,18 +51,13 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     setupLocations()
     configureLocationSymbolColor()
 
-    updater = WeatherDataUpdater(this, configuration)
 
     scroll_view.register(object : UpdatingScrollView.Updater {
       override fun update() {
-        updater?.updateWeatherOnce(true)
+        updateWeatherOnce(true)
       }
     })
 
-  }
-
-  private fun startWeatherUpdater() {
-    updater?.startWeatherScheduler(180)
   }
 
   private fun setupLocations() {
@@ -169,26 +163,23 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   override fun onResume() {
     super.onResume()
     updateStatistics()
-    updater?.updateWeatherOnce(false)
-    startWeatherUpdater()
+    updateWeatherOnce(false)
   }
 
   override fun onPause() {
     super.onPause()
-    updater?.stopWeatherScheduler()
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
     val inflater = menuInflater
     inflater.inflate(R.menu.weather_activity_menu, menu)
     return super.onCreateOptionsMenu(menu)
-
   }
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean =
       when (item.itemId) {
         R.id.action_reload -> {
-          updater?.updateWeatherOnce(true)
+          updateWeatherOnce(true)
           true
         }
         R.id.action_diagrams -> {
@@ -207,22 +198,10 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         else -> false
       }
 
-  private fun startGoogleMapsWithLocation() {
-    val locationStore = LocationOrderStore(applicationContext)
-    val (latitude, longitude) = locationStore.readPosition()
-    val gmmIntentUri = Uri.parse("geo:$latitude,$longitude?q=$latitude,$longitude")
-    val intent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-    intent.setPackage("com.google.android.apps.maps")
-    if (intent.resolveActivity(getPackageManager()) != null) {
-      startActivity(intent);
-    }
-  }
-
   override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
     readConfiguration(preferences)
     setupLocations()
-    updater?.stopWeatherScheduler()
-    updater = WeatherDataUpdater(this, configuration)
+    updateWeatherOnce(true)
   }
 
   fun requestLocationPermission() {
@@ -242,9 +221,13 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
         val locationOrderStore = LocationOrderStore(applicationContext)
         locationOrderStore.writeOrderCriteria(OrderCriteria.default)
-        updater?.updateWeatherOnce(false)
+        updateWeatherOnce(false)
       }
     }
+  }
+
+  fun updateWeatherOnce(showToast: Boolean) {
+    ActivityUpdateTask(this, configuration!!, showToast).execute()
   }
 
 

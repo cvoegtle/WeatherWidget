@@ -4,12 +4,9 @@ import android.app.Service
 import android.content.*
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.hardware.display.DisplayManager
-import android.os.Build
 import android.os.IBinder
-import android.os.PowerManager
 import android.preference.PreferenceManager
-import android.view.Display
+import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import java.util.*
@@ -21,6 +18,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
 
   private var configuration: ApplicationSettings? = null
   private var screenPainterFactory: ScreenPainterFactory? = null
+  private var notificationManager: NotificationSystemManager? = null
   private var lastUpdate: Long = Date().time - WAITING_PERIOD
 
   override fun onCreate() {
@@ -46,10 +44,9 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     val result: Int
     try {
-      if (isScreenOn) {
-        ensureResources()
-        updateWidget()
-      }
+      ensureResources()
+      startForeground(notificationManager!!.INFO_ID, notificationManager!!.createActivityNotification())
+      updateWidget()
     } finally {
       result = super.onStartCommand(intent, flags, startId)
     }
@@ -58,29 +55,10 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
 
   private fun updateWidget() {
     lastUpdate = Date().time
+
     val screenPainters = screenPainterFactory!!.createScreenPainters()
     WidgetUpdateTask(applicationContext, configuration!!, screenPainters).execute()
   }
-
-  val isScreenOn: Boolean
-    @SuppressWarnings()
-    get() {
-      val context = applicationContext
-      if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-        val dm = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        var screenOn = false
-        dm.displays.forEach { display ->
-          if (display.state != Display.STATE_OFF) {
-            screenOn = true
-          }
-        }
-        return screenOn
-      } else {
-        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        // notwendig solange wir noch API Level 16 unterstützen
-        return pm.isScreenOn
-      }
-    }
 
 
   override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
@@ -108,6 +86,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
     if (res == null) {
       res = resources
       configuration = ApplicationSettings()
+      notificationManager = NotificationSystemManager(this, configuration!!)
       screenPainterFactory = ScreenPainterFactory(this, configuration!!)
     }
   }

@@ -4,26 +4,33 @@ import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.os.Build
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.system.IntentFactory
+import org.voegtle.weatherwidget.widget.WidgetRefreshService
 
 abstract class AbstractWidgetProvider : AppWidgetProvider() {
 
   private var configuration: ApplicationSettings? = null
   private var res: Resources? = null
   private var remoteViews: RemoteViews? = null
-  internal abstract val widgetServiceClass: Class<*>
 
   override fun onEnabled(context: Context) {
     ensureResources(context)
-    val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10,
-                     IntentFactory.createRefreshIntent(context, widgetServiceClass))
+    if (Build.VERSION.SDK_INT >= 26) {
+      context.startForegroundService(Intent(context, WidgetRefreshService::class.java))
+    } else {
+      val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+      alarmManager.set(AlarmManager.RTC, System.currentTimeMillis() + 10,
+                       IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java))
+    }
+
     super.onEnabled(context)
   }
 
@@ -37,7 +44,7 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
         it.locations.forEach { location ->
           remoteViews?.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp)
         }
-        val intent = IntentFactory.createRefreshIntent(context.applicationContext, widgetServiceClass)
+        val intent = IntentFactory.createRefreshIntent(context.applicationContext, WidgetRefreshService::class.java)
         remoteViews?.setOnClickPendingIntent(R.id.refresh_button, intent)
         appWidgetManager.updateAppWidget(widgetId, remoteViews)
       }

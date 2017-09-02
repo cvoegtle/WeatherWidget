@@ -18,7 +18,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
                                               private val showToast: Boolean) : AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>() {
   private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
   private val userLocationUpdater = UserLocationUpdater(activity.applicationContext)
-  private val locationOrderStore: LocationOrderStore = LocationOrderStore(activity.applicationContext)
+  private val locationOrderStore = LocationOrderStore(activity.applicationContext)
   private val formatter = DataFormatter()
 
   override fun doInBackground(vararg voids: Void): HashMap<LocationIdentifier, WeatherData> {
