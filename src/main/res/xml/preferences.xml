@@ -16,6 +16,12 @@
           android:entries="@array/colorScheme"
           android:entryValues="@array/colorSchemeValues"/>
 
+  <CheckBoxPreference
+          android:key="info_notification"
+          android:title="@string/weather_as_notification"
+          android:summary="@string/weather_as_notification_summary"
+          android:defaultValue="false"
+          />
   <PreferenceCategory android:title="@string/stations"
                       android:key="catetory_stationen">
     <PreferenceScreen

@@ -107,28 +107,32 @@ class NotificationSystemManager(private val context: Context, private val config
   }
 
   private fun showInfoNotification(data: HashMap<LocationIdentifier, WeatherData>) {
-    val notificationBuilder = Notification.Builder(context)
-    notificationBuilder.setSmallIcon(R.drawable.wetterlogo)
+    if (!configuration.isShowInfoNotification) {
+      notificationManager.cancel(INFO_ID)
+    } else {
+      val notificationBuilder = Notification.Builder(context)
+      notificationBuilder.setSmallIcon(R.drawable.wetterlogo)
 
-    val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo)
-    notificationBuilder.setLargeIcon(bm)
+      val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo)
+      notificationBuilder.setLargeIcon(bm)
 
     notificationBuilder.setContentTitle("${res.getString(R.string.app_name)} - ${DateUtil.currentTime}")
     if (Build.VERSION.SDK_INT >= 26) {
       notificationBuilder.setChannelId(CHANNEL_ID)
     }
 
-    val contentText = buildCurrentWeather(data)
-    notificationBuilder.setContentText(contentText)
+      val contentText = buildCurrentWeather(data)
+      notificationBuilder.setContentText(contentText)
 
-    val intentOpenApp = Intent(context, WeatherActivity::class.java)
-    val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
-    notificationBuilder.setContentIntent(pendingOpenApp)
+      val intentOpenApp = Intent(context, WeatherActivity::class.java)
+      val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
+      notificationBuilder.setContentIntent(pendingOpenApp)
 
-    val notification = notificationBuilder.build()
-    notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
-    notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
-    notificationManager.notify(INFO_ID, notification)
+      val notification = notificationBuilder.build()
+      notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
+      notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
+      notificationManager.notify(INFO_ID, notification)
+    }
   }
 
   fun createActivityNotification(): Notification {
