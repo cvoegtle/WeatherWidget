@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.*
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.os.Build
 import android.os.IBinder
 import android.preference.PreferenceManager
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
@@ -45,12 +46,18 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
     val result: Int
     try {
       ensureResources()
-      startForeground(notificationManager!!.INFO_ID, notificationManager!!.createActivityNotification())
+      forceAndroid8Notification()
       updateWidget()
     } finally {
       result = super.onStartCommand(intent, flags, startId)
     }
     return result
+  }
+
+  private fun forceAndroid8Notification() {
+    if (Build.VERSION.SDK_INT >= 26) {
+      startForeground(notificationManager!!.INFO_ID, notificationManager!!.createActivityNotification())
+    }
   }
 
   private fun updateWidget() {

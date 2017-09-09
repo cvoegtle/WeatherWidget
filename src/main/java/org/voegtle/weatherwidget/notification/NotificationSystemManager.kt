@@ -116,10 +116,10 @@ class NotificationSystemManager(private val context: Context, private val config
       val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo)
       notificationBuilder.setLargeIcon(bm)
 
-    notificationBuilder.setContentTitle("${res.getString(R.string.app_name)} - ${DateUtil.currentTime}")
-    if (Build.VERSION.SDK_INT >= 26) {
-      notificationBuilder.setChannelId(CHANNEL_ID)
-    }
+      notificationBuilder.setContentTitle("${res.getString(R.string.app_name)} - ${DateUtil.currentTime}")
+      if (Build.VERSION.SDK_INT >= 26) {
+        notificationBuilder.setChannelId(CHANNEL_ID)
+      }
 
       val contentText = buildCurrentWeather(data)
       notificationBuilder.setContentText(contentText)
@@ -135,6 +135,7 @@ class NotificationSystemManager(private val context: Context, private val config
     }
   }
 
+  @TargetApi(26)
   fun createActivityNotification(): Notification {
     val notificationBuilder = Notification.Builder(context)
     notificationBuilder.setSmallIcon(R.drawable.wetterlogo)
@@ -143,9 +144,7 @@ class NotificationSystemManager(private val context: Context, private val config
     notificationBuilder.setLargeIcon(bm)
 
     notificationBuilder.setContentTitle(res.getString(R.string.app_name))
-    if (Build.VERSION.SDK_INT >= 26) {
-      notificationBuilder.setChannelId(CHANNEL_ID)
-    }
+    notificationBuilder.setChannelId(CHANNEL_ID)
 
     notificationBuilder.setContentText(res.getString(R.string.wetterwolke_in_background))
 
@@ -155,8 +154,7 @@ class NotificationSystemManager(private val context: Context, private val config
 
     val notification = notificationBuilder.build()
     notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
-    notification.flags = notification.flags or Notification.FLAG_ONGOING_EVENT
-    notification.priority = Notification.PRIORITY_HIGH
+
     return notification
   }
 
