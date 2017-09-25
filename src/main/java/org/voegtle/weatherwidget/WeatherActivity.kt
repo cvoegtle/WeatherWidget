@@ -63,7 +63,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
       }
     })
 
-    if (intent.getBooleanExtra(ANDROID8, false)) {
+    if (intent.action == ANDROID8) {
       showAndroid8Explanation()
     }
   }

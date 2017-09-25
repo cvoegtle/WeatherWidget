@@ -150,9 +150,7 @@ class NotificationSystemManager(private val context: Context, private val config
     notificationBuilder.setContentText(res.getString(R.string.wetterwolke_in_background))
 
     val intentOpenApp = Intent(context, WeatherActivity::class.java)
-    val extras = Bundle()
-    extras.putBoolean(WeatherActivity.ANDROID8, true)
-    intentOpenApp.putExtras(extras)
+    intentOpenApp.action = WeatherActivity.ANDROID8
     val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
     notificationBuilder.setContentIntent(pendingOpenApp)
 
