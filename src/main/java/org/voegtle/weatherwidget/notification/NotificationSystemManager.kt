@@ -12,6 +12,7 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
+import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
@@ -149,6 +150,9 @@ class NotificationSystemManager(private val context: Context, private val config
     notificationBuilder.setContentText(res.getString(R.string.wetterwolke_in_background))
 
     val intentOpenApp = Intent(context, WeatherActivity::class.java)
+    val extras = Bundle()
+    extras.putBoolean(WeatherActivity.ANDROID8, true)
+    intentOpenApp.putExtras(extras)
     val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
     notificationBuilder.setContentIntent(pendingOpenApp)
 

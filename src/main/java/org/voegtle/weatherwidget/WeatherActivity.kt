@@ -1,6 +1,7 @@
 package org.voegtle.weatherwidget
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -28,6 +29,10 @@ import java.util.*
 
 
 class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+  companion object {
+    val ANDROID8 = "org.voegtle.weatherwidget.Android8"
+  }
+
   private var statisticsUpdater: StatisticsUpdater? = null
   private var configuration: ApplicationSettings? = null
 
@@ -58,6 +63,16 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
       }
     })
 
+    if (intent.getBooleanExtra(ANDROID8, false)) {
+      showAndroid8Explanation()
+    }
+  }
+
+  private fun showAndroid8Explanation() {
+    val builder = AlertDialog.Builder(this)
+    builder.setMessage(R.string.android8_explanation).setTitle(R.string.android8_caption)
+    val dialog = builder.create()
+    dialog.show()
   }
 
   private fun setupLocations() {
@@ -150,7 +165,8 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     configuration?.let {
       it.locations.forEach {
         val view: LocationView = findViewById(it.weatherViewId)
-        view.configureSymbols(darkSymbols) }
+        view.configureSymbols(darkSymbols)
+      }
     }
 
   }
