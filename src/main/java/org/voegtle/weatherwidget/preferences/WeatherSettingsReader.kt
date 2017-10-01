@@ -19,13 +19,11 @@ class WeatherSettingsReader {
   }
 
   fun read(preferences: SharedPreferences): ApplicationSettings {
-    val configuration = ApplicationSettings(locations = readLocations(preferences),
-        secret = getString(preferences, "secret"),
-        isShowInfoNotification = getBoolean(preferences, "info_notification", false),
-        widgetTextSize = getInteger(preferences, "text_size", 11),
-        colorScheme = getColorScheme(preferences, "color_scheme", ColorScheme.dark))
-
-    return configuration
+    return ApplicationSettings(locations = readLocations(preferences),
+                               secret = getString(preferences, "secret"),
+                               isShowInfoNotification = getBoolean(preferences, "info_notification", false),
+                               widgetTextSize = getInteger(preferences, "text_size", 11),
+                               colorScheme = getColorScheme(preferences, "color_scheme", ColorScheme.dark))
   }
 
   private fun getColorScheme(preferences: SharedPreferences, key: String, defaultScheme: ColorScheme): ColorScheme {

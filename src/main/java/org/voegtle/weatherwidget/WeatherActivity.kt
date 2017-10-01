@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -70,7 +71,19 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
 
   private fun showAndroid8Explanation() {
     val builder = AlertDialog.Builder(this)
-    builder.setMessage(R.string.android8_explanation).setTitle(R.string.android8_caption)
+    builder.setMessage(R.string.android8_explanation)
+        .setTitle(R.string.android8_caption)
+        .setPositiveButton(R.string.enable_notification,  object : DialogInterface.OnClickListener {
+          override fun onClick(p0: DialogInterface?, p1: Int) {
+            val preferences = PreferenceManager.getDefaultSharedPreferences(this@WeatherActivity)
+            WeatherSettingsWriter().enableNotification(preferences)
+
+          }
+        })
+        .setNegativeButton(R.string.understood, object : DialogInterface.OnClickListener {
+          override fun onClick(p0: DialogInterface?, p1: Int) {
+          }
+        })
     val dialog = builder.create()
     dialog.show()
   }

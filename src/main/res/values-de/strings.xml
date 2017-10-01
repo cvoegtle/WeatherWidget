@@ -109,4 +109,6 @@
     aktiv bleiben zu können.
   </string>
   <string name="android8_caption">Android 8 Hinweis</string>
+  <string name="enable_notification">aktivieren</string>
+  <string name="understood">verstanden</string>
 </resources>

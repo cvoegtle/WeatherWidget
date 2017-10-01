@@ -10,34 +10,30 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.Position
 import org.voegtle.weatherwidget.location.WeatherLocation
-
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
-import java.net.URI
 import java.net.URL
-import java.util.ArrayList
-import java.util.Date
-import java.util.HashMap
+import java.util.*
 
 class WeatherDataFetcher(private val buildNumber: Int?) {
 
 
-  fun fetchAllWeatherDataFromServer(locations: List<WeatherLocation>, secret: String): HashMap<LocationIdentifier, WeatherData> {
+  fun fetchAllWeatherDataFromServer(locations: List<WeatherLocation>,
+                                    secret: String): HashMap<LocationIdentifier, WeatherData> {
     val resultList = HashMap<LocationIdentifier, WeatherData>()
     val urlEncodedSecret = StringUtil.urlEncode(secret)
     val locationIdentifiers = concatenateLocations(locations)
 
     val jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
-        "&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret)
+                                           "&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret)
 
     if (StringUtil.isNotEmpty(jsonWeather)) {
       try {
         val weatherList = JSONArray(jsonWeather)
-        for (i in 0..weatherList.length() - 1) {
-          val weather = weatherList.getJSONObject(i)
+        (0 until weatherList.length()).map { weatherList.getJSONObject(it) }.forEach { weather ->
           getLocation(locations, weather)?.let {
             val data = parseWeatherData(it.key, weather)
             parseLocationData(it, weather)
@@ -98,20 +94,20 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
     val temperature = weather.get("temperature") as Number
     val humidity = weather.get("humidity") as Number
     val position = Position(latitude = getOptionalNumber(weather, "latitude") ?: 0.0F,
-        longitude = getOptionalNumber(weather, "longitude") ?: 0.0F)
+                            longitude = getOptionalNumber(weather, "longitude") ?: 0.0F)
     return WeatherData(location = locationIdentifier,
-        timestamp = Date(timestamp),
-        temperature = temperature.toFloat(),
-        humidity = humidity.toFloat(),
-        localtime = if (weather.has("localtime")) weather.get("localtime") as String else "",
-        insideTemperature = getOptionalNumber(weather, "inside_temperature"),
-        insideHumidity = getOptionalNumber(weather, "inside_humidity"),
-        watt = getOptionalNumber(weather, "watt"),
-        rain = getOptionalNumber(weather, "rain"),
-        rainToday = getOptionalNumber(weather, "rain_today"),
-        wind = getOptionalNumber(weather, "wind"),
-        isRaining = weather.has("raining") && weather.getBoolean("raining"),
-        position = position)
+                       timestamp = Date(timestamp),
+                       temperature = temperature.toFloat(),
+                       humidity = humidity.toFloat(),
+                       localtime = if (weather.has("localtime")) weather.get("localtime") as String else "",
+                       insideTemperature = getOptionalNumber(weather, "inside_temperature"),
+                       insideHumidity = getOptionalNumber(weather, "inside_humidity"),
+                       watt = getOptionalNumber(weather, "watt"),
+                       rain = getOptionalNumber(weather, "rain"),
+                       rainToday = getOptionalNumber(weather, "rain_today"),
+                       wind = getOptionalNumber(weather, "wind"),
+                       isRaining = weather.has("raining") && weather.getBoolean("raining"),
+                       position = position)
   }
 
   @Throws(JSONException::class)
@@ -133,8 +129,9 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
       for (i in 1..locationIds.size - 1) {
         concatenatedLocationIds += "," + locationIds[i]
       }
-      val jsonStatistics = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
-          "&locations=" + concatenatedLocationIds + "&type=stats")
+      val jsonStatistics = getStringFromUrl(
+          "https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
+              "&locations=" + concatenatedLocationIds + "&type=stats")
       try {
         return JsonTranslator.toStatistics(jsonStatistics)
       } catch (e: Throwable) {
