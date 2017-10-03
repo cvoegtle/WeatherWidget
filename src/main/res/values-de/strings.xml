@@ -104,11 +104,9 @@
   <string name="action_show_location">Vermutete Position</string>
   <string name="channel_name">Wetter Wolke</string>
   <string name="channel_description">Aktuelle Wetterdaten im Blick</string>
-  <string name="wetterwolke_in_background">Notwendig unter Android 8, damit das Widget aktualisiert wird</string>
-  <string name="android8_explanation">Seit Android 8 muss Wetterwolke eine Notification anzeigen, um im Hintergrund
-    aktiv bleiben zu können.
-  </string>
-  <string name="android8_caption">Android 8 Hinweis</string>
-  <string name="enable_notification">aktivieren</string>
+  <string name="wetterwolke_in_background">Wetter Wolke wird regelmäßig aktualisiert</string>
+  <string name="android8_caption">Hinweis</string>
+  <string name="android8_explanation">Diese Benachrichtigung ist notwendig, damit das Wetter Widget aktualisiert werden kann.\n\nDiese Benachrichtigung kann ohne Funktionsverlust in den Apps &amp; Benachrichtigungen Einstellungen unterdrückt werden.\n\nAlternativ kann Wetter Wolke auch eine Benachrichtigung mit aktuellen Temperaturen anzeigen.</string>
+  <string name="enable_notification">Aktuelle Messwerte anzeigen</string>
   <string name="understood">verstanden</string>
 </resources>
