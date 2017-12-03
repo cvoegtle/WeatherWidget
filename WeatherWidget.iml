@@ -26,8 +26,8 @@
         <compilerSettings />
         <compilerArguments>
           <option name="jvmTarget" value="1.8" />
-          <option name="languageVersion" value="1.1" />
-          <option name="apiVersion" value="1.1" />
+          <option name="languageVersion" value="1.2" />
+          <option name="apiVersion" value="1.2" />
           <option name="pluginOptions">
             <array>
               <option value="plugin:org.jetbrains.kotlin.android:experimental=false" />
@@ -128,20 +128,20 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 26 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="support-core-ui-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-location-11.2.0" level="project" />
-    <orderEntry type="library" exported="" name="support-v13-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-media-compat-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-basement-11.2.0" level="project" />
-    <orderEntry type="library" exported="" name="support-compat-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="annotations-13.0" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-core-utils-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="support-fragment-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="kotlin-stdlib-1.1.51" level="project" />
-    <orderEntry type="library" exported="" name="kotlin-stdlib-jre7-1.1.51" level="project" />
-    <orderEntry type="library" exported="" name="play-services-tasks-11.2.0" level="project" />
-    <orderEntry type="library" exported="" name="play-services-base-11.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-v4-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-fragment-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: annotations-13.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: play-services-basement-11.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-core-ui-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-core-utils-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-annotations-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-media-compat-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: kotlin-stdlib-1.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: kotlin-stdlib-jre7-1.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-compat-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: support-v13-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: play-services-tasks-11.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: play-services-location-11.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: play-services-base-11.2.0" level="project" />
   </component>
 </module>

@@ -110,4 +110,5 @@
   <string name="android8_explanation">This notification is necessary to keep the weather widget up to date.\n\nThis notification can be suppressed in the Apps &amp; notifications settings without hampering the update of the widget.\n\nAlternatively Wetter Wolke can show a notification with the latest temperatures.</string>
   <string name="enable_notification">activate temperature notification</string>
   <string name="understood">understood</string>
+  <string name="action_winter_days2017">Wintertage 2016/17</string>
 </resources>

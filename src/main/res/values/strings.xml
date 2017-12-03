@@ -131,4 +131,5 @@
   <string name="android8_explanation">Diese Benachrichtigung ist notwendig, damit das Wetter Widget aktualisiert werden kann.\n\nDiese Benachrichtigung kann ohne Funktionsverlust in den Apps &amp; Benachrichtigungen Einstellungen unterdrückt werden.\n\nAlternativ kann Wetter Wolke auch eine Benachrichtigung mit aktuellen Temperaturen anzeigen.</string>
   <string name="enable_notification">Aktuelle Messwerte anzeigen</string>
   <string name="understood">verstanden</string>
+  <string name="action_winter_days2017">Wintertage 2016/17</string>
 </resources>
