@@ -134,10 +134,10 @@
     <orderEntry type="library" exported="" name="Gradle: play-services-basement-11.2.0" level="project" />
     <orderEntry type="library" exported="" name="Gradle: support-core-ui-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: support-core-utils-26.0.1" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: kotlin-stdlib-1.2.21" level="project" />
     <orderEntry type="library" exported="" name="Gradle: support-annotations-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: support-media-compat-26.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: kotlin-stdlib-1.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: kotlin-stdlib-jre7-1.2.0" level="project" />
+    <orderEntry type="library" exported="" name="Gradle: kotlin-stdlib-jre7-1.2.21" level="project" />
     <orderEntry type="library" exported="" name="Gradle: support-compat-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: support-v13-26.0.1" level="project" />
     <orderEntry type="library" exported="" name="Gradle: play-services-tasks-11.2.0" level="project" />

@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.21'
     repositories {
         jcenter()
         maven {
@@ -82,7 +82,7 @@ dependencies {
 
 import java.util.regex.Pattern
 
-task('increaseVersionCode') << {
+task increaseVersionCode(type: Sync) {
     def manifestFile = file("src/main/AndroidManifest.xml")
     def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
     def manifestText = manifestFile.getText()
@@ -93,8 +93,4 @@ task('increaseVersionCode') << {
     manifestFile.write(manifestContent)
 }
 
-tasks.whenTaskAdded { task ->
-    if (task.name == 'generateReleaseBuildConfig') {
-        task.dependsOn 'increaseVersionCode'
-    }
-}
+assemble.dependsOn increaseVersionCode
