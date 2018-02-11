@@ -10,29 +10,26 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.Position
 import org.voegtle.weatherwidget.location.WeatherLocation
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.*
+import java.util.Date
+import java.util.HashMap
+
+data class FetchAllResponse(val valid: Boolean,
+                            val weatherMap: HashMap<LocationIdentifier, WeatherData> = HashMap())
 
 class WeatherDataFetcher(private val buildNumber: Int?) {
-
-
   fun fetchAllWeatherDataFromServer(locations: List<WeatherLocation>,
-                                    secret: String): HashMap<LocationIdentifier, WeatherData> {
-    val resultList = HashMap<LocationIdentifier, WeatherData>()
+                                    secret: String): FetchAllResponse {
     val urlEncodedSecret = StringUtil.urlEncode(secret)
     val locationIdentifiers = concatenateLocations(locations)
 
-    val jsonWeather = getStringFromUrl("https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
-                                           "&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret)
+    val jsonWeather = RawDataFetcher.getStringFromUrl(
+        "https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
+            "&locations=" + locationIdentifiers + "&secret=" + urlEncodedSecret)
 
-    if (StringUtil.isNotEmpty(jsonWeather)) {
+    if (jsonWeather.valid) {
       try {
-        val weatherList = JSONArray(jsonWeather)
+        val resultList = HashMap<LocationIdentifier, WeatherData>()
+        val weatherList = JSONArray(jsonWeather.data)
         (0 until weatherList.length()).map { weatherList.getJSONObject(it) }.forEach { weather ->
           getLocation(locations, weather)?.let {
             val data = parseWeatherData(it.key, weather)
@@ -40,11 +37,12 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
             resultList.put(data.location, data)
           }
         }
+        return FetchAllResponse(true, resultList)
       } catch (e: Throwable) {
         Log.e(WeatherDataFetcher::class.java.toString(), "Failed to parse JSON String <$jsonWeather>", e)
       }
     }
-    return resultList
+    return FetchAllResponse(false)
   }
 
   private fun concatenateLocations(locations: List<WeatherLocation>): String {
@@ -61,11 +59,12 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
   }
 
   fun fetchWeatherDataFromUrl(baseUrl: String): WeatherData? {
-    val jsonWeather = getStringFromUrl(baseUrl + "/weatherstation/query?type=current&new&build=" + buildNumber)
+    val jsonWeather = RawDataFetcher.getStringFromUrl(
+        baseUrl + "/weatherstation/query?type=current&new&build=" + buildNumber)
 
-    if (StringUtil.isNotEmpty(jsonWeather)) {
+    if (jsonWeather.valid) {
       try {
-        val weather = JSONObject(jsonWeather)
+        val weather = JSONObject(jsonWeather.data)
         return getWeatherData(weather)
       } catch (e: Throwable) {
         Log.e(WeatherDataFetcher::class.java.toString(), "Failed to parse JSON String <$jsonWeather>", e)
@@ -123,17 +122,17 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
     return if (json.has(name)) (json.get(name) as Number).toFloat() else null
   }
 
-  fun fetchStatisticsFromUrl(locationIds: ArrayList<String>): HashMap<String, Statistics> {
+  fun fetchStatisticsFromUrl(locationIds: List<String>): HashMap<String, Statistics> {
     if (locationIds.size > 0) {
       var concatenatedLocationIds = locationIds[0]
-      for (i in 1..locationIds.size - 1) {
+      for (i in 1 until locationIds.size) {
         concatenatedLocationIds += "," + locationIds[i]
       }
-      val jsonStatistics = getStringFromUrl(
+      val jsonStatistics = RawDataFetcher.getStringFromUrl(
           "https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
               "&locations=" + concatenatedLocationIds + "&type=stats")
       try {
-        return JsonTranslator.toStatistics(jsonStatistics)
+        return JsonTranslator.toStatistics(jsonStatistics.data)
       } catch (e: Throwable) {
         Log.e(WeatherDataFetcher::class.java.toString(), "Failed to parse JSON String <$jsonStatistics>", e)
       }
@@ -141,40 +140,5 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
     }
     return HashMap()
   }
-
-  private val COMMUNICATION_TIMEOUT = 60000
-
-  private fun getStringFromUrl(uri: String): String {
-    var response = ""
-    try {
-      val url = URL(uri)
-      val connection = url.openConnection() as HttpURLConnection
-      try {
-        connection.connectTimeout = COMMUNICATION_TIMEOUT
-        connection.readTimeout = COMMUNICATION_TIMEOUT
-        response = readStream(connection.inputStream)
-      } finally {
-        connection.disconnect()
-      }
-    } catch (e: Throwable) {
-      Log.d(WeatherDataFetcher::class.java.toString(), "Failed to download weather data", e)
-    }
-
-    return response
-  }
-
-  @Throws(IOException::class)
-  private fun readStream(content: InputStream): String {
-    val builder = StringBuilder()
-    val reader = BufferedReader(InputStreamReader(content, "UTF-8"))
-    var line: String? = reader.readLine()
-    while (line != null) {
-      builder.append(line)
-      line = reader.readLine()
-    }
-    reader.close()
-    return builder.toString()
-  }
-
 
 }

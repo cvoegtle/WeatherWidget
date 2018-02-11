@@ -2,15 +2,14 @@ package org.voegtle.weatherwidget.widget
 
 import android.content.Context
 import android.util.Log
-import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
-import java.util.*
+import org.voegtle.weatherwidget.util.FetchAllResponse
+import java.util.ArrayList
 
 class WidgetUpdateTask(context: Context, configuration: ApplicationSettings,
                        private val screenPainters: ArrayList<WidgetScreenPainter>)
-  : AbstractWidgetUpdateTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>(context, configuration) {
+  : AbstractWidgetUpdateTask<Void, Void, FetchAllResponse>(context, configuration) {
   private val userLocationUpdater = UserLocationUpdater(context)
 
   override fun onPreExecute() {
@@ -21,26 +20,23 @@ class WidgetUpdateTask(context: Context, configuration: ApplicationSettings,
   }
 
 
-  override fun doInBackground(vararg voids: Void): HashMap<LocationIdentifier, WeatherData> {
-    try {
-      if (!screenPainters.isEmpty()) {
-        return fetchAllWeatherData()
-      }
-    } catch (ignore: Throwable) {
+  override fun doInBackground(vararg voids: Void): FetchAllResponse {
+    if (!screenPainters.isEmpty()) {
+      return fetchAllWeatherData()
     }
 
-    return HashMap()
+    return FetchAllResponse(true, HashMap())
   }
 
-  protected fun fetchAllWeatherData(): HashMap<LocationIdentifier, WeatherData> {
+  private fun fetchAllWeatherData(): FetchAllResponse {
     userLocationUpdater.updateLocation()
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
   }
 
 
-  override fun onPostExecute(data: HashMap<LocationIdentifier, WeatherData>) {
+  override fun onPostExecute(data: FetchAllResponse) {
     try {
-      screenPainters.forEach { screenPainter -> screenPainter.updateWidgetData(data) }
+      screenPainters.forEach { screenPainter -> screenPainter.updateWidgetData(data.weatherMap) }
       checkDataForAlert(data)
     } catch (th: Throwable) {
       Log.e(WidgetUpdateTask::class.java.toString(), "Failed to update View", th)

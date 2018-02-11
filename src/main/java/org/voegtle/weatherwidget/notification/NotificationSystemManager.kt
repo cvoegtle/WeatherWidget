@@ -12,7 +12,6 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
-import android.os.Bundle
 import android.support.v4.app.NotificationCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
@@ -21,6 +20,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.DateUtil
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -47,10 +47,10 @@ class NotificationSystemManager(private val context: Context, private val config
     }
   }
 
-  fun checkDataForAlert(data: HashMap<LocationIdentifier, WeatherData>) {
-    if (data.isNotEmpty()) {
-      showAlertNotification(stationCheck.checkForOverdueStations(data))
-      showInfoNotification(data)
+  fun checkDataForAlert(data: FetchAllResponse) {
+    if (data.valid) {
+      showAlertNotification(stationCheck.checkForOverdueStations(data.weatherMap))
+      showInfoNotification(data.weatherMap)
     }
   }
 

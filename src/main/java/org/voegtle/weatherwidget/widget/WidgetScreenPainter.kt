@@ -50,7 +50,6 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
       remoteViews.setTextColor(viewIds.weather, ColorUtil.updateColor(colorScheme))
     }
     remoteViews.setTextColor(R.id.update_time, ColorUtil.updateColor(colorScheme))
-    updateAllWidgets()
   }
 
   override fun showDataIsValid() {

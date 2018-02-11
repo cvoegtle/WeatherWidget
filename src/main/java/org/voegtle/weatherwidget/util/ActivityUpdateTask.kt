@@ -15,24 +15,24 @@ import java.util.*
 
 class ActivityUpdateTask internal constructor(private val activity: WeatherActivity,
                                               private val configuration: ApplicationSettings,
-                                              private val showToast: Boolean) : AsyncTask<Void, Void, HashMap<LocationIdentifier, WeatherData>>() {
+                                              private val showToast: Boolean) : AsyncTask<Void, Void, FetchAllResponse>() {
   private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
   private val userLocationUpdater = UserLocationUpdater(activity.applicationContext)
   private val locationOrderStore = LocationOrderStore(activity.applicationContext)
   private val formatter = DataFormatter()
 
-  override fun doInBackground(vararg voids: Void): HashMap<LocationIdentifier, WeatherData> {
+  override fun doInBackground(vararg voids: Void): FetchAllResponse {
     userLocationUpdater.updateLocation()
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
   }
 
-  override fun onPostExecute(data: HashMap<LocationIdentifier, WeatherData>) {
+  override fun onPostExecute(data: FetchAllResponse) {
     try {
-      updateViewData(data)
-      sortViews(data)
-      updateWidgets(data)
+      updateViewData(data.weatherMap)
+      sortViews(data.weatherMap)
+      updateWidgets(data.weatherMap)
 
-      UserFeedback(activity).showMessage(R.string.message_data_updated, showToast)
+      UserFeedback(activity).showMessage(if (data.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast)
 
       val notificationManager = NotificationSystemManager(activity, configuration)
       notificationManager.checkDataForAlert(data)
