@@ -15,7 +15,6 @@ class WidgetUpdateTask(context: Context, configuration: ApplicationSettings,
   override fun onPreExecute() {
     screenPainters.forEach { screenPainter ->
       screenPainter.showDataIsInvalid()
-      screenPainter.updateAllWidgets()
     }
   }
 
