@@ -2,12 +2,14 @@ package org.voegtle.weatherwidget.widget
 
 import android.content.Context
 import android.util.Log
+import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.util.FetchAllResponse
+import org.voegtle.weatherwidget.util.UserFeedback
 import java.util.ArrayList
 
-class WidgetUpdateTask(context: Context, configuration: ApplicationSettings,
+class WidgetUpdateTask(private val context: Context, configuration: ApplicationSettings,
                        private val screenPainters: ArrayList<WidgetScreenPainter>)
   : AbstractWidgetUpdateTask<Void, Void, FetchAllResponse>(context, configuration) {
   private val userLocationUpdater = UserLocationUpdater(context)
@@ -33,10 +35,14 @@ class WidgetUpdateTask(context: Context, configuration: ApplicationSettings,
   }
 
 
-  override fun onPostExecute(data: FetchAllResponse) {
+  override fun onPostExecute(response: FetchAllResponse) {
     try {
-      screenPainters.forEach { screenPainter -> screenPainter.updateWidgetData(data.weatherMap) }
-      checkDataForAlert(data)
+      if (response.valid) {
+        screenPainters.forEach { screenPainter -> screenPainter.updateWidgetData(response.weatherMap) }
+        checkDataForAlert(response)
+      } else {
+        UserFeedback(context).showMessage(R.string.message_data_update_failed, true)
+      }
     } catch (th: Throwable) {
       Log.e(WidgetUpdateTask::class.java.toString(), "Failed to update View", th)
     } finally {

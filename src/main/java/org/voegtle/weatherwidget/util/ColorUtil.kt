@@ -35,7 +35,7 @@ object ColorUtil {
     }
   }
 
-  fun updateColor(scheme: ColorScheme): Int = if (scheme === ColorScheme.dark) Color.DKGRAY else Color.GRAY
+  fun updateColor(scheme: ColorScheme): Int = if (scheme === ColorScheme.dark) Color.GRAY else Color.GRAY
 
   fun outdatedColor(scheme: ColorScheme): Int = if (scheme === ColorScheme.dark) Color.GRAY else Color.DKGRAY
 

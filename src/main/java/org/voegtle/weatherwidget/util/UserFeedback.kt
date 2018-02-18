@@ -1,11 +1,12 @@
 package org.voegtle.weatherwidget.util
 
 
-import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 
-class UserFeedback(private val activity: Activity) {
+class UserFeedback(private val context: Context) {
 
   fun showMessage(messageId: Int, notifyUser: Boolean) {
     if (notifyUser) {
@@ -14,12 +15,12 @@ class UserFeedback(private val activity: Activity) {
   }
 
   fun showMessage(messageId: Int) {
-    val message = activity.resources.getString(messageId)
-    val context = activity.applicationContext
+    val message = context.resources.getString(messageId)
 
-    activity.runOnUiThread {
+    val handler = Handler(Looper.getMainLooper())
+    handler.post( {
       val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
       toast.show()
-    }
+    })
   }
 }
