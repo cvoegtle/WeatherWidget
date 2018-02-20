@@ -6,12 +6,16 @@ import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.location.*
+import org.voegtle.weatherwidget.location.LocationContainer
+import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.location.LocationOrderStore
+import org.voegtle.weatherwidget.location.LocationView
+import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory
-import java.util.*
+import java.util.HashMap
 
 class ActivityUpdateTask internal constructor(private val activity: WeatherActivity,
                                               private val configuration: ApplicationSettings,
@@ -26,16 +30,17 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
   }
 
-  override fun onPostExecute(data: FetchAllResponse) {
+  override fun onPostExecute(response: FetchAllResponse) {
     try {
-      updateViewData(data.weatherMap)
-      sortViews(data.weatherMap)
-      updateWidgets(data.weatherMap)
+      updateViewData(response.weatherMap)
+      sortViews(response.weatherMap)
+      updateWidgets(response.weatherMap)
 
-      UserFeedback(activity).showMessage(if (data.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast)
+      UserFeedback(activity).showMessage(
+          if (response.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast)
 
       val notificationManager = NotificationSystemManager(activity, configuration)
-      notificationManager.checkDataForAlert(data)
+      notificationManager.checkDataForAlert(response)
     } catch (th: Throwable) {
       UserFeedback(activity).showMessage(R.string.message_data_update_failed, true)
       Log.e(ActivityUpdateTask::class.java.toString(), "Failed to update View", th)
