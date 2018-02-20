@@ -49,7 +49,6 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
 
     updateBackgroundColor(remoteViews)
     viewIds.forEach { viewId ->
-      updateVisibility(remoteViews, viewId.line, false)
       if (SDK_INT >= 16) {
         remoteViews.setTextViewTextSize(viewId.weather, TypedValue.COMPLEX_UNIT_SP, configuration.widgetTextSize.toFloat())
       }
