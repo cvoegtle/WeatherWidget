@@ -16,7 +16,7 @@ class MainDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.average7days)
     addDiagram(DiagramEnum.rain)
     addDiagram(DiagramEnum.summerdays)
-    addDiagram(DiagramEnum.summerdays2016)
+    addDiagram(DiagramEnum.summerdays2017)
     addDiagram(DiagramEnum.winterdays)
     addDiagram(DiagramEnum.winterdays2017)
   }
@@ -35,7 +35,7 @@ class MainDiagramActivity : DiagramActivity() {
         R.id.action_7_days_average -> updateViewPager(3)
         R.id.action_rain -> updateViewPager(4)
         R.id.action_summerdays -> updateViewPager(5)
-        R.id.action_summerdays2016 -> updateViewPager(6)
+        R.id.action_summerdays2017 -> updateViewPager(6)
         R.id.action_winterdays -> updateViewPager(7)
         R.id.action_winterdays2017 -> updateViewPager(8)
         else -> false
