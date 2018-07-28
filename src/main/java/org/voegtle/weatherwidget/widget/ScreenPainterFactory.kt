@@ -17,7 +17,7 @@ import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.widget.view.ViewIdFactory
-import java.util.*
+import java.util.ArrayList
 
 class ScreenPainterFactory(context: Context, private val configuration: ApplicationSettings) {
 
@@ -31,18 +31,20 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     return screenPainters
   }
 
-  private fun getWidgetScreenPainter(screenPainters: ArrayList<WidgetScreenPainter>, isDetailed: Boolean, clazz: Class<*>) {
+  private fun getWidgetScreenPainter(screenPainters: ArrayList<WidgetScreenPainter>, isDetailed: Boolean,
+                                     clazz: Class<*>) {
     val thisWidget = ComponentName(context, clazz)
     val appWidgetManager = AppWidgetManager.getInstance(context)
     val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
     if (allWidgetIds.isNotEmpty()) {
       screenPainters.add(WidgetScreenPainter(appWidgetManager, allWidgetIds, createRemoteViews(), context,
-          configuration, refreshImage, isDetailed))
+                                             configuration, refreshImage, isDetailed))
     }
   }
 
   private val refreshImage: Drawable
-    get() = ContextCompat.getDrawable(context, if (configuration.colorScheme === ColorScheme.dark) R.drawable.ic_action_refresh else R.drawable.ic_action_refresh_dark)
+    get() = ContextCompat.getDrawable(context,
+                                      if (configuration.colorScheme === ColorScheme.dark) R.drawable.ic_action_refresh else R.drawable.ic_action_refresh_dark)!!
 
   private fun createRemoteViews(): RemoteViews {
     val remoteViews = RemoteViews(context.packageName, R.layout.widget_weather)
@@ -50,7 +52,8 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     updateBackgroundColor(remoteViews)
     viewIds.forEach { viewId ->
       if (SDK_INT >= 16) {
-        remoteViews.setTextViewTextSize(viewId.weather, TypedValue.COMPLEX_UNIT_SP, configuration.widgetTextSize.toFloat())
+        remoteViews.setTextViewTextSize(viewId.weather, TypedValue.COMPLEX_UNIT_SP,
+                                        configuration.widgetTextSize.toFloat())
       }
     }
 
@@ -75,7 +78,8 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
   private fun setWidgetIntents(remoteViews: RemoteViews) {
     val pendingOpenApp = IntentFactory.createOpenAppIntent(context)
     viewIds.forEach { viewId -> remoteViews.setOnClickPendingIntent(viewId.line, pendingOpenApp) }
-    remoteViews.setOnClickPendingIntent(R.id.refresh_button, IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java))
+    remoteViews.setOnClickPendingIntent(R.id.refresh_button,
+                                        IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java))
   }
 
 
