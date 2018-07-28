@@ -49,5 +49,5 @@ object DateUtil {
         else -> null
       }
 
-  private fun isOutdated(timestamp: Date): Boolean = getAge(timestamp) > 20 * 60
+  fun isOutdated(timestamp: Date): Boolean = getAge(timestamp) > 20 * 60
 }

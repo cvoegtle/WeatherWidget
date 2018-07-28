@@ -39,7 +39,8 @@ class WeatherSettingsReader {
       val locationPreferences = LocationPreferences(
           showInWidget = getBoolean(preferences, location.prefShowInWidget, visibleInWidgetByDefault),
           showInApp = getBoolean(preferences, location.prefShowInApp, visibleInAppByDefault),
-          alertActive = getBoolean(preferences, location.prefAlert, false))
+          alertActive = getBoolean(preferences, location.prefAlert, false),
+          highlightActive = getBoolean(preferences, location.prefHighlight, false))
       location.preferences = locationPreferences
     }
     return locations

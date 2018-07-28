@@ -45,6 +45,11 @@
                 android:title="@string/alert"
                 android:defaultValue="false"
                 />
+        <CheckBoxPreference
+                android:key="highlight_paderborn"
+                android:title="@string/highlight"
+                android:defaultValue="false"
+                />
       </PreferenceCategory>
 
       <PreferenceCategory
@@ -63,6 +68,11 @@
         <CheckBoxPreference
                 android:key="alert_bali"
                 android:title="@string/alert"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="highlight_bali"
+                android:title="@string/highlight"
                 android:defaultValue="false"
                 />
       </PreferenceCategory>
@@ -85,6 +95,11 @@
                 android:title="@string/alert"
                 android:defaultValue="false"
                 />
+        <CheckBoxPreference
+                android:key="highlight_leo"
+                android:title="@string/highlight"
+                android:defaultValue="false"
+                />
       </PreferenceCategory>
 
       <PreferenceCategory
@@ -103,6 +118,11 @@
         <CheckBoxPreference
                 android:key="alert_bonn"
                 android:title="@string/alert"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="highlight_bonn"
+                android:title="@string/highlight"
                 android:defaultValue="false"
                 />
       </PreferenceCategory>
@@ -125,6 +145,11 @@
                 android:title="@string/alert"
                 android:defaultValue="false"
                 />
+        <CheckBoxPreference
+                android:key="highlight_magdeburg"
+                android:title="@string/highlight"
+                android:defaultValue="false"
+                />
       </PreferenceCategory>
       <PreferenceCategory
               android:title="@string/station_herzogenaurach"
@@ -142,6 +167,11 @@
         <CheckBoxPreference
                 android:key="alert_herzo"
                 android:title="@string/alert"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="highlight_herzo"
+                android:title="@string/highlight"
                 android:defaultValue="false"
                 />
       </PreferenceCategory>
@@ -164,6 +194,11 @@
                 android:title="@string/alert"
                 android:defaultValue="false"
                 />
+        <CheckBoxPreference
+                android:key="highlight_freiburg"
+                android:title="@string/highlight"
+                android:defaultValue="false"
+                />
       </PreferenceCategory>
 
       <PreferenceCategory
@@ -184,6 +219,11 @@
                 android:title="@string/alert"
                 android:defaultValue="false"
         />
+        <CheckBoxPreference
+                android:key="highlight_shenzhen"
+                android:title="@string/highlight"
+                android:defaultValue="false"
+        />
       </PreferenceCategory>
 
       <PreferenceCategory
@@ -202,6 +242,11 @@
         <CheckBoxPreference
                 android:key="alert_mobil"
                 android:title="@string/alert"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="highlight_mobil"
+                android:title="@string/highlight"
                 android:defaultValue="false"
                 />
       </PreferenceCategory>

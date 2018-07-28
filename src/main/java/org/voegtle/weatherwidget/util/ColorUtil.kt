@@ -2,7 +2,7 @@ package org.voegtle.weatherwidget.util
 
 import android.graphics.Color
 import org.voegtle.weatherwidget.preferences.ColorScheme
-import java.util.*
+import java.util.Date
 
 object ColorUtil {
   private val WAITING_PERIOD = 420 // 7 Minuten
@@ -11,7 +11,7 @@ object ColorUtil {
   private val MIN_RGB_VALUE_DARK = 80
 
   fun byAge(colorScheme: ColorScheme, lastUpdate: Date): Int =
-    if (colorScheme === ColorScheme.light) byAgeDark(lastUpdate) else byAge(lastUpdate)
+      if (colorScheme == ColorScheme.light) byAgeDark(lastUpdate) else byAge(lastUpdate)
 
   fun byAge(lastUpdate: Date): Int {
     val age = DateUtil.getAge(lastUpdate)
@@ -24,6 +24,9 @@ object ColorUtil {
     val red = Math.min(MAX_RGB_VALUE, Math.max(MIN_RGB_VALUE_DARK + (age - 420) / 10, MIN_RGB_VALUE_DARK))
     return Color.rgb(red, MIN_RGB_VALUE_DARK, MIN_RGB_VALUE_DARK)
   }
+
+  fun highlightText(colorScheme: ColorScheme): Int =
+      if (colorScheme == ColorScheme.dark) Color.rgb(210, 210, 80) else Color.rgb(170, 130, 0)
 
   fun byRain(isRaining: Boolean, scheme: ColorScheme, lastUpdate: Date): Int {
     val age = DateUtil.getAge(lastUpdate)

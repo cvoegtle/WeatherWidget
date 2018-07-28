@@ -110,4 +110,5 @@
   <string name="enable_notification">Aktuelle Messwerte anzeigen</string>
   <string name="understood">verstanden</string>
   <string name="action_winter_days2017">Wintertage 2016/17</string>
+  <string name="highlight">hervorheben</string>
 </resources>

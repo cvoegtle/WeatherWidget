@@ -11,6 +11,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.UserLocationUpdater
+import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.OrderCriteria
@@ -60,15 +61,21 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {
     configuration.locations.forEach { location ->
       data[location.key]?.let {
-        updateWeatherLocation(location.weatherViewId, location.name, it)
+        updateWeatherLocation(location, location.name, it)
       }
     }
   }
 
-  private fun updateWeatherLocation(locationId: Int, locationName: String, data: WeatherData) {
-    val contentView: LocationView = activity.findViewById(locationId)
+  private fun updateWeatherLocation(location: WeatherLocation, locationName: String, data: WeatherData) {
+    val contentView: LocationView = activity.findViewById(location.weatherViewId)
 
-    val color = ColorUtil.byAge(configuration.colorScheme, data.timestamp)
+    val highlight = location.preferences.highlightActive
+    val colorScheme = configuration.colorScheme
+    val color = if (highlight && !DateUtil.isOutdated(data.timestamp))
+      ColorUtil.highlightText(colorScheme)
+    else
+      ColorUtil.byAge(colorScheme, data.timestamp)
+
     val caption = getCaption(locationName, data)
 
     updateView(contentView, caption, data, color)

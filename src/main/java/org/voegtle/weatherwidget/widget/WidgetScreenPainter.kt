@@ -16,10 +16,8 @@ import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DateUtil
 import org.voegtle.weatherwidget.widget.view.ViewId
 import org.voegtle.weatherwidget.widget.view.ViewIdFactory
-import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.HashMap
-import java.util.Locale
 import kotlin.collections.ArrayList
 import kotlin.collections.List
 import kotlin.collections.forEach
@@ -82,7 +80,11 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
   }
 
   private fun visualizeData(location: WeatherLocation, data: WeatherData, viewId: ViewId) {
-    remoteViews.setTextColor(viewId.weather, ColorUtil.byAge(colorScheme, data.timestamp))
+    var textColor = ColorUtil.byAge(colorScheme, data.timestamp)
+    if (location.preferences.highlightActive && !DateUtil.isOutdated(data.timestamp)) {
+      textColor = ColorUtil.highlightText(colorScheme)
+    }
+    remoteViews.setTextColor(viewId.weather, textColor)
     remoteViews.setTextViewText(viewId.weather, formatter.formatWidgetLine(location, data, detailed))
 
     remoteViews.setTextColor(viewId.rain, ColorUtil.byRain(data.isRaining, colorScheme, data.timestamp))
