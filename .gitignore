@@ -1,6 +1,7 @@
 .gradle
 build
 gradle
+.idea
 /local.properties
 /.idea/workspace.xml
 /src/main/gen
