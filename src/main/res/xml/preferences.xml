@@ -46,7 +46,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="highlight_paderborn"
+                android:key="favorite_paderborn"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -66,12 +66,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="alert_bali"
-                android:title="@string/alert"
-                android:defaultValue="false"
-                />
-        <CheckBoxPreference
-                android:key="highlight_bali"
+                android:key="favorite_bali"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -91,12 +86,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="alert_leo"
-                android:title="@string/alert"
-                android:defaultValue="false"
-                />
-        <CheckBoxPreference
-                android:key="highlight_leo"
+                android:key="favorite_leo"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -116,12 +106,7 @@
                 android:defaultValue="true"
                 />
         <CheckBoxPreference
-                android:key="alert_bonn"
-                android:title="@string/alert"
-                android:defaultValue="false"
-                />
-        <CheckBoxPreference
-                android:key="highlight_bonn"
+                android:key="favorite_bonn"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -141,12 +126,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="alert_magdeburg"
-                android:title="@string/alert"
-                android:defaultValue="false"
-                />
-        <CheckBoxPreference
-                android:key="highlight_magdeburg"
+                android:key="favorite_magdeburg"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -165,12 +145,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="alert_herzo"
-                android:title="@string/alert"
-                android:defaultValue="false"
-                />
-        <CheckBoxPreference
-                android:key="highlight_herzo"
+                android:key="favorite_herzo"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -195,7 +170,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="highlight_freiburg"
+                android:key="favorite_freiburg"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />
@@ -220,7 +195,7 @@
                 android:defaultValue="false"
         />
         <CheckBoxPreference
-                android:key="highlight_shenzhen"
+                android:key="favorite_shenzhen"
                 android:title="@string/highlight"
                 android:defaultValue="false"
         />
@@ -240,12 +215,7 @@
                 android:defaultValue="false"
                 />
         <CheckBoxPreference
-                android:key="alert_mobil"
-                android:title="@string/alert"
-                android:defaultValue="false"
-                />
-        <CheckBoxPreference
-                android:key="highlight_mobil"
+                android:key="favorite_mobil"
                 android:title="@string/highlight"
                 android:defaultValue="false"
                 />

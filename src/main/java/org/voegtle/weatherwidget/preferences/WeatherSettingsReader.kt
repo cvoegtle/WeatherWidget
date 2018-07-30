@@ -40,7 +40,7 @@ class WeatherSettingsReader {
           showInWidget = getBoolean(preferences, location.prefShowInWidget, visibleInWidgetByDefault),
           showInApp = getBoolean(preferences, location.prefShowInApp, visibleInAppByDefault),
           alertActive = getBoolean(preferences, location.prefAlert, false),
-          highlightActive = getBoolean(preferences, location.prefHighlight, false))
+          favorite = getBoolean(preferences, location.prefFavorite, false))
       location.preferences = locationPreferences
     }
     return locations

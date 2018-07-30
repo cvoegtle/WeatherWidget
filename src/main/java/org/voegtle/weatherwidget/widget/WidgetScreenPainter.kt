@@ -81,7 +81,7 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
 
   private fun visualizeData(location: WeatherLocation, data: WeatherData, viewId: ViewId) {
     var textColor = ColorUtil.byAge(colorScheme, data.timestamp)
-    if (location.preferences.highlightActive && !DateUtil.isOutdated(data.timestamp)) {
+    if (location.preferences.favorite && !DateUtil.isOutdated(data.timestamp)) {
       textColor = ColorUtil.highlightText(colorScheme)
     }
     remoteViews.setTextColor(viewId.weather, textColor)

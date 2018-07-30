@@ -185,6 +185,9 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   }
 
   fun highlight(highlight: Boolean) {
-    setBackgroundColor(if (highlight) ColorUtil.highlight() else Color.TRANSPARENT)
+    if (highlight) {
+      setBackgroundColor(ColorUtil.highlight())
+    }
   }
+
 }

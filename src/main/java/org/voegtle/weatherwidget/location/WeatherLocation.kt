@@ -12,7 +12,7 @@ data class WeatherLocation(val key: LocationIdentifier,
                            val prefShowInWidget: String,
                            val prefShowInApp: String,
                            val prefAlert: String,
-                           val prefHighlight: String,
+                           val prefFavorite: String,
                            val isVisibleInAppByDefault: Boolean = true,
                            val isVisibleInWidgetByDefault: Boolean = true,
                            var preferences: LocationPreferences = LocationPreferences()) {

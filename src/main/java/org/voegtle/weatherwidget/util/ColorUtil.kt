@@ -26,7 +26,9 @@ object ColorUtil {
   }
 
   fun highlightText(colorScheme: ColorScheme): Int =
-      if (colorScheme == ColorScheme.dark) Color.rgb(210, 210, 80) else Color.rgb(170, 130, 0)
+      if (colorScheme == ColorScheme.dark) Color.rgb(230, 230, 110) else Color.rgb(170, 130, 40)
+
+  fun favorite(): Int = Color.argb(64, 210, 210, 80)
 
   fun byRain(isRaining: Boolean, scheme: ColorScheme, lastUpdate: Date): Int {
     val age = DateUtil.getAge(lastUpdate)

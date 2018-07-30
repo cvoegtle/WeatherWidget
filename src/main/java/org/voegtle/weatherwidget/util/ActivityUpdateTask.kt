@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.util
 
+import android.graphics.Color
 import android.os.AsyncTask
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_weather.*
@@ -69,17 +70,21 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   private fun updateWeatherLocation(location: WeatherLocation, locationName: String, data: WeatherData) {
     val contentView: LocationView = activity.findViewById(location.weatherViewId)
 
-    val highlight = location.preferences.highlightActive
-    val colorScheme = configuration.colorScheme
-    val color = if (highlight && !DateUtil.isOutdated(data.timestamp))
-      ColorUtil.highlightText(colorScheme)
-    else
-      ColorUtil.byAge(colorScheme, data.timestamp)
+    val favorite = location.preferences.favorite
+    highlightFavorite(contentView, favorite)
 
+
+    val colorScheme = configuration.colorScheme
+    val color = ColorUtil.byAge(colorScheme, data.timestamp)
     val caption = getCaption(locationName, data)
 
     updateView(contentView, caption, data, color)
   }
+
+  private fun highlightFavorite(contentView: LocationView, favorite: Boolean) {
+    contentView.setBackgroundColor(if (favorite) ColorUtil.favorite() else Color.TRANSPARENT)
+  }
+
 
   private fun getCaption(locationName: String, data: WeatherData): String {
     var caption = "$locationName - ${data.localtime}"

@@ -19,7 +19,7 @@ object LocationFactory {
                                   prefShowInApp = "app_show_paderborn",
                                   prefShowInWidget = "widget_show_paderborn",
                                   prefAlert = "alert_paderborn",
-                                  prefHighlight = "highlight_paderborn"))
+                                  prefFavorite = "favorite_paderborn"))
 
     locations.add(WeatherLocation(LocationIdentifier.BadLippspringe,
                                   name = res.getString(R.string.city_bali_full),
@@ -31,7 +31,7 @@ object LocationFactory {
                                   prefShowInApp = "app_show_bali",
                                   prefShowInWidget = "widget_show_bali",
                                   prefAlert = "alert_bali",
-                                  prefHighlight = "highlight_bali",
+                                  prefFavorite = "favorite_bali",
                                   isVisibleInWidgetByDefault = false))
 
     locations.add(WeatherLocation(LocationIdentifier.Bonn,
@@ -44,7 +44,7 @@ object LocationFactory {
                                   prefShowInApp = "app_show_bonn",
                                   prefShowInWidget = "widget_show_bonn",
                                   prefAlert = "alert_bonn",
-                                  prefHighlight = "highlight_bonn"))
+                                  prefFavorite = "favorite_bonn"))
 
     locations.add(WeatherLocation(LocationIdentifier.Freiburg,
                                   name = res.getString(R.string.city_freiburg_full),
@@ -56,7 +56,7 @@ object LocationFactory {
                                   prefShowInApp = "app_show_freiburg",
                                   prefShowInWidget = "widget_show_freiburg",
                                   prefAlert = "alert_freiburg",
-                                  prefHighlight = "highlight_freiburg"))
+                                  prefFavorite = "favorite_freiburg"))
 
     locations.add(WeatherLocation(LocationIdentifier.Leopoldshoehe,
                                   name = res.getString(R.string.city_leo_full),
@@ -69,7 +69,7 @@ object LocationFactory {
                                   prefShowInWidget = "widget_show_leo",
                                   isVisibleInWidgetByDefault = false,
                                   prefAlert = "alert_leo",
-                                  prefHighlight = "highlight_leo"))
+                                  prefFavorite = "favorite_leo"))
 
     locations.add(WeatherLocation(LocationIdentifier.Magdeburg,
                                   name = res.getString(R.string.city_magdeburg_full),
@@ -82,7 +82,7 @@ object LocationFactory {
                                   prefShowInWidget = "widget_show_magdeburg",
                                   isVisibleInWidgetByDefault = false,
                                   prefAlert = "alert_magdeburg",
-                                  prefHighlight = "highlight_magdeburg"))
+                                  prefFavorite = "favorite_magdeburg"))
 
     locations.add(WeatherLocation(LocationIdentifier.Herzogenaurach,
                                   name = res.getString(R.string.city_herzo_full),
@@ -95,7 +95,7 @@ object LocationFactory {
                                   prefShowInWidget = "widget_show_herzo",
                                   isVisibleInWidgetByDefault = false,
                                   prefAlert = "alert_herzo",
-                                  prefHighlight = "highlight_herzo"))
+                                  prefFavorite = "favorite_herzo"))
 
     locations.add(WeatherLocation(LocationIdentifier.Shenzhen,
                                   name = res.getString(R.string.city_shenzhen_full),
@@ -107,7 +107,7 @@ object LocationFactory {
                                   prefShowInWidget = "widget_show_shenzhen",
                                   isVisibleInWidgetByDefault = false,
                                   prefAlert = "alert_shenzhen",
-                                  prefHighlight = "highlight_shenzhen"))
+                                  prefFavorite = "favorite_shenzhen"))
 
     locations.add(WeatherLocation(LocationIdentifier.Mobil,
                                   name = res.getString(R.string.city_mobil_full),
@@ -121,7 +121,7 @@ object LocationFactory {
                                   isVisibleInAppByDefault = false,
                                   isVisibleInWidgetByDefault = false,
                                   prefAlert = "alert_mobil",
-                                  prefHighlight = "highlight_mobil"))
+                                  prefFavorite = "favorite_mobil"))
 
     return locations
   }
