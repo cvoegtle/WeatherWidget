@@ -26,7 +26,7 @@ object ColorUtil {
   }
 
   fun highlightText(colorScheme: ColorScheme): Int =
-      if (colorScheme == ColorScheme.dark) Color.rgb(230, 230, 110) else Color.rgb(170, 130, 40)
+      if (colorScheme == ColorScheme.dark) Color.rgb(230, 230, 110) else Color.rgb(255, 140, 50)
 
   fun favorite(): Int = Color.argb(64, 210, 210, 80)
 
