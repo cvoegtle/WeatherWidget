@@ -107,9 +107,11 @@
   <string name="channel_description">Weather information on the lock screen</string>
   <string name="wetterwolke_in_background">Weather widget is always up to date</string>
   <string name="android8_caption">Explanation</string>
-  <string name="android8_explanation">This notification is necessary to keep the weather widget up to date.\n\nThis notification can be suppressed in the Apps &amp; notifications settings without hampering the update of the widget.\n\nAlternatively Wetter Wolke can show a notification with the latest temperatures.</string>
+  <string name="android8_explanation">This notification is necessary to keep the weather widget up to date. This notification can be suppressed in the\nApps &amp; notifications settings without hampering the update of the widget. Alternatively Wetter Wolke can show a notification with the latest\ntemperatures.
+  </string>
   <string name="enable_notification">activate temperature notification</string>
   <string name="understood">understood</string>
   <string name="action_winter_days2017">Winter days 2016/17</string>
   <string name="highlight">highlight</string>
+  <string name="action_winter_days2018">Winter days 2017/18</string>
 </resources>
