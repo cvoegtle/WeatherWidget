@@ -11,8 +11,8 @@ class DataFormatter {
   private val integerFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
 
   init {
-    this.numberFormat.applyPattern("###.#")
-    this.integerFormat.applyPattern("###")
+    this.numberFormat.applyPattern("#,###.#")
+    this.integerFormat.applyPattern("#,###")
   }
 
   fun formatTemperatureForActivity(data: WeatherData): String {
@@ -38,8 +38,8 @@ class DataFormatter {
     if (detailed) {
       weatherData.append(" | ")
       weatherData.append(formatPercent(data.humidity))
-      if (data.rainToday != null) {
-        weatherData.append(" | ").append(formatRain(data.rainToday))
+      data.rainToday?.let {
+        weatherData.append(" | ").append(formatRain(it))
       }
     }
 

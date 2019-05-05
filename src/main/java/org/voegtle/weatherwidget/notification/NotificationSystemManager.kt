@@ -20,6 +20,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.DateUtil
 import java.text.DecimalFormat
@@ -38,10 +39,9 @@ class NotificationSystemManager(private val context: Context, private val config
       Context.NOTIFICATION_SERVICE) as NotificationManager
 
   private val stationCheck: WeatherStationCheck = WeatherStationCheck(configuration)
-  private val numberFormat: DecimalFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
+  private val dataFormatter = DataFormatter()
 
   init {
-    this.numberFormat.applyPattern("###.#")
     if (Build.VERSION.SDK_INT >= 26) {
       setupNotificationChannel()
     }
@@ -182,12 +182,18 @@ class NotificationSystemManager(private val context: Context, private val config
   }
 
   private fun describeLocation(weatherText: StringBuilder, location: WeatherLocation, weatherData: WeatherData) {
-    weatherText.append("${location.shortName}: ${numberFormat.format(weatherData.temperature)}°C")
+    weatherText.append("${location.shortName}: ${dataFormatter.formatTemperature(weatherData.temperature)}")
     weatherData.insideTemperature?.let {
-      weatherText.append(", ${numberFormat.format(weatherData.insideTemperature)}°C")
+      weatherText.append(", ${dataFormatter.formatTemperature(weatherData.insideTemperature)}")
     }
     weatherData.rainToday?.let {
-      weatherText.append(", ${numberFormat.format(weatherData.rainToday)}l")
+      weatherText.append(", ${dataFormatter.formatRain(it)}")
+    }
+
+    weatherData.solarradiation?.let {
+      if (weatherData.rainToday == null) {
+        weatherText.append(", ${dataFormatter.formatSolarradiation(it)}")
+      }
     }
 
     weatherText.append(" | ")
