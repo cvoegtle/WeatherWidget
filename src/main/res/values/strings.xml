@@ -8,10 +8,12 @@
   <string name="app_name_paderborn">4. Paderborner Temperatur</string>
   <string name="app_name_bonn">5. Bonner Temperatur</string>
   <string name="city_paderborn" translatable="false">PB</string>
+  <string name="city_paderborn20" translatable="false">PB2</string>
   <string name="city_freiburg" translatable="false">FR</string>
   <string name="city_bonn" translatable="false">BN</string>
   <string name="city_leo" translatable="false">Leo</string>
   <string name="city_paderborn_full" translatable="false">Paderborn</string>
+  <string name="city_paderborn20_full" translatable="false">Paderborn 2.0</string>
   <string name="city_freiburg_full" translatable="false">Freiburg</string>
   <string name="city_bonn_full" translatable="false">Bonn</string>
   <string name="city_leo_full" translatable="false">Leopoldshöhe</string>
@@ -31,6 +33,7 @@
   <string name="in_widget">im Widget anzeigen</string>
   <string name="alert">Alarm aktivieren</string>
   <string name="station_paderborn">Wetterstation in Paderborn</string>
+  <string name="station_paderborn20">Wetterstation in Paderborn 2.0</string>
   <string name="station_bonn">Wetterstation in Bonn</string>
   <string name="action_reload">Neu laden</string>
   <string name="message_data_updated">Wetterdaten aktualisiert</string>
@@ -42,6 +45,7 @@
   <string name="hours">Stunden</string>
   <string name="days">Tagen</string>
   <string name="action_7_days">7 Tage</string>
+  <string name="action_solarradiation">Sonneneinstrahlung</string>
   <string name="action_summer_days">Sommertage</string>
   <string name="action_7_days_average">Durchschnitt</string>
   <string name="message_diagram_update_failed">Diagram Abruf fehlgeschlagen</string>
@@ -134,4 +138,7 @@
   <string name="understood">verstanden</string>
   <string name="action_winter_days2017">Wintertage 2016/17</string>
   <string name="highlight">hervorheben</string>
+  <string name="barometer">Luftdruck</string>
+  <string name="solarradiation">Sonneneinstrahlung</string>
+  <string name="uvindex">UV Index</string>
 </resources>

@@ -52,6 +52,30 @@
                 />
       </PreferenceCategory>
 
+      <PreferenceCategory android:title="@string/station_paderborn20"
+                          android:key="settings_paderborn20">
+        <CheckBoxPreference
+                android:key="app_show_paderborn20"
+                android:title="@string/in_app"
+                android:defaultValue="true"
+                />
+        <CheckBoxPreference
+                android:key="widget_show_paderborn20"
+                android:title="@string/in_widget"
+                android:defaultValue="true"
+                />
+        <CheckBoxPreference
+                android:key="alert_paderborn20"
+                android:title="@string/alert"
+                android:defaultValue="false"
+                />
+        <CheckBoxPreference
+                android:key="favorite_paderborn20"
+                android:title="@string/highlight"
+                android:defaultValue="false"
+                />
+      </PreferenceCategory>
+
       <PreferenceCategory
               android:title="@string/station_bali"
               android:key="settings_bali">

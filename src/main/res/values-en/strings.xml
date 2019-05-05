@@ -83,6 +83,7 @@
   <string name="station_magdeburg">Weather station in Magdeburg</string>
   <string name="station_mobil">Mobile weather station</string>
   <string name="station_paderborn">Weather station in Paderborn</string>
+  <string name="station_paderborn20">Weather station in Paderborn 2.0</string>
   <string name="station_shenzhen">Weather station in Shenzhen</string>
   <string name="stations">Measurement station</string>
   <string name="temperature">Temperature</string>
@@ -114,4 +115,8 @@
   <string name="action_winter_days2017">Winter days 2016/17</string>
   <string name="highlight">highlight</string>
   <string name="action_winter_days2018">Winter days 2017/18</string>
+  <string name="action_solarradiation">Solar radiation</string>
+  <string name="barometer">Barometer</string>
+  <string name="solarradiation">Solar radiation</string>
+  <string name="uvindex">UV index</string>
 </resources>

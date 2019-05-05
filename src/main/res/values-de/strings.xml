@@ -23,6 +23,7 @@
   <string name="in_widget">im Widget anzeigen</string>
   <string name="alert">Alarm aktivieren</string>
   <string name="station_paderborn">Wetterstation in Paderborn</string>
+  <string name="station_paderborn20">Wetterstation in Paderborn 2.0</string>
   <string name="station_bonn">Wetterstation in Bonn</string>
   <string name="action_reload">Neu laden</string>
   <string name="message_data_updated">Wetterdaten aktualisiert</string>
@@ -112,4 +113,8 @@
   <string name="action_winter_days2017">Wintertage 2016/17</string>
   <string name="highlight">hervorheben</string>
   <string name="action_winter_days2018">Wintertage 2017/18</string>
+  <string name="action_solarradiation">Sonneneinstrahlung</string>
+  <string name="barometer">Luftdruck</string>
+  <string name="solarradiation">Sonneneinstrahlung</string>
+  <string name="uvindex">UV Index</string>
 </resources>

@@ -118,6 +118,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     locationView.diagramListener = View.OnClickListener { view ->
       when (view.id) {
         R.id.weather_paderborn -> startActivity(Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java))
+        R.id.weather_paderborn20 -> startActivity(Intent(this@WeatherActivity, Paderborn20DiagramActivity::class.java))
         R.id.weather_bali -> startActivity(Intent(this@WeatherActivity, BaliDiagramActivity::class.java))
         R.id.weather_bonn -> startActivity(Intent(this@WeatherActivity, BonnDiagramActivity::class.java))
         R.id.weather_freiburg -> startActivity(Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java))

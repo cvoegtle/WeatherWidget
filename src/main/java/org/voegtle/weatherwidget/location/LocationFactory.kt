@@ -13,13 +13,23 @@ object LocationFactory {
                                   name = res.getString(R.string.city_paderborn_full),
                                   shortName = res.getString(R.string.city_paderborn),
                                   identifier = "tegelweg8",
-                                  forecastUrl = Uri.parse(
-                                      "http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"),
+                                  forecastUrl = Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"),
                                   weatherViewId = R.id.weather_paderborn,
                                   prefShowInApp = "app_show_paderborn",
                                   prefShowInWidget = "widget_show_paderborn",
                                   prefAlert = "alert_paderborn",
                                   prefFavorite = "favorite_paderborn"))
+
+    locations.add(WeatherLocation(LocationIdentifier.Paderborn20,
+                                  name = res.getString(R.string.city_paderborn20_full),
+                                  shortName = res.getString(R.string.city_paderborn20),
+                                  identifier = "wetterwolke",
+                                  forecastUrl = Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"),
+                                  weatherViewId = R.id.weather_paderborn20,
+                                  prefShowInApp = "app_show_paderborn20",
+                                  prefShowInWidget = "widget_show_paderborn20",
+                                  prefAlert = "alert_paderborn20",
+                                  prefFavorite = "favorite_paderborn20"))
 
     locations.add(WeatherLocation(LocationIdentifier.BadLippspringe,
                                   name = res.getString(R.string.city_bali_full),

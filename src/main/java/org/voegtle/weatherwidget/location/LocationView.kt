@@ -2,7 +2,6 @@ package org.voegtle.weatherwidget.location
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.graphics.Color
 import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -99,37 +98,64 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     temperature.text = formatter.formatTemperatureForActivity(data)
     humidity.text = formatter.formatHumidityForActivity(data)
 
+    setBarometer(data.barometer)
+    setSolarradiation(data.solarradiation)
+    setUVIndex(data.UV)
+
     setRainData(data.rain, label_rain_last_hour, rain_last_hour)
     setRainData(data.rainToday, label_rain_today, rain_today)
     setWind(data.wind)
     setSolarData(data.watt)
   }
 
+  private fun setBarometer(value: Float?) {
+    if (value != null && value > 0.0) {
+      show(label_barometer, barometer)
+      barometer.text = formatter.formatBarometer(value)
+    } else {
+      hide(label_barometer, barometer)
+    }
+  }
+
+  private fun setSolarradiation(value: Float?) {
+    if (value != null && value > 0.0) {
+      show(label_solarradiation, solarradiation)
+      solarradiation.text = formatter.formatSolarradiation(value)
+    } else {
+      hide(label_solarradiation, solarradiation)
+    }
+  }
+
+  private fun setUVIndex(value: Float?) {
+    if (value != null && value > 0.0) {
+      show(label_uv, uv)
+      uv.text = formatter.formatInteger(value)
+    } else {
+      hide(label_uv, uv)
+    }
+  }
+
   private fun setSolarData(watt: Float?) {
     if (watt != null && watt > 0.0) {
-      label_solar_output.visibility = View.VISIBLE
-      solar_output.visibility = View.VISIBLE
+      show(label_solar_output, solar_output)
       solar_output.text = formatter.formatWatt(watt)
     } else {
-      label_solar_output.visibility = View.GONE
-      solar_output.visibility = View.GONE
+      hide(label_solar_output, solar_output)
     }
   }
 
   private fun setRainData(value: Float?, rainLabel: TextView, rain: TextView) {
-    rainLabel.visibility = if (value != null) View.VISIBLE else View.GONE
-    rain.visibility = if (value != null) View.VISIBLE else View.GONE
-    rain.text = if (value != null) formatter.formatRain(value) else ""
+    rainLabel.visibility = if (value != null && value > 0.0f) View.VISIBLE else View.GONE
+    rain.visibility = if (value != null && value > 0.0f) View.VISIBLE else View.GONE
+    rain.text = if (value != null && value > 0.0f) formatter.formatRain(value) else ""
   }
 
   private fun setWind(value: Float?) {
     if (value != null && value >= 1.0) {
-      label_wind_speed.visibility = View.VISIBLE
-      wind_speed.visibility = View.VISIBLE
+      show(label_wind_speed, wind_speed)
       wind_speed.text = formatter.formatWind(value)
     } else {
-      label_wind_speed.visibility = View.GONE
-      wind_speed.visibility = View.GONE
+      hide(label_wind_speed, wind_speed)
     }
   }
 
@@ -156,13 +182,13 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     if (stats != null) {
       if (stats.rain != null) {
         rainView.text = formatter.formatRain(stats.rain)
-        caption_rain.visibility = View.VISIBLE
+        show(caption_rain)
       }
       minView.text = formatter.formatTemperature(stats.minTemperature)
       maxView.text = formatter.formatTemperature(stats.maxTemperature)
       if (stats.kwh != null) {
         kwhView.text = formatter.formatKwh(stats.kwh)
-        caption_kwh.visibility = View.VISIBLE
+        show(caption_kwh)
       }
     }
   }
@@ -187,6 +213,18 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   fun highlight(highlight: Boolean) {
     if (highlight) {
       setBackgroundColor(ColorUtil.highlight())
+    }
+  }
+
+  private fun hide(vararg view: TextView) {
+    for (v in view) {
+      v.visibility = View.GONE
+    }
+  }
+
+  private fun show(vararg view: TextView) {
+    for (v in view) {
+      v.visibility = View.VISIBLE
     }
   }
 
