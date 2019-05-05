@@ -9,7 +9,6 @@ import org.voegtle.weatherwidget.location.LocationOrderStore
 object OrderCriteriaDialogBuilder {
 
   fun createOrderCriteriaDialog(activity: WeatherActivity): AlertDialog {
-    val activity = activity
     val locationOrderStore = LocationOrderStore(activity.applicationContext)
     val currentOrder = locationOrderStore.readOrderCriteria()
 
