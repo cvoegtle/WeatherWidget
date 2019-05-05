@@ -29,7 +29,9 @@ object LocationFactory {
                                   prefShowInApp = "app_show_paderborn20",
                                   prefShowInWidget = "widget_show_paderborn20",
                                   prefAlert = "alert_paderborn20",
-                                  prefFavorite = "favorite_paderborn20"))
+                                  prefFavorite = "favorite_paderborn20",
+                                  isVisibleInAppByDefault = false,
+                                  isVisibleInWidgetByDefault = false))
 
     locations.add(WeatherLocation(LocationIdentifier.BadLippspringe,
                                   name = res.getString(R.string.city_bali_full),
