@@ -20,9 +20,9 @@ import org.voegtle.weatherwidget.util.DataFormatter
 class LocationView(private val currentContext: Context, attrs: AttributeSet) : LinearLayout(currentContext, attrs) {
   private var imageExpand = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_expand)
   private var imageCollapse = ContextCompat.getDrawable(currentContext, R.drawable.ic_action_collapse)
-  private var externalClickListener: View.OnClickListener? = null
-  var diagramListener: View.OnClickListener? = null
-  var forecastListener: View.OnClickListener? = null
+  private var externalClickListener: OnClickListener? = null
+  var diagramListener: OnClickListener? = null
+  var forecastListener: OnClickListener? = null
 
   init {
     val li = currentContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -161,34 +161,39 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
   fun setMoreData(statistics: Statistics) {
     val today = statistics[Statistics.TimeRange.today]
-    updateStatistics(today, today_rain, today_min_temperature, today_max_temperature, today_kwh)
+    updateStatistics(today, today_rain, today_min_temperature, today_max_temperature, today_kwh, today_solar)
 
     val yesterday = statistics[Statistics.TimeRange.yesterday]
-    updateStatistics(yesterday, yesterday_rain, yesterday_min_temperature, yesterday_max_temperature, yesterday_kwh)
+    updateStatistics(yesterday, yesterday_rain, yesterday_min_temperature, yesterday_max_temperature, yesterday_kwh, yesterday_solar)
 
     val week = statistics[Statistics.TimeRange.last7days]
-    updateStatistics(week, week_rain, week_min_temperature, week_max_temperature, week_kwh)
+    updateStatistics(week, week_rain, week_min_temperature, week_max_temperature, week_kwh, week_solar)
 
     val month = statistics[Statistics.TimeRange.last30days]
-    updateStatistics(month, month_rain, month_min_temperature, month_max_temperature, month_kwh)
+    updateStatistics(month, month_rain, month_min_temperature, month_max_temperature, month_kwh, month_solar)
   }
 
-  private fun updateStatistics(stats: StatisticsSet?, rainView: TextView, minView: TextView, maxView: TextView,
-                               kwhView: TextView) {
+  private fun updateStatistics(stats: StatisticsSet?, rainView: TextView, minView: TextView, maxView: TextView, kwhView: TextView,
+                               solarView: TextView) {
     rainView.text = ""
     minView.text = ""
     maxView.text = ""
     kwhView.text = ""
-    if (stats != null) {
-      if (stats.rain != null) {
-        rainView.text = formatter.formatRain(stats.rain)
+    solarView.text = ""
+    stats?.let {
+      it.rain?.let  {
+        rainView.text = formatter.formatRain(it)
         show(caption_rain)
       }
-      minView.text = formatter.formatTemperature(stats.minTemperature)
-      maxView.text = formatter.formatTemperature(stats.maxTemperature)
-      if (stats.kwh != null) {
-        kwhView.text = formatter.formatKwh(stats.kwh)
+      minView.text = formatter.formatTemperature(it.minTemperature)
+      maxView.text = formatter.formatTemperature(it.maxTemperature)
+      stats.kwh?.let {
+        kwhView.text = formatter.formatKwh(it)
         show(caption_kwh)
+      }
+      stats.solarRadiationMax?.let {
+        solarView.text = formatter.formatSolarradiation(it)
+        show(caption_solar)
       }
     }
   }

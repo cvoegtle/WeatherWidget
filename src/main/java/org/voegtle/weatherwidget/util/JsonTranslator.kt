@@ -6,7 +6,7 @@ import org.json.JSONObject
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherJSONObject
-import java.util.*
+import java.util.HashMap
 
 object JsonTranslator {
 
@@ -59,10 +59,11 @@ object JsonTranslator {
     val range = Statistics.TimeRange.fromString(rangeStr)
     if (range != null) {
       result = StatisticsSet(range = range,
-          rain = toFloat(json, "rain"),
-          minTemperature = toFloat(json, "minTemperature"),
-          maxTemperature = toFloat(json, "maxTemperature"),
-          kwh = toFloat(json, "kwh"))
+                             rain = toFloat(json, "rain"),
+                             minTemperature = toFloat(json, "minTemperature"),
+                             maxTemperature = toFloat(json, "maxTemperature"),
+                             solarRadiationMax = toFloat(json, "solarRadiationMax"),
+                             kwh = toFloat(json, "kwh"))
     }
     return result
   }
@@ -88,6 +89,7 @@ object JsonTranslator {
     json.put("rain", set.rain)
     json.put("minTemperature", set.minTemperature)
     json.put("maxTemperature", set.maxTemperature)
+    json.put("solarRadiationMax", set.solarRadiationMax)
     json.put("kwh", set.kwh)
     return json
   }

@@ -141,4 +141,5 @@
   <string name="barometer">Luftdruck</string>
   <string name="solarradiation">Sonneneinstrahlung</string>
   <string name="uvindex">UV Index</string>
+  <string name="solar_caption">SonneMax</string>
 </resources>
