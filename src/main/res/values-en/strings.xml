@@ -120,4 +120,5 @@
   <string name="solarradiation">Solar radiation</string>
   <string name="uvindex">UV index</string>
   <string name="solar_caption">Sun Max</string>
+  <string name="solar_cummulated_caption">Sun Cum</string>
 </resources>

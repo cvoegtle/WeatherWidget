@@ -194,6 +194,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       stats.solarRadiationMax?.let {
         solarView.text = formatter.formatSolarradiation(it)
         show(caption_solar)
+        caption_kwh.text = context.resources.getString(R.string.solar_cummulated_caption)
       }
     }
   }
