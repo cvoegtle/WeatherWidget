@@ -20,19 +20,6 @@ object LocationFactory {
                                   prefAlert = "alert_paderborn",
                                   prefFavorite = "favorite_paderborn"))
 
-    locations.add(WeatherLocation(LocationIdentifier.Paderborn20,
-                                  name = res.getString(R.string.city_paderborn20_full),
-                                  shortName = res.getString(R.string.city_paderborn20),
-                                  identifier = "wetterwolke",
-                                  forecastUrl = Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_paderborn20,
-                                  prefShowInApp = "app_show_paderborn20",
-                                  prefShowInWidget = "widget_show_paderborn20",
-                                  prefAlert = "alert_paderborn20",
-                                  prefFavorite = "favorite_paderborn20",
-                                  isVisibleInAppByDefault = false,
-                                  isVisibleInWidgetByDefault = false))
-
     locations.add(WeatherLocation(LocationIdentifier.BadLippspringe,
                                   name = res.getString(R.string.city_bali_full),
                                   shortName = res.getString(R.string.city_bali),

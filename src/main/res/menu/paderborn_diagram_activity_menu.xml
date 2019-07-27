@@ -12,6 +12,9 @@
   <item android:id="@+id/action_2_days"
         android:showAsAction="ifRoom"
         android:title="@string/action_2_days"/>
+  <item android:id="@+id/action_solarradiation"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_solarradiation"/>
   <item android:id="@+id/action_30_days"
         android:showAsAction="ifRoom"
         android:title="@string/action_30_days"/>
