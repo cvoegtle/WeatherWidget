@@ -61,7 +61,7 @@ enum class DiagramEnum constructor(val id: Int, val url: String) {
   shenzhen_30days(49, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1526059248&format=image"),
   shenzhen_lastyear(50, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2094649277&format=image"),
 
-  paderborn20_solarradiation(51, "https://wetterimages.appspot.com/weatherstation/image?sheet=3&oid=1393111713&format=image");
+  paderborn20_solarradiation(51, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=443476029&format=image");
 
   val filename: String
     get() = "$this.png"
