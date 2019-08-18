@@ -143,4 +143,5 @@
   <string name="uvindex">UV Index</string>
   <string name="solar_caption">Max Sonne</string>
   <string name="solar_cummulated_caption">∑ Sonne</string>
+  <string name="action_barometer">Luftdruck</string>
 </resources>

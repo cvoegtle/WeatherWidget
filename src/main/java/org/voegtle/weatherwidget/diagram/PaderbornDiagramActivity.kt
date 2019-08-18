@@ -12,6 +12,7 @@ class PaderbornDiagramActivity : DiagramActivity() {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.paderborn_2days)
     addDiagram(DiagramEnum.paderborn20_solarradiation)
+    addDiagram(DiagramEnum.paderborn20_barometer)
     addDiagram(DiagramEnum.paderborn_30days)
     addDiagram(DiagramEnum.paderborn_lastyear)
     addDiagram(DiagramEnum.paderborn_year)
@@ -27,9 +28,10 @@ class PaderbornDiagramActivity : DiagramActivity() {
       when (item.itemId) {
         R.id.action_2_days -> updateViewPager(0)
         R.id.action_solarradiation -> updateViewPager(1)
-        R.id.action_30_days -> updateViewPager(2)
-        R.id.action_last_year -> updateViewPager(3)
-        R.id.action_year -> updateViewPager(4)
+        R.id.action_barometer -> updateViewPager(2)
+        R.id.action_30_days -> updateViewPager(3)
+        R.id.action_last_year -> updateViewPager(4)
+        R.id.action_year -> updateViewPager(5)
         else -> false
       }
 }
