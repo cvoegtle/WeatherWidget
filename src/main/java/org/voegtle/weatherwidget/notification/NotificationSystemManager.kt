@@ -191,7 +191,7 @@ class NotificationSystemManager(private val context: Context, private val config
     }
 
     weatherData.solarradiation?.let {
-      if (weatherData.rainToday == null) {
+      if (weatherData.rainToday == null && weatherData.solarradiation > 0.0) {
         weatherText.append(", ${dataFormatter.formatSolarradiation(it)}")
       }
     }
