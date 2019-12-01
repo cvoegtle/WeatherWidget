@@ -12,7 +12,7 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.data.WeatherData

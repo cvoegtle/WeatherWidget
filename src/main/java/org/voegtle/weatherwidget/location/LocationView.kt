@@ -2,7 +2,7 @@ package org.voegtle.weatherwidget.location
 
 import android.content.Context
 import android.content.res.TypedArray
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -69,8 +69,8 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     forecast_button.setOnClickListener { forecastListener?.onClick(this@LocationView) }
   }
 
-  override fun setOnClickListener(listener: View.OnClickListener) {
-    externalClickListener = listener
+  override fun setOnClickListener(l: OnClickListener?) {
+    externalClickListener = l
   }
 
   private fun initializeTextViews(attributes: TypedArray) {

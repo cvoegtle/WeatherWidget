@@ -2,7 +2,7 @@ package org.voegtle.weatherwidget.diagram
 
 import android.graphics.drawable.Drawable
 import android.preference.PreferenceManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.util.Log
 import android.widget.ImageView
 import org.voegtle.weatherwidget.R

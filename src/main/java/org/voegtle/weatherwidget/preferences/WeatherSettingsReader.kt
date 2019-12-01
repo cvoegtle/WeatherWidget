@@ -27,7 +27,7 @@ class WeatherSettingsReader {
   }
 
   private fun getColorScheme(preferences: SharedPreferences, key: String, defaultScheme: ColorScheme): ColorScheme {
-    val schemeKey = getString(preferences, key)
+    val schemeKey = getString(preferences, key)!!
     return ColorScheme.byKey(schemeKey) ?: defaultScheme
   }
 
@@ -48,7 +48,7 @@ class WeatherSettingsReader {
 
 
   private fun getInteger(preferences: SharedPreferences, key: String, defaultValue: Int): Int {
-    val value = preferences.getString(key, defaultValue.toString())
+    val value = preferences.getString(key, defaultValue.toString())!!
     return Integer.valueOf(value)
   }
 

@@ -3,7 +3,7 @@ package org.voegtle.weatherwidget.location
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 
 import com.google.android.gms.location.LocationServices
 

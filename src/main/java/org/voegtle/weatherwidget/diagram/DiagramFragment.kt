@@ -1,13 +1,16 @@
 package org.voegtle.weatherwidget.diagram
 
+import android.annotation.SuppressLint
 import android.app.Fragment
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import org.voegtle.weatherwidget.R
 
-class DiagramFragment : Fragment {
+@RequiresApi(Build.VERSION_CODES.HONEYCOMB) class DiagramFragment : Fragment {
 
   private var diagramManager: DiagramManager? = null
   private var diagramId: DiagramEnum? = null
@@ -17,7 +20,7 @@ class DiagramFragment : Fragment {
     placeHolderId = null
   }
 
-  constructor(diagramId: DiagramEnum, placeHolderId: Int?) {
+  @SuppressLint("ValidFragment") constructor(diagramId: DiagramEnum, placeHolderId: Int?) {
     val bundle = Bundle()
     bundle.putInt(DiagramEnum::class.java.name, diagramId.id)
     this.arguments = bundle
@@ -29,8 +32,8 @@ class DiagramFragment : Fragment {
     ensureResources()
   }
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle?): View {
-    return inflater.inflate(R.layout.fragment_diagram, container, false)
+  override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    return inflater!!.inflate(R.layout.fragment_diagram, container, false)
   }
 
   override fun onResume() {

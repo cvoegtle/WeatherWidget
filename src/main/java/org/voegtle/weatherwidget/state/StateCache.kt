@@ -2,6 +2,8 @@ package org.voegtle.weatherwidget.state
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import java.util.*
 
 class StateCache(context: Context) {
@@ -15,14 +17,14 @@ class StateCache(context: Context) {
   fun read(id: Int): State = State(id = id,
       age = readAge(id),
       isExpanded = statePreferences.getBoolean(getKey(STATE, id), false),
-      statistics = statePreferences.getString(getKey(STATISTICS, id), ""))
+      statistics = statePreferences.getString(getKey(STATISTICS, id), "")!!)
 
   fun readAge(id: Int): Date? {
     val age = statePreferences.getLong(getKey(STATE_AGE, id), -1)
     return if (age > 0) Date(age) else null
   }
 
-  fun save(state: State) {
+  @RequiresApi(Build.VERSION_CODES.GINGERBREAD) fun save(state: State) {
     val editor = statePreferences.edit()
     editor.putLong(getKey(STATE_AGE, state.id), state.age?.time ?: -1)
     editor.putBoolean(getKey(STATE, state.id), state.isExpanded)
