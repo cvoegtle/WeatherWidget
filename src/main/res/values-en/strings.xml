@@ -112,9 +112,8 @@
   </string>
   <string name="enable_notification">activate temperature notification</string>
   <string name="understood">understood</string>
-  <string name="action_winter_days2017">Winter days 2016/17</string>
   <string name="highlight">highlight</string>
-  <string name="action_winter_days2018">Winter days 2017/18</string>
+  <string name="action_winter_days2019">Winter days 2018/19</string>
   <string name="action_solarradiation">Solar radiation</string>
   <string name="barometer">Barometer</string>
   <string name="solarradiation">Solar radiation</string>

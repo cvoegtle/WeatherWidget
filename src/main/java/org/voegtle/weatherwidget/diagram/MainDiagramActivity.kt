@@ -18,8 +18,7 @@ class MainDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.summerdays)
     addDiagram(DiagramEnum.summerdays2018)
     addDiagram(DiagramEnum.winterdays)
-    addDiagram(DiagramEnum.winterdays2018)
-    addDiagram(DiagramEnum.winterdays2017)
+    addDiagram(DiagramEnum.winterdays2019)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -38,8 +37,7 @@ class MainDiagramActivity : DiagramActivity() {
         R.id.action_summerdays -> updateViewPager(5)
         R.id.action_summerdays2018 -> updateViewPager(6)
         R.id.action_winterdays -> updateViewPager(7)
-        R.id.action_winterdays2018 -> updateViewPager(8)
-        R.id.action_winterdays2017 -> updateViewPager(9)
+        R.id.action_winterdays2019 -> updateViewPager(8)
         else -> false
       }
 }

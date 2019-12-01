@@ -63,7 +63,7 @@
   <string name="intervall_changed">Update-Intervall:</string>
   <string name="update_deaktiviert">Widget wird nicht automatisch aktualisiert</string>
   <string name="action_winter_days">Wintertage</string>
-  <string name="action_winter_days2018">Wintertage 2017/18</string>
+  <string name="action_winter_days2019">Wintertage 2018/19</string>
   <string name="privileges">Berechtigung</string>
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
@@ -136,7 +136,6 @@
   <string name="android8_explanation">Diese Benachrichtigung ist notwendig, damit das Wetter Widget aktualisiert werden kann.\n\nDiese Benachrichtigung kann ohne Funktionsverlust in den Apps &amp; Benachrichtigungen Einstellungen unterdrückt werden.\n\nAlternativ kann Wetter Wolke auch eine Benachrichtigung mit aktuellen Temperaturen anzeigen.</string>
   <string name="enable_notification">Aktuelle Messwerte anzeigen</string>
   <string name="understood">verstanden</string>
-  <string name="action_winter_days2017">Wintertage 2016/17</string>
   <string name="highlight">hervorheben</string>
   <string name="barometer">Luftdruck</string>
   <string name="solarradiation">Sonneneinstrahlung</string>
