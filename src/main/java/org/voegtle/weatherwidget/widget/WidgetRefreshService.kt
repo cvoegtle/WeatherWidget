@@ -78,10 +78,6 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
     super.onDestroy()
   }
 
-  override fun onConfigurationChanged(newConfig: Configuration) {
-    super.onConfigurationChanged(newConfig)
-  }
-
   private fun processPreferences(preferences: SharedPreferences) {
     val weatherSettingsReader = WeatherSettingsReader(res!!)
     configuration = weatherSettingsReader.read(preferences)
