@@ -1,7 +1,7 @@
 package org.voegtle.weatherwidget.diagram
 
-import android.app.FragmentManager
-import androidx.legacy.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
 import java.util.ArrayList
 

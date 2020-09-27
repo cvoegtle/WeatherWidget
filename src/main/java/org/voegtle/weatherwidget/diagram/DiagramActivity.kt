@@ -52,7 +52,7 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   private fun cleanupFragments() {
-    val fm = fragmentManager
+    val fm = supportFragmentManager
     val fragmentTransaction = fm!!.beginTransaction()
     for (i in 0..pagerAdapter!!.count - 1) {
       fragmentTransaction.remove(pagerAdapter!!.getItem(i))
@@ -61,7 +61,7 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   private fun createPageAdapter(): DiagramFragmentPagerAdapter {
-    val pagerAdapter = DiagramFragmentPagerAdapter(fragmentManager)
+    val pagerAdapter = DiagramFragmentPagerAdapter(supportFragmentManager)
     diagramIdList.forEach { diagramId -> pagerAdapter.add(DiagramFragment(diagramId, placeHolderId)) }
     return pagerAdapter
   }

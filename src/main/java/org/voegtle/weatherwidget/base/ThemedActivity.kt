@@ -3,10 +3,11 @@ package org.voegtle.weatherwidget.base
 import android.app.Activity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import androidx.fragment.app.FragmentActivity
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 
-abstract class ThemedActivity : Activity() {
+abstract class ThemedActivity : FragmentActivity() {
   var colorScheme = ColorScheme.dark
 
   override fun onCreate(savedInstanceState: Bundle?) {
