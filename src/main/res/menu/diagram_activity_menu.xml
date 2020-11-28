@@ -35,5 +35,5 @@
         android:title="@string/action_winter_days"/>
   <item android:id="@+id/action_winterdays2019"
         android:showAsAction="ifRoom"
-        android:title="@string/action_winter_days2019"/>
+        android:title="@string/action_winter_days2020"/>
 </menu>
