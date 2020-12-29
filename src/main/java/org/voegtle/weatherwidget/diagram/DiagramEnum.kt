@@ -51,17 +51,18 @@ enum class DiagramEnum constructor(val id: Int, val url: String) {
   family_weather(42, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
 
   magdeburg_regen(43, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
-  magdeburg_humidity(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
-  magdeburg_paderborn_freiburg(45, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image"),
-  magedburg_30days(46, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=446471860&format=image"),
-  magedburg_lastyear(47, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=968375379&format=image"),
+  magdeburg_wind(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_humidity(45, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_paderborn_freiburg(46, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image"),
+  magedburg_30days(47, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=446471860&format=image"),
+  magedburg_lastyear(48, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=968375379&format=image"),
 
-  shenzhen_7days(48, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image"),
-  shenzhen_30days(49, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1526059248&format=image"),
-  shenzhen_lastyear(50, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2094649277&format=image"),
+  shenzhen_7days(49, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1981128132&format=image"),
+  shenzhen_30days(50, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1526059248&format=image"),
+  shenzhen_lastyear(51, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2094649277&format=image"),
 
-  paderborn20_solarradiation(51, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=443476029&format=image"),
-  paderborn20_barometer(52, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=445461471&format=image");
+  paderborn20_solarradiation(52, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=443476029&format=image"),
+  paderborn20_barometer(53, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=445461471&format=image");
 
   val filename: String
     get() = "$this.png"

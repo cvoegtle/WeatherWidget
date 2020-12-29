@@ -12,6 +12,9 @@
   <item android:id="@+id/action_magdeburg_rain"
         android:showAsAction="ifRoom"
         android:title="@string/action_rain"/>
+  <item android:id="@+id/action_magdeburg_wind"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_wind"/>
   <item android:id="@+id/action_magdeburg_humidity"
         android:showAsAction="ifRoom"
         android:title="@string/action_humidity"/>
