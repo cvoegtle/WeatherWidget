@@ -51,7 +51,7 @@ enum class DiagramEnum constructor(val id: Int, val url: String) {
   family_weather(42, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1089204796&format=image"),
 
   magdeburg_regen(43, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=2090578754&format=image"),
-  magdeburg_wind(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
+  magdeburg_wind(44, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1951689780&format=image"),
   magdeburg_humidity(45, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=808641441&format=image"),
   magdeburg_paderborn_freiburg(46, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=439313787&format=image"),
   magedburg_30days(47, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=446471860&format=image"),
