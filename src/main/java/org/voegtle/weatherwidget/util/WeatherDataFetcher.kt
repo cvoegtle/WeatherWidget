@@ -105,6 +105,8 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
                        solarradiation = getOptionalNumber(weather, "solarradiation"),
                        UV = getOptionalNumber(weather, "UV"),
                        watt = getOptionalNumber(weather, "watt"),
+                       powerProduction=getOptionalNumber(weather, "powerProduction"),
+                       powerFeed=getOptionalNumber(weather, "powerFeed"),
                        rain = getOptionalNumber(weather, "rain"),
                        rainToday = getOptionalNumber(weather, "rain_today"),
                        wind = getOptionalNumber(weather, "wind"),

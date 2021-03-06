@@ -44,7 +44,7 @@
   <GridLayout android:id="@+id/grid_current"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:rowCount="9"
+              android:rowCount="11"
               android:columnCount="2"
               android:paddingLeft="5dp">
     <TextView android:id="@+id/label_temperature"
@@ -192,6 +192,38 @@
               android:visibility="gone"
               android:paddingLeft="10dp"
               android:layout_row="8"
+              android:layout_column="1"/>
+
+    <TextView android:id="@+id/label_power_production"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_row="9"
+              android:layout_column="0"
+              android:visibility="gone"
+              android:textStyle="bold"
+              android:text="@string/power_production"/>
+    <TextView android:id="@+id/power_production"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:visibility="gone"
+              android:paddingLeft="10dp"
+              android:layout_row="9"
+              android:layout_column="1"/>
+
+    <TextView android:id="@+id/label_power_feed"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_row="10"
+              android:layout_column="0"
+              android:visibility="gone"
+              android:textStyle="bold"
+              android:text="@string/power_feed"/>
+    <TextView android:id="@+id/power_feed"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:visibility="gone"
+              android:paddingLeft="10dp"
+              android:layout_row="10"
               android:layout_column="1"/>
   </GridLayout>
 

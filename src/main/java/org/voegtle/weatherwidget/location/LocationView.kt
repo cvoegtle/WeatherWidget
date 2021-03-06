@@ -100,6 +100,8 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
     setBarometer(data.barometer)
     setSolarradiation(data.solarradiation)
+    setPowerProduction(data.powerProduction)
+    setPowerFeed(data.powerFeed)
     setUVIndex(data.UV)
 
     setRainData(data.rain, label_rain_last_hour, rain_last_hour)
@@ -123,6 +125,24 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       solarradiation.text = formatter.formatSolarradiation(value)
     } else {
       hide(label_solarradiation, solarradiation)
+    }
+  }
+
+  private fun setPowerProduction(powerProduction: Float?) {
+    if (powerProduction != null && powerProduction > 0.0) {
+      show(label_power_production, power_production)
+      power_production.text = formatter.formatWatt(powerProduction)
+    } else {
+      hide(label_power_production, power_production)
+    }
+  }
+
+  private fun setPowerFeed(powerFeed: Float?) {
+    if (powerFeed != null && powerFeed > 0.0) {
+      show(label_power_feed, power_feed)
+      power_feed.text = formatter.formatWatt(powerFeed)
+    } else {
+      hide(label_power_feed, power_feed)
     }
   }
 

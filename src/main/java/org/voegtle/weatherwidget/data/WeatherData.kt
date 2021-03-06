@@ -20,6 +20,8 @@ data class WeatherData(val location: LocationIdentifier,
                        val rainToday: Float?,
                        val isRaining: Boolean,
                        val watt: Float?,
+                       val powerProduction: Float?,
+                       val powerFeed: Float?,
                        val wind: Float?) : Comparable<WeatherData> {
 
 

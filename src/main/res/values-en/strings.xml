@@ -121,4 +121,6 @@
   <string name="solar_caption">Max Sun</string>
   <string name="solar_cummulated_caption">∑ Sun</string>
   <string name="action_barometer">Barometer</string>
+  <string name="power_production">Stromproduktion</string>
+  <string name="power_feed">Einspeisung</string>
 </resources>
