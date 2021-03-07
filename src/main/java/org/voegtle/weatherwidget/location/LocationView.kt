@@ -111,6 +111,11 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     setSolarData(data.watt)
   }
 
+  /**
+   * das ist ein eher hässlicher Hack. Wir bestimmen, anhand der enthaltenen Datenfelder, ob
+   * wir es mit einer Solaranlage zu tun haben und merken uns das über die Spaltenüberschrift
+   * für die Statistiken.
+   */
   private fun detectSolarPlant(data: WeatherData) {
     if (data.powerFeed != null || data.powerProduction != null) {
       caption_kwh.text = context.resources.getString(R.string.kwh)
