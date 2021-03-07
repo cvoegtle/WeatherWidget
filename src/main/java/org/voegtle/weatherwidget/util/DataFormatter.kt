@@ -60,7 +60,7 @@ class DataFormatter {
 
   fun formatWind(value: Float?): String = if (value != null) numberFormat.format(value) + "km/h" else ""
 
-  fun formatWatt(watt: Float?): String = if (watt != null) numberFormat.format(watt) + "W" else ""
+  fun formatWatt(watt: Float?): String = if (watt != null) integerFormat.format(watt) + "W" else ""
 
   fun formatBarometer(barometer: Float?): String = if (barometer != null) integerFormat.format(barometer) + "hPa" else ""
 

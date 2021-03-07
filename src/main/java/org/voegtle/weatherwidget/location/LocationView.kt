@@ -103,11 +103,23 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     setPowerProduction(data.powerProduction)
     setPowerFeed(data.powerFeed)
     setUVIndex(data.UV)
+    detectSolarPlant(data)
 
     setRainData(data.rain, label_rain_last_hour, rain_last_hour)
     setRainData(data.rainToday, label_rain_today, rain_today)
     setWind(data.wind)
     setSolarData(data.watt)
+  }
+
+  private fun detectSolarPlant(data: WeatherData) {
+    if (data.powerFeed != null || data.powerProduction != null) {
+      caption_kwh.text = context.resources.getString(R.string.kwh)
+      caption_solar.text = context.resources.getString(R.string.max_power_caption)
+    } else {
+      caption_kwh.text = context.resources.getString(R.string.solar_cummulated_caption)
+      caption_solar.text = context.resources.getString(R.string.solar_caption)
+    }
+
   }
 
   private fun setBarometer(value: Float?) {
@@ -129,7 +141,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   }
 
   private fun setPowerProduction(powerProduction: Float?) {
-    if (powerProduction != null && powerProduction >= 0.0) {
+    if (powerProduction != null && powerProduction >= 1.0) {
       show(label_power_production, power_production)
       power_production.text = formatter.formatWatt(powerProduction)
     } else {
@@ -212,9 +224,12 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
         show(caption_kwh)
       }
       stats.solarRadiationMax?.let {
-        solarView.text = formatter.formatSolarradiation(it)
         show(caption_solar)
-        caption_kwh.text = context.resources.getString(R.string.solar_cummulated_caption)
+        if (caption_kwh.text == context.resources.getString(R.string.kwh)) {
+          solarView.text = formatter.formatWatt(it)
+        } else {
+          solarView.text = formatter.formatSolarradiation(it)
+        }
       }
     }
   }
