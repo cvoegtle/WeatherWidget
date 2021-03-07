@@ -129,7 +129,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   }
 
   private fun setPowerProduction(powerProduction: Float?) {
-    if (powerProduction != null && powerProduction > 0.0) {
+    if (powerProduction != null && powerProduction >= 0.0) {
       show(label_power_production, power_production)
       power_production.text = formatter.formatWatt(powerProduction)
     } else {
@@ -138,7 +138,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   }
 
   private fun setPowerFeed(powerFeed: Float?) {
-    if (powerFeed != null && powerFeed > 0.0) {
+    if (powerFeed != null && powerFeed >= 5.0) {
       show(label_power_feed, power_feed)
       power_feed.text = formatter.formatWatt(powerFeed)
     } else {
