@@ -103,28 +103,11 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     setPowerProduction(data.powerProduction)
     setPowerFeed(data.powerFeed)
     setUVIndex(data.UV)
-    detectSolarPlant(data)
 
     setRainData(data.rain, label_rain_last_hour, rain_last_hour)
     setRainData(data.rainToday, label_rain_today, rain_today)
     setWind(data.wind)
     setSolarData(data.watt)
-  }
-
-  /**
-   * das ist ein eher hässlicher Hack. Wir bestimmen, anhand der enthaltenen Datenfelder, ob
-   * wir es mit einer Solaranlage zu tun haben und merken uns das über die Spaltenüberschrift
-   * für die Statistiken.
-   */
-  private fun detectSolarPlant(data: WeatherData) {
-    if (data.powerFeed != null || data.powerProduction != null) {
-      caption_kwh.text = context.resources.getString(R.string.kwh)
-      caption_solar.text = context.resources.getString(R.string.max_power_caption)
-    } else {
-      caption_kwh.text = context.resources.getString(R.string.solar_cummulated_caption)
-      caption_solar.text = context.resources.getString(R.string.solar_caption)
-    }
-
   }
 
   private fun setBarometer(value: Float?) {
@@ -197,20 +180,22 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
   }
 
   fun setMoreData(statistics: Statistics) {
+    val kindOfStation = statistics.kind
+
     val today = statistics[Statistics.TimeRange.today]
-    updateStatistics(today, today_rain, today_min_temperature, today_max_temperature, today_kwh, today_solar)
+    updateStatistics(today, kindOfStation, today_rain, today_min_temperature, today_max_temperature, today_kwh, today_solar)
 
     val yesterday = statistics[Statistics.TimeRange.yesterday]
-    updateStatistics(yesterday, yesterday_rain, yesterday_min_temperature, yesterday_max_temperature, yesterday_kwh, yesterday_solar)
+    updateStatistics(yesterday, kindOfStation, yesterday_rain, yesterday_min_temperature, yesterday_max_temperature, yesterday_kwh, yesterday_solar)
 
     val week = statistics[Statistics.TimeRange.last7days]
-    updateStatistics(week, week_rain, week_min_temperature, week_max_temperature, week_kwh, week_solar)
+    updateStatistics(week, kindOfStation, week_rain, week_min_temperature, week_max_temperature, week_kwh, week_solar)
 
     val month = statistics[Statistics.TimeRange.last30days]
-    updateStatistics(month, month_rain, month_min_temperature, month_max_temperature, month_kwh, month_solar)
+    updateStatistics(month, kindOfStation, month_rain, month_min_temperature, month_max_temperature, month_kwh, month_solar)
   }
 
-  private fun updateStatistics(stats: StatisticsSet?, rainView: TextView, minView: TextView, maxView: TextView, kwhView: TextView,
+  private fun updateStatistics(stats: StatisticsSet?, kind: String, rainView: TextView, minView: TextView, maxView: TextView, kwhView: TextView,
                                solarView: TextView) {
     rainView.text = ""
     minView.text = ""
@@ -230,7 +215,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       }
       stats.solarRadiationMax?.let {
         show(caption_solar)
-        if (caption_kwh.text == context.resources.getString(R.string.kwh)) {
+        if (kind == "withSolarPower") {
           solarView.text = formatter.formatWatt(it)
         } else {
           solarView.text = formatter.formatSolarradiation(it)
@@ -238,6 +223,18 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       }
     }
   }
+
+  private fun detectSolarPlant(statistics: Statistics) {
+    if (statistics.kind == "withSolarPower") {
+      caption_kwh.text = context.resources.getString(R.string.kwh)
+      caption_solar.text = context.resources.getString(R.string.max_power_caption)
+    } else {
+      caption_kwh.text = context.resources.getString(R.string.solar_cummulated_caption)
+      caption_solar.text = context.resources.getString(R.string.solar_caption)
+    }
+
+  }
+
 
   fun configureSymbols(useDarkSymbols: Boolean) {
     if (useDarkSymbols) {

@@ -2,7 +2,7 @@ package org.voegtle.weatherwidget.data
 
 import java.util.*
 
-data class Statistics(val id: String) {
+data class Statistics(val id: String, val kind: String) {
 
   enum class TimeRange {
     lastHour, today, yesterday, last7days, last30days;

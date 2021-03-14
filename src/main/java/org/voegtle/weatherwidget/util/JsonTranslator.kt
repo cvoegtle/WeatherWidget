@@ -41,9 +41,9 @@ object JsonTranslator {
   }
 
   private fun toStatistics(jsonStatistics: JSONObject): Statistics {
-    val result = Statistics(jsonStatistics.optString("id"))
+    val result = Statistics(id = jsonStatistics.optString("id"), kind = jsonStatistics.optString("kind"))
     val jsonStats = jsonStatistics.getJSONArray("stats")
-    for (i in 0..jsonStats.length() - 1) {
+    for (i in 0 until jsonStats.length()) {
       val statisticsSet = toStatisticsSet(jsonStats.get(i) as JSONObject)
       if (statisticsSet != null) {
         result.add(statisticsSet)
