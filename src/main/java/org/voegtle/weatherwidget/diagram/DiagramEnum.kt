@@ -35,14 +35,15 @@ enum class DiagramEnum constructor(val id: Int, val url: String) {
   bali_lastyear(28, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=583402693&format=image"),
 
   mobil_7days(29, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1380559031&format=image"),
+  mobil_power(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=26392282&format=image"),
 
-  leo_30days(30, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1610295076&format=image"),
-  leo_lastyear(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=322622774&format=image"),
-  leo_regen(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
-  leo_wind(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
-  leo_solar(34, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image"),
-  leo_solar_average(35, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1485103805&format=image"),
-  leo_solar_production(36, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1189452944&format=image"),
+  leo_30days(31, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1610295076&format=image"),
+  leo_lastyear(32, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=322622774&format=image"),
+  leo_regen(33, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1205500547&format=image"),
+  leo_wind(34, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=75598496&format=image"),
+  leo_solar(35, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=255192281&format=image"),
+  leo_solar_average(36, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1485103805&format=image"),
+  leo_solar_production(37, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1189452944&format=image"),
 
   herzo_regen(38, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1655654633&format=image"),
   herzo_wind(39, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1843697553&format=image"),

@@ -122,4 +122,5 @@
   <string name="power_production">Stromproduktion</string>
   <string name="power_feed">Einspeisung</string>
   <string name="max_power_caption">Max L.</string>
+  <string name="action_power">Stromproduktion</string>
 </resources>
