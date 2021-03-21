@@ -72,6 +72,7 @@ object JsonTranslator {
     val json = WeatherJSONObject()
     try {
       json.put("id", statistics.id)
+      json.put("kind", statistics.kind)
 
       val jsonStats = JSONArray()
       statistics.values().forEach { jsonStats.put(toJson(it)) }

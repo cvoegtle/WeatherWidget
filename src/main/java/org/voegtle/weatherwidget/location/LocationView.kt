@@ -181,6 +181,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
   fun setMoreData(statistics: Statistics) {
     val kindOfStation = statistics.kind
+    setSolarCaptions(kindOfStation)
 
     val today = statistics[Statistics.TimeRange.today]
     updateStatistics(today, kindOfStation, today_rain, today_min_temperature, today_max_temperature, today_kwh, today_solar)
@@ -224,8 +225,8 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     }
   }
 
-  private fun detectSolarPlant(statistics: Statistics) {
-    if (statistics.kind == "withSolarPower") {
+  private fun setSolarCaptions(kindOfStation: String) {
+    if (kindOfStation == "withSolarPower") {
       caption_kwh.text = context.resources.getString(R.string.kwh)
       caption_solar.text = context.resources.getString(R.string.max_power_caption)
     } else {
