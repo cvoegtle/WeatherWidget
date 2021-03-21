@@ -17,7 +17,7 @@
         android:title="@string/action_wind"/>
   <item android:id="@+id/action_leo_solar"
         android:showAsAction="ifRoom"
-        android:title="@string/action_solar"/>
+        android:title="@string/action_power"/>
   <item android:id="@+id/action_solar_daily"
         android:showAsAction="ifRoom"
         android:title="@string/action_solar_daily"/>

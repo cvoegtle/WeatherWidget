@@ -13,7 +13,7 @@ class LeoDiagramActivity : DiagramActivity() {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.leo_regen)
     addDiagram(DiagramEnum.leo_wind)
-    addDiagram(DiagramEnum.leo_solar)
+    addDiagram(DiagramEnum.leo_power)
     addDiagram(DiagramEnum.leo_solar_average)
     addDiagram(DiagramEnum.leo_solar_production)
     addDiagram(DiagramEnum.leo_30days)
