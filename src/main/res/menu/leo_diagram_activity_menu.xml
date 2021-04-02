@@ -15,6 +15,9 @@
   <item android:id="@+id/action_leo_wind"
         android:showAsAction="ifRoom"
         android:title="@string/action_wind"/>
+  <item android:id="@+id/action_leo_barometer"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_barometer"/>
   <item android:id="@+id/action_leo_solar"
         android:showAsAction="ifRoom"
         android:title="@string/action_power"/>
