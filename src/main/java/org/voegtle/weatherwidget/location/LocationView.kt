@@ -211,7 +211,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
       minView.text = formatter.formatTemperature(it.minTemperature)
       maxView.text = formatter.formatTemperature(it.maxTemperature)
       stats.kwh?.let {
-        kwhView.text = formatter.formatKwh(it)
+        kwhView.text = if (it < 1000.0f) formatter.formatKwh(it) else formatter.formatKwhShort(it)
         show(caption_kwh)
       }
       stats.solarRadiationMax?.let {

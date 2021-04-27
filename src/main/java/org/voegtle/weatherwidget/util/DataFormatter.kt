@@ -8,10 +8,12 @@ import java.util.*
 
 class DataFormatter {
   private val numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
+  private val numberFormatShort = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
   private val integerFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
 
   init {
     this.numberFormat.applyPattern("#,###.#")
+    this.numberFormatShort.applyPattern("#,###")
     this.integerFormat.applyPattern("#,###")
   }
 
@@ -53,6 +55,7 @@ class DataFormatter {
   fun formatTemperature(temperature: Float?): String = if (temperature != null) numberFormat.format(temperature) + "°C" else ""
 
   fun formatKwh(kwh: Float?): String = if (kwh != null) numberFormat.format(kwh) + "kWh" else ""
+  fun formatKwhShort(kwh: Float?): String = if (kwh != null) numberFormatShort.format(kwh) + "kWh" else ""
 
   fun formatRain(rain: Float?): String = if (rain != null) numberFormat.format(rain) + "l" else ""
 
