@@ -5,8 +5,8 @@ enum class DiagramEnum constructor(val id: Int, val url: String) {
   average7days(2, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1780492499&format=image"),
   winterdays(3, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1463953487&format=image"),
   winterdays2020(4, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=951641867&format=image"),
-  summerdays(5, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=493769748&format=image"),
-  summerdays2019(6, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1460370869&format=image"),
+  summerdays(5, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=971600707&format=image"),
+  summerdays2020(6, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=493769748&format=image"),
   rain(7, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=477091892&format=image"),
   pb_bali_leo(8, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=738029596&format=image"),
 
