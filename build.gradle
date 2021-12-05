@@ -24,12 +24,12 @@ repositories {
     google()
 }
 android {
-    buildToolsVersion '30.0.2'
-    compileSdkVersion 30
+    buildToolsVersion '31.0.0'
+    compileSdkVersion 31
     defaultConfig {
         applicationId 'org.voegtle.weatherwidget'
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
     }
     signingConfigs {
         cvoegtle {
