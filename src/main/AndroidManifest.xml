@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="org.voegtle.weatherwidget"
-          android:versionCode="1053"
+          android:versionCode="1059"
           android:versionName="1.51">
 
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -19,7 +19,7 @@
     <activity
             android:name=".WeatherActivity"
             android:label="@string/app_name"
-            android:logo="@drawable/wetterlogo">
+            android:logo="@drawable/wetterlogo" android:exported="true">
 
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
@@ -99,7 +99,7 @@
 
     <receiver
             android:name="WeatherWidgetProviderLarge"
-            android:label="@string/app_name_large">
+            android:label="@string/app_name_large" android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
@@ -111,7 +111,7 @@
 
     <receiver
             android:name="WeatherWidgetProvider"
-            android:label="@string/app_name_small">
+            android:label="@string/app_name_small" android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
@@ -124,7 +124,7 @@
     <receiver
             android:name="WeatherWidgetFreiburgProvider"
             android:icon="@drawable/fr_widget"
-            android:label="@string/app_name_freiburg">
+            android:label="@string/app_name_freiburg" android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
@@ -137,7 +137,7 @@
     <receiver
             android:name="WeatherWidgetPaderbornProvider"
             android:icon="@drawable/pb_widget"
-            android:label="@string/app_name_paderborn">
+            android:label="@string/app_name_paderborn" android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
@@ -150,7 +150,7 @@
     <receiver
             android:name="WeatherWidgetBonnProvider"
             android:icon="@drawable/bn_widget"
-            android:label="@string/app_name_bonn">
+            android:label="@string/app_name_bonn" android:exported="true">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
       </intent-filter>
