@@ -3,7 +3,6 @@ package org.voegtle.weatherwidget.util
 import android.graphics.Color
 import android.os.AsyncTask
 import android.util.Log
-import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.data.WeatherData
@@ -105,7 +104,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   }
 
   private fun sortViews(data: HashMap<LocationIdentifier, WeatherData>) {
-    val container = activity.location_container
+    val container = activity.locationContainer()
     val locationContainer = LocationContainer(activity.applicationContext, container, configuration)
     locationContainer.updateLocationOrder(data)
   }

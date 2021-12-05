@@ -5,14 +5,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
+import android.view.MenuItem
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import android.util.Log
-import android.view.MenuItem
-import kotlinx.android.synthetic.main.activity_digrams.*
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.base.ThemedActivity
+import org.voegtle.weatherwidget.databinding.ActivityDigramsBinding
 import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.File
 import java.io.FileOutputStream
@@ -24,11 +24,14 @@ abstract class DiagramActivity : ThemedActivity() {
   protected var diagramIdList = ArrayList<DiagramEnum>()
 
   protected var pagerAdapter: DiagramFragmentPagerAdapter? = null
+  private lateinit var binding: ActivityDigramsBinding
+
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    binding = ActivityDigramsBinding.inflate(layoutInflater)
 
-    setContentView(R.layout.activity_digrams)
+    setContentView(binding.root)
   }
 
   override fun onResume() {
@@ -36,17 +39,17 @@ abstract class DiagramActivity : ThemedActivity() {
     val diagramCache = DiagramCache(this)
 
     this.pagerAdapter = createPageAdapter()
-    pager.adapter = pagerAdapter
+    binding.pager.adapter = pagerAdapter
 
     val currentItem = diagramCache.readCurrentDiagram(this.javaClass.name)
-    pager.currentItem = currentItem
+    binding.pager.currentItem = currentItem
   }
 
   override fun onPause() {
     val diagramCache = DiagramCache(this)
 
-    diagramCache.saveCurrentDiagram(this.javaClass.name, pager.currentItem)
-    pager.removeAllViews()
+    diagramCache.saveCurrentDiagram(this.javaClass.name, binding.pager.currentItem)
+    binding.pager.removeAllViews()
     cleanupFragments()
     super.onPause()
   }
@@ -73,13 +76,13 @@ abstract class DiagramActivity : ThemedActivity() {
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
       R.id.action_reload -> {
-        val index = pager.currentItem
+        val index = binding.pager.currentItem
         val fragment = pagerAdapter!!.getItem(index)
         fragment.reload()
         return true
       }
       R.id.action_share -> {
-        shareCurrentImage(pager.currentItem)
+        shareCurrentImage(binding.pager.currentItem)
         return true
       }
 
@@ -164,7 +167,7 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   protected fun updateViewPager(index: Int): Boolean {
-    pager.setCurrentItem(index, true)
+    binding.pager.setCurrentItem(index, true)
     return true
   }
 

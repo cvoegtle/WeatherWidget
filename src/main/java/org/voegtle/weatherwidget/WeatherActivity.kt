@@ -14,9 +14,9 @@ import androidx.core.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import kotlinx.android.synthetic.main.activity_weather.*
 import org.voegtle.weatherwidget.base.ThemedActivity
 import org.voegtle.weatherwidget.base.UpdatingScrollView
+import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
 import org.voegtle.weatherwidget.diagram.*
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
@@ -37,11 +37,15 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   private var statisticsUpdater: StatisticsUpdater? = null
   private var configuration: ApplicationSettings? = null
 
+  private lateinit var binding: ActivityWeatherBinding
+
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    binding = ActivityWeatherBinding.inflate(layoutInflater)
 
-    setContentView(R.layout.activity_weather)
-    button_google_docs.setOnClickListener {
+    setContentView(binding.root)
+    binding.buttonGoogleDocs.setOnClickListener {
       val browserIntent = Intent(Intent.ACTION_VIEW,
                                  Uri.parse(
                                      "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"))
@@ -58,7 +62,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     configureLocationSymbolColor()
 
 
-    scroll_view.register(object : UpdatingScrollView.Updater {
+    binding.scrollView.register(object : UpdatingScrollView.Updater {
       override fun update() {
         updateWeatherOnce(true)
       }
@@ -258,6 +262,8 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
   fun updateWeatherOnce(showToast: Boolean) {
     ActivityUpdateTask(this, configuration!!, showToast).execute()
   }
+
+  fun locationContainer() = binding.locationContainer
 
 
 }
