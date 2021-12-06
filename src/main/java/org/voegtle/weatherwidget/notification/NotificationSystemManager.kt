@@ -20,6 +20,7 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.DateUtil
@@ -125,8 +126,7 @@ class NotificationSystemManager(private val context: Context, private val config
       val contentText = buildCurrentWeather(data)
       notificationBuilder.setContentText(contentText)
 
-      val intentOpenApp = Intent(context, WeatherActivity::class.java)
-      val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
+      val pendingOpenApp = IntentFactory.createOpenAppIntent(context)
       notificationBuilder.setContentIntent(pendingOpenApp)
 
       val notification = notificationBuilder.build()
@@ -149,9 +149,7 @@ class NotificationSystemManager(private val context: Context, private val config
 
     notificationBuilder.setContentText(res.getString(R.string.wetterwolke_in_background))
 
-    val intentOpenApp = Intent(context, WeatherActivity::class.java)
-    intentOpenApp.action = WeatherActivity.ANDROID8
-    val pendingOpenApp = PendingIntent.getActivity(context, 0, intentOpenApp, PendingIntent.FLAG_UPDATE_CURRENT)
+    val pendingOpenApp = IntentFactory.createNotificationIntent(context)
     notificationBuilder.setContentIntent(pendingOpenApp)
 
     val notification = notificationBuilder.build()
