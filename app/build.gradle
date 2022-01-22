@@ -1,0 +1,78 @@
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    signingConfigs {
+        cvoegtle {
+            storeFile file("/Users/cv/Google_Developer/cvoegtle.signing.jks")
+            storePassword "insecure"
+            keyAlias 'cvoegtle'
+            keyPassword "insecure"
+        }
+    }
+
+    defaultConfig {
+        applicationId "org.voegtle.weatherwidget"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionCode 1
+        versionName "0.1.6"
+        vectorDrawables.useSupportLibrary true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.cvoegtle
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            jniDebuggable true
+            minifyEnabled false
+            signingConfig signingConfigs.cvoegtle
+            zipAlignEnabled true
+            versionNameSuffix '-debug'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+        useIR = true
+    }
+    packagingOptions {
+        // Multiple dependency bring these files in. Exclude them to enable
+        // our test APK to build (has no effect on our AARs)
+        excludes += "/META-INF/AL2.0"
+        excludes += "/META-INF/LGPL2.1"
+    }
+}
+
+dependencies {
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
+}
+
+import java.util.regex.Pattern
+
+task increaseVersionCode(type: Sync) {
+    def manifestFile = file("src/main/AndroidManifest.xml")
+    def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
+    def manifestText = manifestFile.getText()
+    def matcher = pattern.matcher(manifestText)
+    matcher.find()
+    def versionCode = Integer.parseInt(matcher.group(1))
+    def manifestContent = matcher.replaceAll("versionCode=\"" + ++versionCode + "\"")
+    manifestFile.write(manifestContent)
+}
+
+assemble.dependsOn increaseVersionCode
