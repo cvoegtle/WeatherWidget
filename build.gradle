@@ -11,6 +11,7 @@ buildscript {
         gradleVersion = '7.0.4'
         kotlinVersion = '1.4.32'
         navigationVersion = '2.3.5'
+        preferencesVersion = '1.1.1'
 
         composeVersion = '1.0.5'
         appCompatVersion = '1.1.0'

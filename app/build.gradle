@@ -60,6 +60,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
 
+    implementation "androidx.preference:preference:$rootProject.preferencesVersion"
+
     implementation "androidx.compose.ui:ui:$rootProject.composeVersion"
     // Tooling support (Previews, etc.)
     implementation "androidx.compose.ui:ui-tooling:$rootProject.composeVersion"
