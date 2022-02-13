@@ -6,7 +6,6 @@ android {
     compileSdkVersion rootProject.compileSdkVersion
 
     buildFeatures {
-        compose true
         viewBinding true
     }
 
@@ -61,28 +60,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
 
     implementation "androidx.preference:preference:$rootProject.preferencesVersion"
-
-    implementation "androidx.compose.ui:ui:$rootProject.composeVersion"
-    // Tooling support (Previews, etc.)
-    implementation "androidx.compose.ui:ui-tooling:$rootProject.composeVersion"
-    // Foundation (Border, Background, Box, Image, Scroll, shapes, animations, etc.)
-    implementation "androidx.compose.foundation:foundation:$rootProject.composeVersion"
-    // Material Design
-    implementation "androidx.compose.material:material:$rootProject.composeVersion"
-    // Material design icons
-    implementation "androidx.compose.material:material-icons-core:$rootProject.composeVersion"
-    implementation "androidx.compose.material:material-icons-extended:$rootProject.composeVersion"
-    // Integration with activities
-    implementation "androidx.activity:activity-compose:$rootProject.activityComposeVersion"
-    // Integration with ViewModels
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$rootProject.viewModelComposeVersion"
-    // Integration with observables
-    implementation "androidx.compose.runtime:runtime-livedata:$rootProject.composeVersion"
-    implementation "androidx.compose.runtime:runtime-rxjava2:$rootProject.composeVersion"
-
-    // UI Tests
-    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$rootProject.composeVersion"
-
 }
 
 import java.util.regex.Pattern

@@ -13,12 +13,7 @@ buildscript {
         navigationVersion = '2.3.5'
         preferencesVersion = '1.1.1'
 
-        composeVersion = '1.0.5'
         appCompatVersion = '1.1.0'
-        coilVersion = '1.3.0'
-        composeVersion = '1.0.5'
-        activityComposeVersion = '1.4.0'
-        viewModelComposeVersion = '2.4.0'
     }
 
     repositories {
