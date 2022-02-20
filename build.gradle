@@ -8,12 +8,9 @@ buildscript {
         targetSdkVersion = 31
 
         // App dependencies
-        gradleVersion = '7.0.4'
-        kotlinVersion = '1.4.32'
-        navigationVersion = '2.3.5'
-        preferencesVersion = '1.1.1'
-
-        appCompatVersion = '1.1.0'
+        gradleVersion = '7.1.1'
+        kotlinVersion = '1.6.10'
+        preferencesVersion = '1.2.0'
     }
 
     repositories {
@@ -24,7 +21,6 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:$gradleVersion"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
-        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationVersion"
     }
 }
 
