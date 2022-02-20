@@ -110,6 +110,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
         setRainData(data.rain, binding.labelRainLastHour, binding.rainLastHour)
         setRainData(data.rainToday, binding.labelRainToday, binding.rainToday)
         setWind(data.wind)
+        setWindGust(data.windgust);
         setSolarData(data.watt)
     }
 
@@ -173,12 +174,21 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
         rain.text = if (value != null && value > 0.0f) formatter.formatRain(value) else ""
     }
 
-    private fun setWind(value: Float?) {
-        if (value != null && value >= 1.0) {
+    private fun setWind(windgust: Float?) {
+        if (windgust != null && windgust >= 1.0) {
             show(binding.labelWindSpeed, binding.windSpeed)
-            binding.windSpeed.text = formatter.formatWind(value)
+            binding.windSpeed.text = formatter.formatWind(windgust)
         } else {
             hide(binding.labelWindSpeed, binding.windSpeed)
+        }
+    }
+
+    private fun setWindGust(windgust: Float?) {
+        if (windgust != null && windgust >= 10.0) {
+            show(binding.labelWindGust, binding.windGust)
+            binding.windGust.text = formatter.formatWind(windgust)
+        } else {
+            hide(binding.labelWindGust, binding.windGust)
         }
     }
 
