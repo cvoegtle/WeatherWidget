@@ -126,4 +126,5 @@
   <string name="max_power_caption">Max P.</string>
   <string name="action_power">Power production</string>
   <string name="wind_gust">Gust</string>
+  <string name="action_instant_freiburg">Littenweiler - Freiburg</string>
 </resources>

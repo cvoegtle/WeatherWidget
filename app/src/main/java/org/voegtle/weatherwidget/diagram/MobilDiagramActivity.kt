@@ -12,6 +12,7 @@ class MobilDiagramActivity : DiagramActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.mobil_7days)
+    addDiagram(DiagramEnum.mobil_freiburg)
     intent.let {
       val title = it.getStringExtra(MobilDiagramActivity::class.java.name)
       if (StringUtil.isNotEmpty(title)) {
@@ -26,10 +27,10 @@ class MobilDiagramActivity : DiagramActivity() {
     return super.onCreateOptionsMenu(menu)
   }
 
-
   override fun onCustomItemSelected(item: MenuItem): Boolean =
       when (item.itemId) {
         R.id.action_instant_7days -> updateViewPager(0)
+        R.id.action_instant_freiburg -> updateViewPager(1)
         else -> false
       }
 }

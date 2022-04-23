@@ -12,4 +12,7 @@
   <item android:id="@+id/action_instant_7days"
         android:showAsAction="ifRoom"
         android:title="@string/action_7_days"/>
+  <item android:id="@+id/action_instant_freiburg"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_instant_freiburg"/>
 </menu>
