@@ -27,9 +27,9 @@
   <item android:id="@+id/action_summerdays"
         android:showAsAction="ifRoom"
         android:title="@string/action_summer_days"/>
-  <item android:id="@+id/action_summerdays2020"
+  <item android:id="@+id/action_summerdays2021"
         android:showAsAction="ifRoom"
-        android:title="@string/action_summer_days2020"/>
+        android:title="@string/action_summer_days2021"/>
   <item android:id="@+id/action_winterdays"
         android:showAsAction="ifRoom"
         android:title="@string/action_winter_days"/>

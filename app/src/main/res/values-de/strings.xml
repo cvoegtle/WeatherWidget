@@ -101,7 +101,7 @@
   <string name="message_permission_required">Die Schreibrechte sind notwendig, um das Diagramm an andere Anwendungen weiterzugeben.</string>
   <string name="message_location_permission_required">Sortierung wird zurückgesetzt auf standard (fest)</string>
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
-  <string name="action_summer_days2020">Sommertage 2020</string>
+  <string name="action_summer_days2021">Sommertage 2021</string>
   <string name="action_show_location">Vermutete Position</string>
   <string name="channel_name">Wetter Wolke</string>
   <string name="channel_description">Aktuelle Wetterdaten im Blick</string>
