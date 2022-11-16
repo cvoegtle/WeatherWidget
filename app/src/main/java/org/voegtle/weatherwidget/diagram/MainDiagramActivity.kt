@@ -18,7 +18,7 @@ class MainDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.summerdays)
     addDiagram(DiagramEnum.summerdays2021)
     addDiagram(DiagramEnum.winterdays)
-    addDiagram(DiagramEnum.winterdays2021)
+    addDiagram(DiagramEnum.winterdays2022)
   }
 
   override fun onCreateOptionsMenu(menu: Menu): Boolean {
