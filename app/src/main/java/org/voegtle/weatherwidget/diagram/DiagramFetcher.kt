@@ -30,6 +30,7 @@ class DiagramFetcher {
 
   @Throws(IOException::class)
   private fun createImageFromResponse(inputStream: InputStream): Drawable {
-    return Drawable.createFromStream(inputStream, "Google Drive")
+    val diagramImage = Drawable.createFromStream(inputStream, "Google Drive")
+    return diagramImage ?: throw IOException("Image is null")
   }
 }

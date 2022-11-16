@@ -25,11 +25,13 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
   private val locationOrderStore = LocationOrderStore(activity.applicationContext)
   private val formatter = DataFormatter()
 
+  @Deprecated("Deprecated in Java")
   override fun doInBackground(vararg voids: Void): FetchAllResponse {
     userLocationUpdater.updateLocation()
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
   }
 
+  @Deprecated("Deprecated in Java")
   override fun onPostExecute(response: FetchAllResponse) {
     try {
       updateViewData(response.weatherMap)

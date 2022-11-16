@@ -13,6 +13,7 @@ class WidgetUpdateTask(private val context: Context, configuration: ApplicationS
   : AbstractWidgetUpdateTask<Void, Void, FetchAllResponse>(context, configuration) {
   private val userLocationUpdater = UserLocationUpdater(context)
 
+  @Deprecated("Deprecated in Java")
   override fun onPreExecute() {
     screenPainters.forEach { screenPainter ->
       screenPainter.showDataIsInvalid()
@@ -20,6 +21,7 @@ class WidgetUpdateTask(private val context: Context, configuration: ApplicationS
   }
 
 
+  @Deprecated("Deprecated in Java")
   override fun doInBackground(vararg voids: Void): FetchAllResponse {
     if (!screenPainters.isEmpty()) {
       return fetchAllWeatherData()
@@ -34,6 +36,7 @@ class WidgetUpdateTask(private val context: Context, configuration: ApplicationS
   }
 
 
+  @Deprecated("Deprecated in Java")
   override fun onPostExecute(response: FetchAllResponse) {
     try {
       if (response.valid) {

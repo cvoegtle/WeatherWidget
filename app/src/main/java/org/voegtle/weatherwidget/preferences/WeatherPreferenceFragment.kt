@@ -14,6 +14,7 @@ class WeatherPreferenceFragment : PreferenceFragment() {
   private var buildNumber: Int = 0
   private var versionName: String = ""
 
+  @Deprecated("Deprecated in Java")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     addPreferencesFromResource(R.xml.preferences)

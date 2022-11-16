@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.io.OutputStream
 import java.util.Date
 
@@ -32,9 +33,10 @@ internal class DiagramCache(private val context: Context) {
     return if (age > 0) readInternal(diagramId, age) else null
   }
 
+  @Throws(IOException::class)
   fun readInternal(diagramId: DiagramEnum, age: Long): Diagram {
     context.openFileInput(diagramId.filename).use {
-      val image = Drawable.createFromStream(it, "Local Cache")
+      val image = Drawable.createFromStream(it, "Local Cache") ?: throw IOException("Image is null")
       return Diagram(diagramId, image, Date(age))
     }
   }
