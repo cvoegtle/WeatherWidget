@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        android:versionCode="1074"
-          android:versionName="1.56">
+        android:versionCode="1075"
+          android:versionName="1.57">
 
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
