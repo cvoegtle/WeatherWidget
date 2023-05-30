@@ -3,10 +3,10 @@ package org.voegtle.weatherwidget.diagram
 enum class DiagramEnum constructor(val id: Int, val url: String) {
   temperature7days(1, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=291472484&format=image"),
   average7days(2, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1780492499&format=image"),
-  winterdays(3, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1333259502&format=image"),
-  winterdays2022(4, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=386238328&format=image"),
-  summerdays(5, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1885598364&format=image"),
-  summerdays2021(6, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=971600707&format=image"),
+  summerdays(3, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=92028519&format=image"),
+  summerdays2022(4, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1885598364&format=image"),
+  winterdays(5, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1333259502&format=image"),
+  winterdays2021(6, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=386238328&format=image"),
   rain(7, "https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=477091892&format=image"),
   pb_bali_leo(8, "https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=738029596&format=image"),
 

@@ -17,10 +17,10 @@
           </option>
           <option name="languageVersion" value="1.6" />
           <option name="apiVersion" value="1.6" />
-          <option name="pluginOptions">
+          <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="pluginClasspaths">
+          <option name="pluginOptions">
             <array />
           </option>
           <option name="errors">
