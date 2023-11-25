@@ -53,11 +53,9 @@
   <string name="privileges">Berechtigung</string>
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
-  <string name="weather_as_notification">Wetter Notification</string>
   <string name="stations">Messstationen</string>
   <string name="theme">Farbschema</string>
   <string name="theme_summary">App wirklich beenden, damit das neue Schema wirksam wird</string>
-  <string name="weather_as_notification_summary">Wetterdaten als Notification anzeigen</string>
   <string name="secret_summary">damit sieht man mehr</string>
   <string name="app_details">Details zu Wetter Wolke</string>
   <string name="app_author">von Christian Vögtle</string>

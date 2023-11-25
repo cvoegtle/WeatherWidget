@@ -95,8 +95,6 @@
   <string name="update_intervall">Update frequency</string>
   <string name="update_summary">Frequency of data refresh in the widget</string>
   <string name="version_info">About the app</string>
-  <string name="weather_as_notification">Weather notification</string>
-  <string name="weather_as_notification_summary">Show weather data as notification</string>
   <string name="week">7 days</string>
   <string name="wind_speed">Wind</string>
   <string name="yesterday">Yesterday</string>
