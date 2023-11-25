@@ -21,7 +21,6 @@ class WeatherSettingsReader {
   fun read(preferences: SharedPreferences): ApplicationSettings {
     return ApplicationSettings(locations = readLocations(preferences),
                                secret = readString(preferences, "secret"),
-                               isShowInfoNotification = readBoolean(preferences, "info_notification", false),
                                widgetTextSize = readInteger(preferences, "text_size", 11),
                                colorScheme = readColorScheme(preferences, "color_scheme", ColorScheme.dark))
   }

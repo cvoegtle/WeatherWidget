@@ -16,13 +16,13 @@ class LocationOrderStore(context: Context) {
 
   fun readIndexOf(viewId: Int) = locationStore.getInt(INDEX_OF + viewId, 1000)
 
-  @RequiresApi(Build.VERSION_CODES.GINGERBREAD) fun writeIndexOf(viewId: Int, index: Int) {
+   fun writeIndexOf(viewId: Int, index: Int) {
     val editor = locationStore.edit()
     editor.putInt(INDEX_OF + viewId, index)
     editor.apply()
   }
 
-  @RequiresApi(Build.VERSION_CODES.GINGERBREAD) fun writeOrderCriteria(orderCriteria: OrderCriteria) {
+  fun writeOrderCriteria(orderCriteria: OrderCriteria) {
     val editor = locationStore.edit()
     editor.putString(ORDER_CRITERIA, orderCriteria.toString())
     editor.apply()

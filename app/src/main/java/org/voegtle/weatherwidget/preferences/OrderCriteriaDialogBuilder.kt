@@ -19,7 +19,7 @@ object OrderCriteriaDialogBuilder {
         val orderCriteria = OrderCriteria.byIndex(which)
         store(orderCriteria)
 
-        activity.requestLocationPermission()
+        activity.requestPermissions()
         activity.updateWeatherOnce(true)
 
         dialog.cancel()

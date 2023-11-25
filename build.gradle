@@ -3,13 +3,13 @@ buildscript {
     // Define versions in a single place
     ext {
         // Sdk and tools
-        compileSdkVersion = 33
+        compileSdkVersion = 34
         minSdkVersion = 21
-        targetSdkVersion = 33
+        targetSdkVersion = 34
 
         // App dependencies
-        gradleVersion = '7.4.2'
-        kotlinVersion = '1.7.20'
+        gradleVersion = '8.1.4'
+        kotlinVersion = '1.9.0'
         preferencesVersion = '1.2.0'
     }
 

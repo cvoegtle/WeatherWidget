@@ -33,11 +33,11 @@ import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
+import org.voegtle.weatherwidget.preferences.NotificationSettings
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
-import org.voegtle.weatherwidget.preferences.WeatherSettingsWriter
 import org.voegtle.weatherwidget.util.ActivityUpdateTask
 import org.voegtle.weatherwidget.util.StatisticsUpdater
 import org.voegtle.weatherwidget.util.UserFeedback
@@ -92,8 +92,6 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
             .setPositiveButton(R.string.enable_notification, object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
                     val preferences = PreferenceManager.getDefaultSharedPreferences(this@WeatherActivity)
-                    WeatherSettingsWriter().enableNotification(preferences)
-
                 }
             }).setNegativeButton(R.string.understood, object : DialogInterface.OnClickListener {
                 override fun onClick(p0: DialogInterface?, p1: Int) {
@@ -117,7 +115,8 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     private fun readConfiguration(preferences: SharedPreferences) {
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
         configuration = weatherSettingsReader.read(preferences)
-        requestLocationPermission()
+        requestPermissions()
+        enableNotificationsIfPermitted()
     }
 
     private fun addClickHandler(location: WeatherLocation) {
@@ -221,48 +220,87 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
             updateWeatherOnce(true)
             true
         }
+
         R.id.action_diagrams -> {
             startActivity(Intent(this, MainDiagramActivity::class.java))
             true
         }
+
         R.id.action_sort -> {
             val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this)
             orderCriteriaDialog.show()
             true
         }
+
         R.id.action_perferences -> {
             startActivity(Intent(this, WeatherPreferences::class.java))
             true
         }
+
         else -> false
     }
 
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
+    override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
         readConfiguration(preferences)
         setupLocations()
         updateWeatherOnce(true)
     }
 
-    fun requestLocationPermission() {
+    fun requestPermissions() {
+        val missingPermissions = ArrayList<String>()
         val locationOrderStore = LocationOrderStore(applicationContext)
         val orderCriteria = locationOrderStore.readOrderCriteria()
         if (orderCriteria == OrderCriteria.location) {
-            val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 0)
+            checkForPermissionsToRequest(Manifest.permission.ACCESS_FINE_LOCATION)?.let { missingPermissions.add(it) }
+        }
+
+        if (NotificationSettings(this).isEnabled()) {
+            checkForPermissionsToRequest(Manifest.permission.POST_NOTIFICATIONS)?.let { missingPermissions.add(it) }
+        }
+
+        if (!missingPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), 0)
+        }
+    }
+
+    private fun checkForPermissionsToRequest(permission: String): String? {
+        val permissionCheck = ContextCompat.checkSelfPermission(this, permission)
+        return if (permissionCheck != PackageManager.PERMISSION_GRANTED) permission else null
+    }
+
+    override fun onRequestPermissionsResult(requestId: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestId, permissions, grantResults)
+        for ((index, permission) in permissions.withIndex()) {
+            val userGrantResponse = grantResults[index]
+            if (permission == Manifest.permission.ACCESS_FINE_LOCATION && userGrantResponse != PackageManager.PERMISSION_GRANTED) {
+                rollbackLocationOrdering()
+            }
+            if (permission == Manifest.permission.POST_NOTIFICATIONS && userGrantResponse != PackageManager.PERMISSION_GRANTED) {
+                disableNotifications()
             }
         }
     }
 
-    override fun onRequestPermissionsResult(requestId: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (grantResults.isNotEmpty()) {
-            if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
-                val locationOrderStore = LocationOrderStore(applicationContext)
-                locationOrderStore.writeOrderCriteria(OrderCriteria.default)
-                updateWeatherOnce(false)
-            }
+    fun enableNotificationsIfPermitted() {
+        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            enableNotifications()
         }
+    }
+
+    private fun disableNotifications() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this@WeatherActivity)
+        NotificationSettings(this).saveEnabled(true)
+    }
+    private fun enableNotifications() {
+        NotificationSettings(this).saveEnabled(true)
+    }
+
+    private fun rollbackLocationOrdering() {
+        UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
+        val locationOrderStore = LocationOrderStore(applicationContext)
+        locationOrderStore.writeOrderCriteria(OrderCriteria.default)
+        updateWeatherOnce(false)
     }
 
     fun updateWeatherOnce(showToast: Boolean) {

@@ -71,7 +71,7 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
   }
 
 
-  override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String) {
+  override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
     processPreferences(preferences)
   }
 

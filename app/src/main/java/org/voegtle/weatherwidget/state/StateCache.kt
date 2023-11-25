@@ -24,7 +24,7 @@ class StateCache(context: Context) {
     return if (age > 0) Date(age) else null
   }
 
-  @RequiresApi(Build.VERSION_CODES.GINGERBREAD) fun save(state: State) {
+  fun save(state: State) {
     val editor = statePreferences.edit()
     editor.putLong(getKey(STATE_AGE, state.id), state.age?.time ?: -1)
     editor.putBoolean(getKey(STATE, state.id), state.isExpanded)
