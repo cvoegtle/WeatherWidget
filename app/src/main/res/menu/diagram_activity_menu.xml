@@ -34,7 +34,7 @@
   <item android:id="@+id/action_winterdays"
           android:title="@string/action_winter_days"
           app:showAsAction="ifRoom" />
-  <item android:id="@+id/action_winterdays2021"
+  <item android:id="@+id/action_winterdays2022"
           android:title="@string/action_winter_days2022"
           app:showAsAction="ifRoom" />
 </menu>
