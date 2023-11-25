@@ -41,7 +41,7 @@ class WidgetUpdateTask(private val context: Context, configuration: ApplicationS
     try {
       if (response.valid) {
         screenPainters.forEach { screenPainter -> screenPainter.updateWidgetData(response.weatherMap) }
-        checkDataForAlert(response)
+        updateNotification(response)
       } else {
         UserFeedback(context).showMessage(R.string.message_data_update_failed, true)
       }

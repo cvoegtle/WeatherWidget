@@ -11,12 +11,11 @@ data class WeatherLocation(val key: LocationIdentifier,
                            val weatherViewId: Int,
                            val prefShowInWidget: String,
                            val prefShowInApp: String,
-                           val prefAlert: String,
                            val prefFavorite: String,
                            val isVisibleInAppByDefault: Boolean = true,
                            val isVisibleInWidgetByDefault: Boolean = true,
                            var preferences: LocationPreferences = LocationPreferences()) {
 
   val isActive: Boolean
-    get() = preferences.showInApp || preferences.showInWidget || preferences.alertActive
+    get() = preferences.showInApp || preferences.showInWidget
 }

@@ -16,7 +16,6 @@ object LocationFactory {
                                   weatherViewId = R.id.weather_paderborn,
                                   prefShowInApp = "app_show_paderborn",
                                   prefShowInWidget = "widget_show_paderborn",
-                                  prefAlert = "alert_paderborn",
                                   prefFavorite = "favorite_paderborn"))
 
     locations.add(WeatherLocation(LocationIdentifier.BadLippspringe,
@@ -28,7 +27,6 @@ object LocationFactory {
                                   weatherViewId = R.id.weather_bali,
                                   prefShowInApp = "app_show_bali",
                                   prefShowInWidget = "widget_show_bali",
-                                  prefAlert = "alert_bali",
                                   prefFavorite = "favorite_bali",
                                   isVisibleInWidgetByDefault = false))
 
@@ -41,7 +39,6 @@ object LocationFactory {
                                   weatherViewId = R.id.weather_bonn,
                                   prefShowInApp = "app_show_bonn",
                                   prefShowInWidget = "widget_show_bonn",
-                                  prefAlert = "alert_bonn",
                                   prefFavorite = "favorite_bonn"))
 
     locations.add(WeatherLocation(LocationIdentifier.Freiburg,
@@ -53,7 +50,6 @@ object LocationFactory {
                                   weatherViewId = R.id.weather_freiburg,
                                   prefShowInApp = "app_show_freiburg",
                                   prefShowInWidget = "widget_show_freiburg",
-                                  prefAlert = "alert_freiburg",
                                   prefFavorite = "favorite_freiburg"))
 
     locations.add(WeatherLocation(LocationIdentifier.Leopoldshoehe,
@@ -66,7 +62,6 @@ object LocationFactory {
                                   prefShowInApp = "app_show_leo",
                                   prefShowInWidget = "widget_show_leo",
                                   isVisibleInWidgetByDefault = false,
-                                  prefAlert = "alert_leo",
                                   prefFavorite = "favorite_leo"))
 
     locations.add(WeatherLocation(LocationIdentifier.Magdeburg,
@@ -79,7 +74,6 @@ object LocationFactory {
                                   prefShowInApp = "app_show_magdeburg",
                                   prefShowInWidget = "widget_show_magdeburg",
                                   isVisibleInWidgetByDefault = false,
-                                  prefAlert = "alert_magdeburg",
                                   prefFavorite = "favorite_magdeburg"))
 
     locations.add(WeatherLocation(LocationIdentifier.Herzogenaurach,
@@ -92,7 +86,6 @@ object LocationFactory {
                                   prefShowInApp = "app_show_herzo",
                                   prefShowInWidget = "widget_show_herzo",
                                   isVisibleInWidgetByDefault = false,
-                                  prefAlert = "alert_herzo",
                                   prefFavorite = "favorite_herzo"))
 
     locations.add(WeatherLocation(LocationIdentifier.Shenzhen,
@@ -104,7 +97,6 @@ object LocationFactory {
                                   prefShowInApp = "app_show_shenzhen",
                                   prefShowInWidget = "widget_show_shenzhen",
                                   isVisibleInWidgetByDefault = false,
-                                  prefAlert = "alert_shenzhen",
                                   prefFavorite = "favorite_shenzhen"))
 
     locations.add(WeatherLocation(LocationIdentifier.Mobil,
@@ -118,7 +110,6 @@ object LocationFactory {
                                   prefShowInWidget = "widget_show_mobil",
                                   isVisibleInAppByDefault = false,
                                   isVisibleInWidgetByDefault = false,
-                                  prefAlert = "alert_mobil",
                                   prefFavorite = "favorite_mobil"))
 
     return locations

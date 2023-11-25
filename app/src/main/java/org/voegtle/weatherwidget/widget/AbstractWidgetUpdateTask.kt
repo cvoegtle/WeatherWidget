@@ -17,9 +17,9 @@ abstract class AbstractWidgetUpdateTask<Params, Progress, Result>(private val co
     return weatherDataFetcher.fetchWeatherDataFromUrl(weatherServerUrl)
   }
 
-  protected fun checkDataForAlert(data: FetchAllResponse) {
+  protected fun updateNotification(data: FetchAllResponse) {
     val notificationManager = NotificationSystemManager(context, configuration)
-    notificationManager.checkDataForAlert(data)
+    notificationManager.updateNotification(data)
   }
 
 

@@ -38,7 +38,6 @@ class WeatherSettingsReader {
       val locationPreferences = LocationPreferences(
           showInWidget = readBoolean(preferences, location.prefShowInWidget, visibleInWidgetByDefault),
           showInApp = readBoolean(preferences, location.prefShowInApp, visibleInAppByDefault),
-          alertActive = readBoolean(preferences, location.prefAlert, false),
           favorite = readBoolean(preferences, location.prefFavorite, false))
       location.preferences = locationPreferences
     }

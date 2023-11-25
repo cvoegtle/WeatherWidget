@@ -42,7 +42,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
           if (response.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast)
 
       val notificationManager = NotificationSystemManager(activity, configuration)
-      notificationManager.checkDataForAlert(response)
+      notificationManager.updateNotification(response)
     } catch (th: Throwable) {
       UserFeedback(activity).showMessage(R.string.message_data_update_failed, true)
       Log.e(ActivityUpdateTask::class.java.toString(), "Failed to update View", th)
