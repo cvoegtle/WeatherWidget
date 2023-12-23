@@ -79,28 +79,6 @@ class NotificationSystemManager(private val context: Context, private val config
         notificationManager.notify(INFO_ID, notification)
     }
 
-    @TargetApi(26)
-    fun createActivityNotification(): Notification {
-        val notificationBuilder = Notification.Builder(context)
-        notificationBuilder.setSmallIcon(R.drawable.wetterlogo)
-
-        val bm = BitmapFactory.decodeResource(res, R.drawable.wetterlogo)
-        notificationBuilder.setLargeIcon(bm)
-
-        notificationBuilder.setContentTitle(res.getString(R.string.app_name))
-        notificationBuilder.setChannelId(CHANNEL_ID)
-
-        notificationBuilder.setContentText(res.getString(R.string.wetterwolke_in_background))
-
-        val pendingOpenApp = IntentFactory.createNotificationIntent(context)
-        notificationBuilder.setContentIntent(pendingOpenApp)
-
-        val notification = notificationBuilder.build()
-        notification.flags = notification.flags or Notification.FLAG_ONLY_ALERT_ONCE
-
-        return notification
-    }
-
     private fun buildCurrentWeather(data: HashMap<LocationIdentifier, WeatherData>): String {
 
         val relevantData = HashMap<LocationIdentifier, WeatherData>()

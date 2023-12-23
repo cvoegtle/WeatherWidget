@@ -24,13 +24,9 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
     override fun onEnabled(context: Context) {
         ensureResources(context)
         if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(Intent(context, WidgetRefreshService::class.java))
+            context.startService(Intent(context, WidgetRefreshService::class.java))
         } else {
-            val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.set(
-                AlarmManager.RTC, System.currentTimeMillis() + 10,
-                IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java)
-            )
+            callRefreshService(context)
         }
 
         super.onEnabled(context)
@@ -48,8 +44,17 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
                 val intent = IntentFactory.createRefreshIntent(context.applicationContext, WidgetRefreshService::class.java)
                 remoteViews?.setOnClickPendingIntent(R.id.refresh_button, intent)
                 appWidgetManager.updateAppWidget(widgetId, remoteViews)
+                callRefreshService(context)
             }
         }
+    }
+
+    private fun callRefreshService(context: Context) {
+        val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.set(
+            AlarmManager.RTC, System.currentTimeMillis() + 10,
+            IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java)
+        )
     }
 
     override fun onDisabled(context: Context) {

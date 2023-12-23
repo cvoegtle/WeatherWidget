@@ -1,13 +1,9 @@
 package org.voegtle.weatherwidget.widget
 
 import android.app.Service
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.os.Build
 import android.os.IBinder
 import android.preference.PreferenceManager
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
@@ -33,34 +29,17 @@ class WidgetRefreshService : Service(), SharedPreferences.OnSharedPreferenceChan
     preferences.registerOnSharedPreferenceChangeListener(this)
 
     processPreferences(preferences)
-
-    val filter = IntentFilter(Intent.ACTION_SCREEN_ON)
-    registerReceiver(object : BroadcastReceiver() {
-      override fun onReceive(context: Context, intent: Intent) {
-        if (isLastUpdateOutdated) {
-          ensureResources()
-          updateWidget()
-        }
-      }
-    }, filter)
   }
 
   override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
     val result: Int
     try {
       ensureResources()
-      forceAndroid8Notification()
       updateWidget()
     } finally {
       result = super.onStartCommand(intent, flags, startId)
     }
     return result
-  }
-
-  private fun forceAndroid8Notification() {
-    if (Build.VERSION.SDK_INT >= 26) {
-      startForeground(notificationManager!!.INFO_ID, notificationManager!!.createActivityNotification())
-    }
   }
 
   private fun updateWidget() {
