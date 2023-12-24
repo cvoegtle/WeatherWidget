@@ -22,6 +22,7 @@ import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.DateUtil
 import org.voegtle.weatherwidget.util.FetchAllResponse
+import kotlin.math.max
 
 
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
@@ -97,7 +98,7 @@ class NotificationSystemManager(private val context: Context, private val config
             location?.let { currentLocation -> describeLocation(weatherText, currentLocation, weatherData) }
         }
 
-        return weatherText.substring(0, weatherText.length - 3)
+        return weatherText.substring(0, max(weatherText.length - 3, 0))
     }
 
     private fun describeLocation(weatherText: StringBuilder, location: WeatherLocation, weatherData: WeatherData) {
