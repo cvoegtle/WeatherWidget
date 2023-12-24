@@ -17,13 +17,6 @@ object IntentFactory {
     return PendingIntent.getActivity(context, 0, intentOpenApp, intentFlags())
   }
 
-  fun createNotificationIntent(context: Context): PendingIntent? {
-    val intentOpenApp = Intent(context, WeatherActivity::class.java)
-    intentOpenApp.action = WeatherActivity.ANDROID8
-    return PendingIntent.getActivity(context, 0, intentOpenApp, intentFlags())
-  }
-
-
-  private fun intentFlags() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )  PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT
+  private fun intentFlags() = PendingIntent.FLAG_IMMUTABLE
 
 }

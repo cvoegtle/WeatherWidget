@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
-import android.os.Build
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
@@ -23,12 +22,7 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         ensureResources(context)
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startService(Intent(context, WidgetRefreshService::class.java))
-        } else {
-            callRefreshService(context)
-        }
-
+        context.startService(Intent(context, WidgetRefreshService::class.java))
         super.onEnabled(context)
     }
 

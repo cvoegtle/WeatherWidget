@@ -43,10 +43,6 @@ import org.voegtle.weatherwidget.util.StatisticsUpdater
 import org.voegtle.weatherwidget.util.UserFeedback
 
 class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-    companion object {
-        val ANDROID8 = "org.voegtle.weatherwidget.Android8"
-    }
-
     private var statisticsUpdater: StatisticsUpdater? = null
     private var configuration: ApplicationSettings? = null
 
@@ -80,25 +76,6 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
                 updateWeatherOnce(true)
             }
         })
-
-        if (intent.action == ANDROID8) {
-            showAndroid8Explanation()
-        }
-    }
-
-    private fun showAndroid8Explanation() {
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage(R.string.android8_explanation).setTitle(R.string.android8_caption)
-            .setPositiveButton(R.string.enable_notification, object : DialogInterface.OnClickListener {
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                    val preferences = PreferenceManager.getDefaultSharedPreferences(this@WeatherActivity)
-                }
-            }).setNegativeButton(R.string.understood, object : DialogInterface.OnClickListener {
-                override fun onClick(p0: DialogInterface?, p1: Int) {
-                }
-            })
-        val dialog = builder.create()
-        dialog.show()
     }
 
     private fun setupLocations() {
