@@ -7,7 +7,7 @@ data class Statistics(val id: String, val kind: String) {
 
     companion object {
       fun fromString(rangeStr: String): TimeRange? {
-        return values().firstOrNull { it.toString() == rangeStr }
+        return entries.firstOrNull { it.toString() == rangeStr }
       }
     }
   }

@@ -5,7 +5,7 @@ enum class LocationIdentifier(private val id: String) {
 
   companion object {
     fun getByString(stringIdentifier: String): LocationIdentifier? {
-      return values().firstOrNull { it.id == stringIdentifier }
+      return entries.firstOrNull { it.id == stringIdentifier }
     }
   }
 }

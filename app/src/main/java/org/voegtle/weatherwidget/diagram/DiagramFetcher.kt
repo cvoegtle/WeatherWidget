@@ -9,8 +9,6 @@ import java.net.URL
 
 class DiagramFetcher {
 
-  private val COMMUNICATION_TIMEOUT = 60000
-
   fun fetchImageFromUrl(diagramId: DiagramEnum): Drawable? {
     var image: Drawable? = null
     try {
@@ -32,5 +30,9 @@ class DiagramFetcher {
   private fun createImageFromResponse(inputStream: InputStream): Drawable {
     val diagramImage = Drawable.createFromStream(inputStream, "Google Drive")
     return diagramImage ?: throw IOException("Image is null")
+  }
+
+  companion object {
+    private const val COMMUNICATION_TIMEOUT = 60000
   }
 }

@@ -57,7 +57,7 @@ abstract class DiagramActivity : ThemedActivity() {
   private fun cleanupFragments() {
     val fm = supportFragmentManager
     val fragmentTransaction = fm!!.beginTransaction()
-    for (i in 0..pagerAdapter!!.count - 1) {
+    for (i in 0..< pagerAdapter!!.count) {
       fragmentTransaction.remove(pagerAdapter!!.getItem(i))
     }
     fragmentTransaction.commit()
@@ -172,6 +172,6 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   protected abstract fun onCustomItemSelected(item: MenuItem): Boolean
-  protected abstract val placeHolderId: Int?
+  protected abstract val placeHolderId: Int
 
 }

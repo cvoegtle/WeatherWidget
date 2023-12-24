@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.diagram
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -7,7 +8,7 @@ import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.StringUtil
 
 class MobilDiagramActivity : DiagramActivity() {
-  override val placeHolderId: Int? = null
+  override val placeHolderId: Int = R.drawable.station_paderborn
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

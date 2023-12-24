@@ -33,7 +33,7 @@ class LocationOrderStore(context: Context) {
     return OrderCriteria.byKey(str!!)
   }
 
-  @RequiresApi(Build.VERSION_CODES.GINGERBREAD) fun writePosition(userPosition: Position) {
+  fun writePosition(userPosition: Position) {
     val editor = locationStore.edit()
     editor.putFloat(LATITUDE, userPosition.latitude)
     editor.putFloat(LONGITUDE, userPosition.longitude)

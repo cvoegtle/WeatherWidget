@@ -1,8 +1,6 @@
 package org.voegtle.weatherwidget
 
 import android.Manifest
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
@@ -266,8 +264,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun disableNotifications() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this@WeatherActivity)
-        NotificationSettings(this).saveEnabled(true)
+        NotificationSettings(this).saveEnabled(false)
     }
     private fun enableNotifications() {
         NotificationSettings(this).saveEnabled(true)

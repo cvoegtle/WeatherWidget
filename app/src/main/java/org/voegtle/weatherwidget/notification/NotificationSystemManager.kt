@@ -25,8 +25,7 @@ import org.voegtle.weatherwidget.util.FetchAllResponse
 
 
 class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
-    private val ALERT_ID = 1
-    val INFO_ID = 2
+    private val INFO_ID = 2
     private val CHANNEL_ID = "wetterwolke"
 
     private val res: Resources = context.resources
@@ -51,9 +50,11 @@ class NotificationSystemManager(private val context: Context, private val config
 
 
     private fun showInfoNotification(data: HashMap<LocationIdentifier, WeatherData>) {
-        val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionCheck = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                return
+            }
         }
 
         val notificationBuilder = Notification.Builder(context)
@@ -63,7 +64,7 @@ class NotificationSystemManager(private val context: Context, private val config
         notificationBuilder.setLargeIcon(bm)
 
         notificationBuilder.setContentTitle("${res.getString(R.string.app_name)} - ${DateUtil.currentTime}")
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationBuilder.setChannelId(CHANNEL_ID)
         }
 
@@ -85,16 +86,15 @@ class NotificationSystemManager(private val context: Context, private val config
         configuration.locations
             .filter { it.preferences.showInWidget }
             .forEach { (key) ->
-                data[key]?.let { relevantData.put(key, it) }
+                data[key]?.let { relevantData[key] = it }
             }
 
         val weatherText = StringBuilder()
 
         val sortedData = locationSorter.sort(relevantData)
-        sortedData.forEach {
-            val location = configuration.findLocation(it.location)
-            val weatherData = it
-            location?.let { describeLocation(weatherText, it, weatherData) }
+        sortedData.forEach { weatherData ->
+            val location = configuration.findLocation(weatherData.location)
+            location?.let { currentLocation -> describeLocation(weatherText, currentLocation, weatherData) }
         }
 
         return weatherText.substring(0, weatherText.length - 3)

@@ -31,7 +31,7 @@ class DiagramFragment : Fragment {
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater!!.inflate(R.layout.fragment_diagram, container, false)
+    return inflater.inflate(R.layout.fragment_diagram, container, false)
   }
 
   override fun onResume() {
@@ -49,7 +49,7 @@ class DiagramFragment : Fragment {
   private fun ensureResources() {
     if (diagramManager == null) {
       this.diagramManager = DiagramManager(this, placeHolderId)
-      diagramId = DiagramEnum.byId(arguments!!.getInt(DiagramEnum::class.java.name, -1))
+      diagramId = DiagramEnum.byId(requireArguments().getInt(DiagramEnum::class.java.name, -1))
     }
   }
 

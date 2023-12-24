@@ -6,7 +6,7 @@ import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 
 class BonnDiagramActivity : DiagramActivity() {
-  override val placeHolderId: Int? = R.drawable.station_bonn
+  override val placeHolderId: Int = R.drawable.station_bonn
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

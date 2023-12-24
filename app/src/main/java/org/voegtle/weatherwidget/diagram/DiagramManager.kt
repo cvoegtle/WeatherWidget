@@ -14,13 +14,9 @@ import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class DiagramManager(private val fragment: DiagramFragment, val placeHolderPreset: Int?) {
-  private val diagramCache: DiagramCache
+  private val diagramCache: DiagramCache = DiagramCache(fragment.requireActivity())
   private var placeholderImage: Drawable? = null
   private var active = false
-
-  init {
-    this.diagramCache = DiagramCache(fragment.activity!!)
-  }
 
   fun onResume() {
     configureTheme()
@@ -29,7 +25,7 @@ class DiagramManager(private val fragment: DiagramFragment, val placeHolderPrese
   }
 
   private fun configureTheme() {
-    val context = fragment.activity!!.applicationContext
+    val context = fragment.requireActivity().applicationContext
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
     val weatherSettingsReader = WeatherSettingsReader(context)
     val configuration = weatherSettingsReader.read(preferences)
@@ -78,7 +74,7 @@ class DiagramManager(private val fragment: DiagramFragment, val placeHolderPrese
   private fun fetchDrawable(diagramId: DiagramEnum): Drawable {
     val image = DiagramFetcher().fetchImageFromUrl(diagramId)
     if (image == null) {
-      UserFeedback(fragment.activity!!).showMessage(R.string.message_diagram_update_failed)
+      UserFeedback(fragment.requireActivity()).showMessage(R.string.message_diagram_update_failed)
       val message = "Fetching Image $diagramId failed"
       Log.e(DiagramManager::class.java.name, message)
       throw RuntimeException(message)
@@ -93,7 +89,7 @@ class DiagramManager(private val fragment: DiagramFragment, val placeHolderPrese
 
   private fun showDrawable(newImage: Drawable) {
     if (active) {
-      fragment.activity!!.runOnUiThread {
+      fragment.requireActivity().runOnUiThread {
         fragment.view?.let {
           val imageView: ImageView = it.findViewById(R.id.diagram_view)
           imageView.setImageDrawable(newImage)
