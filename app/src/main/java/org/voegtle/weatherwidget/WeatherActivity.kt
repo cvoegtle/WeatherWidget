@@ -226,7 +226,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         val locationOrderStore = LocationOrderStore(applicationContext)
         val orderCriteria = locationOrderStore.readOrderCriteria()
         if (orderCriteria == OrderCriteria.location) {
-            checkForPermissionsToRequest(Manifest.permission.ACCESS_COARSE_LOCATION)?.let { missingPermissions.add(it) }
+            checkForPermissionsToRequest(Manifest.permission.ACCESS_FINE_LOCATION)?.let { missingPermissions.add(it) }
         }
 
         if (NotificationSettings(this).isEnabled()) {
