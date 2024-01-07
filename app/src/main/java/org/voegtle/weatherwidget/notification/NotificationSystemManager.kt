@@ -38,7 +38,7 @@ class NotificationSystemManager(private val context: Context, private val config
     private val dataFormatter = DataFormatter()
 
     init {
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             setupNotificationChannel()
         }
     }
