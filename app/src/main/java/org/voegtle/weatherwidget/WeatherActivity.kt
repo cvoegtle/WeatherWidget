@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.Menu
@@ -229,7 +230,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
             checkForPermissionsToRequest(Manifest.permission.ACCESS_FINE_LOCATION)?.let { missingPermissions.add(it) }
         }
 
-        if (NotificationSettings(this).isEnabled()) {
+        if (NotificationSettings(this).isEnabled() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             checkForPermissionsToRequest(Manifest.permission.POST_NOTIFICATIONS)?.let { missingPermissions.add(it) }
         }
 
@@ -256,16 +257,25 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    fun enableNotificationsIfPermitted() {
-        val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+    private fun enableNotificationsIfPermitted() {
+        if (isNotificationsPermitted()) {
             enableNotifications()
+        }
+    }
+
+    private fun isNotificationsPermitted(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+            return permissionCheck == PackageManager.PERMISSION_GRANTED
+        } else {
+            return true
         }
     }
 
     private fun disableNotifications() {
         NotificationSettings(this).saveEnabled(false)
     }
+
     private fun enableNotifications() {
         NotificationSettings(this).saveEnabled(true)
     }
