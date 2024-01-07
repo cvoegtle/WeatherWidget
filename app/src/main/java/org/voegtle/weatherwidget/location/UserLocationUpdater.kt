@@ -1,13 +1,13 @@
 package org.voegtle.weatherwidget.location
 
 import android.Manifest
-import android.content.Context
+import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
 
-class UserLocationUpdater(val context: Context) {
+class UserLocationUpdater(val context: Activity) {
   private val locationOrderStore: LocationOrderStore = LocationOrderStore(context)
   private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 
@@ -16,7 +16,7 @@ class UserLocationUpdater(val context: Context) {
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       return
     }
-    fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+    fusedLocationClient.getCurrentLocation(Priority.PRIORITY_BALANCED_POWER_ACCURACY, null).addOnSuccessListener { location ->
       location?.let {
         val userPosition = Position(latitude = it.latitude.toFloat(),
             longitude = it.longitude.toFloat())
@@ -24,6 +24,4 @@ class UserLocationUpdater(val context: Context) {
       }
     }
   }
-
-
 }

@@ -21,7 +21,7 @@ class ActivityUpdateTask internal constructor(private val activity: WeatherActiv
                                               private val configuration: ApplicationSettings,
                                               private val showToast: Boolean) : AsyncTask<Void, Void, FetchAllResponse>() {
   private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
-  private val userLocationUpdater = UserLocationUpdater(activity.applicationContext)
+  private val userLocationUpdater = UserLocationUpdater(activity)
   private val locationOrderStore = LocationOrderStore(activity.applicationContext)
   private val formatter = DataFormatter()
 
