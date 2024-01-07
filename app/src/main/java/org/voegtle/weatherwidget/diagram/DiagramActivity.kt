@@ -1,10 +1,13 @@
 package org.voegtle.weatherwidget.diagram
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import androidx.core.app.ActivityCompat
@@ -17,6 +20,7 @@ import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.util.Date
 
 
@@ -91,13 +95,47 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   protected fun shareCurrentImage(diagramIndex: Int) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      shareImage(diagramIndex)
+    } else {
+      shareImageLegacy(diagramIndex)
+    }
+  }
+
+  private fun shareImage(diagramIndex: Int) {
+    val mimeType = "image/png"
+
+    val values = ContentValues()
+
+    values.put(MediaStore.MediaColumns.DISPLAY_NAME, "Wetter Diagramm")
+    values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
+    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + File.separator + "WetterWolke")
+
+    val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
+    val outputStream = contentResolver.openOutputStream(uri!!)
+
+    outputStream?.let {
+      writeImageToStream(diagramIndex, outputStream)
+      outputStream.close()
+    }
+
+    val share = Intent(Intent.ACTION_SEND)
+    share.type = mimeType
+    share.putExtra(Intent.EXTRA_STREAM, uri)
+    startActivity(Intent.createChooser(share, "Wetterwolke Diagramm"))
+
+  }
+
+  private fun shareImageLegacy(diagramIndex: Int): Boolean {
     // Assume thisActivity is the current activity
-    val permissionCheck = ContextCompat.checkSelfPermission(this,
-                                                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    val permissionCheck = ContextCompat.checkSelfPermission(
+      this,
+      Manifest.permission.WRITE_EXTERNAL_STORAGE
+    )
     if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
       requestStoragePermission(diagramIndex)
-      return
-    }
+      return true
+      }
 
     ensureWetterWolkeDirectory()
 
@@ -107,12 +145,15 @@ abstract class DiagramActivity : ThemedActivity() {
     file?.let {
       val share = Intent(Intent.ACTION_SEND)
       share.type = "image/png"
-      val imageUri = FileProvider.getUriForFile(this,
-                                                this.applicationContext.packageName
-                                                    + ".org.voegtle.weatherwidget.diagram.DiagramProvider", it)
+      val imageUri = FileProvider.getUriForFile(
+        this,
+        this.applicationContext.packageName
+                + ".org.voegtle.weatherwidget.diagram.DiagramProvider", it
+      )
       share.putExtra(Intent.EXTRA_STREAM, imageUri)
       startActivity(Intent.createChooser(share, "Wetterwolke Diagramm teilen"))
-    }
+      }
+    return false
   }
 
   private fun ensureWetterWolkeDirectory() {
@@ -147,8 +188,14 @@ abstract class DiagramActivity : ThemedActivity() {
       Log.e(DiagramActivity::class.java.toString(), "failed to write image", e)
       return null
     }
-
     return f
+  }
+
+  private fun writeImageToStream(diagramIndex: Int, out: OutputStream) {
+    val diagramEnum = diagramIdList[diagramIndex]
+    val diagramCache = DiagramCache(this)
+    val image = diagramCache.asPNG(diagramEnum)
+    out.write(image)
   }
 
   private fun requestStoragePermission(diagramId: Int) {
@@ -164,6 +211,7 @@ abstract class DiagramActivity : ThemedActivity() {
         UserFeedback(this).showMessage(R.string.message_permission_required, true)
       }
     }
+    super.onRequestPermissionsResult(diagramId, permissions, grantResults)
   }
 
   protected fun updateViewPager(index: Int): Boolean {
