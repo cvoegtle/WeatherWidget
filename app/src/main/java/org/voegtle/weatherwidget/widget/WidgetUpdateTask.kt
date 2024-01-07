@@ -3,7 +3,6 @@ package org.voegtle.weatherwidget.widget
 import android.content.Context
 import android.util.Log
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.UserFeedback
@@ -11,7 +10,6 @@ import org.voegtle.weatherwidget.util.UserFeedback
 class WidgetUpdateTask(private val context: Context, configuration: ApplicationSettings,
                        private val screenPainters: ArrayList<WidgetScreenPainter>)
   : AbstractWidgetUpdateTask<Void, Void, FetchAllResponse>(context, configuration) {
-  private val userLocationUpdater = UserLocationUpdater(context)
 
   @Deprecated("Deprecated in Java")
   override fun onPreExecute() {
@@ -31,7 +29,6 @@ class WidgetUpdateTask(private val context: Context, configuration: ApplicationS
   }
 
   private fun fetchAllWeatherData(): FetchAllResponse {
-    userLocationUpdater.updateLocation()
     return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
   }
 
