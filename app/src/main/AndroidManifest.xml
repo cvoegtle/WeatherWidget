@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        android:versionCode="1253"
+        android:versionCode="1279"
           android:versionName="1.61">
 
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -91,12 +91,6 @@
               android:logo="@drawable/wetterlogo"
               android:parentActivityName=".WeatherActivity">
     </activity>
-
-    <service android:enabled="true"
-             android:exported="false"
-             android:isolatedProcess="false"
-             android:foregroundServiceType="dataSync"
-             android:name=".widget.WidgetRefreshService"/>
 
     <receiver
             android:name="WeatherWidgetProviderLarge"

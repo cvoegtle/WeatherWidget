@@ -75,10 +75,8 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
 
 
   private fun setWidgetIntents(remoteViews: RemoteViews) {
-    val pendingOpenApp = IntentFactory.createOpenAppIntent(context)
-    viewIds.forEach { viewId -> remoteViews.setOnClickPendingIntent(viewId.line, pendingOpenApp) }
-    remoteViews.setOnClickPendingIntent(R.id.refresh_button,
-                                        IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java))
+    remoteViews.setOnClickPendingIntent(R.id.widget_container,
+                                        IntentFactory.createRefreshIntent(context))
   }
 
 

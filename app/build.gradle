@@ -60,6 +60,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
 
     implementation "androidx.preference:preference:$rootProject.preferencesVersion"
+    implementation 'androidx.work:work-runtime-ktx:2.9.0'
 }
 
 import java.util.regex.Pattern

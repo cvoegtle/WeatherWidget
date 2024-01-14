@@ -7,14 +7,9 @@ import android.os.Build
 import org.voegtle.weatherwidget.WeatherActivity
 
 object IntentFactory {
-  fun createRefreshIntent(context: Context, cls: Class<*>): PendingIntent {
-    val refreshIntent = Intent(context, cls)
-    return PendingIntent.getService(context, 0, refreshIntent, intentFlags())
-  }
-
-  fun createOpenAppIntent(context: Context): PendingIntent {
-    val intentOpenApp = Intent(context, WeatherActivity::class.java)
-    return PendingIntent.getActivity(context, 0, intentOpenApp, intentFlags())
+  fun createRefreshIntent(context: Context): PendingIntent {
+    val refreshIntent = Intent(context, WeatherActivity::class.java)
+    return PendingIntent.getActivity(context, 0, refreshIntent, intentFlags())
   }
 
   private fun intentFlags() = PendingIntent.FLAG_IMMUTABLE

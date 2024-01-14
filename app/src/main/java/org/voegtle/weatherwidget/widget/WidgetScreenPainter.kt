@@ -30,13 +30,8 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
   private val viewIds = ViewIdFactory.buildViewIds()
   private val locationSorter = LocationSorter(context)
 
-  init {
-    remoteViews.setBitmap(R.id.refresh_button, "setImageBitmap", (refreshImage as BitmapDrawable).bitmap)
-  }
 
   override fun showDataIsInvalid() {
-    remoteViews.setViewVisibility(R.id.refresh_button, View.GONE)
-
     viewIds.forEach { viewIds ->
       remoteViews.setTextColor(viewIds.rain, ColorUtil.updateColor(colorScheme))
       remoteViews.setTextColor(viewIds.weather, ColorUtil.updateColor(colorScheme))
@@ -46,7 +41,6 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
   }
 
   override fun showDataIsValid() {
-    remoteViews.setViewVisibility(R.id.refresh_button, View.VISIBLE)
     updateAllWidgets()
   }
 

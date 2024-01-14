@@ -72,7 +72,7 @@ class NotificationSystemManager(private val context: Context, private val config
         val contentText = buildCurrentWeather(data)
         notificationBuilder.setContentText(contentText)
 
-        val pendingOpenApp = IntentFactory.createOpenAppIntent(context)
+        val pendingOpenApp = IntentFactory.createRefreshIntent(context)
         notificationBuilder.setContentIntent(pendingOpenApp)
 
         val notification = notificationBuilder.build()

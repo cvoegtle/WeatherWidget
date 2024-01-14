@@ -77,6 +77,10 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         })
     }
 
+    override fun startActivity(intent: Intent?) {
+        super.startActivity(intent)
+    }
+
     private fun setupLocations() {
         configuration?.let {
             it.locations.forEach { location ->

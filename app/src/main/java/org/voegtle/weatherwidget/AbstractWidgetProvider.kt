@@ -1,18 +1,23 @@
 package org.voegtle.weatherwidget
 
-import android.app.AlarmManager
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.preference.PreferenceManager
 import android.widget.RemoteViews
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.system.IntentFactory
-import org.voegtle.weatherwidget.widget.WidgetRefreshService
+import org.voegtle.weatherwidget.widget.WidgetUpdateWorker
+import java.util.concurrent.TimeUnit
+
+private const val UPDATE_WORK = "update-widget"
 
 abstract class AbstractWidgetProvider : AppWidgetProvider() {
 
@@ -22,7 +27,8 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
 
     override fun onEnabled(context: Context) {
         ensureResources(context)
-        context.startService(Intent(context, WidgetRefreshService::class.java))
+        enqueueInitialWidgetUpdateWorker(context)
+        enqueuePeriodicWidgetUpdateWorker(context)
         super.onEnabled(context)
     }
 
@@ -30,29 +36,27 @@ abstract class AbstractWidgetProvider : AppWidgetProvider() {
         ensureResources(context)
 
         appWidgetIds.forEach { widgetId ->
-            val pendingOpenApp = IntentFactory.createOpenAppIntent(context.applicationContext)
             configuration?.let {
-                it.locations.forEach { location ->
-                    remoteViews?.setOnClickPendingIntent(location.weatherViewId, pendingOpenApp)
-                }
-                val intent = IntentFactory.createRefreshIntent(context.applicationContext, WidgetRefreshService::class.java)
-                remoteViews?.setOnClickPendingIntent(R.id.refresh_button, intent)
+                val intent = IntentFactory.createRefreshIntent(context.applicationContext)
+                remoteViews?.setOnClickPendingIntent(R.id.widget_container, intent)
                 appWidgetManager.updateAppWidget(widgetId, remoteViews)
-                callRefreshService(context)
             }
         }
     }
 
-    private fun callRefreshService(context: Context) {
-        val alarmManager: AlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.set(
-            AlarmManager.RTC, System.currentTimeMillis() + 10,
-            IntentFactory.createRefreshIntent(context, WidgetRefreshService::class.java)
-        )
+    private fun enqueueInitialWidgetUpdateWorker(context: Context) {
+        val widgetUpdateRequest = OneTimeWorkRequestBuilder<WidgetUpdateWorker>().setInitialDelay(5, TimeUnit.SECONDS).build()
+        WorkManager.getInstance(context).enqueue(widgetUpdateRequest)
+    }
+
+    private fun enqueuePeriodicWidgetUpdateWorker(context: Context) {
+        val widgetUpdateRequest = PeriodicWorkRequestBuilder<WidgetUpdateWorker>(16, TimeUnit.MINUTES).build()
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(UPDATE_WORK, ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE, widgetUpdateRequest)
     }
 
     override fun onDisabled(context: Context) {
         ensureResources(context)
+        WorkManager.getInstance(context).cancelUniqueWork(UPDATE_WORK)
     }
 
     private fun ensureResources(context: Context) {
