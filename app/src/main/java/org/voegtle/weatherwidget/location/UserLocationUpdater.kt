@@ -2,12 +2,13 @@ package org.voegtle.weatherwidget.location
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 
-class UserLocationUpdater(val context: Activity) {
+class UserLocationUpdater(val context: Context) {
   private val locationOrderStore: LocationOrderStore = LocationOrderStore(context)
   private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
 

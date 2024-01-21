@@ -4,17 +4,26 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import com.google.gson.Gson
 import org.voegtle.weatherwidget.base.ThemedActivity
 import org.voegtle.weatherwidget.base.UpdatingScrollView
+import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
 import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
 import org.voegtle.weatherwidget.diagram.BonnDiagramActivity
@@ -26,10 +35,13 @@ import org.voegtle.weatherwidget.diagram.MainDiagramActivity
 import org.voegtle.weatherwidget.diagram.MobilDiagramActivity
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity
 import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
+import org.voegtle.weatherwidget.location.LocationContainer
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.LocationView
+import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.location.WeatherLocation
+import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.preferences.NotificationSettings
@@ -37,15 +49,25 @@ import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
-import org.voegtle.weatherwidget.util.ActivityUpdateTask
+import org.voegtle.weatherwidget.util.ActivityUpdateWorker
+import org.voegtle.weatherwidget.util.ColorUtil
+import org.voegtle.weatherwidget.util.DataFormatter
+import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticsUpdater
 import org.voegtle.weatherwidget.util.UserFeedback
+import org.voegtle.weatherwidget.widget.ScreenPainterFactory
 
 class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var statisticsUpdater: StatisticsUpdater? = null
     private var configuration: ApplicationSettings? = null
 
     private lateinit var binding: ActivityWeatherBinding
+    private var locationOrderStore: LocationOrderStore? = null
+    private val formatter = DataFormatter()
+
+    private var workInfo: LiveData<MutableList<WorkInfo>>? = null
+    private var userLocationUpdater: UserLocationUpdater? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +87,10 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         readConfiguration(preferences)
         preferences.registerOnSharedPreferenceChangeListener(this)
 
+        locationOrderStore = LocationOrderStore(this.applicationContext)
         statisticsUpdater = StatisticsUpdater(this)
+        userLocationUpdater = UserLocationUpdater(this)
+
 
         setupLocations()
         configureLocationSymbolColor()
@@ -292,8 +317,103 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     fun updateWeatherOnce(showToast: Boolean) {
-        ActivityUpdateTask(this, configuration!!, showToast).execute()
+        userLocationUpdater!!.updateLocation()
+
+        val activityUpdateRequest = OneTimeWorkRequestBuilder<ActivityUpdateWorker>().addTag(ActivityUpdateWorker.WEATHER_DATA).build()
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueue(activityUpdateRequest)
+        workInfo = workManager.getWorkInfosByTagLiveData(ActivityUpdateWorker.WEATHER_DATA)
+        val observer = Observer<MutableList<WorkInfo>>() { workInfoList ->
+            val latestWorkInfo = workInfoList.firstOrNull { it.id == activityUpdateRequest.id }
+
+            if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
+                val weatherDataJson = latestWorkInfo.outputData.getString(ActivityUpdateWorker.WEATHER_DATA)
+                val weatherData = Gson().fromJson(weatherDataJson, FetchAllResponse::class.java)
+                updateActivity(weatherData, showToast)
+            }
+        }
+        workInfo?.observe(this, observer)
     }
+
+    private fun updateActivity(weatherData: FetchAllResponse, showToast: Boolean) {
+        try {
+            updateViewData(weatherData.weatherMap)
+            sortViews(weatherData.weatherMap)
+            updateWidgets(weatherData.weatherMap)
+
+            UserFeedback(applicationContext).showMessage(
+                if (weatherData.valid) R.string.message_data_updated else R.string.message_data_update_failed, true
+            )
+
+            val notificationManager = NotificationSystemManager(applicationContext, configuration!!)
+            notificationManager.updateNotification(weatherData)
+        } catch (th: Throwable) {
+            UserFeedback(applicationContext).showMessage(R.string.message_data_update_failed, true)
+            Log.e(ActivityUpdateWorker::class.java.toString(), "Failed to update View", th)
+        }
+
+    }
+
+    private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {
+        configuration!!.locations.forEach { location ->
+            data[location.key]?.let {
+                updateWeatherLocation(location, location.name, it)
+            }
+        }
+    }
+
+    private fun updateWeatherLocation(location: WeatherLocation, locationName: String, data: WeatherData) {
+        val contentView: LocationView = findViewById(location.weatherViewId)
+
+        val favorite = location.preferences.favorite
+        highlightFavorite(contentView, favorite)
+
+
+        val colorScheme = configuration!!.colorScheme
+        val color = ColorUtil.byAge(colorScheme, data.timestamp)
+        val caption = getCaption(locationName, data)
+
+        updateView(contentView, caption, data, color)
+    }
+
+    private fun highlightFavorite(contentView: LocationView, favorite: Boolean) {
+        contentView.setBackgroundColor(if (favorite) ColorUtil.favorite() else Color.TRANSPARENT)
+    }
+
+
+    private fun getCaption(locationName: String, data: WeatherData): String {
+        var caption = "$locationName - ${data.localtime}"
+
+        if (locationOrderStore!!.readOrderCriteria() == OrderCriteria.location) {
+            val userPosition = locationOrderStore!!.readPosition()
+            val distance = userPosition.distanceTo(data.position)
+            caption += " - ${formatter.formatDistance(distance.toFloat())}"
+        }
+
+        return caption
+    }
+
+    private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {
+        view.setCaption(caption)
+        view.setData(data)
+        view.setTextColor(color)
+    }
+
+    private fun updateWidgets(data: HashMap<LocationIdentifier, WeatherData>) {
+        val factory = ScreenPainterFactory(this, configuration!!)
+        val screenPainters = factory.createScreenPainters()
+        for (screenPainter in screenPainters) {
+            screenPainter.updateWidgetData(data)
+            screenPainter.showDataIsValid()
+        }
+    }
+
+    private fun sortViews(data: HashMap<LocationIdentifier, WeatherData>) {
+        val container = locationContainer()
+        val locationContainer = LocationContainer(applicationContext, container, configuration!!)
+        locationContainer.updateLocationOrder(data)
+    }
+
 
     fun locationContainer() = binding.locationContainer
 
