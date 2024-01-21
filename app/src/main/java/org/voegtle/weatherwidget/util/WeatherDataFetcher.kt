@@ -37,7 +37,6 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
                 (0 until weatherList.length()).map { weatherList.getJSONObject(it) }.forEach { weather ->
                     getLocation(locations, weather)?.let {
                         val data = parseWeatherData(it.key, weather)
-                        parseLocationData(it, weather)
                         resultList.put(data.location, data)
                     }
                 }
@@ -101,6 +100,7 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
             latitude = getOptionalNumber(weather, "latitude") ?: 0.0F,
             longitude = getOptionalNumber(weather, "longitude") ?: 0.0F
         )
+
         return WeatherData(
             location = locationIdentifier,
             timestamp = Date(timestamp),
@@ -120,21 +120,19 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
             wind = getOptionalNumber(weather, "wind"),
             windgust = getOptionalNumber(weather, "windgust"),
             isRaining = weather.has("raining") && weather.getBoolean("raining"),
-            position = position
+            position = position,
+            location_name = weather.getString("location"),
+            location_short = weather.getString("location_short"),
+            forecast = getOptionalString(weather, "forecast")
         )
-    }
-
-    @Throws(JSONException::class)
-    private fun parseLocationData(location: WeatherLocation, weather: JSONObject) {
-        location.name = weather.getString("location")
-        location.shortName = weather.getString("location_short")
-        if (weather.has("forecast")) {
-            location.forecastUrl = Uri.parse(weather.getString("forecast"))
-        }
     }
 
     private fun getOptionalNumber(json: JSONObject, name: String): Float? {
         return if (json.has(name)) (json.get(name) as Number).toFloat() else null
+    }
+
+    private fun getOptionalString(json: JSONObject, name: String): String? {
+        return if (json.has(name)) json.getString(name) else null
     }
 
     fun fetchStatisticsFromUrl(locationIds: List<String>): HashMap<String, Statistics> {

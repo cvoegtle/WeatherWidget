@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.data
 
+import android.net.Uri
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.Position
 import org.voegtle.weatherwidget.util.DateUtil
@@ -24,7 +25,10 @@ data class WeatherData(
     val powerProduction: Float?,
     val powerFeed: Float?,
     val wind: Float?,
-    val windgust: Float?
+    val windgust: Float?,
+    val location_name: String,
+    val location_short: String,
+    val forecast: String?
 ) : Comparable<WeatherData> {
 
 

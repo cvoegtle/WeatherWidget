@@ -336,21 +336,30 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun updateActivity(weatherData: FetchAllResponse, showToast: Boolean) {
         try {
+            refreshLocationData(weatherData.weatherMap)
             updateViewData(weatherData.weatherMap)
             sortViews(weatherData.weatherMap)
             updateWidgets(weatherData.weatherMap)
 
             UserFeedback(applicationContext).showMessage(
-                if (weatherData.valid) R.string.message_data_updated else R.string.message_data_update_failed, true
+                if (weatherData.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast
             )
 
             val notificationManager = NotificationSystemManager(applicationContext, configuration!!)
             notificationManager.updateNotification(weatherData)
         } catch (th: Throwable) {
             UserFeedback(applicationContext).showMessage(R.string.message_data_update_failed, true)
-            Log.e(ActivityUpdateWorker::class.java.toString(), "Failed to update View", th)
+            Log.e(WeatherActivity::class.java.toString(), "Failed to update View", th)
         }
 
+    }
+
+    private fun refreshLocationData(data: java.util.HashMap<LocationIdentifier, WeatherData>) {
+        configuration!!.locations.forEach { location ->
+            data[location.key]?.let {
+                location.refresh(it)
+            }
+        }
     }
 
     private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {

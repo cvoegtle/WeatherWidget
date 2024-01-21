@@ -8,6 +8,8 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.voegtle.weatherwidget.R
+import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
@@ -35,6 +37,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters):
     override fun doWork(): Result {
         cleanup()
         val response = fetchWeatherData()
+        refreshLocationData(response.weatherMap)
         updateWidgets(response)
 
         return Result.success()
@@ -67,9 +70,17 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters):
                 UserFeedback(applicationContext).showMessage(R.string.message_data_update_failed, true)
             }
         } catch (th: Throwable) {
-            Log.e(WidgetUpdateTask::class.java.toString(), "Failed to update View", th)
+            Log.e(WidgetUpdateWorker::class.java.toString(), "Failed to update View", th)
         } finally {
             showDataIsValid()
+        }
+    }
+
+    private fun refreshLocationData(data: java.util.HashMap<LocationIdentifier, WeatherData>) {
+        configuration!!.locations.forEach { location ->
+            data[location.key]?.let {
+                location.refresh(it)
+            }
         }
     }
 
@@ -77,7 +88,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters):
         try {
             screenPainters.forEach { screenPainter -> screenPainter.showDataIsValid() }
         } catch (th: Throwable) {
-            Log.e(WidgetUpdateTask::class.java.toString(), "Failed to repaint view", th)
+            Log.e(WidgetUpdateWorker::class.java.toString(), "Failed to repaint view", th)
         }
     }
 
