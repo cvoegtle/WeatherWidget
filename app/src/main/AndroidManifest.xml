@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        android:versionCode="1334"
+        android:versionCode="1338"
           android:versionName="1.61">
 
   <uses-permission android:name="android.permission.INTERNET"/>

@@ -322,17 +322,16 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         val activityUpdateRequest = OneTimeWorkRequestBuilder<ActivityUpdateWorker>().addTag(ActivityUpdateWorker.WEATHER_DATA).build()
         val workManager = WorkManager.getInstance(applicationContext)
         workManager.enqueue(activityUpdateRequest)
-        workInfo = workManager.getWorkInfosByTagLiveData(ActivityUpdateWorker.WEATHER_DATA)
-        val observer = Observer<MutableList<WorkInfo>>() { workInfoList ->
-            val latestWorkInfo = workInfoList.firstOrNull { it.id == activityUpdateRequest.id }
+        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(activityUpdateRequest.id)
 
+        val observer = Observer<WorkInfo>() { latestWorkInfo ->
             if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
                 val weatherDataJson = latestWorkInfo.outputData.getString(ActivityUpdateWorker.WEATHER_DATA)
                 val weatherData = Gson().fromJson(weatherDataJson, FetchAllResponse::class.java)
                 updateActivity(weatherData, showToast)
             }
         }
-        workInfo?.observe(this, observer)
+        workInfoByIdLiveData.observe(this, observer)
     }
 
     private fun updateActivity(weatherData: FetchAllResponse, showToast: Boolean) {
