@@ -13,6 +13,7 @@ class BaliDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.bali_7days)
     addDiagram(DiagramEnum.bali_wind)
     addDiagram(DiagramEnum.bali_humidity)
+    addDiagram(DiagramEnum.bali_solar_production)
     addDiagram(DiagramEnum.bali_30days)
     addDiagram(DiagramEnum.bali_paderborn)
     addDiagram(DiagramEnum.bali_lastyear)
@@ -31,9 +32,10 @@ class BaliDiagramActivity : DiagramActivity() {
         R.id.action_bali_7days -> updateViewPager(0)
         R.id.action_bali_wind -> updateViewPager(1)
         R.id.action_bali_humidity -> updateViewPager(2)
-        R.id.action_30_days -> updateViewPager(3)
-        R.id.action_bali_paderborn -> updateViewPager(4)
-        R.id.action_last_year -> updateViewPager(5)
+        R.id.action_bali_solar_production -> updateViewPager(3)
+        R.id.action_30_days -> updateViewPager(4)
+        R.id.action_bali_paderborn -> updateViewPager(5)
+        R.id.action_last_year -> updateViewPager(6)
         else -> false
       }
 
