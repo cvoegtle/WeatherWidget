@@ -22,6 +22,12 @@
   <item android:id="@+id/action_bali_solar_production"
           android:title="@string/action_power"
           app:showAsAction="ifRoom" />
+  <item android:id="@+id/action_bali_solar_daily"
+          android:title="@string/action_bali_solar_daily"
+          app:showAsAction="ifRoom" />
+  <item android:id="@+id/action_bali_solar_monthly"
+          android:title="@string/action_bali_solar_monthly"
+          app:showAsAction="ifRoom" />
   <item android:id="@+id/action_30_days"
           android:title="@string/action_30_days"
           app:showAsAction="ifRoom" />

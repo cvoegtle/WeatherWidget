@@ -124,4 +124,6 @@
   <string name="action_power">Power production</string>
   <string name="wind_gust">Gust</string>
   <string name="action_instant_freiburg">Littenweiler - Freiburg</string>
+  <string name="action_bali_solar_daily">Daily production</string>
+  <string name="action_bali_solar_monthly">Monthly production</string>
 </resources>
