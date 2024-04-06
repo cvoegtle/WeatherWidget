@@ -28,8 +28,8 @@
   <item android:id="@+id/action_summerdays"
           android:title="@string/action_summer_days"
           app:showAsAction="ifRoom" />
-  <item android:id="@+id/action_summerdays2022"
-          android:title="@string/action_summer_days2022"
+  <item android:id="@+id/action_summerdays2023"
+          android:title="@string/action_summer_days2023"
           app:showAsAction="ifRoom" />
   <item android:id="@+id/action_winterdays"
           android:title="@string/action_winter_days"

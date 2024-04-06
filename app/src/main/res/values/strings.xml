@@ -123,7 +123,7 @@
   <string name="city_shenzhen_full" translatable="false">Shenzhen</string>
   <string name="city_shenzhen" translatable="false">SZ</string>
   <string name="station_shenzhen">Wetterstation in Shenzhen</string>
-  <string name="action_summer_days2022">Sommertage 2022</string>
+  <string name="action_summer_days2023">Sommertage 2023</string>
   <string name="message_location_permission_required">Sortierung wird zurückgesetzt auf standard (fest)</string>
   <string name="action_show_location">Vermutete Position</string>
   <string name="channel_name">Wetter Wolke</string>
