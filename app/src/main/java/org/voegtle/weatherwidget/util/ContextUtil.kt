@@ -13,7 +13,7 @@ object ContextUtil {
   fun getVersion(context: Context): String {
     val packageManager = context.packageManager
     val packageName = context.packageName
-    return packageManager.getPackageInfo(packageName, 0).versionName
+    return packageManager.getPackageInfo(packageName, 0).versionName ?: " unbekannt"
   }
 
 }
