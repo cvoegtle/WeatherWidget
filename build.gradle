@@ -8,7 +8,7 @@ buildscript {
         targetSdkVersion = 35
 
         // App dependencies
-        gradleVersion = '8.6.0'
+        gradleVersion = '8.7.2'
         kotlinVersion = '2.0.21'
         preferencesVersion = '1.2.1'
     }

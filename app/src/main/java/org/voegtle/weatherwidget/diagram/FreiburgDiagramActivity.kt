@@ -12,6 +12,7 @@ class FreiburgDiagramActivity : DiagramActivity() {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.freiburg_2days)
     addDiagram(DiagramEnum.freiburg_wind)
+    addDiagram(DiagramEnum.freiburg_sun)
     addDiagram(DiagramEnum.freiburg_30days)
     addDiagram(DiagramEnum.freiburg_lastyear)
     addDiagram(DiagramEnum.freiburg_year)
@@ -27,9 +28,10 @@ class FreiburgDiagramActivity : DiagramActivity() {
       when (item.itemId) {
         R.id.action_rain -> updateViewPager(0)
         R.id.action_wind -> updateViewPager(1)
-        R.id.action_30_days -> updateViewPager(2)
-        R.id.action_last_year -> updateViewPager(3)
-        R.id.action_year -> updateViewPager(4)
+        R.id.action_sun -> updateViewPager(2)
+        R.id.action_30_days -> updateViewPager(3)
+        R.id.action_last_year -> updateViewPager(4)
+        R.id.action_year -> updateViewPager(5)
         else -> false
       }
 }
