@@ -65,7 +65,8 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     private var locationOrderStore: LocationOrderStore? = null
     private val formatter = DataFormatter()
 
-    private var workInfo: LiveData<MutableList<WorkInfo>>? = null
+    // wird benötigt um die Daten asynchron zu aktualisieren
+    private var workInfo: LiveData<MutableList<WorkInfo?>>? = null
     private var userLocationUpdater: UserLocationUpdater? = null
 
 
@@ -325,7 +326,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         workManager.enqueue(activityUpdateRequest)
         val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(activityUpdateRequest.id)
 
-        val observer = Observer<WorkInfo>() { latestWorkInfo ->
+        val observer = Observer<WorkInfo?>() { latestWorkInfo ->
             if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
                 val weatherDataJson = latestWorkInfo.outputData.getString(ActivityUpdateWorker.WEATHER_DATA)
                 val weatherData = Gson().fromJson(weatherDataJson, FetchAllResponse::class.java)
