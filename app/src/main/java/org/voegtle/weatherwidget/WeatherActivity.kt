@@ -91,6 +91,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
 
+        patchPaddingForAndroid15()
 
         setupLocations()
         configureLocationSymbolColor()
@@ -423,7 +424,14 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
 
-    fun locationContainer() = binding.locationContainer
+    private fun patchPaddingForAndroid15() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            locationContainer().setPadding(0, 310, 0, 0)
+        }
+    }
+
+
+    private fun locationContainer() = binding.locationContainer
 
 
 }

@@ -7,12 +7,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-  <org.voegtle.weatherwidget.base.UpdatingScrollView android:id="@+id/scroll_view" android:layout_width="match_parent" android:layout_height="match_parent">
+  <org.voegtle.weatherwidget.base.UpdatingScrollView
+          android:id="@+id/scroll_view"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:padding="5dp">
     <LinearLayout android:id="@+id/location_container"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:padding="5dp">
+                  android:orientation="vertical">
       <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_paderborn"
                                                        android:layout_width="match_parent"
                                                        android:layout_height="wrap_content"
