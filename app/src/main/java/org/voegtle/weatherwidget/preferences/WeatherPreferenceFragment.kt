@@ -1,9 +1,11 @@
 package org.voegtle.weatherwidget.preferences
 
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceCategory
 import android.preference.PreferenceFragment
 import android.preference.PreferenceScreen
+import android.view.View
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.ContextUtil
 
@@ -21,7 +23,17 @@ class WeatherPreferenceFragment : PreferenceFragment() {
 
     readVersionInformationFromAndroidManifest()
     addBuildInformation(versionNotice)
+  }
 
+  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    patchPaddingForAndroid15(view)
+  }
+
+  private fun patchPaddingForAndroid15(view: View?) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+      view?.setPadding(0, 310, 0, 0)
+    }
   }
 
   private fun readVersionInformationFromAndroidManifest() {
