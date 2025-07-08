@@ -5,5 +5,6 @@
         android:layout_height="wrap_content"
         android:paddingStart="21dp"
         android:paddingTop="130dp"
-        android:textColor="?android:attr/textColorLink"
+        android:paddingBottom="13dp"
+        android:textColor="?android:attr/textColorSecondary"
         android:textStyle="bold"/>

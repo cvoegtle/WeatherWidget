@@ -221,7 +221,7 @@
                       android:summary="@string/version">
       <Preference android:title="@string/version"
                   android:summary="@string/app_author"
-              android:layout="@layout/custom_preference_category_layout"/>
+              android:layout="@layout/small_preference_category_layout"/>
       <Preference android:title="@string/send_message"
                   android:summary="@string/send_mail">
         <intent android:action="android.intent.action.SENDTO"
