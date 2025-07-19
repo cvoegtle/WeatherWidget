@@ -1,11 +1,12 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     // Define versions in a single place
     ext {
         // Sdk and tools
-        compileSdkVersion = 35
+        compileSdkVersion = 36
         minSdkVersion = 24
-        targetSdkVersion = 35
+        targetSdkVersion = 36
 
         // App dependencies
         gradleVersion = '8.11.1'
@@ -32,7 +33,7 @@ allprojects {
 }
 
 subprojects {
-    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
             jvmTarget = "17"
             // Use experimental APIs
