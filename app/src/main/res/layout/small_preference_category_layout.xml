@@ -3,7 +3,7 @@
         android:id="@android:id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="21dp"
+        android:paddingStart="23dp"
         android:paddingTop="130dp"
         android:paddingBottom="13dp"
         android:textColor="?android:attr/textColorSecondary"

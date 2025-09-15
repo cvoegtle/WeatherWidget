@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowInsets
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
@@ -219,6 +220,7 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.weather_activity_menu, menu)
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -427,9 +429,17 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun patchPaddingForAndroid15() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            locationContainer().setPadding(0, 310, 0, 0)
+            val windowMetrics = windowManager.currentWindowMetrics
+            val insetsStatusBars = windowMetrics.windowInsets.getInsets(WindowInsets.Type.statusBars())
+            val insetsSystemBars = windowMetrics.windowInsets.getInsets(WindowInsets.Type.systemBars())
+            val topPadding = insetsStatusBars.top + insetsSystemBars.top
+
+            locationContainer().setPadding(0, topPadding, 0, 0)
         }
     }
+
+    fun Int.dpToPx(): Float = (this *
+            applicationContext.resources.displayMetrics.density)
 
 
     private fun locationContainer() = binding.locationContainer
