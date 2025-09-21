@@ -7,7 +7,7 @@
           android:defaultValue="11"
           android:entries="@array/fontSize"
           android:entryValues="@array/fontSizeValues"
-          />
+          android:layout="@layout/first_preference_layout"/>
   <ListPreference
           android:key="color_scheme"
           android:title="@string/theme"
