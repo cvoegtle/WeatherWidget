@@ -2,36 +2,35 @@ package org.voegtle.weatherwidget.state
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.RequiresApi
 import java.util.Date
 
 class StateCache(context: Context) {
-  private val STATE_CACHE = "STATE"
-  private val STATE_AGE = "AGE"
-  private val STATE = "STATE"
-  private val STATISTICS = "STATISTICS"
+  private val STATE_CACHE_PREF_NAME = "STATE_CACHE"
+  private val STATE_AGE_PREFIX = "AGE_"
+  // private val STATE_EXPANDED_PREFIX = "EXPANDED_" // Nicht mehr benötigt
+  private val STATISTICS_PREFIX = "STATISTICS_"
 
-  private val statePreferences: SharedPreferences = context.getSharedPreferences(STATE_CACHE, 0)
+  private val statePreferences: SharedPreferences = context.getSharedPreferences(STATE_CACHE_PREF_NAME, 0)
 
-  fun read(id: Int): State = State(id = id,
+  fun read(id: String): State = State(
+      id = id,
       age = readAge(id),
-      isExpanded = statePreferences.getBoolean(getKey(STATE, id), false),
-      statistics = statePreferences.getString(getKey(STATISTICS, id), "")!!)
+      // isExpanded = statePreferences.getBoolean(getKey(STATE_EXPANDED_PREFIX, id), false), // Entfernt
+      statistics = statePreferences.getString(getKey(STATISTICS_PREFIX, id), "") ?: ""
+  )
 
-  fun readAge(id: Int): Date? {
-    val age = statePreferences.getLong(getKey(STATE_AGE, id), -1)
-    return if (age > 0) Date(age) else null
+  fun readAge(id: String): Date? {
+    val ageTimestamp = statePreferences.getLong(getKey(STATE_AGE_PREFIX, id), -1)
+    return if (ageTimestamp > 0) Date(ageTimestamp) else null
   }
 
   fun save(state: State) {
     val editor = statePreferences.edit()
-    editor.putLong(getKey(STATE_AGE, state.id), state.age?.time ?: -1)
-    editor.putBoolean(getKey(STATE, state.id), state.isExpanded)
-    editor.putString(getKey(STATISTICS, state.id), state.statistics)
+    editor.putLong(getKey(STATE_AGE_PREFIX, state.id), state.age?.time ?: -1)
+    // editor.putBoolean(getKey(STATE_EXPANDED_PREFIX, state.id), state.isExpanded) // Entfernt
+    editor.putString(getKey(STATISTICS_PREFIX, state.id), state.statistics)
     editor.apply()
   }
 
-  private fun getKey(prefix: String, id: Int) = prefix + id
-
+  private fun getKey(prefix: String, id: String) = prefix + id
 }
