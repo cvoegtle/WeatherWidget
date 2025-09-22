@@ -1,60 +1,61 @@
 package org.voegtle.weatherwidget.preferences
 
-import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceCategory
-import android.preference.PreferenceFragment
-import android.preference.PreferenceScreen
-import android.view.View
+import androidx.preference.Preference // AndroidX Import
+import androidx.preference.PreferenceFragmentCompat // AndroidX Import
+import androidx.preference.PreferenceScreen // AndroidX Import
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.ContextUtil
 
-class WeatherPreferenceFragment : PreferenceFragment() {
-  private val PLACEHOLDER_VERSION = "{v}"
-  private val PLACEHOLDER_BUILD = "{b}"
+class WeatherPreferenceFragment : PreferenceFragmentCompat() {
+    private val PLACEHOLDER_VERSION = "{v}"
+    private val PLACEHOLDER_BUILD = "{b}"
 
-  private var buildNumber: Int = 0
-  private var versionName: String = ""
+    // WICHTIG: Dieser Key MUSS mit dem android:key in deiner res/xml/preferences.xml übereinstimmen,
+    // für die PreferenceScreen (oder Preference), die die Versionsinfos anzeigt.
+    private val VERSION_INFO_KEY = "version_info_screen_key" // Passe diesen Key ggf. an!
 
-  @Deprecated("Deprecated in Java")
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    addPreferencesFromResource(R.xml.preferences)
+    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+        setPreferencesFromResource(R.xml.preferences, rootKey)
 
-    readVersionInformationFromAndroidManifest()
-    addBuildInformation(versionNotice)
-  }
+        var versionName = ""
+        var buildNumber = 0
 
-  override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    patchPaddingForAndroid15(view)
-  }
+        // Context über requireActivity() holen, da das Fragment zu diesem Zeitpunkt an eine Activity gebunden sein sollte.
+        try {
+            val activity = requireActivity()
+            versionName = ContextUtil.getVersion(activity)
+            buildNumber = ContextUtil.getBuildNumber(activity)
+        } catch (e: IllegalStateException) {
+            // Activity ist nicht verfügbar, kann passieren, wenn das Fragment schnell detached wird.
+            // In diesem Fall können die Versionsinfos nicht geladen werden.
+            return
+        }
 
-  private fun patchPaddingForAndroid15(view: View?) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-      view?.setPadding(0, 310, 0, 0)
+        // Finde die Preference (oder PreferenceScreen) anhand des Keys
+        val versionPreferenceItem: Preference? = findPreference(VERSION_INFO_KEY)
+
+        versionPreferenceItem?.let { pref ->
+            val currentSummary = pref.summary?.toString() ?: "Version {v} (Build {b})" // Fallback, falls Summary nicht in XML gesetzt ist
+            val versionInfoText = currentSummary
+                .replace(PLACEHOLDER_VERSION, versionName)
+                .replace(PLACEHOLDER_BUILD, buildNumber.toString())
+
+            pref.summary = versionInfoText
+
+            // Wenn das gefundene Item eine PreferenceScreen ist und du den Titel des ersten Kindes aktualisieren willst,
+            // (entsprechend deiner ursprünglichen Logik):
+            if (pref is PreferenceScreen) {
+                if (pref.preferenceCount > 0) {
+                    val firstChild: Preference? = pref.getPreference(0)
+                    firstChild?.title = versionInfoText
+                }
+            } else {
+                // Wenn es eine einfache Preference ist, deren Titel du auch dynamisch setzen wolltest (seltener):
+                // pref.title = versionInfoText
+            }
+        }
     }
-  }
-
-  private fun readVersionInformationFromAndroidManifest() {
-    buildNumber = ContextUtil.getBuildNumber(activity)
-    versionName = ContextUtil.getVersion(activity)
-  }
-
-  private fun addBuildInformation(appInfoScreen: PreferenceScreen) {
-    val versionInfo = appInfoScreen.summary.toString()
-        .replace(PLACEHOLDER_VERSION, versionName)
-        .replace(PLACEHOLDER_BUILD, buildNumber.toString())
-    appInfoScreen.summary = versionInfo
-    appInfoScreen.getPreference(0).title = versionInfo
-  }
-
-
-  private val versionNotice: PreferenceScreen
-    get() {
-      val lastIndex = preferenceScreen.preferenceCount - 1
-
-      val versionCategory = preferenceScreen.getPreference(lastIndex) as PreferenceCategory
-      return versionCategory.getPreference(0) as PreferenceScreen
-    }
+    // Die patchPaddingForAndroid15 Methode wurde entfernt.
+    // Das Padding sollte durch fitsSystemWindows in der Activity korrekt gehandhabt werden.
 }

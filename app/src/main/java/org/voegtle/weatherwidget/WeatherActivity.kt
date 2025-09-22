@@ -14,6 +14,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowInsets
+import androidx.appcompat.app.AppCompatActivity // Import geändert/hinzugefügt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
@@ -22,7 +23,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.gson.Gson
-import org.voegtle.weatherwidget.base.ThemedActivity
+// import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
 import org.voegtle.weatherwidget.base.UpdatingScrollView
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
@@ -58,7 +59,7 @@ import org.voegtle.weatherwidget.util.StatisticsUpdater
 import org.voegtle.weatherwidget.util.UserFeedback
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory
 
-class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener { // Basisklasse geändert
     private var statisticsUpdater: StatisticsUpdater? = null
     private var configuration: ApplicationSettings? = null
 
@@ -70,12 +71,29 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     private var workInfo: LiveData<MutableList<WorkInfo?>>? = null
     private var userLocationUpdater: UserLocationUpdater? = null
 
+    // Aus ThemedActivity übernommen
+    var colorScheme = ColorScheme.dark
+
+    // Aus ThemedActivity übernommen
+    private fun configureTheme() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
+        val configuration = weatherSettingsReader.read(preferences)
+        this.colorScheme = configuration.colorScheme
+        setTheme(colorScheme.theme)
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        configureTheme() // Theme-Logik vor super.onCreate() aufrufen
         super.onCreate(savedInstanceState)
         binding = ActivityWeatherBinding.inflate(layoutInflater)
-
         setContentView(binding.root)
+
+        val toolbar: com.google.android.material.appbar.MaterialToolbar = binding.toolbar
+        setSupportActionBar(toolbar)
+        supportActionBar?.title = getString(R.string.app_name)
+
         binding.buttonGoogleDocs.setOnClickListener {
             val browserIntent = Intent(
                 Intent.ACTION_VIEW, Uri.parse(
@@ -86,17 +104,15 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         }
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        readConfiguration(preferences)
+        readConfiguration(preferences) // Dies wird das colorScheme erneut setzen, was ok ist.
         preferences.registerOnSharedPreferenceChangeListener(this)
 
         locationOrderStore = LocationOrderStore(this.applicationContext)
         statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
 
-        patchPaddingForAndroid15()
-
         setupLocations()
-        configureLocationSymbolColor()
+        configureLocationSymbolColor() // Nutzt das colorScheme Property
 
         binding.scrollView.register(object : UpdatingScrollView.Updater {
             override fun update() {
@@ -123,6 +139,8 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     private fun readConfiguration(preferences: SharedPreferences) {
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
         configuration = weatherSettingsReader.read(preferences)
+        // Das colorScheme hier zu aktualisieren ist gut, da es in onSharedPreferenceChanged aufgerufen wird
+        this.colorScheme = configuration!!.colorScheme 
         requestPermissions()
         enableNotificationsIfPermitted()
     }
@@ -250,8 +268,9 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
-        readConfiguration(preferences)
+        readConfiguration(preferences) // Dies wird das colorScheme aktualisieren
         setupLocations()
+        configureLocationSymbolColor() // Und die Symbolfarben neu setzen
         updateWeatherOnce(true)
     }
 
@@ -426,23 +445,6 @@ class WeatherActivity : ThemedActivity(), SharedPreferences.OnSharedPreferenceCh
         locationContainer.updateLocationOrder(data)
     }
 
-
-    private fun patchPaddingForAndroid15() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            val windowMetrics = windowManager.currentWindowMetrics
-            val insetsStatusBars = windowMetrics.windowInsets.getInsets(WindowInsets.Type.statusBars())
-            val insetsSystemBars = windowMetrics.windowInsets.getInsets(WindowInsets.Type.systemBars())
-            val topPadding = insetsStatusBars.top + insetsSystemBars.top
-
-            locationContainer().setPadding(0, topPadding, 0, 0)
-        }
-    }
-
-    fun Int.dpToPx(): Float = (this *
-            applicationContext.resources.displayMetrics.density)
-
-
     private fun locationContainer() = binding.locationContainer
-
 
 }

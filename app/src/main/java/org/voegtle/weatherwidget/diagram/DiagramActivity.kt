@@ -7,15 +7,20 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.preference.PreferenceManager // Import für Theme-Logik
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity // Geändert
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.google.android.material.appbar.MaterialToolbar
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.base.ThemedActivity
+// import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
 import org.voegtle.weatherwidget.databinding.ActivityDiagramsBinding
+import org.voegtle.weatherwidget.preferences.ColorScheme // Import für Theme-Logik
+import org.voegtle.weatherwidget.preferences.WeatherSettingsReader // Import für Theme-Logik
 import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.File
 import java.io.FileOutputStream
@@ -24,18 +29,39 @@ import java.io.OutputStream
 import java.util.Date
 
 
-abstract class DiagramActivity : ThemedActivity() {
+abstract class DiagramActivity : AppCompatActivity() { // Basisklasse geändert
   protected var diagramIdList = ArrayList<DiagramEnum>()
 
   protected var pagerAdapter: DiagramFragmentPagerAdapter? = null
   private lateinit var binding: ActivityDiagramsBinding
 
+  // Aus ThemedActivity/WeatherActivity übernommene Theme-Logik
+  var colorScheme = ColorScheme.dark
+
+  private fun configureTheme() {
+    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+    val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
+    val configuration = weatherSettingsReader.read(preferences)
+    this.colorScheme = configuration.colorScheme
+    setTheme(colorScheme.theme)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    configureTheme() // Theme setzen vor super.onCreate und setContentView
     super.onCreate(savedInstanceState)
     binding = ActivityDiagramsBinding.inflate(layoutInflater)
-
     setContentView(binding.root)
+
+    setupToolbar()
+  }
+
+  private fun setupToolbar() {
+    val toolbar: MaterialToolbar = binding.toolbar
+    setSupportActionBar(toolbar)
+
+    supportActionBar?.title = getString(R.string.action_diagrams)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setDisplayShowHomeEnabled(true)
   }
 
   override fun onResume() {
@@ -60,11 +86,14 @@ abstract class DiagramActivity : ThemedActivity() {
 
   private fun cleanupFragments() {
     val fm = supportFragmentManager
-    val fragmentTransaction = fm!!.beginTransaction()
-    for (i in 0..< pagerAdapter!!.count) {
+    // Kleiner Fix: FragmentTransaction sollte nicht nullable sein, wenn supportFragmentManager nicht null ist.
+    // Aber zur Sicherheit kann man eine Prüfung einbauen oder sicherstellen, dass fm nicht null ist.
+    // Für diesen Kontext belassen wir es, da es vorher auch so war.
+    val fragmentTransaction = fm.beginTransaction()
+    for (i in 0 until pagerAdapter!!.count) {
       fragmentTransaction.remove(pagerAdapter!!.getItem(i))
     }
-    fragmentTransaction.commit()
+    fragmentTransaction.commitAllowingStateLoss() // Sicherer Commit, falls State schon gespeichert wurde
   }
 
   private fun createPageAdapter(): DiagramFragmentPagerAdapter {
@@ -79,6 +108,10 @@ abstract class DiagramActivity : ThemedActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
+      android.R.id.home -> { // Behandelt Klick auf den Zurück-Pfeil in der Toolbar
+        onBackPressedDispatcher.onBackPressed() // Moderne Art der Zurück-Navigation
+        return true
+      }
       R.id.action_reload -> {
         val index = binding.pager.currentItem
         val fragment = pagerAdapter!!.getItem(index)
@@ -89,7 +122,6 @@ abstract class DiagramActivity : ThemedActivity() {
         shareCurrentImage(binding.pager.currentItem)
         return true
       }
-
       else -> return onCustomItemSelected(item)
     }
   }
@@ -115,8 +147,11 @@ abstract class DiagramActivity : ThemedActivity() {
     val outputStream = contentResolver.openOutputStream(uri!!)
 
     outputStream?.let {
-      writeImageToStream(diagramIndex, outputStream)
-      outputStream.close()
+      try {
+        writeImageToStream(diagramIndex, it)
+      } finally {
+        it.close()
+      }
     }
 
     val share = Intent(Intent.ACTION_SEND)
@@ -127,7 +162,6 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
   private fun shareImageLegacy(diagramIndex: Int): Boolean {
-    // Assume thisActivity is the current activity
     val permissionCheck = ContextCompat.checkSelfPermission(
       this,
       Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -203,15 +237,17 @@ abstract class DiagramActivity : ThemedActivity() {
   }
 
 
-  override fun onRequestPermissionsResult(diagramId: Int, permissions: Array<String>, grantResults: IntArray) {
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    // Changed diagramId to requestCode to match super signature
     if (grantResults.isNotEmpty()) {
       if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-        shareCurrentImage(diagramId)
+        // Assuming requestCode here is the diagramIndex we passed to requestStoragePermission
+        shareCurrentImage(requestCode)
       } else {
         UserFeedback(this).showMessage(R.string.message_permission_required, true)
       }
     }
-    super.onRequestPermissionsResult(diagramId, permissions, grantResults)
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
   }
 
   protected fun updateViewPager(index: Int): Boolean {
