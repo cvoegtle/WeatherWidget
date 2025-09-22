@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:id="@+id/action_reload"
-        android:icon="@drawable/ic_action_refresh"
-        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_refresh_dark"
+        app:showAsAction="ifRoom"
         android:title="@string/action_reload"/>
   <item android:id="@+id/action_share"
         android:icon="@drawable/ic_action_share"
-        android:showAsAction="ifRoom"
+        app:showAsAction="ifRoom"
         android:title="@string/action_share"/>
   <item android:id="@+id/action_magdeburg_rain"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_rain"/>
   <item android:id="@+id/action_magdeburg_wind"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_wind"/>
   <item android:id="@+id/action_magdeburg_humidity"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_humidity"/>
   <item android:id="@+id/action_md_pb_fr"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_compare_md_with_pb_fr"/>
   <item android:id="@+id/action_md_30days"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_30_days"/>
   <item android:id="@+id/action_md_last_year"
-        android:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/action_last_year"/>
 
 </menu>
