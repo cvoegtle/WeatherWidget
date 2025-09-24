@@ -51,7 +51,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
     private fun repaintExpandButton() {
         binding.resizeButton.setImageDrawable(if (isExpanded) imageCollapse else imageExpand)
-        binding.moreData.visibility = if (isExpanded) View.VISIBLE else View.GONE
+        binding.composeViewStatistics.visibility = if (isExpanded) View.VISIBLE else View.GONE
     }
 
     private fun initializeButtons(attributes: TypedArray) {
@@ -83,7 +83,6 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     fun setTextSize(textSize: Int) {
         binding.caption.textSize = (textSize + 1).toFloat()
         updateTextSize(binding.gridCurrent, textSize)
-        updateTextSize(binding.moreData, textSize)
     }
 
     private fun updateTextSize(container: GridLayout, textSize: Int) {
@@ -193,95 +192,11 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
     }
 
     fun setMoreData(statistics: Statistics) {
-        val kindOfStation = statistics.kind
-        setSolarCaptions(kindOfStation)
-
-        val today = statistics[Statistics.TimeRange.today]
-        updateStatistics(
-            today,
-            kindOfStation,
-            binding.todayRain,
-            binding.todayMinTemperature,
-            binding.todayMaxTemperature,
-            binding.todayKwh,
-            binding.todaySolar
-        )
-
-        val yesterday = statistics[Statistics.TimeRange.yesterday]
-        updateStatistics(
-            yesterday,
-            kindOfStation,
-            binding.yesterdayRain,
-            binding.yesterdayMinTemperature,
-            binding.yesterdayMaxTemperature,
-            binding.yesterdayKwh,
-            binding.yesterdaySolar
-        )
-
-        val week = statistics[Statistics.TimeRange.last7days]
-        updateStatistics(
-            week,
-            kindOfStation,
-            binding.weekRain,
-            binding.weekMinTemperature,
-            binding.weekMaxTemperature,
-            binding.weekKwh,
-            binding.weekSolar
-        )
-
-        val month = statistics[Statistics.TimeRange.last30days]
-        updateStatistics(
-            month,
-            kindOfStation,
-            binding.monthRain,
-            binding.monthMinTemperature,
-            binding.monthMaxTemperature,
-            binding.monthKwh,
-            binding.monthSolar
-        )
-    }
-
-    private fun updateStatistics(
-        stats: StatisticsSet?, kind: String, rainView: TextView, minView: TextView, maxView: TextView, kwhView: TextView,
-        solarView: TextView
-    ) {
-        rainView.text = ""
-        minView.text = ""
-        maxView.text = ""
-        kwhView.text = ""
-        solarView.text = ""
-        stats?.let {
-            it.rain?.let {
-                rainView.text = formatter.formatRain(it)
-                show(binding.captionRain)
-            }
-            minView.text = formatter.formatTemperature(it.minTemperature)
-            maxView.text = formatter.formatTemperature(it.maxTemperature)
-            stats.kwh?.let {
-                kwhView.text = if (it < 1000.0f) formatter.formatKwh(it) else formatter.formatKwhShort(it)
-                show(binding.captionKwh)
-            }
-            stats.solarRadiationMax?.let {
-                show(binding.captionSolar)
-                if (kind == "withSolarPower") {
-                    solarView.text = formatter.formatWatt(it)
-                } else {
-                    solarView.text = formatter.formatSolarradiation(it)
-                }
-            }
+        binding.composeViewStatistics.setContent {
+            StatisticsView(statistics)
         }
     }
 
-    private fun setSolarCaptions(kindOfStation: String) {
-        if (kindOfStation == "withSolarPower") {
-            binding.captionKwh.text = context.resources.getString(R.string.kwh)
-            binding.captionSolar.text = context.resources.getString(R.string.max_power_caption)
-        } else {
-            binding.captionKwh.text = context.resources.getString(R.string.solar_cummulated_caption)
-            binding.captionSolar.text = context.resources.getString(R.string.solar_caption)
-        }
-
-    }
 
 
     fun configureSymbols(useDarkSymbols: Boolean) {

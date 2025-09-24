@@ -127,4 +127,5 @@
   <string name="action_instant_freiburg">Littenweiler - Freiburg</string>
   <string name="action_bali_solar_daily">Daily production</string>
   <string name="action_bali_solar_monthly">Monthly production</string>
+  <string name="last_hour">last hour</string>
 </resources>

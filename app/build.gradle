@@ -1,12 +1,16 @@
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+}
 
 android {
-    compileSdk 36
+    compileSdk rootProject.ext.compileSdkVersion
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     signingConfigs {
@@ -62,6 +66,12 @@ dependencies {
     implementation "androidx.preference:preference-ktx:$rootProject.preferencesVersion"
     implementation 'androidx.work:work-runtime-ktx:2.10.4'
     implementation "com.google.android.material:material:1.13.0"
+
+    // Jetpack Compose Abhängigkeiten
+    implementation "androidx.compose.ui:ui:1.9.1"
+    implementation "androidx.compose.material3:material3:1.3.2"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.9.1"
+    implementation "androidx.activity:activity-compose:1.11.0"
 }
 
 import java.util.regex.Pattern
