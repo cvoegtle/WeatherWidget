@@ -2,28 +2,11 @@
 <resources>
   <style
           name="AppTheme"
-          parent="Theme.Material3.Dark.NoActionBar"> 
-    <!-- Hier könntest du M3-spezifische Farbattribute für das dunkle/DayNight Theme hinzufügen -->
-    <!-- z.B. <item name="colorPrimary">@color/my_dark_primary</item> -->
-    <!--     <item name="colorSurface">@color/my_dark_surface</item> -->
+          parent="Theme.Material3.Dark.NoActionBar">
   </style>
 
   <style
           name="AppThemeLight"
-          parent="Theme.Material3.Light.NoActionBar"> 
-    <item name="colorPrimary">@color/primary_blue</item>
-    <item name="colorPrimaryDark">@color/primary_dark_blue</item> 
-
-    <!-- Farbe für Icons und Text auf dem primären Hintergrund (z.B. Toolbar) -->
-    <item name="colorOnPrimary">@android:color/white</item> <!-- HINZUGEFÜGT für Icon-Kontrast auf Toolbar -->
-
-    <!-- Festlegen der Farbe für Icons und andere Elemente auf Standard-Oberflächen -->
-    <item name="colorOnSurfaceVariant">@android:color/black</item> 
-
-    <!-- Empfohlene weitere M3 Farbattribute (Beispiele, Farben anpassen!): -->
-    <!-- <item name="colorPrimaryContainer">@color/primary_blue_light_container</item> -->
-    <!-- <item name="colorOnPrimaryContainer">@color/primary_blue_dark_text_on_container</item> -->
-    <!-- <item name="colorSurface">@color/white</item> -->
-    <!-- <item name="colorOnSurface">@color/black</item> -->
+          parent="Theme.Material3.Light.NoActionBar">
   </style>
 </resources>
