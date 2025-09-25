@@ -1,13 +1,18 @@
 package org.voegtle.weatherwidget.location
 
+import android.net.Uri
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Assessment
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.WbCloudy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,27 +20,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.data.WeatherData
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Assessment
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.WbCloudy
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
+import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
 
 @Composable
-fun LocationComposable(caption: String, data: WeatherData, statistics: Statistics?,
-                       onExpandStateChanged: (isExpanded: Boolean) -> Unit = {}) {
+fun LocationComposable(
+    caption: String, data: WeatherData, statistics: Statistics?,
+    onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {},
+    onForecastClick: (forecastUrl: Uri) -> Unit = {},
+    onExpandStateChanged: (isExpanded: Boolean) -> Unit = {}
+) {
     Column {
-        LocationCaption(caption, statistics != null,
-            onDiagramClick = {},
-            onForecastClick = {},
-            onExpandStateChanged = onExpandStateChanged)
+        LocationCaption(
+            caption, statistics != null,
+            onDiagramClick = { onDiagramClick(data.location) },
+            onForecastClick = { data.forecast?.let { onForecastClick(Uri.parse(data.forecast)) } },
+            onExpandStateChanged = onExpandStateChanged
+        )
         LocationData(data)
         if (statistics != null) {
             StatisticsComposable(statistics)
@@ -44,12 +49,13 @@ fun LocationComposable(caption: String, data: WeatherData, statistics: Statistic
 }
 
 @Composable
-fun LocationCaption(caption: String, isExpanded: Boolean,
-                    onDiagramClick: () -> Unit = {},
-                    onForecastClick: () -> Unit = {},
-                    onExpandStateChanged: (isExpanded: Boolean) -> Unit = {},
+fun LocationCaption(
+    caption: String, isExpanded: Boolean,
+    onDiagramClick: () -> Unit = {},
+    onForecastClick: () -> Unit = {},
+    onExpandStateChanged: (isExpanded: Boolean) -> Unit = {},
 ) {
-    Row (
+    Row(
         modifier = Modifier
             .fillMaxWidth()
             .height(30.dp)
@@ -92,9 +98,11 @@ fun LocationCaption(caption: String, isExpanded: Boolean,
 @Composable
 fun LocationData(weatherData: WeatherData) {
     val formatter = DataFormatter()
-    Column(modifier = Modifier
-        .background(MaterialTheme.colorScheme.surface)
-        .padding(start = 4.dp)) {
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(start = 4.dp)
+    ) {
         DataRow(label = stringResource(R.string.temperature), value = formatter.formatTemperatureForActivity(weatherData))
         DataRow(label = stringResource(R.string.humidity), value = formatter.formatHumidityForActivity(weatherData))
         weatherData.barometer?.takeIf { it > 0.0 }?.let {

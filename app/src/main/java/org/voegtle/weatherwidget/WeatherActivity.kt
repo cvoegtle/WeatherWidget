@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -259,7 +260,12 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun updateLocations(data: HashMap<LocationIdentifier, WeatherData>) {
         val container = locationContainer()
         val locationContainer = LocationContainer(applicationContext, container)
-        locationContainer.showWeatherData(configuration!!.locations, data)
+        locationContainer.showWeatherData(configuration!!.locations, data, onForecastClick = (::onForecastClicked))
+    }
+
+    private fun onForecastClicked(forecastUrl: Uri) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, forecastUrl)
+        startActivity(browserIntent)
     }
 
     private fun locationContainer() = binding.locationContainer
