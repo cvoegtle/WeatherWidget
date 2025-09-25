@@ -100,7 +100,7 @@
   <string name="solar_output">Solarleistung</string>
   <string name="kwh">Ertrag</string>
   <string name="city_mobil" translatable="false">MO</string>
-  <string name="city_mobil_full">Mobil</string>
+  <string name="city_mobil_full">Freiburg Littenweiler</string>
   <string name="station_mobil">Mobile Wetterstation</string>
   <string name="city_herzo_full" translatable="false">Herzogenaurach</string>
   <string name="action_family_weather">Familienwetter</string>

@@ -22,10 +22,18 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.google.gson.Gson
 // import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
-import org.voegtle.weatherwidget.base.UpdatingScrollView
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
+import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
+import org.voegtle.weatherwidget.diagram.BonnDiagramActivity
+import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity
+import org.voegtle.weatherwidget.diagram.HerzoDiagramActivity
+import org.voegtle.weatherwidget.diagram.LeoDiagramActivity
+import org.voegtle.weatherwidget.diagram.MagdeburgDiagramActivity
 import org.voegtle.weatherwidget.diagram.MainDiagramActivity
+import org.voegtle.weatherwidget.diagram.MobilDiagramActivity
+import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity
+import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
 import org.voegtle.weatherwidget.location.LocationContainer
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
@@ -83,9 +91,10 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         userLocationUpdater = UserLocationUpdater(this)
     }
 
-    override fun startActivity(intent: Intent?) {
-        super.startActivity(intent)
-    }
+    // Removed duplicate startActivity method, super.startActivity is sufficient if no custom logic is needed.
+    // override fun startActivity(intent: Intent?) {
+    //     super.startActivity(intent)
+    // }
 
     private fun readConfiguration(preferences: SharedPreferences) {
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
@@ -260,7 +269,31 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun updateLocations(data: HashMap<LocationIdentifier, WeatherData>) {
         val container = locationContainer()
         val locationContainer = LocationContainer(applicationContext, container)
-        locationContainer.showWeatherData(configuration!!.locations, data, onForecastClick = (::onForecastClicked))
+        locationContainer.showWeatherData(configuration!!.locations, data, onDiagramClick = (::onDiagramClicked), onForecastClick = (::onForecastClicked))
+    }
+
+    private fun onDiagramClicked(locationIdentifier: LocationIdentifier) {
+        navigateToDiagramActivity(locationIdentifier)
+    }
+
+    private fun navigateToDiagramActivity(locationIdentifier: LocationIdentifier) {
+        val intent = mapLocation2Intent(locationIdentifier)
+        startActivity(intent)
+    }
+
+    private fun mapLocation2Intent(locationIdentifier: LocationIdentifier): Intent {
+        val intent = when (locationIdentifier) {
+            LocationIdentifier.Paderborn -> Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java)
+            LocationIdentifier.BadLippspringe -> Intent(this@WeatherActivity, BaliDiagramActivity::class.java)
+            LocationIdentifier.Bonn -> Intent(this@WeatherActivity, BonnDiagramActivity::class.java)
+            LocationIdentifier.Freiburg -> Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java)
+            LocationIdentifier.Leopoldshoehe -> Intent(this@WeatherActivity, LeoDiagramActivity::class.java)
+            LocationIdentifier.Herzogenaurach -> Intent(this@WeatherActivity, HerzoDiagramActivity::class.java)
+            LocationIdentifier.Magdeburg -> Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java)
+            LocationIdentifier.Shenzhen -> Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java)
+            LocationIdentifier.Mobil -> Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
+        }
+        return intent
     }
 
     private fun onForecastClicked(forecastUrl: Uri) {

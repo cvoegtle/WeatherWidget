@@ -34,14 +34,7 @@ abstract class DiagramActivity : AppCompatActivity() { // Basisklasse geändert
   protected var pagerAdapter: DiagramFragmentPagerAdapter? = null
   private lateinit var binding: ActivityDiagramsBinding
 
-  private fun configureTheme() {
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
-    val configuration = weatherSettingsReader.read(preferences)
-  }
-
   override fun onCreate(savedInstanceState: Bundle?) {
-    configureTheme() // Theme setzen vor super.onCreate und setContentView
     super.onCreate(savedInstanceState)
     binding = ActivityDiagramsBinding.inflate(layoutInflater)
     setContentView(binding.root)
@@ -53,10 +46,12 @@ abstract class DiagramActivity : AppCompatActivity() { // Basisklasse geändert
     val toolbar: MaterialToolbar = binding.toolbar
     setSupportActionBar(toolbar)
 
-    supportActionBar?.title = getString(R.string.action_diagrams)
+    supportActionBar?.title = getCaption()
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
     supportActionBar?.setDisplayShowHomeEnabled(true)
   }
+
+  protected open fun getCaption() = getString(R.string.action_diagrams)
 
   override fun onResume() {
     super.onResume()
@@ -80,9 +75,6 @@ abstract class DiagramActivity : AppCompatActivity() { // Basisklasse geändert
 
   private fun cleanupFragments() {
     val fm = supportFragmentManager
-    // Kleiner Fix: FragmentTransaction sollte nicht nullable sein, wenn supportFragmentManager nicht null ist.
-    // Aber zur Sicherheit kann man eine Prüfung einbauen oder sicherstellen, dass fm nicht null ist.
-    // Für diesen Kontext belassen wir es, da es vorher auch so war.
     val fragmentTransaction = fm.beginTransaction()
     for (i in 0 until pagerAdapter!!.count) {
       fragmentTransaction.remove(pagerAdapter!!.getItem(i))

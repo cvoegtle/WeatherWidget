@@ -7,6 +7,7 @@ import org.voegtle.weatherwidget.R
 
 class PaderbornDiagramActivity : DiagramActivity() {
   override val placeHolderId: Int = R.drawable.station_paderborn20
+  override fun getCaption() = getString(R.string.city_paderborn_full)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

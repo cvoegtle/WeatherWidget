@@ -26,6 +26,7 @@ import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
+import androidx.core.net.toUri
 
 @Composable
 fun LocationComposable(
@@ -38,7 +39,7 @@ fun LocationComposable(
         LocationCaption(
             caption, statistics != null,
             onDiagramClick = { onDiagramClick(data.location) },
-            onForecastClick = { data.forecast?.let { onForecastClick(Uri.parse(data.forecast)) } },
+            onForecastClick = { data.forecast?.let { onForecastClick(it.toUri()) } },
             onExpandStateChanged = onExpandStateChanged
         )
         LocationData(data)

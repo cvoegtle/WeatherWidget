@@ -32,7 +32,7 @@
   <string name="app_name_freiburg">3. Temperature in Freiburg</string>
   <string name="app_name_paderborn">4. Temperature in Paderborn</string>
   <string name="app_name_small">2. Wetter Wolke compact</string>
-  <string name="city_mobil_full">Mobile</string>
+  <string name="city_mobil_full">Freiburg Littenweiler</string>
   <string name="configure_stations">Configure stations</string>
   <string name="data_mining">Open in Google Sheets</string>
   <string name="data_overdue">Weather data overdue</string>

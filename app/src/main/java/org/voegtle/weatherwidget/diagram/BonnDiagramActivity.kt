@@ -8,6 +8,8 @@ import org.voegtle.weatherwidget.R
 class BonnDiagramActivity : DiagramActivity() {
   override val placeHolderId: Int = R.drawable.station_bonn
 
+  override fun getCaption() = getString(R.string.city_bonn_full)
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     addDiagram(DiagramEnum.bonn_2days)
