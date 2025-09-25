@@ -29,10 +29,10 @@ import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.util.DataFormatter
 
 @Composable
-fun LocationComposable(caption: String, data: WeatherData, statistics: Statistics?, color: Int,
+fun LocationComposable(caption: String, data: WeatherData, statistics: Statistics?,
                        onExpandStateChanged: (isExpanded: Boolean) -> Unit = {}) {
     Column {
-        LocationCaption(caption, color, statistics != null,
+        LocationCaption(caption, statistics != null,
             onDiagramClick = {},
             onForecastClick = {},
             onExpandStateChanged = onExpandStateChanged)
@@ -44,7 +44,7 @@ fun LocationComposable(caption: String, data: WeatherData, statistics: Statistic
 }
 
 @Composable
-fun LocationCaption(caption: String, color: Int, isExpanded: Boolean,
+fun LocationCaption(caption: String, isExpanded: Boolean,
                     onDiagramClick: () -> Unit = {},
                     onForecastClick: () -> Unit = {},
                     onExpandStateChanged: (isExpanded: Boolean) -> Unit = {},

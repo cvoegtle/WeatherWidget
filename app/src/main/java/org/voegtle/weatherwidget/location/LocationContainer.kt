@@ -25,7 +25,7 @@ class LocationContainer(val context: Context, private val container: ComposeView
         container.setContent {
             LazyColumn() {
                 items(items = locationDataSets) { dataSet ->
-                    LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics, 0)
+                    LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics )
                 }
             }
 
