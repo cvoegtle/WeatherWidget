@@ -8,11 +8,13 @@ import androidx.compose.ui.platform.ComposeView
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.OrderCriteria
+import org.voegtle.weatherwidget.state.StateCache
 import org.voegtle.weatherwidget.util.DataFormatter
 
 data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, val statistics: Statistics?)
 
 class LocationContainer(val context: Context, private val container: ComposeView) {
+    private val stateCache = StateCache(context)
     private val locationOrderStore = LocationOrderStore(context)
     private val locationSorter = LocationSorter(context)
     private val formatter = DataFormatter()

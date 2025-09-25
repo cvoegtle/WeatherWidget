@@ -37,7 +37,6 @@ import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
 import org.voegtle.weatherwidget.location.LocationContainer
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
-import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
@@ -90,11 +89,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
     }
-
-    // Removed duplicate startActivity method, super.startActivity is sufficient if no custom logic is needed.
-    // override fun startActivity(intent: Intent?) {
-    //     super.startActivity(intent)
-    // }
 
     private fun readConfiguration(preferences: SharedPreferences) {
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
@@ -249,12 +243,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             Log.e(WeatherActivity::class.java.toString(), "Failed to update View", th)
         }
 
-    }
-
-    private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {
-        view.setCaption(caption)
-        view.setData(data)
-        view.setTextColor(color)
     }
 
     private fun updateWidgets(data: HashMap<LocationIdentifier, WeatherData>) {
