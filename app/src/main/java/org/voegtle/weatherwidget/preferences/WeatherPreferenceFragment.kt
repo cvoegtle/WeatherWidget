@@ -1,17 +1,21 @@
 package org.voegtle.weatherwidget.preferences
 
 import android.os.Bundle
-import androidx.preference.Preference // AndroidX Import
-import androidx.preference.PreferenceFragmentCompat // AndroidX Import
-import androidx.preference.PreferenceScreen // AndroidX Import
+import androidx.fragment.app.Fragment
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.PreferenceScreen
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.ContextUtil
 
-class WeatherPreferenceFragment : PreferenceFragmentCompat() {
+class WeatherPreferenceFragment : PreferenceFragmentCompat(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
     private val PLACEHOLDER_VERSION = "{v}"
     private val PLACEHOLDER_BUILD = "{b}"
 
-    private val VERSION_INFO_KEY = "version" // Passe diesen Key ggf. an!
+    // Du hast VERSION_INFO_KEY als "version" definiert.
+    // Der Key für deinen konfigurierbaren Screen ist "screen_stationen" aus der XML.
+    // Dieser wird in onPreferenceStartScreen relevant.
+    private val VERSION_INFO_KEY = "version"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -24,10 +28,8 @@ class WeatherPreferenceFragment : PreferenceFragmentCompat() {
             versionName = ContextUtil.getVersion(activity)
             buildNumber = ContextUtil.getBuildNumber(activity)
         } catch (e: IllegalStateException) {
-            return
         }
 
-        // Finde die Preference (oder PreferenceScreen) anhand des Keys
         val versionPreferenceItem: Preference? = findPreference(VERSION_INFO_KEY)
 
         versionPreferenceItem?.let { pref ->
@@ -38,12 +40,28 @@ class WeatherPreferenceFragment : PreferenceFragmentCompat() {
 
             pref.summary = versionInfoText
 
-            if (pref is PreferenceScreen) {
+            if (pref is PreferenceScreen && pref.key == VERSION_INFO_KEY) {
                 if (pref.preferenceCount > 0) {
                     val firstChild: Preference? = pref.getPreference(0)
                     firstChild?.title = versionInfoText
                 }
             }
         }
+    }
+
+    override fun onPreferenceStartScreen(
+        caller: PreferenceFragmentCompat,
+        screen: PreferenceScreen
+    ): Boolean {
+        val fragment: Fragment = WeatherPreferenceFragment()
+        val args = Bundle()
+        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, screen.key)
+        fragment.arguments = args
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(screen.key)
+            .commit()
+        return true
     }
 }
