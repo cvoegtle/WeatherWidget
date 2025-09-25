@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-  <ListPreference
-          android:key="text_size"
-          android:title="@string/text_size"
-          android:defaultValue="11"
-          android:entries="@array/fontSize"
-          android:entryValues="@array/fontSizeValues"/>
-  <ListPreference
-          android:key="color_scheme"
-          android:title="@string/theme"
-          android:summary="@string/theme_summary"
-          android:defaultValue="dark"
-          android:entries="@array/colorScheme"
-          android:entryValues="@array/colorSchemeValues"/>
-
   <PreferenceCategory android:title="@string/stations"
                       android:key="category_stationen">
     <PreferenceScreen

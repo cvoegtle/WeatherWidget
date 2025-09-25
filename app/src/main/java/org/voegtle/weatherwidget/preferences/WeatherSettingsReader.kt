@@ -20,14 +20,7 @@ class WeatherSettingsReader {
 
   fun read(preferences: SharedPreferences): ApplicationSettings {
     return ApplicationSettings(locations = readLocations(preferences),
-                               secret = readString(preferences, "secret"),
-                               widgetTextSize = readInteger(preferences, "text_size", 11),
-                               colorScheme = readColorScheme(preferences, "color_scheme", ColorScheme.dark))
-  }
-
-  private fun readColorScheme(preferences: SharedPreferences, key: String, defaultScheme: ColorScheme): ColorScheme {
-    val schemeKey = readString(preferences, key)!!
-    return ColorScheme.byKey(schemeKey) ?: defaultScheme
+                               secret = readString(preferences, "secret"))
   }
 
   private fun readLocations(preferences: SharedPreferences): List<WeatherLocation> {

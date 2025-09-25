@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -91,7 +92,9 @@ fun LocationCaption(caption: String, color: Int, isExpanded: Boolean,
 @Composable
 fun LocationData(weatherData: WeatherData) {
     val formatter = DataFormatter()
-    Column() {
+    Column(modifier = Modifier
+        .background(MaterialTheme.colorScheme.surface)
+        .padding(start = 4.dp)) {
         DataRow(label = stringResource(R.string.temperature), value = formatter.formatTemperatureForActivity(weatherData))
         DataRow(label = stringResource(R.string.humidity), value = formatter.formatHumidityForActivity(weatherData))
         weatherData.barometer?.takeIf { it > 0.0 }?.let {
@@ -132,10 +135,8 @@ fun DataRow(label: String, value: String, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 2.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
+        Text(text = label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, modifier = Modifier.widthIn(min = 150.dp))
         Text(text = value, style = MaterialTheme.typography.bodyMedium)
     }
 }

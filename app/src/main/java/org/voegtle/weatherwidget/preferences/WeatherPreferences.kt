@@ -10,14 +10,10 @@ import org.voegtle.weatherwidget.R // Import für R.layout.activity_weather_pref
 
 class WeatherPreferences : AppCompatActivity() { // Basisklasse geändert
 
-    var colorScheme = ColorScheme.dark
-
     private fun configureTheme() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
         val configuration = weatherSettingsReader.read(preferences)
-        this.colorScheme = configuration.colorScheme
-        setTheme(colorScheme.theme)
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {

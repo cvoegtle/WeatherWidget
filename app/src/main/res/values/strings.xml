@@ -96,7 +96,6 @@
   <string name="action_wind">Wind</string>
   <string name="action_sun">Sonne</string>
   <string name="action_7_days_owl">OWL 7 Tage</string>
-  <string name="text_size">Schriftgröße festlegen</string>
   <string name="action_solar">Solarleistung</string>
   <string name="solar_output">Solarleistung</string>
   <string name="kwh">Ertrag</string>

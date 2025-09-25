@@ -32,7 +32,6 @@ import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
-import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.preferences.NotificationSettings
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
@@ -58,17 +57,11 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private var userLocationUpdater: UserLocationUpdater? = null
 
     // Aus ThemedActivity übernommen
-    var colorScheme = ColorScheme.dark
-
-    // Aus ThemedActivity übernommen
     private fun configureTheme() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
         val configuration = weatherSettingsReader.read(preferences)
-        this.colorScheme = configuration.colorScheme
-        setTheme(colorScheme.theme)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         configureTheme() // Theme-Logik vor super.onCreate() aufrufen
@@ -96,8 +89,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun readConfiguration(preferences: SharedPreferences) {
         val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
         configuration = weatherSettingsReader.read(preferences)
-        // Das colorScheme hier zu aktualisieren ist gut, da es in onSharedPreferenceChanged aufgerufen wird
-        this.colorScheme = configuration!!.colorScheme 
         requestPermissions()
         enableNotificationsIfPermitted()
     }

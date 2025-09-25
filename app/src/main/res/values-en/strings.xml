@@ -87,7 +87,6 @@
   <string name="station_shenzhen">Weather station in Shenzhen</string>
   <string name="stations">Measurement station</string>
   <string name="temperature">Temperature</string>
-  <string name="text_size">Font size</string>
   <string name="theme">Color scheme</string>
   <string name="theme_summary">Force close app to activate the new color scheme</string>
   <string name="today">Today</string>

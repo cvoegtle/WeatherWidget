@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.preferences.ColorScheme
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.util.UserFeedback
 import uk.co.senab.photoview.PhotoView
@@ -31,8 +30,7 @@ class DiagramManager(private val fragment: DiagramFragment, val placeHolderPrese
     val configuration = weatherSettingsReader.read(preferences)
     val placeHolderId = when {
       placeHolderPreset != null -> placeHolderPreset
-      configuration.colorScheme == ColorScheme.dark -> R.drawable.ic_action_picture
-      else -> R.drawable.ic_action_picture_dark
+      else -> R.drawable.ic_action_picture
     }
     placeholderImage = ContextCompat.getDrawable(context, placeHolderId)
   }

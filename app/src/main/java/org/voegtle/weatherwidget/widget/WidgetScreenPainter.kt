@@ -27,17 +27,16 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
                           refreshImage: Drawable,
                           private val detailed: Boolean) : AbstractWidgetScreenPainter(appWidgetManager, widgetIds,
                                                                                        remoteViews) {
-  private val colorScheme = configuration.colorScheme
   private val viewIds = ViewIdFactory.buildViewIds()
   private val locationSorter = LocationSorter(context)
 
 
   override fun showDataIsInvalid() {
     viewIds.forEach { viewIds ->
-      remoteViews.setTextColor(viewIds.rain, ColorUtil.updateColor(colorScheme))
-      remoteViews.setTextColor(viewIds.weather, ColorUtil.updateColor(colorScheme))
+      remoteViews.setTextColor(viewIds.rain, ColorUtil.updateColor())
+      remoteViews.setTextColor(viewIds.weather, ColorUtil.updateColor())
     }
-    remoteViews.setTextColor(R.id.update_time, ColorUtil.updateColor(colorScheme))
+    remoteViews.setTextColor(R.id.update_time, ColorUtil.updateColor())
     updateAllWidgets()
   }
 
@@ -66,18 +65,18 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
 
   private fun updateUpdateTime() {
     remoteViews.setTextViewText(R.id.update_time, DateUtil.currentTime)
-    remoteViews.setTextColor(R.id.update_time, ColorUtil.byAge(colorScheme, Date()))
+    remoteViews.setTextColor(R.id.update_time, ColorUtil.byAgeDark( Date()))
   }
 
   private fun visualizeData(location: WeatherLocation, data: WeatherData, viewId: ViewId) {
-    var textColor = ColorUtil.byAge(colorScheme, data.timestamp)
+    var textColor = ColorUtil.byAgeDark(data.timestamp)
     if (location.preferences.favorite && !DateUtil.isOutdated(data.timestamp)) {
-      textColor = ColorUtil.highlightText(colorScheme)
+      textColor = ColorUtil.highlightText()
     }
     remoteViews.setTextColor(viewId.weather, textColor)
     remoteViews.setTextViewText(viewId.weather, formatter.formatWidgetLine(location, data, detailed))
 
-    remoteViews.setTextColor(viewId.rain, ColorUtil.byRain(data.isRaining, colorScheme, data.timestamp))
+    remoteViews.setTextColor(viewId.rain, ColorUtil.byRain(data.isRaining, data.timestamp))
     remoteViews.setViewVisibility(viewId.line, View.VISIBLE)
   }
 

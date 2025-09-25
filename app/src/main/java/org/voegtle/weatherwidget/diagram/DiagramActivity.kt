@@ -19,7 +19,6 @@ import com.google.android.material.appbar.MaterialToolbar
 import org.voegtle.weatherwidget.R
 // import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
 import org.voegtle.weatherwidget.databinding.ActivityDiagramsBinding
-import org.voegtle.weatherwidget.preferences.ColorScheme // Import für Theme-Logik
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader // Import für Theme-Logik
 import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.File
@@ -35,15 +34,10 @@ abstract class DiagramActivity : AppCompatActivity() { // Basisklasse geändert
   protected var pagerAdapter: DiagramFragmentPagerAdapter? = null
   private lateinit var binding: ActivityDiagramsBinding
 
-  // Aus ThemedActivity/WeatherActivity übernommene Theme-Logik
-  var colorScheme = ColorScheme.dark
-
   private fun configureTheme() {
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
     val configuration = weatherSettingsReader.read(preferences)
-    this.colorScheme = configuration.colorScheme
-    setTheme(colorScheme.theme)
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
