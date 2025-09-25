@@ -19,82 +19,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <org.voegtle.weatherwidget.base.UpdatingScrollView
-        android:id="@+id/scroll_view"
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/location_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="5dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/location_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_paderborn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:caption="@string/city_paderborn_full"
-                weather:diagrams="true"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bali"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:caption="@string/city_bali_full"
-                weather:diagrams="true"
-                weather:forecast="true"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_leo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:forecast="true"
-                weather:caption="@string/city_leo_full"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_bonn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:caption="@string/city_bonn_full"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_magdeburg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:caption="@string/city_magdeburg_full"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_herzogenaurach"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:caption="@string/city_herzo_full"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_freiburg"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:caption="@string/city_freiburg_full"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_shenzhen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:caption="@string/city_shenzhen_full"/>
-            <org.voegtle.weatherwidget.location.LocationView android:id="@+id/weather_mobil"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="9dp"
-                weather:diagrams="true"
-                weather:forecast="true"
-                weather:caption="@string/city_mobil_full"/>
-
-            <Button android:id="@+id/button_google_docs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:text="@string/data_mining"/>
-
-        </LinearLayout>
-    </org.voegtle.weatherwidget.base.UpdatingScrollView>
+    </androidx.compose.ui.platform.ComposeView>
 </LinearLayout>

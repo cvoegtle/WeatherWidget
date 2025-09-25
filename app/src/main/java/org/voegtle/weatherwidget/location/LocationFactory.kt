@@ -13,7 +13,6 @@ object LocationFactory {
                                   shortName = res.getString(R.string.city_paderborn),
                                   identifier = "tegelweg8",
                                   forecastUrl = Uri.parse("http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_paderborn,
                                   prefShowInApp = "app_show_paderborn",
                                   prefShowInWidget = "widget_show_paderborn",
                                   prefFavorite = "favorite_paderborn"))
@@ -24,7 +23,6 @@ object LocationFactory {
                                   identifier = "bali",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=104300&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_bali,
                                   prefShowInApp = "app_show_bali",
                                   prefShowInWidget = "widget_show_bali",
                                   prefFavorite = "favorite_bali",
@@ -36,7 +34,6 @@ object LocationFactory {
                                   identifier = "forstweg17",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=105170&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_bonn,
                                   prefShowInApp = "app_show_bonn",
                                   prefShowInWidget = "widget_show_bonn",
                                   prefFavorite = "favorite_bonn"))
@@ -47,7 +44,6 @@ object LocationFactory {
                                   identifier = "ochsengasse",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=108030&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_freiburg,
                                   prefShowInApp = "app_show_freiburg",
                                   prefShowInWidget = "widget_show_freiburg",
                                   prefFavorite = "favorite_freiburg"))
@@ -58,7 +54,6 @@ object LocationFactory {
                                   identifier = "leoxity",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=103250&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_leo,
                                   prefShowInApp = "app_show_leo",
                                   prefShowInWidget = "widget_show_leo",
                                   isVisibleInWidgetByDefault = false,
@@ -70,7 +65,6 @@ object LocationFactory {
                                   identifier = "elb",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=103610&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_magdeburg,
                                   prefShowInApp = "app_show_magdeburg",
                                   prefShowInWidget = "widget_show_magdeburg",
                                   isVisibleInWidgetByDefault = false,
@@ -82,7 +76,6 @@ object LocationFactory {
                                   identifier = "herzo",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=194919&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_herzogenaurach,
                                   prefShowInApp = "app_show_herzo",
                                   prefShowInWidget = "widget_show_herzo",
                                   isVisibleInWidgetByDefault = false,
@@ -93,7 +86,6 @@ object LocationFactory {
                                   shortName = res.getString(R.string.city_shenzhen),
                                   identifier = "shenzhen",
                                   forecastUrl = Uri.parse("http://www.wetter.com/china/shenzhen/CN0GD0012.html"),
-                                  weatherViewId = R.id.weather_shenzhen,
                                   prefShowInApp = "app_show_shenzhen",
                                   prefShowInWidget = "widget_show_shenzhen",
                                   isVisibleInWidgetByDefault = false,
@@ -105,7 +97,6 @@ object LocationFactory {
                                   identifier = "instant",
                                   forecastUrl = Uri.parse(
                                       "http://wetterstationen.meteomedia.de/?station=103250&wahl=vorhersage"),
-                                  weatherViewId = R.id.weather_mobil,
                                   prefShowInApp = "app_show_mobil",
                                   prefShowInWidget = "widget_show_mobil",
                                   isVisibleInAppByDefault = false,

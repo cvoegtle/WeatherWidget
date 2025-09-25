@@ -17,6 +17,7 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
+import org.voegtle.weatherwidget.location.assembleLocationDataSets
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.util.DataFormatter
@@ -92,10 +93,11 @@ class NotificationSystemManager(private val context: Context, private val config
 
         val weatherText = StringBuilder()
 
-        val sortedData = locationSorter.sort(relevantData)
-        sortedData.forEach { weatherData ->
-            val location = configuration.findLocation(weatherData.location)
-            location?.let { currentLocation -> describeLocation(weatherText, currentLocation, weatherData) }
+        val relevantDataSets = assembleLocationDataSets(configuration.locations, relevantData)
+        locationSorter.sort(relevantDataSets)
+        relevantDataSets.forEach { dataSet ->
+            val location = configuration.findLocation(dataSet.weatherData.location)
+            location?.let { currentLocation -> describeLocation(weatherText, currentLocation, dataSet.weatherData) }
         }
 
         return weatherText.substring(0, max(weatherText.length - 3, 0))

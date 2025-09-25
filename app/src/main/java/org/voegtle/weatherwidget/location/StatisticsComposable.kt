@@ -1,11 +1,8 @@
 package org.voegtle.weatherwidget.location
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
-import org.voegtle.weatherwidget.R
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,9 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.util.DataFormatter
+
 
 data class ColumnVisibility(
     val rain: Boolean = true,
@@ -37,7 +36,7 @@ private const val WEIGHT_MAX_SUN = 1.1f
 private const val WEIGHT_KWH = 0.9f
 
 @Composable
-fun StatisticsView(statistics: Statistics) {
+fun StatisticsComposable(statistics: Statistics) {
     val visibility = detectVisibleColumns(statistics)
     MaterialTheme {
         Column() {

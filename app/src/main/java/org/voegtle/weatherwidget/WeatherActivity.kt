@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -13,7 +11,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowInsets
 import androidx.appcompat.app.AppCompatActivity // Import geändert/hinzugefügt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,22 +24,12 @@ import com.google.gson.Gson
 import org.voegtle.weatherwidget.base.UpdatingScrollView
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
-import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
-import org.voegtle.weatherwidget.diagram.BonnDiagramActivity
-import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity
-import org.voegtle.weatherwidget.diagram.HerzoDiagramActivity
-import org.voegtle.weatherwidget.diagram.LeoDiagramActivity
-import org.voegtle.weatherwidget.diagram.MagdeburgDiagramActivity
 import org.voegtle.weatherwidget.diagram.MainDiagramActivity
-import org.voegtle.weatherwidget.diagram.MobilDiagramActivity
-import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity
-import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
 import org.voegtle.weatherwidget.location.LocationContainer
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.LocationView
 import org.voegtle.weatherwidget.location.UserLocationUpdater
-import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.preferences.ColorScheme
@@ -52,7 +39,6 @@ import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.util.ActivityUpdateWorker
-import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticsUpdater
@@ -94,15 +80,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         setSupportActionBar(toolbar)
         supportActionBar?.title = getString(R.string.app_name)
 
-        binding.buttonGoogleDocs.setOnClickListener {
-            val browserIntent = Intent(
-                Intent.ACTION_VIEW, Uri.parse(
-                    "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"
-                )
-            )
-            startActivity(browserIntent)
-        }
-
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         readConfiguration(preferences) // Dies wird das colorScheme erneut setzen, was ok ist.
         preferences.registerOnSharedPreferenceChangeListener(this)
@@ -110,30 +87,10 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         locationOrderStore = LocationOrderStore(this.applicationContext)
         statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
-
-        setupLocations()
-        configureLocationSymbolColor() // Nutzt das colorScheme Property
-
-        binding.scrollView.register(object : UpdatingScrollView.Updater {
-            override fun update() {
-                updateWeatherOnce(true)
-            }
-        })
     }
 
     override fun startActivity(intent: Intent?) {
         super.startActivity(intent)
-    }
-
-    private fun setupLocations() {
-        configuration?.let {
-            it.locations.forEach { location ->
-                addClickHandler(location)
-                updateVisibility(location)
-                updateState(location)
-                updateTextSize(location, it.appTextSize)
-            }
-        }
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
@@ -145,93 +102,13 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         enableNotificationsIfPermitted()
     }
 
-    private fun addClickHandler(location: WeatherLocation) {
-        val locationView: LocationView = findViewById(location.weatherViewId)
-        locationView.setOnClickListener {
-            if (locationView.isExpanded) {
-                statisticsUpdater!!.updateStatistics(locationView, location)
-            } else {
-                statisticsUpdater!!.clearState(locationView)
-            }
-        }
-
-        locationView.diagramListener = View.OnClickListener { view ->
-            when (view.id) {
-                R.id.weather_paderborn -> startActivity(Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java))
-                R.id.weather_bali -> startActivity(Intent(this@WeatherActivity, BaliDiagramActivity::class.java))
-                R.id.weather_bonn -> startActivity(Intent(this@WeatherActivity, BonnDiagramActivity::class.java))
-                R.id.weather_freiburg -> startActivity(Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java))
-                R.id.weather_leo -> startActivity(Intent(this@WeatherActivity, LeoDiagramActivity::class.java))
-                R.id.weather_herzogenaurach -> startActivity(Intent(this@WeatherActivity, HerzoDiagramActivity::class.java))
-                R.id.weather_magdeburg -> startActivity(Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java))
-                R.id.weather_shenzhen -> startActivity(Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java))
-                R.id.weather_mobil -> {
-                    val intent = Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
-                    val mobileLocation = configuration!!.findLocation(LocationIdentifier.Mobil)
-                    if (mobileLocation != null) {
-                        intent.putExtra(MobilDiagramActivity::class.java.name, mobileLocation.name)
-                    }
-                    startActivity(intent)
-                }
-            }
-        }
-
-        locationView.forecastListener = View.OnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, location.forecastUrl)
-            startActivity(browserIntent)
-        }
-    }
-
-    private fun updateStatistics() {
-        val updateCandidates = HashMap<LocationView, WeatherLocation>()
-        configuration?.let {
-            it.locations.forEach { location ->
-                val locationView: LocationView = findViewById(location.weatherViewId)
-                if (locationView.isExpanded) {
-                    updateCandidates.put(locationView, location)
-                }
-            }
-        }
-        statisticsUpdater?.updateStatistics(updateCandidates, false)
-    }
-
-    private fun updateVisibility(location: WeatherLocation) {
-        val show = location.preferences.showInApp
-        updateVisibility(location.weatherViewId, show)
-    }
-
     private fun updateVisibility(viewId: Int, isVisible: Boolean) {
         val view: View = findViewById(viewId)
         view.visibility = if (isVisible) View.VISIBLE else View.GONE
     }
 
-    private fun updateTextSize(location: WeatherLocation, textSize: Int) {
-        if (location.preferences.showInApp) {
-            val view: LocationView = findViewById(location.weatherViewId)
-            view.setTextSize(textSize)
-        }
-    }
-
-    private fun configureLocationSymbolColor() {
-        // Dunkle Symbole wenn der Hintergrund hell ist
-        val darkSymbols = colorScheme == ColorScheme.light
-        configuration?.let {
-            it.locations.forEach {
-                val view: LocationView = findViewById(it.weatherViewId)
-                view.configureSymbols(darkSymbols)
-            }
-        }
-
-    }
-
-    private fun updateState(location: WeatherLocation) {
-        val locationView: LocationView = findViewById(location.weatherViewId)
-        statisticsUpdater!!.setupStatistics(locationView)
-    }
-
     override fun onResume() {
         super.onResume()
-        updateStatistics()
         updateWeatherOnce(false)
     }
 
@@ -269,8 +146,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
         readConfiguration(preferences) // Dies wird das colorScheme aktualisieren
-        setupLocations()
-        configureLocationSymbolColor() // Und die Symbolfarben neu setzen
         updateWeatherOnce(true)
     }
 
@@ -359,9 +234,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     private fun updateActivity(weatherData: FetchAllResponse, showToast: Boolean) {
         try {
-            refreshLocationData(weatherData.weatherMap)
-            updateViewData(weatherData.weatherMap)
-            sortViews(weatherData.weatherMap)
+            updateLocations(weatherData.weatherMap)
             updateWidgets(weatherData.weatherMap)
 
             UserFeedback(applicationContext).showMessage(
@@ -375,53 +248,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             Log.e(WeatherActivity::class.java.toString(), "Failed to update View", th)
         }
 
-    }
-
-    private fun refreshLocationData(data: java.util.HashMap<LocationIdentifier, WeatherData>) {
-        configuration!!.locations.forEach { location ->
-            data[location.key]?.let {
-                location.refresh(it)
-            }
-        }
-    }
-
-    private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {
-        configuration!!.locations.forEach { location ->
-            data[location.key]?.let {
-                updateWeatherLocation(location, location.name, it)
-            }
-        }
-    }
-
-    private fun updateWeatherLocation(location: WeatherLocation, locationName: String, data: WeatherData) {
-        val contentView: LocationView = findViewById(location.weatherViewId)
-
-        val favorite = location.preferences.favorite
-        highlightFavorite(contentView, favorite)
-
-
-        val colorScheme = configuration!!.colorScheme
-        val color = ColorUtil.byAge(colorScheme, data.timestamp)
-        val caption = getCaption(locationName, data)
-
-        updateView(contentView, caption, data, color)
-    }
-
-    private fun highlightFavorite(contentView: LocationView, favorite: Boolean) {
-        contentView.setBackgroundColor(if (favorite) ColorUtil.favorite() else Color.TRANSPARENT)
-    }
-
-
-    private fun getCaption(locationName: String, data: WeatherData): String {
-        var caption = "$locationName - ${data.localtime}"
-
-        if (locationOrderStore!!.readOrderCriteria() == OrderCriteria.location) {
-            val userPosition = locationOrderStore!!.readPosition()
-            val distance = userPosition.distanceTo(data.position)
-            caption += " - ${formatter.formatDistance(distance.toFloat())}"
-        }
-
-        return caption
     }
 
     private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {
@@ -439,10 +265,10 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         }
     }
 
-    private fun sortViews(data: HashMap<LocationIdentifier, WeatherData>) {
+    private fun updateLocations(data: HashMap<LocationIdentifier, WeatherData>) {
         val container = locationContainer()
-        val locationContainer = LocationContainer(applicationContext, container, configuration!!)
-        locationContainer.updateLocationOrder(data)
+        val locationContainer = LocationContainer(applicationContext, container)
+        locationContainer.showWeatherData(configuration!!.locations, data)
     }
 
     private fun locationContainer() = binding.locationContainer

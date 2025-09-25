@@ -1,56 +1,69 @@
 package org.voegtle.weatherwidget.location
 
 import android.content.Context
-import android.widget.LinearLayout
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.platform.ComposeView
+import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.preferences.OrderCriteria
+import org.voegtle.weatherwidget.util.DataFormatter
 
-class LocationContainer(val context: Context, private val container: LinearLayout, configuration: ApplicationSettings) {
+data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, val statistics: Statistics?)
 
-  private val locationOrderStore = LocationOrderStore(context)
-  private val locations: List<WeatherLocation> = configuration.locations
-  private val locationSorter = LocationSorter(context)
+class LocationContainer(val context: Context, private val container: ComposeView) {
 
-  fun updateLocationOrder(weatherData: HashMap<LocationIdentifier, WeatherData>) {
-    val sortedWeatherData = locationSorter.sort(weatherData)
+    private val locationOrderStore = LocationOrderStore(context)
+    private val locationSorter = LocationSorter(context)
+    private val formatter = DataFormatter()
 
-    for (i in sortedWeatherData.indices) {
-      val data = sortedWeatherData[i]
-      var view = container.getChildAt(i) as LocationView
-      if (!belongTogether(data, view)) {
-        view = moveViewToPosition(i, data)
-      }
-      manageViewPosition(view, i)
+    fun showWeatherData(locations: List<WeatherLocation>, data: Map<LocationIdentifier, WeatherData>) {
+        val locationDataSets = assembleLocationDataSets(locations, data)
+        enrichCaptionWithTimeAndDistance(locationDataSets)
+        locationSorter.sort(locationDataSets)
+
+        container.setContent {
+            LazyColumn() {
+                items(items = locationDataSets) { dataSet ->
+                    LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics, 0)
+                }
+            }
+
+        }
+
     }
 
-  }
+    private fun enrichCaptionWithTimeAndDistance(locationDataSets: List<LocationDataSet>) {
+        locationDataSets.forEach {
+            it.caption = appendTimeAndDistance(it.weatherLocation.name, it.weatherData)
+        }
+    }
 
-  private fun belongTogether(data: WeatherData, view: LocationView): Boolean {
-    val location = findLocation(data)
-    return location.weatherViewId == view.id
-  }
+    private fun appendTimeAndDistance(locationName: String, data: WeatherData): String {
+        var caption = "$locationName - ${data.localtime}"
 
-  private fun moveViewToPosition(i: Int, data: WeatherData): LocationView {
-    val view = findLocationView(data)
-    container.removeView(view)
-    container.addView(view, i)
-    return view
-  }
+        if (locationOrderStore.readOrderCriteria() == OrderCriteria.location) {
+            val userPosition = locationOrderStore.readPosition()
+            val distance = userPosition.distanceTo(data.position)
+            caption += " - ${formatter.formatDistance(distance.toFloat())}"
+        }
 
-
-  private fun findLocationView(data: WeatherData): LocationView {
-    val location = findLocation(data)
-    return container.findViewById(location.weatherViewId)
-  }
-
-  private fun findLocation(data: WeatherData): WeatherLocation {
-    return locations.first { it.key == data.location }
-  }
-
-  private fun manageViewPosition(view: LocationView, position: Int) {
-    val oldPosition = locationOrderStore.readIndexOf(view.id)
-    locationOrderStore.writeIndexOf(view.id, position)
-    view.highlight(position < oldPosition)
-  }
-
+        return caption
+    }
 }
+
+fun assembleLocationDataSets(
+    locations: List<WeatherLocation>,
+    data: Map<LocationIdentifier, WeatherData>
+): List<LocationDataSet> {
+    val locationDataSets = ArrayList<LocationDataSet>()
+
+    for (location in locations) {
+        val weatherData = data[location.key]
+        if (weatherData != null) {
+            locationDataSets.add(LocationDataSet(location, location.name, weatherData, null))
+        }
+    }
+    return locationDataSets
+}
+

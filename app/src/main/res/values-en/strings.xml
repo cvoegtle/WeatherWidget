@@ -128,4 +128,8 @@
   <string name="action_bali_solar_daily">Daily production</string>
   <string name="action_bali_solar_monthly">Monthly production</string>
   <string name="last_hour">last hour</string>
+  <string name="diagram_button_description">Show diagrams</string>
+  <string name="forecast_button_description">Weather forecast</string>
+  <string name="collapse_button_description">Hide statistics</string>
+  <string name="expand_button_description">Show statistics</string>
 </resources>

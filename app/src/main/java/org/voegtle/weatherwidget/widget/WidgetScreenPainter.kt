@@ -2,15 +2,16 @@ package org.voegtle.weatherwidget.widget
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.RemoteViews
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
+import org.voegtle.weatherwidget.location.assembleLocationDataSets
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DateUtil
@@ -45,8 +46,9 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
   }
 
   fun updateWidgetData(data: HashMap<LocationIdentifier, WeatherData>) {
-    val sortedData = locationSorter.sort(data)
-    val relevantData = reduceToWidgetData(sortedData)
+    val locationDataSets = assembleLocationDataSets(configuration.locations, data)
+    locationSorter.sort(locationDataSets)
+    val relevantData = reduceToWidgetData(locationDataSets)
     for (i in viewIds.indices) {
       if (i < relevantData.size) {
         val location = configuration.findLocation(relevantData[i].location)
@@ -83,13 +85,13 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
     remoteViews.setViewVisibility(viewId.line, View.GONE)
   }
 
-  private fun reduceToWidgetData(sortedData: List<WeatherData>): List<WeatherData> {
+  private fun reduceToWidgetData(sortedData: List<LocationDataSet>): List<WeatherData> {
     val relevantData = ArrayList<WeatherData>()
 
     sortedData.forEach {
-      val location = configuration.findLocation(it.location)
+      val location = configuration.findLocation(it.weatherData.location)
       if (location != null && location.preferences.showInWidget) {
-        relevantData.add(it)
+        relevantData.add(it.weatherData)
       }
     }
 

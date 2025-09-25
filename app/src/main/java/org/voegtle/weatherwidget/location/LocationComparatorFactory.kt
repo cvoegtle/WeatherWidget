@@ -6,7 +6,7 @@ import org.voegtle.weatherwidget.util.DateUtil
 import java.util.Collections
 
 object LocationComparatorFactory {
-  fun createComparator(criteria: OrderCriteria, userPosition: Position): Comparator<WeatherData> =
+  fun createComparator(criteria: OrderCriteria, userPosition: Position): Comparator<LocationDataSet> =
       when (criteria) {
         OrderCriteria.location -> locationComparator(userPosition)
         OrderCriteria.temperature -> Collections.reverseOrder(temperatureComparator)
@@ -15,36 +15,36 @@ object LocationComparatorFactory {
         OrderCriteria.default -> defaultComparator
       }
 
-  val defaultComparator: Comparator<WeatherData> = Comparator { (location), rhs -> location.compareTo(rhs.location) }
+  val defaultComparator: Comparator<LocationDataSet> = Comparator { lhs, rhs -> lhs.weatherData.location.compareTo(rhs.weatherData.location) }
 
-  val temperatureComparator: Comparator<WeatherData> = Comparator { lhs, rhs -> lhs.compareTo(rhs) }
+  val temperatureComparator: Comparator<LocationDataSet> = Comparator { lhs, rhs -> lhs.weatherData.compareTo(rhs.weatherData) }
 
-  fun locationComparator(userPosition: Position): Comparator<WeatherData> = Comparator<WeatherData> { lhs, rhs ->
-    val lhsDistance = userPosition.distanceTo(lhs.position)
-    val rhsDistance = userPosition.distanceTo(rhs.position)
+  fun locationComparator(userPosition: Position): Comparator<LocationDataSet> = Comparator<LocationDataSet> { lhs, rhs ->
+    val lhsDistance = userPosition.distanceTo(lhs.weatherData.position)
+    val rhsDistance = userPosition.distanceTo(rhs.weatherData.position)
     lhsDistance.compareTo(rhsDistance)
   }
 
-  val rainTodayComparator: Comparator<WeatherData>
+  val rainTodayComparator: Comparator<LocationDataSet>
     get() = Comparator { lhs, rhs ->
-      DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)?.let {
+      DateUtil.checkIfOutdated(lhs.weatherData.timestamp, rhs.weatherData.timestamp)?.let {
         return@Comparator it
       }
 
-      checkForNullValue(lhs.rainToday, rhs.rainToday)?.let {
+      checkForNullValue(lhs.weatherData.rainToday, rhs.weatherData.rainToday)?.let {
         return@Comparator it
       }
 
-      lhs.rainToday!!.compareTo(rhs.rainToday!!)
+      lhs.weatherData.rainToday!!.compareTo(rhs.weatherData.rainToday!!)
     }
 
 
-  val humidityComparator: Comparator<WeatherData> = Comparator { lhs, rhs ->
-    DateUtil.checkIfOutdated(lhs.timestamp, rhs.timestamp)?.let {
+  val humidityComparator: Comparator<LocationDataSet> = Comparator { lhs, rhs ->
+    DateUtil.checkIfOutdated(lhs.weatherData.timestamp, rhs.weatherData.timestamp)?.let {
       return@Comparator it
     }
 
-    lhs.humidity.compareTo(rhs.humidity)
+    lhs.weatherData.humidity.compareTo(rhs.weatherData.humidity)
   }
 
   private fun checkForNullValue(lhs: Float?, rhs: Float?): Int? =

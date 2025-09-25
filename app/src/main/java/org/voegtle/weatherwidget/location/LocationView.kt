@@ -11,7 +11,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
-import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.databinding.ViewLocationBinding
 import org.voegtle.weatherwidget.util.ColorUtil
@@ -193,7 +192,7 @@ class LocationView(private val currentContext: Context, attrs: AttributeSet) : L
 
     fun setMoreData(statistics: Statistics) {
         binding.composeViewStatistics.setContent {
-            StatisticsView(statistics)
+            StatisticsComposable(statistics)
         }
     }
 
