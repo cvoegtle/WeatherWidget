@@ -20,7 +20,6 @@ import org.voegtle.weatherwidget.widget.view.ViewIdFactory
 class ScreenPainterFactory(context: Context, private val configuration: ApplicationSettings) {
 
   private val context = context.applicationContext
-  private val viewIds = ViewIdFactory.buildViewIds()
 
   fun createScreenPainters(): ArrayList<WidgetScreenPainter> {
     val screenPainters = ArrayList<WidgetScreenPainter>()
@@ -48,11 +47,6 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     setWidgetIntents(remoteViews)
     return remoteViews
   }
-
-  private fun updateVisibility(remoteViews: RemoteViews, id: Int, isVisible: Boolean) {
-    remoteViews.setViewVisibility(id, if (isVisible) View.VISIBLE else View.GONE)
-  }
-
 
   private fun updateBackgroundColor(remoteViews: RemoteViews) {
     remoteViews.setInt(R.id.widget_container, "setBackgroundColor", Color.argb(0xD0, 0xff, 0xff, 0xff))
