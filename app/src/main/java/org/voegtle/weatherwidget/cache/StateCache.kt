@@ -1,9 +1,7 @@
-package org.voegtle.weatherwidget.state
+package org.voegtle.weatherwidget.cache
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
-import androidx.annotation.RequiresApi
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import java.util.Date
 

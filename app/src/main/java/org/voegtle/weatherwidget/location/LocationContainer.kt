@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.ComposeView
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.OrderCriteria
-import org.voegtle.weatherwidget.state.StateCache
+import org.voegtle.weatherwidget.cache.StateCache
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.JsonTranslator
 
@@ -49,7 +49,9 @@ class LocationContainer(val context: Context, private val container: ComposeView
     private fun enrichWithStatistics(locationDataSets: List<LocationDataSet>) {
         locationDataSets.forEach {
             val state = stateCache.read(it.weatherLocation.key)
-            it.statistics = JsonTranslator.toSingleStatistics(state.statistics)
+            if (state.isExpanded) {
+                it.statistics = JsonTranslator.toSingleStatistics(state.statistics)
+            }
         }
     }
 

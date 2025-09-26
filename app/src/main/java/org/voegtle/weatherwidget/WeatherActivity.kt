@@ -11,17 +11,13 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity // Import geändert/hinzugefügt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.gson.Gson
-// import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
 import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
@@ -45,35 +41,25 @@ import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
-import org.voegtle.weatherwidget.state.StateCache
-import org.voegtle.weatherwidget.util.ActivityUpdateWorker
-import org.voegtle.weatherwidget.util.DataFormatter
+import org.voegtle.weatherwidget.cache.StateCache
+import org.voegtle.weatherwidget.cache.WeatherDataCache
+import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.util.FetchAllResponse
-import org.voegtle.weatherwidget.util.StatisticsUpdater
+import org.voegtle.weatherwidget.util.StatisticUpdateWorker
 import org.voegtle.weatherwidget.util.UserFeedback
 import org.voegtle.weatherwidget.widget.ScreenPainterFactory
 
-class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener { // Basisklasse geändert
-    private var statisticsUpdater: StatisticsUpdater? = null
+class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var configuration: ApplicationSettings? = null
 
     private lateinit var binding: ActivityWeatherBinding
     private var locationOrderStore: LocationOrderStore? = null
 
-    // wird benötigt um die Daten asynchron zu aktualisieren
-    private var workInfo: LiveData<MutableList<WorkInfo?>>? = null
     private var userLocationUpdater: UserLocationUpdater? = null
     private var stateCache: StateCache? = null
-
-    // Aus ThemedActivity übernommen
-    private fun configureTheme() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
-        val configuration = weatherSettingsReader.read(preferences)
-    }
+    private var weatherDataCache: WeatherDataCache? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        configureTheme() // Theme-Logik vor super.onCreate() aufrufen
         super.onCreate(savedInstanceState)
         binding = ActivityWeatherBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -83,13 +69,13 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         supportActionBar?.title = getString(R.string.app_name)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        readConfiguration(preferences) // Dies wird das colorScheme erneut setzen, was ok ist.
+        readConfiguration(preferences)
         preferences.registerOnSharedPreferenceChangeListener(this)
 
         locationOrderStore = LocationOrderStore(this.applicationContext)
-        statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
         stateCache = StateCache(this)
+        weatherDataCache = WeatherDataCache(this)
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
@@ -99,14 +85,9 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         enableNotificationsIfPermitted()
     }
 
-    private fun updateVisibility(viewId: Int, isVisible: Boolean) {
-        val view: View = findViewById(viewId)
-        view.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
     override fun onResume() {
         super.onResume()
-        updateWeatherOnce(false)
+        updateAll(false)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -118,7 +99,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
         R.id.action_reload -> {
-            updateWeatherOnce(true)
+            updateAll(true)
             true
         }
 
@@ -142,8 +123,13 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
-        readConfiguration(preferences) // Dies wird das colorScheme aktualisieren
-        updateWeatherOnce(true)
+        readConfiguration(preferences)
+        updateAll(true)
+    }
+
+    fun updateAll(showToast: Boolean) {
+        updateWeather(showToast)
+        updateStatistics(false)
     }
 
     fun requestPermissions() {
@@ -208,38 +194,50 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
         val locationOrderStore = LocationOrderStore(applicationContext)
         locationOrderStore.writeOrderCriteria(OrderCriteria.default)
-        updateWeatherOnce(false)
+        updateAll(false)
     }
 
-    fun updateWeatherOnce(showToast: Boolean) {
+    fun updateWeather(showToast: Boolean) {
         userLocationUpdater!!.updateLocation()
 
-        val activityUpdateRequest = OneTimeWorkRequestBuilder<ActivityUpdateWorker>().addTag(ActivityUpdateWorker.WEATHER_DATA).build()
+        val weatherDataUpdateRequest = OneTimeWorkRequestBuilder<WeatherDataUpdateWorker>().addTag(WeatherDataUpdateWorker.WEATHER_DATA).build()
         val workManager = WorkManager.getInstance(applicationContext)
-        workManager.enqueue(activityUpdateRequest)
-        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(activityUpdateRequest.id)
+        workManager.enqueue(weatherDataUpdateRequest)
+        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(weatherDataUpdateRequest.id)
 
         val observer = Observer<WorkInfo?>() { latestWorkInfo ->
             if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
-                val weatherDataJson = latestWorkInfo.outputData.getString(ActivityUpdateWorker.WEATHER_DATA)
-                val weatherData = Gson().fromJson(weatherDataJson, FetchAllResponse::class.java)
-                updateActivity(weatherData, showToast)
+                updateActivity(showToast)
             }
         }
         workInfoByIdLiveData.observe(this, observer)
     }
 
-    private fun updateActivity(weatherData: FetchAllResponse, showToast: Boolean) {
+    fun updateStatistics(showToast: Boolean) {
+        val statisticsUpdateRequest = OneTimeWorkRequestBuilder<StatisticUpdateWorker>().addTag(StatisticUpdateWorker.STATISTIC_DATA).build()
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueue(statisticsUpdateRequest)
+        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(statisticsUpdateRequest.id)
+
+        val observer = Observer<WorkInfo?>() { latestWorkInfo ->
+            if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
+                updateActivity(showToast)
+            }
+        }
+        workInfoByIdLiveData.observe(this, observer)
+
+    }
+
+    private fun updateActivity(showToast: Boolean) {
         try {
-            updateLocations(weatherData.weatherMap)
-            updateWidgets(weatherData.weatherMap)
+            val weatherData = weatherDataCache!!.read()
+            weatherData?.let {
+                updateLocations(it.weatherMap)
+                updateWidgets(it.weatherMap)
 
-            UserFeedback(applicationContext).showMessage(
-                if (weatherData.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast
-            )
-
-            val notificationManager = NotificationSystemManager(applicationContext, configuration!!)
-            notificationManager.updateNotification(weatherData)
+                showUserToast(it, showToast)
+                updateNotification(it)
+            }
         } catch (th: Throwable) {
             UserFeedback(applicationContext).showMessage(R.string.message_data_update_failed, true)
             Log.e(WeatherActivity::class.java.toString(), "Failed to update View", th)
@@ -264,6 +262,19 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             onForecastClick = (::onForecastClicked),
             onExpandStateChanged = (::onExpandedClicked))
     }
+
+    private fun showUserToast(response: FetchAllResponse, showToast: Boolean) {
+        UserFeedback(applicationContext).showMessage(
+            if (response.valid) R.string.message_data_updated else R.string.message_data_update_failed,
+            showToast
+        )
+    }
+
+    private fun updateNotification(fetchAllResponse: FetchAllResponse) {
+        val notificationManager = NotificationSystemManager(applicationContext, configuration!!)
+        notificationManager.updateNotification(fetchAllResponse)
+    }
+
 
     private fun onDiagramClicked(locationIdentifier: LocationIdentifier) {
         navigateToDiagramActivity(locationIdentifier)
@@ -297,12 +308,14 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun onExpandedClicked(locationIdentifier: LocationIdentifier, isExpanded: Boolean) {
         val state = stateCache!!.read(locationIdentifier)
         state.isExpanded = isExpanded
+        state.makeOutdated()
         stateCache!!.save(state)
 
         if (isExpanded) {
-            statisticsUpdater!!.updateStatistics(listOf(locationIdentifier), true)
+            updateStatistics(false)
+        } else {
+            updateActivity(false)
         }
-
     }
 
     private fun locationContainer() = binding.locationContainer

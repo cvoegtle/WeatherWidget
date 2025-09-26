@@ -1,4 +1,4 @@
-package org.voegtle.weatherwidget.state
+package org.voegtle.weatherwidget.cache
 
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.util.DateUtil
@@ -10,5 +10,9 @@ data class State(val id: LocationIdentifier, var isExpanded: Boolean = false, va
   fun outdated(): Boolean {
     val oneHourBefore = DateUtil.oneHouerBefore
     return age == null || age!!.before(oneHourBefore)
+  }
+
+  fun makeOutdated() {
+    age = null
   }
 }
