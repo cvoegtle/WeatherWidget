@@ -1,10 +1,12 @@
 package org.voegtle.weatherwidget.location
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,12 +41,14 @@ private const val WEIGHT_KWH = 0.9f
 @Composable
 fun StatisticsComposable(statistics: Statistics) {
     val visibility = detectVisibleColumns(statistics)
-    Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
-        StatisticsCaptionRow(visibility, statistics.kind)
-        StatisticsContentRow(statistics.get(Statistics.TimeRange.today), visibility)
-        StatisticsContentRow(statistics.get(Statistics.TimeRange.yesterday), visibility)
-        StatisticsContentRow(statistics.get(Statistics.TimeRange.last7days), visibility)
-        StatisticsContentRow(statistics.get(Statistics.TimeRange.last30days), visibility)
+    Surface(color = MaterialTheme.colorScheme.surface) {
+        Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+            StatisticsCaptionRow(visibility, statistics.kind)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.today), visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.yesterday), visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.last7days), visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.last30days), visibility)
+        }
     }
 }
 

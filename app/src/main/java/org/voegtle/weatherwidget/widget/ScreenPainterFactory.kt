@@ -40,9 +40,6 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     }
   }
 
-  private val refreshImage: Drawable
-    get() = ContextCompat.getDrawable(context, R.drawable.ic_action_refresh_dark)!!
-
   private fun createRemoteViews(): RemoteViews {
     val remoteViews = RemoteViews(context.packageName, R.layout.widget_weather)
 

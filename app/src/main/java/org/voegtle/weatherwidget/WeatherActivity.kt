@@ -117,7 +117,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             true
         }
 
-        R.id.action_perferences -> {
+        R.id.action_preferences -> {
             startActivity(Intent(this, WeatherPreferences::class.java))
             true
         }

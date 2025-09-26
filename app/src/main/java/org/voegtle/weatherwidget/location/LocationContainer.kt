@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.platform.ComposeView
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
 
 data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, var statistics: Statistics?)
 
@@ -20,10 +21,12 @@ class LocationContainer(val context: Context, private val container: ComposeView
         locationSorter.sort(locationDataSets)
 
         container.setContent {
-            LazyColumn() {
-                items(items = locationDataSets) { dataSet ->
-                    LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics,
-                        onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged)
+            WeatherWidgetTheme {
+                LazyColumn() {
+                    items(items = locationDataSets) { dataSet ->
+                        LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics,
+                            onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged)
+                    }
                 }
             }
         }
@@ -31,4 +34,3 @@ class LocationContainer(val context: Context, private val container: ComposeView
     }
 
 }
-

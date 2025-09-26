@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assessment
@@ -18,17 +17,18 @@ import androidx.compose.material.icons.filled.WbCloudy
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
-import androidx.core.net.toUri
 
 @Composable
 fun LocationComposable(
@@ -58,42 +58,46 @@ fun LocationCaption(
     onForecastClick: () -> Unit = {},
     onExpandStateChanged: (isExpanded: Boolean) -> Unit = {},
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(30.dp)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(start = 4.dp),
-        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
-    ) {
-        Text(
-            text = caption,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.weight(1f)
-        )
-
-        IconButton(onClick = onDiagramClick, modifier = Modifier.size(30.dp)) {
-            Icon(
-                imageVector = Icons.Filled.Assessment,
-                contentDescription = stringResource(R.string.diagram_button_description)
+    Surface (
+        color = MaterialTheme.colorScheme.surfaceDim,
+    ){
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .padding(start = 4.dp),
+            verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+        ) {
+            Text(
+                text = caption,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f)
             )
-        }
 
-        IconButton(onClick = onForecastClick, modifier = Modifier.size(30.dp)) {
-            Icon(
-                imageVector = Icons.Filled.WbCloudy,
-                contentDescription = stringResource(R.string.forecast_button_description)
-            )
-        }
+            IconButton(onClick = onDiagramClick, modifier = Modifier.size(30.dp)) {
+                Icon(
+                    imageVector = Icons.Filled.Assessment,
+                    contentDescription = stringResource(R.string.diagram_button_description)
+                )
+            }
 
-        IconButton(
-            onClick = { onExpandStateChanged(!isExpanded)},
-            modifier = Modifier.size(30.dp)) {
-            Icon(
-                imageVector = if (isExpanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
-                contentDescription = stringResource(if (isExpanded) R.string.collapse_button_description else R.string.expand_button_description)
-            )
+            IconButton(onClick = onForecastClick, modifier = Modifier.size(30.dp)) {
+                Icon(
+                    imageVector = Icons.Filled.WbCloudy,
+                    contentDescription = stringResource(R.string.forecast_button_description)
+                )
+            }
+
+            IconButton(
+                onClick = { onExpandStateChanged(!isExpanded) },
+                modifier = Modifier.size(30.dp)
+            ) {
+                Icon(
+                    imageVector = if (isExpanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
+                    contentDescription = stringResource(if (isExpanded) R.string.collapse_button_description else R.string.expand_button_description)
+                )
+            }
         }
     }
 }
@@ -101,42 +105,40 @@ fun LocationCaption(
 @Composable
 fun LocationData(weatherData: WeatherData) {
     val formatter = DataFormatter()
-    Column(
-        modifier = Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(start = 4.dp)
-    ) {
-        DataRow(label = stringResource(R.string.temperature), value = formatter.formatTemperatureForActivity(weatherData))
-        DataRow(label = stringResource(R.string.humidity), value = formatter.formatHumidityForActivity(weatherData))
-        weatherData.barometer?.takeIf { it > 0.0 }?.let {
-            DataRow(label = stringResource(R.string.barometer), value = formatter.formatBarometer(it))
-        }
-        weatherData.solarradiation?.takeIf { it > 0.0 }?.let {
-            DataRow(label = stringResource(R.string.solarradiation), value = formatter.formatSolarradiation(it))
-        }
-        weatherData.UV?.takeIf { it > 0.0 }?.let {
-            DataRow(label = stringResource(R.string.uvindex), value = formatter.formatInteger(it))
-        }
-        weatherData.rain?.takeIf { it > 0.0f }?.let {
-            DataRow(label = stringResource(R.string.rain_last_hour), value = formatter.formatRain(it))
-        }
-        weatherData.rainToday?.takeIf { it > 0.0f }?.let {
-            DataRow(label = stringResource(R.string.rain_today), value = formatter.formatRain(it))
-        }
-        weatherData.wind?.takeIf { it >= 1.0 }?.let {
-            DataRow(label = stringResource(R.string.wind_speed), value = formatter.formatWind(it))
-        }
-        weatherData.windgust?.takeIf { it >= 10.0 }?.let {
-            DataRow(label = stringResource(R.string.wind_gust), value = formatter.formatWind(it))
-        }
-        weatherData.watt?.takeIf { it > 0.0 }?.let {
-            DataRow(label = stringResource(R.string.solar_output), value = formatter.formatWatt(it))
-        }
-        weatherData.powerProduction?.takeIf { it >= 1.0 }?.let {
-            DataRow(label = stringResource(R.string.power_production), value = formatter.formatWatt(it))
-        }
-        weatherData.powerFeed?.takeIf { it >= 5.0 }?.let {
-            DataRow(label = stringResource(R.string.power_feed), value = formatter.formatWatt(it))
+    Surface(color = MaterialTheme.colorScheme.surfaceVariant) {
+        Column(modifier = Modifier.padding(all = 4.dp)) {
+            DataRow(label = stringResource(R.string.temperature), value = formatter.formatTemperatureForActivity(weatherData))
+            DataRow(label = stringResource(R.string.humidity), value = formatter.formatHumidityForActivity(weatherData))
+            weatherData.barometer?.takeIf { it > 0.0 }?.let {
+                DataRow(label = stringResource(R.string.barometer), value = formatter.formatBarometer(it))
+            }
+            weatherData.solarradiation?.takeIf { it > 0.0 }?.let {
+                DataRow(label = stringResource(R.string.solarradiation), value = formatter.formatSolarradiation(it))
+            }
+            weatherData.UV?.takeIf { it > 0.0 }?.let {
+                DataRow(label = stringResource(R.string.uvindex), value = formatter.formatInteger(it))
+            }
+            weatherData.rain?.takeIf { it > 0.0f }?.let {
+                DataRow(label = stringResource(R.string.rain_last_hour), value = formatter.formatRain(it))
+            }
+            weatherData.rainToday?.takeIf { it > 0.0f }?.let {
+                DataRow(label = stringResource(R.string.rain_today), value = formatter.formatRain(it))
+            }
+            weatherData.wind?.takeIf { it >= 1.0 }?.let {
+                DataRow(label = stringResource(R.string.wind_speed), value = formatter.formatWind(it))
+            }
+            weatherData.windgust?.takeIf { it >= 10.0 }?.let {
+                DataRow(label = stringResource(R.string.wind_gust), value = formatter.formatWind(it))
+            }
+            weatherData.watt?.takeIf { it > 0.0 }?.let {
+                DataRow(label = stringResource(R.string.solar_output), value = formatter.formatWatt(it))
+            }
+            weatherData.powerProduction?.takeIf { it >= 1.0 }?.let {
+                DataRow(label = stringResource(R.string.power_production), value = formatter.formatWatt(it))
+            }
+            weatherData.powerFeed?.takeIf { it >= 5.0 }?.let {
+                DataRow(label = stringResource(R.string.power_feed), value = formatter.formatWatt(it))
+            }
         }
     }
 }

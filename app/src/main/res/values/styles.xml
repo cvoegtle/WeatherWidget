@@ -44,4 +44,8 @@
 
 
   </style>
+
+  <!-- <style name="AppTheme" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
+
+  </style> -->
 </resources>

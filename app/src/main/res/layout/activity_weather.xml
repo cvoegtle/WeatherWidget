@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:weather="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="?attr/actionBarTheme"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/location_container"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:weather="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </androidx.compose.ui.platform.ComposeView>
+  <com.google.android.material.appbar.AppBarLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.compose.ui.platform.ComposeView
+          android:id="@+id/location_container"
+          android:theme="@style/AppTheme"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+
+  </androidx.compose.ui.platform.ComposeView>
 </androidx.appcompat.widget.LinearLayoutCompat>
