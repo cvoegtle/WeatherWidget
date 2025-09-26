@@ -16,18 +16,18 @@ class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters)
 
     override fun doWork(): Result {
         val updateCandidates = configuration.locations.map { it.key }.toList()
-        val outdatedLocations = lookupOutdatedLocations(updateCandidates, false)
+        val outdatedLocations = lookupOutdatedLocations(updateCandidates)
 
         val statistics = weatherDataFetcher.fetchStatisticsFromUrl(outdatedLocations)
         updateStateCache(statistics)
         return Result.success()
     }
 
-    private fun lookupOutdatedLocations(updateCandidates: Collection<LocationIdentifier>, forceUpdate: Boolean): ArrayList<LocationIdentifier> {
+    private fun lookupOutdatedLocations(updateCandidates: Collection<LocationIdentifier>): ArrayList<LocationIdentifier> {
         val outdatedLocations = ArrayList<LocationIdentifier>()
         for (locationIdentifier in updateCandidates) {
             val state = stateCache.read(locationIdentifier)
-            if (state.outdated() || forceUpdate) {
+            if (state.outdated() && state.isExpanded) {
                 outdatedLocations.add(locationIdentifier)
             }
 
