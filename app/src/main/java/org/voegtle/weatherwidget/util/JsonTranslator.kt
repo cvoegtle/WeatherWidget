@@ -6,6 +6,7 @@ import org.json.JSONObject
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherJSONObject
+import org.voegtle.weatherwidget.location.LocationIdentifier
 
 object JsonTranslator {
 
@@ -20,13 +21,15 @@ object JsonTranslator {
     return null
   }
 
-  internal fun toStatistics(jsonStr: String): HashMap<String, Statistics> {
-    val statisticsMap = HashMap<String, Statistics>()
+  internal fun toStatistics(jsonStr: String): Collection<Statistics> {
+    val statisticsMap = HashSet<Statistics>()
     try {
       val jsonStatistics = JSONArray(jsonStr)
       for (i in 0..jsonStatistics.length() - 1) {
         val stats = toStatistics(jsonStatistics.getJSONObject(i))
-        statisticsMap.put(stats.id, stats)
+        stats?.let {
+          statisticsMap.add(stats)
+        }
       }
     } catch (ignore: JSONException) {
     }
@@ -34,13 +37,20 @@ object JsonTranslator {
     return statisticsMap
   }
 
-  internal fun toSingleStatistics(jsonStr: String): Statistics {
+  internal fun toSingleStatistics(jsonStr: String): Statistics? {
+    if (jsonStr.isEmpty()) {
+      return null
+    }
     val json = JSONObject(jsonStr)
     return toStatistics(json)
   }
 
-  private fun toStatistics(jsonStatistics: JSONObject): Statistics {
-    val result = Statistics(id = jsonStatistics.optString("id"), kind = jsonStatistics.optString("kind"))
+  private fun toStatistics(jsonStatistics: JSONObject): Statistics? {
+    val locationIdentifier = LocationIdentifier.getByString(jsonStatistics.getString("id"))
+    if (locationIdentifier == null) {
+      return null
+    }
+    val result = Statistics(id = locationIdentifier, kind = jsonStatistics.optString("kind"))
     val jsonStats = jsonStatistics.getJSONArray("stats")
     for (i in 0 until jsonStats.length()) {
       val statisticsSet = toStatisticsSet(jsonStats.get(i) as JSONObject)
@@ -70,7 +80,7 @@ object JsonTranslator {
   fun toString(statistics: Statistics): String {
     val json = WeatherJSONObject()
     try {
-      json.put("id", statistics.id)
+      json.put("id", statistics.id.id)
       json.put("kind", statistics.kind)
 
       val jsonStats = JSONArray()

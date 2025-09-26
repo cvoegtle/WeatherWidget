@@ -45,6 +45,7 @@ import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
+import org.voegtle.weatherwidget.state.StateCache
 import org.voegtle.weatherwidget.util.ActivityUpdateWorker
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.FetchAllResponse
@@ -58,11 +59,11 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     private lateinit var binding: ActivityWeatherBinding
     private var locationOrderStore: LocationOrderStore? = null
-    private val formatter = DataFormatter()
 
     // wird benötigt um die Daten asynchron zu aktualisieren
     private var workInfo: LiveData<MutableList<WorkInfo?>>? = null
     private var userLocationUpdater: UserLocationUpdater? = null
+    private var stateCache: StateCache? = null
 
     // Aus ThemedActivity übernommen
     private fun configureTheme() {
@@ -88,6 +89,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         locationOrderStore = LocationOrderStore(this.applicationContext)
         statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
+        stateCache = StateCache(this)
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
@@ -257,7 +259,10 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun updateLocations(data: HashMap<LocationIdentifier, WeatherData>) {
         val container = locationContainer()
         val locationContainer = LocationContainer(applicationContext, container)
-        locationContainer.showWeatherData(configuration!!.locations, data, onDiagramClick = (::onDiagramClicked), onForecastClick = (::onForecastClicked))
+        locationContainer.showWeatherData(configuration!!.locations, data,
+            onDiagramClick = (::onDiagramClicked),
+            onForecastClick = (::onForecastClicked),
+            onExpandStateChanged = (::onExpandedClicked))
     }
 
     private fun onDiagramClicked(locationIdentifier: LocationIdentifier) {
@@ -287,6 +292,17 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun onForecastClicked(forecastUrl: Uri) {
         val browserIntent = Intent(Intent.ACTION_VIEW, forecastUrl)
         startActivity(browserIntent)
+    }
+
+    private fun onExpandedClicked(locationIdentifier: LocationIdentifier, isExpanded: Boolean) {
+        val state = stateCache!!.read(locationIdentifier)
+        state.isExpanded = isExpanded
+        stateCache!!.save(state)
+
+        if (isExpanded) {
+            statisticsUpdater!!.updateStatistics(listOf(locationIdentifier), true)
+        }
+
     }
 
     private fun locationContainer() = binding.locationContainer

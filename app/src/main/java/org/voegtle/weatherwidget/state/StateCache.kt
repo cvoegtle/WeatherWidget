@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
+import org.voegtle.weatherwidget.location.LocationIdentifier
 import java.util.Date
 
 class StateCache(context: Context) {
@@ -14,12 +15,12 @@ class StateCache(context: Context) {
 
   private val statePreferences: SharedPreferences = context.getSharedPreferences(STATE_CACHE, 0)
 
-  fun read(id: Int): State = State(id = id,
+  fun read(id: LocationIdentifier): State = State(id = id,
       age = readAge(id),
       isExpanded = statePreferences.getBoolean(getKey(STATE, id), false),
       statistics = statePreferences.getString(getKey(STATISTICS, id), "")!!)
 
-  fun readAge(id: Int): Date? {
+  fun readAge(id: LocationIdentifier): Date? {
     val age = statePreferences.getLong(getKey(STATE_AGE, id), -1)
     return if (age > 0) Date(age) else null
   }
@@ -32,6 +33,6 @@ class StateCache(context: Context) {
     editor.apply()
   }
 
-  private fun getKey(prefix: String, id: Int) = prefix + id
+  private fun getKey(prefix: String, id: LocationIdentifier) = prefix + id
 
 }

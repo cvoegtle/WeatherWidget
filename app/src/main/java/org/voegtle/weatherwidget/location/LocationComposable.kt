@@ -31,16 +31,16 @@ import androidx.core.net.toUri
 @Composable
 fun LocationComposable(
     caption: String, data: WeatherData, statistics: Statistics?,
-    onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {},
+    onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {_ -> },
     onForecastClick: (forecastUrl: Uri) -> Unit = {},
-    onExpandStateChanged: (isExpanded: Boolean) -> Unit = {}
+    onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }
 ) {
     Column {
         LocationCaption(
             caption, statistics != null,
             onDiagramClick = { onDiagramClick(data.location) },
             onForecastClick = { data.forecast?.let { onForecastClick(it.toUri()) } },
-            onExpandStateChanged = onExpandStateChanged
+            onExpandStateChanged = { onExpandStateChanged(data.location, statistics == null) }
         )
         LocationData(data)
         if (statistics != null) {

@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.util
 
 import android.app.Activity
 import org.voegtle.weatherwidget.data.Statistics
+import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.state.State
 import org.voegtle.weatherwidget.state.StateCache
@@ -13,78 +14,34 @@ class StatisticsUpdater(activity: Activity) {
   private val stateCache = StateCache(activity)
   private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(activity))
 
-//  fun updateStatistics(updateCandidates: HashMap<LocationView, WeatherLocation>, forceUpdate: Boolean) {
-//    updateCachedLocations(updateCandidates)
-//
-//    val updater = Runnable {
-//      val outdatedLocations = lookupOutdatedLocations(updateCandidates, forceUpdate)
-//
-//      val statistics = weatherDataFetcher.fetchStatisticsFromUrl(outdatedLocations)
-//      updateLocations(updateCandidates, statistics)
-//    }
-//    val scheduler = Executors.newScheduledThreadPool(1)
-//    scheduler.schedule(updater, 0, TimeUnit.SECONDS)
-//  }
-//
-//
-//  private fun updateLocations(updateCandidates: HashMap<LocationView, WeatherLocation>, statistics: HashMap<String, Statistics>) {
-//    for (locationView in updateCandidates.keys) {
-//      val location: WeatherLocation? = updateCandidates[locationView]
-//      val stats = statistics[location?.identifier]
-//      if (stats != null) {
-//        updateLocation(locationView, stats)
-//      }
-//
-//    }
-//  }
-//
-//  private fun lookupOutdatedLocations(updateCandidates: HashMap<LocationView, WeatherLocation>, forceUpdate: Boolean): ArrayList<String> {
-//    val outdatedLocations = ArrayList<String>()
-//    for (locationView in updateCandidates.keys) {
-//      val state = stateCache.read(locationView.id)
-//      if (state.outdated() || forceUpdate) {
-//        val outdatedLocation: WeatherLocation? = updateCandidates[locationView]
-//        outdatedLocations.add(outdatedLocation!!.identifier)
-//      }
-//
-//    }
-//    return outdatedLocations
-//  }
-//
-//  private fun updateCachedLocations(updateCandidates: HashMap<LocationView, WeatherLocation>) {
-//    for (locationView in updateCandidates.keys) {
-//      val state = stateCache.read(locationView.id)
-//      if (!state.outdated()) {
-//        updateView(locationView, JsonTranslator.toSingleStatistics(state.statistics))
-//      }
-//    }
-//  }
-//
-//  private fun updateLocation(locationView: LocationView, statistics: Statistics) {
-//    locationView.post {
-//      updateView(locationView, statistics)
-//      updateCache(locationView, statistics)
-//    }
-//  }
-//
-//  private fun updateCache(locationView: LocationView, statistics: Statistics) {
-//    val state = State(locationView.id)
-//    state.age = Date()
-//    state.isExpanded = locationView.isExpanded
-//    state.statistics = JsonTranslator.toString(statistics)
-//    stateCache.save(state)
-//  }
-//
-//  private fun updateView(locationView: LocationView, moreData: Statistics) {
-//    locationView.setMoreData(moreData)
-//  }
-//
-//  fun clearState(locationView: LocationView) {
-//    val state = stateCache.read(locationView.id)
-//    state.isExpanded = false
-//    state.statistics = ""
-//    state.age = DateUtil.yesterday
-//    stateCache.save(state)
-//  }
-//
+  fun updateStatistics(updateCandidates: Collection<LocationIdentifier>, forceUpdate: Boolean) {
+    val updater = Runnable {
+      val outdatedLocations = lookupOutdatedLocations(updateCandidates, forceUpdate)
+
+      val statistics = weatherDataFetcher.fetchStatisticsFromUrl(outdatedLocations)
+      updateLocations(statistics)
+    }
+    val scheduler = Executors.newScheduledThreadPool(1)
+    scheduler.schedule(updater, 0, TimeUnit.SECONDS)
+  }
+
+
+  private fun updateLocations(statistics: Collection<Statistics>) {
+    for (statistic in statistics) {
+      val state = State(statistic.id, true, Date(), JsonTranslator.toString(statistic))
+      stateCache.save(state)
+    }
+  }
+
+  private fun lookupOutdatedLocations(updateCandidates: Collection<LocationIdentifier>, forceUpdate: Boolean): ArrayList<LocationIdentifier> {
+    val outdatedLocations = ArrayList<LocationIdentifier>()
+    for (locationIdentifier in updateCandidates) {
+      val state = stateCache.read(locationIdentifier)
+      if (state.outdated() || forceUpdate) {
+        outdatedLocations.add(locationIdentifier)
+      }
+
+    }
+    return outdatedLocations
+  }
 }

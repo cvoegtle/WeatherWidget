@@ -135,12 +135,10 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
         return if (json.has(name)) json.getString(name) else null
     }
 
-    fun fetchStatisticsFromUrl(locationIds: List<String>): HashMap<String, Statistics> {
-        if (locationIds.size > 0) {
-            var concatenatedLocationIds = locationIds[0]
-            for (i in 1 until locationIds.size) {
-                concatenatedLocationIds += "," + locationIds[i]
-            }
+    fun fetchStatisticsFromUrl(locationIds: List<LocationIdentifier>): Collection<Statistics> {
+        if (locationIds.isNotEmpty()) {
+            val concatenatedLocationIds = locationIds.joinToString(",") { it.id }
+
             val jsonStatistics = RawDataFetcher.getStringFromUrl(
                 "https://wettercentral.appspot.com/weatherstation/read?build=" + buildNumber +
                         "&locations=" + concatenatedLocationIds + "&type=stats"
@@ -152,7 +150,7 @@ class WeatherDataFetcher(private val buildNumber: Int?) {
             }
 
         }
-        return HashMap()
+        return HashSet()
     }
 
 }

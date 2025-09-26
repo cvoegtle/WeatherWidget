@@ -10,8 +10,9 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.state.StateCache
 import org.voegtle.weatherwidget.util.DataFormatter
+import org.voegtle.weatherwidget.util.JsonTranslator
 
-data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, val statistics: Statistics?)
+data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, var statistics: Statistics?)
 
 class LocationContainer(val context: Context, private val container: ComposeView) {
     private val stateCache = StateCache(context)
@@ -21,19 +22,20 @@ class LocationContainer(val context: Context, private val container: ComposeView
 
     fun showWeatherData(locations: List<WeatherLocation>, data: Map<LocationIdentifier, WeatherData>,
                         onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {},
-                        onForecastClick: (forecastUrl: Uri) -> Unit = {}) {
+                        onForecastClick: (forecastUrl: Uri) -> Unit = {},
+                        onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }) {
         val locationDataSets = assembleLocationDataSets(locations, data)
         enrichCaptionWithTimeAndDistance(locationDataSets)
+        enrichWithStatistics(locationDataSets)
         locationSorter.sort(locationDataSets)
 
         container.setContent {
             LazyColumn() {
                 items(items = locationDataSets) { dataSet ->
                     LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics,
-                        onDiagramClick = onDiagramClick, onForecastClick = onForecastClick)
+                        onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged)
                 }
             }
-
         }
 
     }
@@ -41,6 +43,13 @@ class LocationContainer(val context: Context, private val container: ComposeView
     private fun enrichCaptionWithTimeAndDistance(locationDataSets: List<LocationDataSet>) {
         locationDataSets.forEach {
             it.caption = appendTimeAndDistance(it.weatherLocation.name, it.weatherData)
+        }
+    }
+
+    private fun enrichWithStatistics(locationDataSets: List<LocationDataSet>) {
+        locationDataSets.forEach {
+            val state = stateCache.read(it.weatherLocation.key)
+            it.statistics = JsonTranslator.toSingleStatistics(state.statistics)
         }
     }
 
