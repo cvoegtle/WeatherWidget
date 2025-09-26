@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assessment
@@ -71,23 +73,23 @@ fun LocationCaption(
             modifier = Modifier.weight(1f)
         )
 
-        IconButton(onClick = onDiagramClick) {
+        IconButton(onClick = onDiagramClick, modifier = Modifier.size(30.dp)) {
             Icon(
                 imageVector = Icons.Filled.Assessment,
                 contentDescription = stringResource(R.string.diagram_button_description)
             )
         }
 
-        IconButton(onClick = onForecastClick) {
+        IconButton(onClick = onForecastClick, modifier = Modifier.size(30.dp)) {
             Icon(
                 imageVector = Icons.Filled.WbCloudy,
                 contentDescription = stringResource(R.string.forecast_button_description)
             )
         }
 
-        IconButton(onClick = {
-            onExpandStateChanged(!isExpanded)
-        }) {
+        IconButton(
+            onClick = { onExpandStateChanged(!isExpanded)},
+            modifier = Modifier.size(30.dp)) {
             Icon(
                 imageVector = if (isExpanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
                 contentDescription = stringResource(if (isExpanded) R.string.collapse_button_description else R.string.expand_button_description)

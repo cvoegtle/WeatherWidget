@@ -14,10 +14,10 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
-import org.voegtle.weatherwidget.location.assembleLocationDataSets
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.util.DataFormatter
@@ -32,6 +32,8 @@ class NotificationSystemManager(private val context: Context, private val config
 
     private val res: Resources = context.resources
     private val locationSorter = LocationSorter(context)
+    private val locationDataSetFactory = LocationDataSetFactory(context)
+
     private val notificationManager: NotificationManager = context.getSystemService(
         Context.NOTIFICATION_SERVICE
     ) as NotificationManager
@@ -93,7 +95,7 @@ class NotificationSystemManager(private val context: Context, private val config
 
         val weatherText = StringBuilder()
 
-        val relevantDataSets = assembleLocationDataSets(configuration.locations, relevantData)
+        val relevantDataSets = locationDataSetFactory.assembleLocationDataSets(configuration.locations, relevantData)
         locationSorter.sort(relevantDataSets)
         relevantDataSets.forEach { dataSet ->
             val location = configuration.findLocation(dataSet.weatherData.location)

@@ -43,6 +43,7 @@ import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.cache.StateCache
 import org.voegtle.weatherwidget.cache.WeatherDataCache
+import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticUpdateWorker
@@ -58,6 +59,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private var userLocationUpdater: UserLocationUpdater? = null
     private var stateCache: StateCache? = null
     private var weatherDataCache: WeatherDataCache? = null
+    private var locationDataSetFactory: LocationDataSetFactory? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +78,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         userLocationUpdater = UserLocationUpdater(this)
         stateCache = StateCache(this)
         weatherDataCache = WeatherDataCache(this)
+        locationDataSetFactory = LocationDataSetFactory(this)
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
@@ -257,7 +260,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun updateLocations(data: HashMap<LocationIdentifier, WeatherData>) {
         val container = locationContainer()
         val locationContainer = LocationContainer(applicationContext, container)
-        locationContainer.showWeatherData(configuration!!.locations, data,
+        val locationDataSets = locationDataSetFactory!!.assembleLocationDataSets(configuration!!.locations, data)
+        locationContainer.showWeatherData(locationDataSets,
             onDiagramClick = (::onDiagramClicked),
             onForecastClick = (::onForecastClicked),
             onExpandStateChanged = (::onExpandedClicked))

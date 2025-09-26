@@ -8,10 +8,10 @@ import android.widget.RemoteViews
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
-import org.voegtle.weatherwidget.location.assembleLocationDataSets
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.util.ColorUtil
 import org.voegtle.weatherwidget.util.DateUtil
@@ -24,11 +24,11 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
                           private val remoteViews: RemoteViews,
                           context: Context,
                           val configuration: ApplicationSettings,
-                          refreshImage: Drawable,
                           private val detailed: Boolean) : AbstractWidgetScreenPainter(appWidgetManager, widgetIds,
                                                                                        remoteViews) {
   private val viewIds = ViewIdFactory.buildViewIds()
   private val locationSorter = LocationSorter(context)
+  private val locationDataSetFactory = LocationDataSetFactory(context)
 
 
   override fun showDataIsInvalid() {
@@ -45,7 +45,7 @@ class WidgetScreenPainter(appWidgetManager: AppWidgetManager,
   }
 
   fun updateWidgetData(data: HashMap<LocationIdentifier, WeatherData>) {
-    val locationDataSets = assembleLocationDataSets(configuration.locations, data)
+    val locationDataSets = locationDataSetFactory.assembleLocationDataSets(configuration.locations, data)
     locationSorter.sort(locationDataSets)
     val relevantData = reduceToWidgetData(locationDataSets)
     for (i in viewIds.indices) {

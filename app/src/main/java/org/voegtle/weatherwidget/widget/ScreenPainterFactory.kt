@@ -36,7 +36,7 @@ class ScreenPainterFactory(context: Context, private val configuration: Applicat
     val allWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget)
     if (allWidgetIds.isNotEmpty()) {
       screenPainters.add(WidgetScreenPainter(appWidgetManager, allWidgetIds, createRemoteViews(), context,
-                                             configuration, refreshImage, isDetailed))
+                                             configuration, isDetailed))
     }
   }
 
