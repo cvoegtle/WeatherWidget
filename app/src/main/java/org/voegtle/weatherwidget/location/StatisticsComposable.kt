@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -31,7 +32,7 @@ data class ColumnVisibility(
 )
 
 private const val WEIGHT_LABEL = 1.1f
-private val MAX_LABEL = 50.dp
+private val MIN_LABEL = 100.dp
 private const val WEIGHT_RAIN = 0.6f
 private const val WEIGHT_MIN_TEMPERATURE = 0.7f
 private const val WEIGHT_MAX_TEMPERATURE = 0.7f
@@ -41,7 +42,7 @@ private const val WEIGHT_KWH = 0.9f
 @Composable
 fun StatisticsComposable(statistics: Statistics) {
     val visibility = detectVisibleColumns(statistics)
-    Surface(color = MaterialTheme.colorScheme.surface) {
+    Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
         Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
             StatisticsCaptionRow(visibility, statistics.kind)
             StatisticsContentRow(statistics.get(Statistics.TimeRange.today), visibility)
@@ -58,7 +59,7 @@ fun StatisticsCaptionRow(visibility: ColumnVisibility, kind: String) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "", modifier = Modifier.weight(WEIGHT_LABEL))
+        Text(text = "", modifier = Modifier.widthIn(min = MIN_LABEL))
         if (visibility.rain) {
             TextCaption(id = R.string.rain, modifier = Modifier.weight(WEIGHT_RAIN))
         }
@@ -88,7 +89,8 @@ fun StatisticsContentRow(statisticsSet: StatisticsSet?, visibility: ColumnVisibi
     ) {
         statisticsSet?.let { statisticsSet ->
             val formatter = DataFormatter()
-            TextCaption(id = timeRange2TextId(statisticsSet.range), textAlign = TextAlign.Start, modifier = Modifier.weight(WEIGHT_LABEL))
+            TextCaption(id = timeRange2TextId(statisticsSet.range), textAlign = TextAlign.Start,
+                modifier = Modifier.widthIn(min = MIN_LABEL))
             if (visibility.rain) {
                 TextContent(text = formatter.formatRain(statisticsSet.rain), modifier = Modifier.weight(WEIGHT_RAIN))
             }
