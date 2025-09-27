@@ -2,7 +2,8 @@ package org.voegtle.weatherwidget.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color // Added import
+// import androidx.compose.ui.Modifier // Glance uses GlanceModifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -19,27 +20,31 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
+// import androidx.glance.layout.Arrangement // Removed import
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
 import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer // Ensure this is present
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
+import androidx.glance.layout.size
 import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import com.google.gson.Gson
-import org.voegtle.weatherwidget.R // Import für R.drawable
+import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.util.DataFormatter
 import androidx.glance.Image
-import androidx.glance.layout.Spacer
-import androidx.glance.layout.size
 import androidx.glance.ColorFilter
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.background
-import androidx.glance.color.ColorProvider // Changed import
+import androidx.glance.color.ColorProvider
 import androidx.glance.unit.ColorProvider
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.util.DateUtil
@@ -59,16 +64,41 @@ class SmallGlanceWidget : GlanceAppWidget() {
         val locationDataSets = loadDataSetsFromPreferences()
 
         GlanceTheme {
-            Scaffold(backgroundColor = GlanceTheme.colors.surface,
-                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>())) {
+            Scaffold(
+                backgroundColor = GlanceTheme.colors.surface,
+                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>())
+            ) {
                 if (locationDataSets.isNotEmpty()) {
-                    LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
-                        items(items = locationDataSets) { dataSet ->
-                            WeatherRow(dataSet)
+                    Column(modifier = GlanceModifier.fillMaxSize()) { 
+                        LazyColumn(GlanceModifier.defaultWeight()) {
+                            items(items = locationDataSets) { dataSet ->
+                                WeatherRow(dataSet)
+                            }
+                        }
+                        Row(
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically // Optional: if you want the text vertically centered in its row
+                        ) {
+                            Spacer(GlanceModifier.defaultWeight()) // This pushes the Text to the right
+                            Text(
+                                text = DateUtil.currentTime,
+                                style = TextStyle(color = GlanceTheme.colors.onSurface)
+                            )
                         }
                     }
                 } else {
-                    Text(text = "Laden...", modifier = GlanceModifier.padding(8.dp))
+                    Box(
+                        modifier = GlanceModifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Laden...",
+                            modifier = GlanceModifier.padding(8.dp),
+                            style = TextStyle(color = GlanceTheme.colors.onSurface)
+                        )
+                    }
                 }
             }
         }
@@ -89,7 +119,7 @@ class SmallGlanceWidget : GlanceAppWidget() {
         val formatter = DataFormatter()
         Row(
             modifier = GlanceModifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .padding(horizontal = 2.dp, vertical = 2.dp)
                 .background(determineRowBackground(locationDataSet)),
             verticalAlignment = Alignment.CenterVertically
@@ -98,7 +128,7 @@ class SmallGlanceWidget : GlanceAppWidget() {
                 provider = ImageProvider(R.drawable.ic_filled_circle),
                 contentDescription = "Regenindikator",
                 modifier = GlanceModifier
-                    .size(14.dp)
+                    .size(13.dp)
                     .padding(top = 2.dp),
                 colorFilter = determineIconColor(locationDataSet)
             )
