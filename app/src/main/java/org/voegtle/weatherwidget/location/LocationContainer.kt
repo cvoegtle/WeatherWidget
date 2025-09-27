@@ -22,7 +22,8 @@ class LocationContainer(val context: Context, private val container: ComposeView
             WeatherWidgetTheme {
                 LazyColumn() {
                     items(items = locationDataSets) { dataSet ->
-                        LocationComposable(dataSet.caption, dataSet.weatherData, dataSet.statistics,
+                        LocationComposable(
+                            dataSet,
                             onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged)
                     }
                 }

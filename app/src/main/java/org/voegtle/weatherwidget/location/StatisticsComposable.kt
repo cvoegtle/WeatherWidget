@@ -40,9 +40,9 @@ private const val WEIGHT_MAX_SUN = 1.1f
 private const val WEIGHT_KWH = 0.9f
 
 @Composable
-fun StatisticsComposable(statistics: Statistics) {
+fun StatisticsComposable(statistics: Statistics, color: androidx.compose.ui.graphics.Color) {
     val visibility = detectVisibleColumns(statistics)
-    Surface(color = MaterialTheme.colorScheme.surfaceContainer) {
+    Surface(color = color) {
         Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
             StatisticsCaptionRow(visibility, statistics.kind)
             StatisticsContentRow(statistics.get(Statistics.TimeRange.today), visibility)

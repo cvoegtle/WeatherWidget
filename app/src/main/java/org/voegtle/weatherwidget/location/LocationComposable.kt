@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.location
 
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,46 +20,68 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
+import org.voegtle.weatherwidget.util.DateUtil
 
 @Composable
-fun LocationComposable(
-    caption: String, data: WeatherData, statistics: Statistics?,
-    onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {_ -> },
+fun LocationComposable(locationDataSet: LocationDataSet,
+    onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = { _ -> },
     onForecastClick: (forecastUrl: Uri) -> Unit = {},
     onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }
 ) {
     Column {
         LocationCaption(
-            caption, statistics != null,
-            onDiagramClick = { onDiagramClick(data.location) },
-            onForecastClick = { data.forecast?.let { onForecastClick(it.toUri()) } },
-            onExpandStateChanged = { onExpandStateChanged(data.location, statistics == null) }
+            locationDataSet.caption,
+            color = determineCaptionBackgroundColor(locationDataSet),
+            locationDataSet.statistics != null,
+            onDiagramClick = { onDiagramClick(locationDataSet.weatherData.location) },
+            onForecastClick = { locationDataSet.weatherData.forecast?.let { onForecastClick(it.toUri()) } },
+            onExpandStateChanged = { onExpandStateChanged(locationDataSet.weatherData.location, locationDataSet.statistics == null) }
         )
-        LocationData(data)
-        if (statistics != null) {
-            StatisticsComposable(statistics)
-        }
+        LocationData(locationDataSet.weatherData, determineDataBackgroundColor(locationDataSet))
+        locationDataSet.statistics?.let { StatisticsComposable(it, determineStatisticsBackgroundColor(locationDataSet)) }
     }
 }
 
 @Composable
+private fun determineCaptionBackgroundColor(locationDataSet: LocationDataSet): Color =
+    when {
+        DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> MaterialTheme.colorScheme.error
+        locationDataSet.weatherLocation.preferences.favorite -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.surfaceDim
+    }
+
+@Composable
+private fun determineDataBackgroundColor(locationDataSet: LocationDataSet): Color =
+    when {
+        locationDataSet.weatherLocation.preferences.favorite -> MaterialTheme.colorScheme.secondary
+        else -> MaterialTheme.colorScheme.surfaceVariant
+    }
+
+@Composable
+private fun determineStatisticsBackgroundColor(locationDataSet: LocationDataSet): Color =
+    when {
+        locationDataSet.weatherLocation.preferences.favorite -> MaterialTheme.colorScheme.tertiary
+        else -> MaterialTheme.colorScheme.surfaceContainerHighest
+    }
+
+@Composable
 fun LocationCaption(
-    caption: String, isExpanded: Boolean,
+    caption: String, color: Color = MaterialTheme.colorScheme.surfaceDim, isExpanded: Boolean,
     onDiagramClick: () -> Unit = {},
     onForecastClick: () -> Unit = {},
     onExpandStateChanged: (isExpanded: Boolean) -> Unit = {},
 ) {
-    Surface (
-        color = MaterialTheme.colorScheme.surfaceDim,
-    ){
+    Surface(
+        color = color,
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -103,9 +124,9 @@ fun LocationCaption(
 }
 
 @Composable
-fun LocationData(weatherData: WeatherData) {
+fun LocationData(weatherData: WeatherData, backgroundColor: Color) {
     val formatter = DataFormatter()
-    Surface(color = MaterialTheme.colorScheme.surfaceVariant) {
+    Surface(color = backgroundColor) {
         Column(modifier = Modifier.padding(all = 4.dp)) {
             DataRow(label = stringResource(R.string.temperature), value = formatter.formatTemperatureForActivity(weatherData))
             DataRow(label = stringResource(R.string.humidity), value = formatter.formatHumidityForActivity(weatherData))
