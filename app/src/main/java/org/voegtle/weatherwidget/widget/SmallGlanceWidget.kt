@@ -2,9 +2,9 @@ package org.voegtle.weatherwidget.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-// import androidx.compose.ui.Modifier // Glance uses GlanceModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp // Added import for sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
@@ -20,17 +20,14 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
-// import androidx.glance.layout.Arrangement // Removed import
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
-import androidx.glance.layout.Spacer // Ensure this is present
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
-import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
-import androidx.glance.layout.width
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -79,12 +76,15 @@ class SmallGlanceWidget : GlanceAppWidget() {
                             modifier = GlanceModifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically // Optional: if you want the text vertically centered in its row
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Spacer(GlanceModifier.defaultWeight()) // This pushes the Text to the right
+                            Spacer(GlanceModifier.defaultWeight()) 
                             Text(
                                 text = DateUtil.currentTime,
-                                style = TextStyle(color = GlanceTheme.colors.onSurface)
+                                style = TextStyle(
+                                    color = GlanceTheme.colors.onSurface,
+                                    fontSize = 12.sp // Font size changed
+                                )
                             )
                         }
                     }
@@ -120,6 +120,7 @@ class SmallGlanceWidget : GlanceAppWidget() {
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
+                .clickable(onClick = actionStartActivity<WeatherActivity>()) // Added clickable modifier here
                 .padding(horizontal = 2.dp, vertical = 2.dp)
                 .background(determineRowBackground(locationDataSet)),
             verticalAlignment = Alignment.CenterVertically
