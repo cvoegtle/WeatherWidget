@@ -36,9 +36,12 @@ import androidx.glance.Image
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.size
 import androidx.glance.ColorFilter
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.background
 import androidx.glance.color.ColorProvider // Changed import
 import androidx.glance.unit.ColorProvider
+import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.util.DateUtil
 
 private const val WIDGET_DATA_KEY = "weather_lines"
@@ -56,7 +59,8 @@ class SmallGlanceWidget : GlanceAppWidget() {
         val locationDataSets = loadDataSetsFromPreferences()
 
         GlanceTheme {
-            Scaffold(backgroundColor = GlanceTheme.colors.surface) {
+            Scaffold(backgroundColor = GlanceTheme.colors.surface,
+                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>())) {
                 if (locationDataSets.isNotEmpty()) {
                     LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                         items(items = locationDataSets) { dataSet ->
