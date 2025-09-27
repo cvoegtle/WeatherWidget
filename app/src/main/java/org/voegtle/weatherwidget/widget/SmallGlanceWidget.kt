@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color // Added import
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -34,6 +35,11 @@ import org.voegtle.weatherwidget.util.DataFormatter
 import androidx.glance.Image
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.size
+import androidx.glance.ColorFilter
+import androidx.glance.background
+import androidx.glance.color.ColorProvider // Changed import
+import androidx.glance.unit.ColorProvider
+import org.voegtle.weatherwidget.util.DateUtil
 
 private const val WIDGET_DATA_KEY = "weather_lines"
 
@@ -50,7 +56,7 @@ class SmallGlanceWidget : GlanceAppWidget() {
         val locationDataSets = loadDataSetsFromPreferences()
 
         GlanceTheme {
-            Scaffold(backgroundColor = GlanceTheme.colors.surfaceVariant) {
+            Scaffold(backgroundColor = GlanceTheme.colors.surface) {
                 if (locationDataSets.isNotEmpty()) {
                     LazyColumn(modifier = GlanceModifier.fillMaxSize()) {
                         items(items = locationDataSets) { dataSet ->
@@ -78,7 +84,10 @@ class SmallGlanceWidget : GlanceAppWidget() {
     private fun WeatherRow(locationDataSet: LocationDataSet) {
         val formatter = DataFormatter()
         Row(
-            modifier = GlanceModifier.fillMaxSize().padding(horizontal = 2.dp, vertical = 2.dp).height(20.dp),
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .padding(horizontal = 2.dp, vertical = 2.dp)
+                .background(determineRowBackground(locationDataSet)),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -86,17 +95,42 @@ class SmallGlanceWidget : GlanceAppWidget() {
                 contentDescription = "Regenindikator",
                 modifier = GlanceModifier
                     .size(14.dp)
-                    .padding(top = 4.dp)
+                    .padding(top = 2.dp),
+                colorFilter = determineIconColor(locationDataSet)
             )
-
-            Spacer(modifier = GlanceModifier.width(4.dp)) // Abstand nach dem Icon/Platzhalter
             Text(
                 modifier = GlanceModifier.padding(start = 4.dp),
                 text = locationDataSet.weatherData.location_short + " " + formatter.formatTemperature(locationDataSet.weatherData.temperature),
-                style = TextStyle(fontWeight = FontWeight.Bold, color = GlanceTheme.colors.onSurface)
+                style = TextStyle(fontWeight = FontWeight.Bold, color = determineTextColor(locationDataSet))
             )
         }
     }
+
+    @Composable
+    private fun determineRowBackground(locationDataSet: LocationDataSet): ColorProvider =
+        when {
+            DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> GlanceTheme.colors.error
+            locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.primary
+            else -> GlanceTheme.colors.surface
+        }
+
+    @Composable
+    private fun determineIconColor(locationDataSet: LocationDataSet): ColorFilter =
+        when {
+            DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> ColorFilter.tint(GlanceTheme.colors.onError)
+            locationDataSet.weatherData.isRaining -> ColorFilter.tint(ColorProvider(Color.Blue, Color.Cyan))
+            locationDataSet.weatherLocation.preferences.favorite -> ColorFilter.tint(GlanceTheme.colors.onPrimary)
+            else -> ColorFilter.tint(GlanceTheme.colors.onSurface)
+        }
+
+    @Composable
+    private fun determineTextColor(locationDataSet: LocationDataSet): ColorProvider =
+        when {
+            DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> GlanceTheme.colors.onError
+            locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.onPrimary
+            else -> GlanceTheme.colors.onSurface
+        }
+
 }
 
 // This function is called by the worker to update the state
