@@ -11,14 +11,15 @@ import android.preference.PreferenceManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity // Import geändert/hinzugefügt
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import org.voegtle.weatherwidget.data.WeatherData
+import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
 import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
 import org.voegtle.weatherwidget.diagram.BonnDiagramActivity
@@ -43,12 +44,14 @@ import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
 import org.voegtle.weatherwidget.cache.StateCache
 import org.voegtle.weatherwidget.cache.WeatherDataCache
+import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.location.LocationDataSetFactory
+import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticUpdateWorker
 import org.voegtle.weatherwidget.util.UserFeedback
-import org.voegtle.weatherwidget.widget.ScreenPainterFactory
+import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
 
 class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var configuration: ApplicationSettings? = null
@@ -60,6 +63,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private var stateCache: StateCache? = null
     private var weatherDataCache: WeatherDataCache? = null
     private var locationDataSetFactory: LocationDataSetFactory? = null
+    private var locationSorter: LocationSorter? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +84,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         stateCache = StateCache(this)
         weatherDataCache = WeatherDataCache(this)
         locationDataSetFactory = LocationDataSetFactory(this)
+        locationSorter = LocationSorter(this)
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
@@ -235,8 +241,11 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         try {
             val weatherData = weatherDataCache!!.read()
             weatherData?.let {
-                updateLocations(it.weatherMap)
-                updateWidgets(it.weatherMap)
+                val locationDataSets = locationDataSetFactory!!.assembleLocationDataSets(configuration!!.locations, it.weatherMap)
+                locationSorter!!.sort(locationDataSets)
+
+                updateLocations(locationDataSets)
+                updateWidgets(locationDataSets)
 
                 showUserToast(it, showToast)
                 updateNotification(it)
@@ -248,19 +257,16 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     }
 
-    private fun updateWidgets(data: HashMap<LocationIdentifier, WeatherData>) {
-        val factory = ScreenPainterFactory(this, configuration!!)
-        val screenPainters = factory.createScreenPainters()
-        for (screenPainter in screenPainters) {
-            screenPainter.updateWidgetData(data)
-            screenPainter.showDataIsValid()
+    private fun updateWidgets(locationDataSets: List<LocationDataSet>) {
+        // Neue Logik, um das Glance-Widget zu aktualisieren
+        lifecycleScope.launch {
+            updateWeatherWidgetState(applicationContext, configuration!!, locationDataSets)
         }
     }
 
-    private fun updateLocations(data: HashMap<LocationIdentifier, WeatherData>) {
+    private fun updateLocations(locationDataSets: List<LocationDataSet>) {
         val container = locationContainer()
         val locationContainer = LocationContainer(applicationContext, container)
-        val locationDataSets = locationDataSetFactory!!.assembleLocationDataSets(configuration!!.locations, data)
         locationContainer.showWeatherData(locationDataSets,
             onDiagramClick = (::onDiagramClicked),
             onForecastClick = (::onForecastClicked),

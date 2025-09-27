@@ -12,13 +12,11 @@ import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
 data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, var statistics: Statistics?)
 
 class LocationContainer(val context: Context, private val container: ComposeView) {
-    private val locationSorter = LocationSorter(context)
 
     fun showWeatherData(locationDataSets: List<LocationDataSet>,
                         onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {},
                         onForecastClick: (forecastUrl: Uri) -> Unit = {},
                         onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }) {
-        locationSorter.sort(locationDataSets)
 
         container.setContent {
             WeatherWidgetTheme {
