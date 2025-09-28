@@ -260,7 +260,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private fun updateWidgets(locationDataSets: List<LocationDataSet>) {
         // Neue Logik, um das Glance-Widget zu aktualisieren
         lifecycleScope.launch {
-            updateWeatherWidgetState(applicationContext, configuration!!, locationDataSets)
+            updateWeatherWidgetState(applicationContext, locationDataSets)
         }
     }
 

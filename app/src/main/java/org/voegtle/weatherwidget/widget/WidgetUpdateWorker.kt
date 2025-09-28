@@ -35,7 +35,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
                 val locationDataSets = locationDataSetFactory.assembleLocationDataSets(configuration.locations, response.weatherMap)
                 locationSorter.sort(locationDataSets)
 
-                updateWeatherWidgetState(applicationContext, configuration, locationDataSets)
+                updateWeatherWidgetState(applicationContext, locationDataSets)
 
                 // Update notifications (optional, but good to keep)
                 updateNotification(response)

@@ -1,6 +1,7 @@
 package org.voegtle.weatherwidget.util
 
 import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.location.WeatherLocation
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -35,8 +36,9 @@ class DataFormatter {
     return builder.toString()
   }
 
-  fun formatWidgetLine(location: WeatherLocation, data: WeatherData, detailed: Boolean): String {
-    val weatherData = StringBuilder(location.shortName + " " + formatTemperature(data))
+  fun formatWidgetLine(locationDataSet: LocationDataSet, detailed: Boolean): String {
+    val data = locationDataSet.weatherData
+    val weatherData = StringBuilder(locationDataSet.weatherLocation.shortName + " " + formatTemperature(data))
     if (detailed) {
       weatherData.append(" | ")
       weatherData.append(formatPercent(data.humidity))

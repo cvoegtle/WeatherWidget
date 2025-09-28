@@ -3,11 +3,11 @@ package org.voegtle.weatherwidget.widget
 import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.util.DataFormatter
 
-class SmallGlanceWidget : BaseWeatherGlanceWidget() {
+class LargeGlanceWidget : BaseWeatherGlanceWidget() {
 
     override fun assembleWeatherText(
         locationDataSet: LocationDataSet,
         formatter: DataFormatter
-    ): String = formatter.formatWidgetLine(locationDataSet, false)
+    ): String = formatter.formatWidgetLine(locationDataSet, true)
 
 }
