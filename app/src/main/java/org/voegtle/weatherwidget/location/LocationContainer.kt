@@ -2,25 +2,26 @@ package org.voegtle.weatherwidget.location
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource.Companion.UserInput
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
+import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
@@ -34,7 +35,8 @@ class LocationContainer(val context: Context, private val container: ComposeView
         onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = {},
         onForecastClick: (forecastUrl: Uri) -> Unit = {},
         onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> },
-        onPullToRefresh: (overscrollAmount: Float) -> Unit = {}
+        onPullToRefresh: (overscrollAmount: Float) -> Unit = {},
+        onDataMiningButtonClick: () -> Unit = {} // Neuer Callback für den Button
     ) {
         container.setContent {
             WeatherWidgetTheme {
@@ -62,6 +64,21 @@ class LocationContainer(val context: Context, private val container: ComposeView
                             onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged
                         )
                         Spacer(modifier = Modifier.height(4.dp))
+                    }
+
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Button(onClick = {
+                                onDataMiningButtonClick()
+                            }) {
+                                Text(text = context.getString(R.string.data_mining))
+                            }
+                        }
                     }
                 }
             }

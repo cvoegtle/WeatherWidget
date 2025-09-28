@@ -277,7 +277,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             onDiagramClick = (::onDiagramClicked),
             onForecastClick = (::onForecastClicked),
             onExpandStateChanged = (::onExpandedClicked),
-            onPullToRefresh = (::onPullToRefresh))
+            onPullToRefresh = (::onPullToRefresh),
+            onDataMiningButtonClick = (::onDataMiningButtonClick))
     }
 
     private fun showUserToast(response: FetchAllResponse, showToast: Boolean) {
@@ -339,6 +340,14 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         if (overscrollAmount > 40) {
             updateAll(true)
         }
+    }
+
+    private fun onDataMiningButtonClick() {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW, Uri.parse(
+                "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing")
+        )
+        startActivity(browserIntent)
     }
 
     private fun locationContainer() = binding.locationContainer
