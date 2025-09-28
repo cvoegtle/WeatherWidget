@@ -52,7 +52,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     }
 
     private fun fetchWeatherDataFromServer(): FetchAllResponse {
-        if (configuration.locations.isEmpty() || configuration.secret.isNullOrEmpty()) {
+        if (configuration.locations.isEmpty()) {
             return FetchAllResponse(true, HashMap())
         }
         return weatherDataFetcher.fetchAllWeatherDataFromServer(configuration.locations, configuration.secret!!)
