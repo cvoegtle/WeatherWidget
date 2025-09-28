@@ -47,11 +47,13 @@ import org.voegtle.weatherwidget.cache.WeatherDataCache
 import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationSorter
+import org.voegtle.weatherwidget.util.DateUtil
 import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticUpdateWorker
 import org.voegtle.weatherwidget.util.UserFeedback
 import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
+import java.util.Date
 
 class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var configuration: ApplicationSettings? = null
@@ -136,9 +138,13 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         updateAll(true)
     }
 
+    private var timeOfLastUpdate: Date = DateUtil.yesterday
     fun updateAll(showToast: Boolean) {
-        updateWeather(showToast)
-        updateStatistics(false)
+        if (DateUtil.isMinimumTimeSinceLastUpdate(timeOfLastUpdate)) {
+            timeOfLastUpdate = Date()
+            updateWeather(showToast)
+            updateStatistics(false)
+        }
     }
 
     fun requestPermissions() {
@@ -270,7 +276,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         locationContainer.showWeatherData(locationDataSets,
             onDiagramClick = (::onDiagramClicked),
             onForecastClick = (::onForecastClicked),
-            onExpandStateChanged = (::onExpandedClicked))
+            onExpandStateChanged = (::onExpandedClicked),
+            onPullToRefresh = (::onPullToRefresh))
     }
 
     private fun showUserToast(response: FetchAllResponse, showToast: Boolean) {
@@ -325,6 +332,12 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             updateStatistics(false)
         } else {
             updateActivity(false)
+        }
+    }
+
+    private fun onPullToRefresh(overscrollAmount: Float) {
+        if (overscrollAmount > 40) {
+            updateAll(true)
         }
     }
 

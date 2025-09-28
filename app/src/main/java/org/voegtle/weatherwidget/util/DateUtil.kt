@@ -52,4 +52,7 @@ object DateUtil {
       }
 
   fun isOutdated(timestamp: Date): Boolean = getAge(timestamp) > 20 * 60
+  fun isMinimumTimeSinceLastUpdate(timeOfLastUpdate: Date): Boolean {
+    return getAge(timeOfLastUpdate)  > 3
+  }
 }
