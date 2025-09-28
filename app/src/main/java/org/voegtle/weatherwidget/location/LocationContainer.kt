@@ -29,7 +29,7 @@ class LocationContainer(val context: Context, private val container: ComposeView
                         LocationComposable(
                             dataSet,
                             onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged)
-                        Spacer(modifier = Modifier.height(2.dp))
+                        Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
             }
