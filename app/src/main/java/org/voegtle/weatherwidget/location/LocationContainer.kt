@@ -2,9 +2,13 @@ package org.voegtle.weatherwidget.location
 
 import android.content.Context
 import android.net.Uri
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
@@ -25,6 +29,7 @@ class LocationContainer(val context: Context, private val container: ComposeView
                         LocationComposable(
                             dataSet,
                             onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged)
+                        Spacer(modifier = Modifier.height(2.dp))
                     }
                 }
             }

@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.WbCloudy
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,17 +37,19 @@ fun LocationComposable(locationDataSet: LocationDataSet,
     onForecastClick: (forecastUrl: Uri) -> Unit = {},
     onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }
 ) {
-    Column {
-        LocationCaption(
-            locationDataSet.caption,
-            color = determineCaptionBackgroundColor(locationDataSet),
-            locationDataSet.statistics != null,
-            onDiagramClick = { onDiagramClick(locationDataSet.weatherData.location) },
-            onForecastClick = { locationDataSet.weatherData.forecast?.let { onForecastClick(it.toUri()) } },
-            onExpandStateChanged = { onExpandStateChanged(locationDataSet.weatherData.location, locationDataSet.statistics == null) }
-        )
-        LocationData(locationDataSet.weatherData, determineDataBackgroundColor(locationDataSet))
-        locationDataSet.statistics?.let { StatisticsComposable(it, determineStatisticsBackgroundColor(locationDataSet)) }
+    Card {
+        Column {
+            LocationCaption(
+                locationDataSet.caption,
+                color = determineCaptionBackgroundColor(locationDataSet),
+                locationDataSet.statistics != null,
+                onDiagramClick = { onDiagramClick(locationDataSet.weatherData.location) },
+                onForecastClick = { locationDataSet.weatherData.forecast?.let { onForecastClick(it.toUri()) } },
+                onExpandStateChanged = { onExpandStateChanged(locationDataSet.weatherData.location, locationDataSet.statistics == null) }
+            )
+            LocationData(locationDataSet.weatherData, determineDataBackgroundColor(locationDataSet))
+            locationDataSet.statistics?.let { StatisticsComposable(it, determineStatisticsBackgroundColor(locationDataSet)) }
+        }
     }
 }
 
