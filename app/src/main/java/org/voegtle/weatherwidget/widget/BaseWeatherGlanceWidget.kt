@@ -34,7 +34,6 @@ import androidx.glance.text.TextStyle
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.location.LocationDataSet
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
 import org.voegtle.weatherwidget.util.DataFormatter
 import androidx.glance.Image
 import androidx.glance.ColorFilter
@@ -186,6 +185,6 @@ suspend fun <T : GlanceAppWidget>updateWeatherWidgetState(context: Context, loca
             val key = stringPreferencesKey(WIDGET_DATA_KEY)
             prefs[key] = jsonLocationDataSets
         }
-        SmallGlanceWidget().update(context, glanceId)
+        provider.getDeclaredConstructor().newInstance().update(context, glanceId)
     }
 }
