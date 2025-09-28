@@ -28,10 +28,7 @@
   <string name="action_year">course of one year</string>
   <string name="app_author">by Christian Vögtle</string>
   <string name="app_details">Details of Wetter Wolke</string>
-  <string name="app_name_bonn">5. Temperature in Bonn</string>
-  <string name="app_name_freiburg">3. Temperature in Freiburg</string>
-  <string name="app_name_paderborn">4. Temperature in Paderborn</string>
-  <string name="app_name_small">2. Wetter Wolke compact</string>
+  <string name="app_name_temperature">Temperature</string>
   <string name="city_mobil_full">Freiburg Littenweiler</string>
   <string name="configure_stations">Configure stations</string>
   <string name="data_mining">Open in Google Sheets</string>
@@ -98,7 +95,7 @@
   <string name="wind_speed">Wind</string>
   <string name="yesterday">Yesterday</string>
   <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
-  <string name="app_name_large">1. Wetter Wolke XL</string>
+  <string name="app_name_weatherdetails">Weather details</string>
   <string name="message_location_permission_required">Ordering reset to standard (fix)</string>
   <string name="action_show_location">Assumed location</string>
   <string name="channel_name">Wetter Wolke</string>

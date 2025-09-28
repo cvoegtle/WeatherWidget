@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string-array name="fontSize">
-    <item name="10">S</item>
-    <item name="11">M (standard)</item>
-    <item name="12">L</item>
-    <item name="13">XL</item>
-    <item name="14">XXL</item>
-    <item name="16">XXXL</item>
-  </string-array>
-  <string-array name="fontSizeValues">
-    <item name="10">10</item>
-    <item name="11">11</item>
-    <item name="12">12</item>
-    <item name="13">13</item>
-    <item name="14">14</item>
-    <item name="16">16</item>
-  </string-array>
-
-  <string-array name="colorScheme">
-    <item name="dark">Mitternachts Schwarz</item>
-    <item name="light">Hell</item>
-  </string-array>
-  <string-array name="colorSchemeValues">
-    <item name="dark">dark</item>
-    <item name="light">light</item>
-  </string-array>
-
   <string-array name="orderCriteria">
     <item name="default">Standard (fest)</item>
     <item name="location">Ort</item>

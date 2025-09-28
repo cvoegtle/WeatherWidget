@@ -3,6 +3,7 @@ package org.voegtle.weatherwidget.widget
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp // Added import for sp
 import androidx.datastore.preferences.core.Preferences
@@ -47,7 +48,7 @@ import org.voegtle.weatherwidget.util.DateUtil
 
 private const val WIDGET_DATA_KEY = "weather_lines"
 
-abstract class BaseWeatherGlanceWidget : GlanceAppWidget() {
+abstract class BaseWeatherWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
@@ -62,7 +63,7 @@ abstract class BaseWeatherGlanceWidget : GlanceAppWidget() {
         GlanceTheme {
             Scaffold(
                 backgroundColor = GlanceTheme.colors.surface,
-                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>())
+                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>()).padding(top = 4.dp)
             ) {
                 if (locationDataSets.isNotEmpty()) {
                     Column(modifier = GlanceModifier.fillMaxSize()) { 
@@ -71,21 +72,7 @@ abstract class BaseWeatherGlanceWidget : GlanceAppWidget() {
                                 WeatherRow(dataSet)
                             }
                         }
-                        Row(
-                            modifier = GlanceModifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 8.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Spacer(GlanceModifier.defaultWeight()) 
-                            Text(
-                                text = DateUtil.currentTime,
-                                style = TextStyle(
-                                    color = GlanceTheme.colors.onSurface,
-                                    fontSize = 12.sp // Font size changed
-                                )
-                            )
-                        }
+                        LastUpdateTime()
                     }
                 } else {
                     Box(
@@ -133,14 +120,37 @@ abstract class BaseWeatherGlanceWidget : GlanceAppWidget() {
                 colorFilter = determineIconColor(locationDataSet)
             )
             Text(
-                modifier = GlanceModifier.padding(start = 4.dp),
+                modifier = GlanceModifier.padding(start = 2.dp),
                 text = assembleWeatherText(locationDataSet, formatter),
-                style = TextStyle(fontWeight = FontWeight.Bold, color = determineTextColor(locationDataSet))
+                style = TextStyle(color = determineTextColor(locationDataSet), fontSize = determineFontSize(), fontWeight = determineFontWeight())
             )
         }
     }
 
-    protected abstract fun assembleWeatherText(locationDataSet: LocationDataSet, formatter: DataFormatter): String
+    @Composable
+    private fun LastUpdateTime() {
+        Row(
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp, vertical = 2.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(GlanceModifier.defaultWeight())
+            Text(
+                text = DateUtil.currentTime,
+                style = TextStyle(
+                    color = GlanceTheme.colors.onSurface,
+                    fontSize = 11.sp
+                )
+            )
+        }
+    }
+
+    abstract fun assembleWeatherText(locationDataSet: LocationDataSet, formatter: DataFormatter): String
+
+    abstract fun determineFontSize(): TextUnit
+
+    abstract fun determineFontWeight(): FontWeight
 
     @Composable
     private fun determineRowBackground(locationDataSet: LocationDataSet): ColorProvider =
@@ -171,8 +181,8 @@ abstract class BaseWeatherGlanceWidget : GlanceAppWidget() {
 
 // This function is called by the worker to update the state
 suspend fun updateWeatherWidgetState(context: Context, locationDataSets: List<LocationDataSet>) {
-    updateWeatherWidgetState(context, locationDataSets, SmallGlanceWidget::class.java)
-    updateWeatherWidgetState(context, locationDataSets, LargeGlanceWidget::class.java)
+    updateWeatherWidgetState(context, locationDataSets, TemperatureWidget::class.java)
+    updateWeatherWidgetState(context, locationDataSets, WeatherDetailsWidget::class.java)
 }
 
 suspend fun <T : GlanceAppWidget>updateWeatherWidgetState(context: Context, locationDataSets: List<LocationDataSet>, provider: Class<T>) {
