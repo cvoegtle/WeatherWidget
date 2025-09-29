@@ -27,4 +27,8 @@ data class Statistics(val id: LocationIdentifier, val kind: String) {
   fun values(): Collection<StatisticsSet> {
     return statistics.values
   }
+
+  companion object {
+    val KIND_SOLARPOWER = "withSolarPower"
+  }
 }

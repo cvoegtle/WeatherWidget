@@ -1,10 +1,10 @@
 package org.voegtle.weatherwidget.location
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -32,87 +32,90 @@ data class ColumnVisibility(
 )
 
 private const val WEIGHT_LABEL = 1.1f
-private val MIN_LABEL = 100.dp
+private val MIN_LABEL = 80.dp
+private val WIDTH_VALUE = 61.dp // Max width for data columns
 private const val WEIGHT_RAIN = 0.6f
 private const val WEIGHT_MIN_TEMPERATURE = 0.7f
 private const val WEIGHT_MAX_TEMPERATURE = 0.7f
 private const val WEIGHT_MAX_SUN = 1.1f
-private const val WEIGHT_KWH = 0.9f
+private const val WEIGHT_KWH = 0.95f
 
 @Composable
 fun StatisticsComposable(statistics: Statistics, color: androidx.compose.ui.graphics.Color) {
     val visibility = detectVisibleColumns(statistics)
     Surface(color = color) {
-        Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(4.dp)) {
             StatisticsCaptionRow(visibility, statistics.kind)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.today), visibility)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.yesterday), visibility)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.last7days), visibility)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.last30days), visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.today), statistics.kind, visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.yesterday), statistics.kind, visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.last7days), statistics.kind, visibility)
+            StatisticsContentRow(statistics.get(Statistics.TimeRange.last30days), statistics.kind, visibility)
         }
     }
 }
 
+
 @Composable
 fun StatisticsCaptionRow(visibility: ColumnVisibility, kind: String) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = "", modifier = Modifier.widthIn(min = MIN_LABEL))
         if (visibility.rain) {
-            TextCaption(id = R.string.rain, modifier = Modifier.weight(WEIGHT_RAIN))
+            TextCaption(id = R.string.rain, modifier = Modifier.width(WIDTH_VALUE))
         }
         if (visibility.minTemperature) {
-            TextCaption(id = R.string.min_temperature, modifier = Modifier.weight(WEIGHT_MIN_TEMPERATURE))
+            TextCaption(id = R.string.min_temperature, modifier = Modifier.width(WIDTH_VALUE))
         }
         if (visibility.maxTemperature) {
-            TextCaption(id = R.string.max_temperature, modifier = Modifier.weight(WEIGHT_MAX_TEMPERATURE))
+            TextCaption(id = R.string.max_temperature, modifier = Modifier.width(WIDTH_VALUE))
         }
         if (visibility.solarRadiationMax) {
-            val captionId = if (kind == "withSolarPower") R.string.max_power_caption else R.string.solar_caption
+            val captionId = if (kind == Statistics.KIND_SOLARPOWER) R.string.max_power_caption else R.string.solar_caption
             TextCaption(id = captionId, modifier = Modifier.weight(WEIGHT_MAX_SUN))
         }
         if (visibility.kwh) {
-            val captionId = if (kind == "withSolarPower") R.string.kwh else R.string.solar_cummulated_caption
+            val captionId = if (kind == Statistics.KIND_SOLARPOWER) R.string.kwh else R.string.solar_cummulated_caption
             TextCaption(id = captionId, modifier = Modifier.weight(WEIGHT_KWH))
         }
     }
 }
 
 @Composable
-fun StatisticsContentRow(statisticsSet: StatisticsSet?, visibility: ColumnVisibility) {
+fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility: ColumnVisibility) {
     val context = LocalContext.current
     Row(
-        modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         statisticsSet?.let { statisticsSet ->
             val formatter = DataFormatter()
-            TextCaption(id = timeRange2TextId(statisticsSet.range), textAlign = TextAlign.Start,
-                modifier = Modifier.widthIn(min = MIN_LABEL))
+            TextCaption(
+                id = timeRange2TextId(statisticsSet.range), textAlign = TextAlign.Start,
+                modifier = Modifier.widthIn(min = MIN_LABEL)
+            )
             if (visibility.rain) {
-                TextContent(text = formatter.formatRain(statisticsSet.rain), modifier = Modifier.weight(WEIGHT_RAIN))
+                TextContent(text = formatter.formatRain(statisticsSet.rain), modifier = Modifier.width(WIDTH_VALUE))
             }
             if (visibility.minTemperature) {
                 TextContent(
                     text = formatter.formatTemperature(statisticsSet.minTemperature),
-                    modifier = Modifier.weight(WEIGHT_MIN_TEMPERATURE)
+                    modifier = Modifier.width(WIDTH_VALUE)
                 )
             }
             if (visibility.maxTemperature) {
                 TextContent(
-                    text = formatter.formatTemperature(statisticsSet.maxTemperature), modifier = Modifier.weight(
-                        WEIGHT_MAX_TEMPERATURE
-                    )
+                    text = formatter.formatTemperature(statisticsSet.maxTemperature), modifier = Modifier.width(WIDTH_VALUE)
                 )
             }
             if (visibility.solarRadiationMax) {
+                val maxPower = if (kind == Statistics.KIND_SOLARPOWER)
+                    formatter.formatWatt(statisticsSet.solarRadiationMax)
+                else
+                    formatter.formatSolarradiation(statisticsSet.solarRadiationMax)
                 TextContent(
-                    text = formatter.formatSolarradiation(statisticsSet.solarRadiationMax), modifier = Modifier.weight(
-                        WEIGHT_MAX_SUN
-                    )
-                )
+                    text = maxPower, modifier = Modifier.weight(WEIGHT_MAX_SUN))
             }
             if (visibility.kwh) {
                 TextContent(text = formatter.formatKwhShort(statisticsSet.kwh), modifier = Modifier.weight(WEIGHT_KWH))
