@@ -7,6 +7,10 @@ import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
 
+private const val SEPARATOR_SLIM = "|"
+
+private const val SEPARATOR_WIDE = " | "
+
 class DataFormatter {
   private val numberFormat = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
   private val numberFormatShort = NumberFormat.getNumberInstance(Locale.GERMANY) as DecimalFormat
@@ -38,12 +42,13 @@ class DataFormatter {
 
   fun formatWidgetLine(locationDataSet: LocationDataSet, detailed: Boolean): String {
     val data = locationDataSet.weatherData
+    val separator = if (data.rainToday != null) SEPARATOR_SLIM else SEPARATOR_WIDE
     val weatherData = StringBuilder(locationDataSet.weatherLocation.shortName + " " + formatTemperature(data))
     if (detailed) {
-      weatherData.append(" | ")
+      weatherData.append(separator)
       weatherData.append(formatPercent(data.humidity))
       data.rainToday?.let {
-        weatherData.append(" | ").append(formatRain(it))
+        weatherData.append(separator).append(formatRain(it))
       }
     }
 

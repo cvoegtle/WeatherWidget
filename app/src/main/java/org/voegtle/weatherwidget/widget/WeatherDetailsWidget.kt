@@ -13,7 +13,8 @@ class WeatherDetailsWidget : BaseWeatherWidget() {
         formatter: DataFormatter
     ): String = formatter.formatWidgetLine(locationDataSet, true)
 
-    override fun determineFontSize(): TextUnit = 13.sp
+    override fun determineFontSize(locationDataSets: List<LocationDataSet>) =
+        if (locationDataSets.any { it.weatherData.rainToday != null })  12.sp else 13.sp
     override fun determineFontWeight(): FontWeight = FontWeight.Normal
 
 }

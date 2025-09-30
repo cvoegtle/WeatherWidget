@@ -40,8 +40,10 @@ import androidx.glance.Image
 import androidx.glance.ColorFilter
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
+import androidx.glance.layout.height
 import androidx.glance.unit.ColorProvider
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.util.DateUtil
@@ -59,6 +61,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     @Composable
     private fun Content() {
         val locationDataSets = loadDataSetsFromPreferences()
+        val fontSize = determineFontSize(locationDataSets)
 
         GlanceTheme {
             Scaffold(
@@ -66,25 +69,18 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                 modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>()).padding(top = 4.dp)
             ) {
                 if (locationDataSets.isNotEmpty()) {
-                    Column(modifier = GlanceModifier.fillMaxSize()) { 
+                    Column(modifier = GlanceModifier.fillMaxSize()) {
                         LazyColumn(GlanceModifier.defaultWeight()) {
                             items(items = locationDataSets) { dataSet ->
-                                WeatherRow(dataSet)
+                                Column(modifier = GlanceModifier.padding(vertical = 2.dp)) {
+                                    WeatherRow(dataSet, fontSize)
+                                }
                             }
                         }
                         LastUpdateTime()
                     }
                 } else {
-                    Box(
-                        modifier = GlanceModifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Laden...",
-                            modifier = GlanceModifier.padding(8.dp),
-                            style = TextStyle(color = GlanceTheme.colors.onSurface)
-                        )
-                    }
+                    PlaceHolder()
                 }
             }
         }
@@ -101,14 +97,15 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun WeatherRow(locationDataSet: LocationDataSet) {
+    private fun WeatherRow(locationDataSet: LocationDataSet, fontSize: TextUnit) {
         val formatter = DataFormatter()
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
-                .clickable(onClick = actionStartActivity<WeatherActivity>()) // Added clickable modifier here
-                .padding(horizontal = 2.dp, vertical = 2.dp)
-                .background(determineRowBackground(locationDataSet)),
+                .clickable(onClick = actionStartActivity<WeatherActivity>())
+                .background(determineRowBackground(locationDataSet))
+                .padding(horizontal = 2.dp)
+                .cornerRadius(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -116,13 +113,13 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                 contentDescription = "Regenindikator",
                 modifier = GlanceModifier
                     .size(13.dp)
-                    .padding(top = 2.dp),
+                    .padding(top = 1.dp),
                 colorFilter = determineIconColor(locationDataSet)
             )
             Text(
                 modifier = GlanceModifier.padding(start = 2.dp),
                 text = assembleWeatherText(locationDataSet, formatter),
-                style = TextStyle(color = determineTextColor(locationDataSet), fontSize = determineFontSize(), fontWeight = determineFontWeight())
+                style = TextStyle(color = determineTextColor(locationDataSet), fontSize = fontSize, fontWeight = determineFontWeight())
             )
         }
     }
@@ -146,9 +143,23 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         }
     }
 
+    @Composable
+    private fun PlaceHolder() {
+        Box(
+            modifier = GlanceModifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Laden...",
+                modifier = GlanceModifier.padding(8.dp),
+                style = TextStyle(color = GlanceTheme.colors.onSurface)
+            )
+        }
+    }
+
     abstract fun assembleWeatherText(locationDataSet: LocationDataSet, formatter: DataFormatter): String
 
-    abstract fun determineFontSize(): TextUnit
+    abstract fun determineFontSize(locationDataSets: List<LocationDataSet>): TextUnit
 
     abstract fun determineFontWeight(): FontWeight
 
@@ -157,7 +168,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         when {
             DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> GlanceTheme.colors.error
             locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.primary
-            else -> GlanceTheme.colors.surface
+            else -> GlanceTheme.colors.surfaceVariant
         }
 
     @Composable
@@ -185,7 +196,7 @@ suspend fun updateWeatherWidgetState(context: Context, locationDataSets: List<Lo
     updateWeatherWidgetState(context, locationDataSets, WeatherDetailsWidget::class.java)
 }
 
-suspend fun <T : GlanceAppWidget>updateWeatherWidgetState(context: Context, locationDataSets: List<LocationDataSet>, provider: Class<T>) {
+suspend fun <T : GlanceAppWidget> updateWeatherWidgetState(context: Context, locationDataSets: List<LocationDataSet>, provider: Class<T>) {
     val widgetRelevantLocationDataSets = locationDataSets.filter { it.weatherLocation.preferences.showInWidget }.toList()
     val glanceManager = GlanceAppWidgetManager(context)
     val glanceIds = glanceManager.getGlanceIds(provider)

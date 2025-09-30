@@ -13,7 +13,7 @@ class TemperatureWidget : BaseWeatherWidget() {
         formatter: DataFormatter
     ): String = formatter.formatWidgetLine(locationDataSet, false)
 
-    override fun determineFontSize(): TextUnit = 17.sp
+    override fun determineFontSize(locationDataSets: List<LocationDataSet>): TextUnit = 17.sp
     override fun determineFontWeight(): FontWeight = FontWeight.Bold
 
 }

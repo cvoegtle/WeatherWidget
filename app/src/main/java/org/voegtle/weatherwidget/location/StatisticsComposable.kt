@@ -32,8 +32,8 @@ data class ColumnVisibility(
 )
 
 private const val WEIGHT_LABEL = 1.1f
-private val MIN_LABEL = 80.dp
-private val WIDTH_VALUE = 61.dp // Max width for data columns
+private val MIN_LABEL = 78.dp
+private val WIDTH_VALUE = 58.dp // Max width for data columns
 private const val WEIGHT_RAIN = 0.6f
 private const val WEIGHT_MIN_TEMPERATURE = 0.7f
 private const val WEIGHT_MAX_TEMPERATURE = 0.7f
