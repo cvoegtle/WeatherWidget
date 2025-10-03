@@ -5,17 +5,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
@@ -29,19 +33,17 @@ data class ColumnVisibility(
     val maxTemperature: Boolean = true,
     val solarRadiationMax: Boolean = false,
     val kwh: Boolean = false
-)
+) {
+    fun onlyBasicColumns() = !(solarRadiationMax || kwh)
+}
 
-private const val WEIGHT_LABEL = 1.1f
 private val MIN_LABEL = 78.dp
 private val WIDTH_VALUE = 58.dp // Max width for data columns
-private const val WEIGHT_RAIN = 0.6f
-private const val WEIGHT_MIN_TEMPERATURE = 0.7f
-private const val WEIGHT_MAX_TEMPERATURE = 0.7f
 private const val WEIGHT_MAX_SUN = 1.1f
 private const val WEIGHT_KWH = 0.95f
 
 @Composable
-fun StatisticsComposable(statistics: Statistics, color: androidx.compose.ui.graphics.Color) {
+fun StatisticsComposable(statistics: Statistics, color: Color) {
     val visibility = detectVisibleColumns(statistics)
     Surface(color = color) {
         Column(modifier = Modifier
@@ -56,21 +58,23 @@ fun StatisticsComposable(statistics: Statistics, color: androidx.compose.ui.grap
     }
 }
 
-
 @Composable
 fun StatisticsCaptionRow(visibility: ColumnVisibility, kind: String) {
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = "", modifier = Modifier.widthIn(min = MIN_LABEL))
+        val labelColumnWidth = calculateColumnWidth("Yesterday", visibility)
+        Text(text = "", modifier = Modifier.width(labelColumnWidth))
+
+        val fixedColumnWidth = calculateColumnWidth("Regen", visibility)
         if (visibility.rain) {
-            TextCaption(id = R.string.rain, modifier = Modifier.width(WIDTH_VALUE))
+            TextCaption(id = R.string.rain, modifier = Modifier.width(fixedColumnWidth))
         }
         if (visibility.minTemperature) {
-            TextCaption(id = R.string.min_temperature, modifier = Modifier.width(WIDTH_VALUE))
+            TextCaption(id = R.string.min_temperature, modifier = Modifier.width(fixedColumnWidth))
         }
         if (visibility.maxTemperature) {
-            TextCaption(id = R.string.max_temperature, modifier = Modifier.width(WIDTH_VALUE))
+            TextCaption(id = R.string.max_temperature, modifier = Modifier.width(fixedColumnWidth))
         }
         if (visibility.solarRadiationMax) {
             val captionId = if (kind == Statistics.KIND_SOLARPOWER) R.string.max_power_caption else R.string.solar_caption
@@ -85,28 +89,29 @@ fun StatisticsCaptionRow(visibility: ColumnVisibility, kind: String) {
 
 @Composable
 fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility: ColumnVisibility) {
-    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically
     ) {
         statisticsSet?.let { statisticsSet ->
             val formatter = DataFormatter()
+            val labelColumnWidth = calculateColumnWidth("Yesterday", visibility)
             TextCaption(
                 id = timeRange2TextId(statisticsSet.range), textAlign = TextAlign.Start,
-                modifier = Modifier.widthIn(min = MIN_LABEL)
+                modifier = Modifier.width(labelColumnWidth)
             )
+            val fixedColumnWidth = calculateColumnWidth("Regen", visibility)
             if (visibility.rain) {
-                TextContent(text = formatter.formatRain(statisticsSet.rain), modifier = Modifier.width(WIDTH_VALUE))
+                TextContent(text = formatter.formatRain(statisticsSet.rain), modifier = Modifier.width(fixedColumnWidth))
             }
             if (visibility.minTemperature) {
                 TextContent(
                     text = formatter.formatTemperature(statisticsSet.minTemperature),
-                    modifier = Modifier.width(WIDTH_VALUE)
+                    modifier = Modifier.width(fixedColumnWidth)
                 )
             }
             if (visibility.maxTemperature) {
                 TextContent(
-                    text = formatter.formatTemperature(statisticsSet.maxTemperature), modifier = Modifier.width(WIDTH_VALUE)
+                    text = formatter.formatTemperature(statisticsSet.maxTemperature), modifier = Modifier.width(fixedColumnWidth)
                 )
             }
             if (visibility.solarRadiationMax) {
@@ -126,12 +131,20 @@ fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility
 
 @Composable
 fun TextCaption(id: Int, textAlign: TextAlign = TextAlign.End, modifier: Modifier) {
-    Text(text = stringResource(id = id), textAlign = textAlign, fontWeight = FontWeight.Bold, modifier = modifier)
+    Text(text = stringResource(id = id), textAlign = textAlign, fontWeight = FontWeight.Bold, fontSize = MaterialTheme.typography.bodyLarge.fontSize, modifier = modifier)
 }
 
 @Composable
 fun TextContent(text: String, modifier: Modifier) {
     Text(text = text, textAlign = TextAlign.End, style = MaterialTheme.typography.bodyMedium, modifier = modifier)
+}
+
+@Composable
+fun calculateColumnWidth(text: String, visibility: ColumnVisibility): Dp {
+    val textMeasurer = rememberTextMeasurer()
+    val textLayoutResult = textMeasurer.measure(text = text,
+        style = TextStyle(fontSize = MaterialTheme.typography.bodyLarge.fontSize, fontWeight = FontWeight.Bold))
+    return with( LocalDensity.current) { textLayoutResult.size.width.toDp() + 5.dp + if (visibility.onlyBasicColumns()) 5.dp else 0.dp }
 }
 
 
