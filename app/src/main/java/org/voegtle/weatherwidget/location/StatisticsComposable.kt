@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,9 +19,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
@@ -37,32 +38,26 @@ data class ColumnVisibility(
     fun onlyBasicColumns() = !(solarRadiationMax || kwh)
 }
 
-private val MIN_LABEL = 78.dp
-private val WIDTH_VALUE = 58.dp // Max width for data columns
 private const val WEIGHT_MAX_SUN = 1.1f
-private const val WEIGHT_KWH = 0.95f
+private const val WEIGHT_KWH = 1.0f
 
 @Composable
 fun StatisticsComposable(statistics: Statistics, color: Color) {
     val visibility = detectVisibleColumns(statistics)
     Surface(color = color) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(4.dp)) {
-            StatisticsCaptionRow(visibility, statistics.kind)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.today), statistics.kind, visibility)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.yesterday), statistics.kind, visibility)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.last7days), statistics.kind, visibility)
-            StatisticsContentRow(statistics.get(Statistics.TimeRange.last30days), statistics.kind, visibility)
+        Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
+            StatisticsCaptionRow(statistics.kind, visibility)
+            StatisticsContentRow(statistics[Statistics.TimeRange.today], statistics.kind, visibility)
+            StatisticsContentRow(statistics[Statistics.TimeRange.yesterday], statistics.kind, visibility)
+            StatisticsContentRow(statistics[Statistics.TimeRange.last7days], statistics.kind, visibility)
+            StatisticsContentRow(statistics[Statistics.TimeRange.last30days], statistics.kind, visibility)
         }
     }
 }
 
 @Composable
-fun StatisticsCaptionRow(visibility: ColumnVisibility, kind: String) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+fun StatisticsCaptionRow(kind: String, visibility: ColumnVisibility) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         val labelColumnWidth = calculateColumnWidth("Yesterday", visibility)
         Text(text = "", modifier = Modifier.width(labelColumnWidth))
 
@@ -110,24 +105,15 @@ fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility
                 )
             }
             if (visibility.maxTemperature) {
-                TextContent(
-                    text = formatter.formatTemperature(statisticsSet.maxTemperature), modifier = Modifier.width(fixedColumnWidth)
+                TextContent(text = formatter.formatTemperature(statisticsSet.maxTemperature), modifier = Modifier.width(fixedColumnWidth)
                 )
             }
             if (visibility.solarRadiationMax) {
-                val maxPower = if (kind == Statistics.KIND_SOLARPOWER)
-                    formatter.formatWatt(statisticsSet.solarRadiationMax)
-                else
-                    formatter.formatSolarradiation(statisticsSet.solarRadiationMax)
-                TextContent(
-                    text = maxPower, modifier = Modifier.weight(WEIGHT_MAX_SUN))
+                val maxPower = getMaxPowerText(kind, statisticsSet)
+                TextContent(text = maxPower, modifier = Modifier.weight(WEIGHT_MAX_SUN))
             }
             if (visibility.kwh) {
-                val totalPower = if (kind == Statistics.KIND_SOLARPOWER)
-                    formatter.formatKwhShort(statisticsSet.kwh)
-                else
-                    formatter.formatKwh(statisticsSet.kwh)
-
+                val totalPower = getTotalPowerText(kind, statisticsSet)
                 TextContent(text = totalPower, modifier = Modifier.weight(WEIGHT_KWH))
             }
         }
@@ -152,6 +138,23 @@ fun calculateColumnWidth(text: String, visibility: ColumnVisibility): Dp {
     return with( LocalDensity.current) { textLayoutResult.size.width.toDp() + 5.dp + if (visibility.onlyBasicColumns()) 5.dp else 0.dp }
 }
 
+private fun getTotalPowerText(kind: String, statisticsSet: StatisticsSet): String {
+    val formatter = DataFormatter()
+    val totalPower = if (kind == Statistics.KIND_SOLARPOWER)
+        formatter.formatKwhShort(statisticsSet.kwh)
+    else
+        formatter.formatKwh(statisticsSet.kwh)
+    return totalPower
+}
+
+private fun getMaxPowerText(kind: String, statisticsSet: StatisticsSet): String {
+    val formatter = DataFormatter()
+    val maxPower = if (kind == Statistics.KIND_SOLARPOWER)
+        formatter.formatWatt(statisticsSet.solarRadiationMax)
+    else
+        formatter.formatSolarradiation(statisticsSet.solarRadiationMax)
+    return maxPower
+}
 
 fun detectVisibleColumns(statistics: Statistics): ColumnVisibility {
     return ColumnVisibility(

@@ -3,6 +3,7 @@ package org.voegtle.weatherwidget.widget
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp // Added import for sp
@@ -43,7 +44,6 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
-import androidx.glance.layout.height
 import androidx.glance.unit.ColorProvider
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.util.DateUtil
@@ -72,7 +72,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                     Column(modifier = GlanceModifier.fillMaxSize()) {
                         LazyColumn(GlanceModifier.defaultWeight()) {
                             items(items = locationDataSets) { dataSet ->
-                                Column(modifier = GlanceModifier.padding(vertical = 2.dp)) {
+                                Column(modifier = GlanceModifier.padding(vertical = determineGap())) {
                                     WeatherRow(dataSet, fontSize)
                                 }
                             }
@@ -162,6 +162,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     abstract fun determineFontSize(locationDataSets: List<LocationDataSet>): TextUnit
 
     abstract fun determineFontWeight(): FontWeight
+
+    abstract fun determineGap(): Dp
 
     @Composable
     private fun determineRowBackground(locationDataSet: LocationDataSet): ColorProvider =

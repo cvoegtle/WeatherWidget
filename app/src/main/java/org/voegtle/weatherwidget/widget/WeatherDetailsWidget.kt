@@ -1,6 +1,8 @@
 package org.voegtle.weatherwidget.widget
 
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.text.FontWeight
 import org.voegtle.weatherwidget.location.LocationDataSet
@@ -16,5 +18,6 @@ class WeatherDetailsWidget : BaseWeatherWidget() {
     override fun determineFontSize(locationDataSets: List<LocationDataSet>) =
         if (locationDataSets.any { it.weatherData.rainToday != null })  12.sp else 13.sp
     override fun determineFontWeight(): FontWeight = FontWeight.Normal
+    override fun determineGap(): Dp = 3.dp
 
 }
