@@ -70,7 +70,7 @@ class LocationContainer(val context: Context, private val container: ComposeView
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(top = 8.dp, bottom = 16.dp),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Button(onClick = {
