@@ -149,11 +149,7 @@ private fun getTotalPowerText(kind: String, statisticsSet: StatisticsSet): Strin
 
 private fun getMaxPowerText(kind: String, statisticsSet: StatisticsSet): String {
     val formatter = DataFormatter()
-    val maxPower = if (kind == Statistics.KIND_SOLARPOWER)
-        formatter.formatWatt(statisticsSet.solarRadiationMax)
-    else
-        formatter.formatSolarradiation(statisticsSet.solarRadiationMax)
-    return maxPower
+    return formatter.formatWatt(statisticsSet.solarRadiationMax)
 }
 
 fun detectVisibleColumns(statistics: Statistics): ColumnVisibility {

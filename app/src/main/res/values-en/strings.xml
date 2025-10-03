@@ -112,7 +112,7 @@
   <string name="barometer">Barometer</string>
   <string name="solarradiation">Solar radiation</string>
   <string name="uvindex">UV index</string>
-  <string name="solar_caption">Max Sun</string>
+  <string name="solar_caption">Max P/m²</string>
   <string name="solar_cummulated_caption">∑ Sun</string>
   <string name="action_barometer">Barometer</string>
   <string name="power_production">Power production</string>
