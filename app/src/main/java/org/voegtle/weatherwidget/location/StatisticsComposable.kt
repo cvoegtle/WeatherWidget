@@ -123,7 +123,12 @@ fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility
                     text = maxPower, modifier = Modifier.weight(WEIGHT_MAX_SUN))
             }
             if (visibility.kwh) {
-                TextContent(text = formatter.formatKwhShort(statisticsSet.kwh), modifier = Modifier.weight(WEIGHT_KWH))
+                val totalPower = if (kind == Statistics.KIND_SOLARPOWER)
+                    formatter.formatKwhShort(statisticsSet.kwh)
+                else
+                    formatter.formatKwh(statisticsSet.kwh)
+
+                TextContent(text = totalPower, modifier = Modifier.weight(WEIGHT_KWH))
             }
         }
     }
