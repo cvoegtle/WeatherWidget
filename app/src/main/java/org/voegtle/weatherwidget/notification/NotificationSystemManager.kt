@@ -18,7 +18,7 @@ import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.DateUtil
@@ -26,7 +26,7 @@ import org.voegtle.weatherwidget.util.FetchAllResponse
 import kotlin.math.max
 
 
-class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
+class NotificationSystemManager(private val context: Context, private val configuration: ApplicationPreferences) {
     private val INFO_ID = 2
     private val CHANNEL_ID = "wetterwolke"
 

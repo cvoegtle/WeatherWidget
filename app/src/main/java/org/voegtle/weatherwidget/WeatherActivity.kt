@@ -36,12 +36,12 @@ import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.preferences.NotificationSettings
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
-import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
+import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.cache.StateCache
 import org.voegtle.weatherwidget.cache.WeatherDataCache
 import org.voegtle.weatherwidget.location.LocationDataSet
@@ -56,7 +56,7 @@ import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
 import java.util.Date
 
 class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private var configuration: ApplicationSettings? = null
+    private var configuration: ApplicationPreferences? = null
 
     private lateinit var binding: ActivityWeatherBinding
     private var locationOrderStore: LocationOrderStore? = null
@@ -90,8 +90,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
-        val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
-        configuration = weatherSettingsReader.read(preferences)
+        val weatherPreferencesReader = WeatherPreferencesReader(this.applicationContext)
+        configuration = weatherPreferencesReader.read(preferences)
         requestPermissions()
         enableNotificationsIfPermitted()
     }

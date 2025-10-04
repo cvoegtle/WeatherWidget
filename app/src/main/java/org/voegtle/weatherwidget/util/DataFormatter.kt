@@ -2,12 +2,11 @@ package org.voegtle.weatherwidget.util
 
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationDataSet
-import org.voegtle.weatherwidget.location.WeatherLocation
+import org.voegtle.weatherwidget.preferences.WidgetPreferences
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
-
-private const val SEPARATOR_SLIM = "|"
+import kotlin.math.min
 
 private const val SEPARATOR_WIDE = " | "
 
@@ -40,23 +39,43 @@ class DataFormatter {
     return builder.toString()
   }
 
-  fun formatWidgetLine(locationDataSet: LocationDataSet, detailed: Boolean): String {
+  fun formatWidgetLine(locationDataSet: LocationDataSet): String {
     val data = locationDataSet.weatherData
-    val separator = if (data.rainToday != null) SEPARATOR_SLIM else SEPARATOR_WIDE
-    val weatherData = StringBuilder(locationDataSet.weatherLocation.shortName + " " + formatTemperature(data))
-    if (detailed) {
-      weatherData.append(separator)
-      weatherData.append(formatPercent(data.humidity))
-      data.rainToday?.let {
-        weatherData.append(separator).append(formatRain(it))
-      }
-    }
-
+    val weatherData = StringBuilder(locationDataSet.weatherLocation.shortName + " " + formatTemperature(data.temperature))
     return weatherData.toString()
   }
 
-  fun formatTemperature(data: WeatherData): String {
-    return formatTemperature(data.temperature)
+  fun formatWidgetLine(locationDataSet: LocationDataSet, widgetPreferences: WidgetPreferences): String {
+    val data = locationDataSet.weatherData
+    val weatherData = StringBuilder(locationDataSet.weatherLocation.shortName + " ")
+    val weatherValues = translateToArray(widgetPreferences, data)
+
+    if (weatherValues.isNotEmpty()) {
+      weatherData.append(weatherValues[0])
+      for (i in 1 until min(widgetPreferences.numberOfItems,  weatherValues.size)) {
+        weatherData.append(SEPARATOR_WIDE).append(weatherValues[i])
+      }
+    }
+    return weatherData.toString()
+  }
+
+  private fun translateToArray(
+      widgetPreferences: WidgetPreferences,
+      data: WeatherData
+  ): ArrayList<String> {
+    val weatherValues = ArrayList<String>()
+
+    data.temperature.takeIf { widgetPreferences.showTemperature }?.let { weatherValues.add(formatTemperature(it)) }
+    data.rainToday?.takeIf { widgetPreferences.showRain && it > 0.0f }?.let { weatherValues.add(formatRain(it)) }
+    data.rain?.takeIf { widgetPreferences.showRainLastHour && it > 0.0f }?.let { weatherValues.add(formatRain(it)) }
+    data.wind?.takeIf { widgetPreferences.showWindSpeed && it > 0.0f }?.let { weatherValues.add(formatWind(it)) }
+    data.windgust?.takeIf { widgetPreferences.showWindGust && it > 0.0f }?.let { weatherValues.add(formatWind(it)) }
+    data.solarradiation?.takeIf { widgetPreferences.showCurrentRadiation && it > 0.0f }?.let {weatherValues.add(formatWatt(it))}
+    data.powerProduction?.takeIf { widgetPreferences.showCurrentRadiation && it > 0.0f }?.let { weatherValues.add(formatWatt(it))}
+    data.humidity.takeIf { widgetPreferences.showHumidity }?.let { weatherValues.add(formatPercent(it)) }
+    data.barometer.takeIf { widgetPreferences.showPressure }?.let { weatherValues.add(formatBarometer(it)) }
+
+    return weatherValues
   }
 
   fun formatTemperature(temperature: Float?): String = if (temperature != null) numberFormat.format(temperature) + "°C" else ""

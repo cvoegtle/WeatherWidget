@@ -6,20 +6,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp // Added import for sp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
+import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
+import androidx.glance.background
+import androidx.glance.color.ColorProvider
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -33,19 +40,14 @@ import androidx.glance.layout.size
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
+import androidx.glance.unit.ColorProvider
+import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.location.LocationDataSet
-import org.voegtle.weatherwidget.util.DataFormatter
-import androidx.glance.Image
-import androidx.glance.ColorFilter
-import androidx.glance.action.actionStartActivity
-import androidx.glance.action.clickable
-import androidx.glance.appwidget.cornerRadius
-import androidx.glance.background
-import androidx.glance.color.ColorProvider
-import androidx.glance.unit.ColorProvider
 import org.voegtle.weatherwidget.WeatherActivity
+import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
+import org.voegtle.weatherwidget.preferences.WidgetPreferences
 import org.voegtle.weatherwidget.util.DateUtil
 
 private const val WIDGET_DATA_KEY = "weather_lines"
@@ -54,14 +56,15 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
-            Content()
+            Content(context)
         }
     }
 
     @Composable
-    private fun Content() {
+    private fun Content(context: Context) {
+        val widgetPreferences = readPreferences(context)
         val locationDataSets = loadDataSetsFromPreferences()
-        val fontSize = determineFontSize(locationDataSets)
+        val fontSize = determineFontSize(locationDataSets, widgetPreferences)
 
         GlanceTheme {
             Scaffold(
@@ -73,7 +76,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                         LazyColumn(GlanceModifier.defaultWeight()) {
                             items(items = locationDataSets) { dataSet ->
                                 Column(modifier = GlanceModifier.padding(vertical = determineGap())) {
-                                    WeatherRow(dataSet, fontSize)
+                                    WeatherRow(dataSet, fontSize, context)
                                 }
                             }
                         }
@@ -97,8 +100,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun WeatherRow(locationDataSet: LocationDataSet, fontSize: TextUnit) {
-        val formatter = DataFormatter()
+    private fun WeatherRow(locationDataSet: LocationDataSet, fontSize: TextUnit, context: Context) {
+        val widgetPreferences = readPreferences(context)
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
@@ -118,7 +121,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
             )
             Text(
                 modifier = GlanceModifier.padding(start = 2.dp),
-                text = assembleWeatherText(locationDataSet, formatter),
+                text = assembleWeatherText(locationDataSet, widgetPreferences),
                 style = TextStyle(color = determineTextColor(locationDataSet), fontSize = fontSize, fontWeight = determineFontWeight())
             )
         }
@@ -157,9 +160,11 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         }
     }
 
-    abstract fun assembleWeatherText(locationDataSet: LocationDataSet, formatter: DataFormatter): String
+    @Composable
+    abstract fun assembleWeatherText(locationDataSet: LocationDataSet, widgetPreferences: WidgetPreferences): String
 
-    abstract fun determineFontSize(locationDataSets: List<LocationDataSet>): TextUnit
+    @Composable
+    abstract fun determineFontSize(locationDataSets: List<LocationDataSet>, widgetPreferences: WidgetPreferences): TextUnit
 
     abstract fun determineFontWeight(): FontWeight
 
@@ -189,6 +194,12 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
             locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.onPrimary
             else -> GlanceTheme.colors.onSurface
         }
+
+    protected fun readPreferences(context: Context): WidgetPreferences {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+        val (_, widgetPreferences, _) = WeatherPreferencesReader(context.resources).read(preferences)
+        return widgetPreferences
+    }
 
 }
 

@@ -6,7 +6,7 @@ import android.content.res.Resources
 import org.voegtle.weatherwidget.location.LocationFactory
 import org.voegtle.weatherwidget.location.WeatherLocation
 
-class WeatherSettingsReader {
+class WeatherPreferencesReader {
 
   private val resources: Resources
 
@@ -18,8 +18,9 @@ class WeatherSettingsReader {
     this.resources = resources
   }
 
-  fun read(preferences: SharedPreferences): ApplicationSettings {
-    return ApplicationSettings(locations = readLocations(preferences),
+  fun read(preferences: SharedPreferences): ApplicationPreferences {
+    return ApplicationPreferences(locations = readLocations(preferences),
+                                widgetPreferences = readWidgetPreferences(preferences),
                                secret = readString(preferences, "secret"))
   }
 
@@ -35,6 +36,31 @@ class WeatherSettingsReader {
       location.preferences = locationPreferences
     }
     return locations
+  }
+
+  private fun readWidgetPreferences(preferences: SharedPreferences): WidgetPreferences {
+    return WidgetPreferences(fontCorrectionFactor = readFontCorrectionFactor(preferences),
+        numberOfItems = readInteger(preferences, "widget_max_values", 9),
+        showTemperature = readBoolean(preferences, "widget_temperature", true),
+        showRain = readBoolean(preferences, "widget_rain", true),
+        showRainLastHour = readBoolean(preferences, "widget_rain_last_hour", false),
+        showWindSpeed = readBoolean(preferences, "widget_wind_speed", false),
+        showWindGust = readBoolean(preferences, "widget_wind_gust", false),
+        showCurrentRadiation = readBoolean(preferences, "widget_current_radiation", false),
+        showHumidity = readBoolean(preferences, "widget_humidity", true),
+        showPressure = readBoolean(preferences, "widget_pressure", false))
+  }
+
+  private fun readFontCorrectionFactor(preferences: SharedPreferences): Int {
+    val widgetFontSize = readString(preferences, "widget_font_size")
+    return when (widgetFontSize) {
+      "XS" -> -2
+      "S" -> -1
+      "M" -> 0
+      "L" -> 1
+      "XL" -> 3
+      else -> 0
+    }
   }
 
   private fun readString(preferences: SharedPreferences, key: String) = preferences.getString(key, "")

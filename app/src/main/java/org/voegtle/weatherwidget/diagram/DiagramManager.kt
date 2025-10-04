@@ -6,7 +6,7 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
+import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.util.UserFeedback
 import uk.co.senab.photoview.PhotoView
 import java.util.concurrent.Executors
@@ -26,8 +26,8 @@ class DiagramManager(private val fragment: DiagramFragment, val placeHolderPrese
   private fun configureTheme() {
     val context = fragment.requireActivity().applicationContext
     val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-    val weatherSettingsReader = WeatherSettingsReader(context)
-    val configuration = weatherSettingsReader.read(preferences)
+    val weatherPreferencesReader = WeatherPreferencesReader(context)
+    val configuration = weatherPreferencesReader.read(preferences)
     val placeHolderId = when {
       placeHolderPreset != null -> placeHolderPreset
       else -> R.drawable.ic_action_picture

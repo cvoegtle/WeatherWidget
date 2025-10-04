@@ -190,18 +190,18 @@
 
   <PreferenceCategory
           android:title="@string/preferences_widget"
-          android:key="settings_privileges">
-    <ListPreference
-            android:key="widget_font_size"
-            android:title="@string/widget_font_size_title"
-            android:summary="@string/widget_font_size_summary"
-            android:defaultValue="M"
-            android:entries="@array/widget_font_size_entries"
-            android:entryValues="@array/widget_font_size_values"/>
-
+          android:key="settings_widget">
     <PreferenceScreen
             android:title="@string/widget_content"
+            android:summary="@string/widget_content_summary"
             android:key="widget_content">
+        <ListPreference
+            android:key="widget_max_values"
+            android:title="@string/widget_max_values_title"
+            android:summary="@string/widget_max_values_summary"
+            android:defaultValue="8"
+            android:entries="@array/widget_max_values_entries"
+            android:entryValues="@array/widget_max_values_values"/>
       <CheckBoxPreference
               android:key="widget_temperature"
               android:title="@string/temperature"
@@ -209,24 +209,39 @@
       <CheckBoxPreference
               android:key="widget_rain"
               android:title="@string/rain"
-              android:defaultValue="false" />
+              android:defaultValue="true" />
       <CheckBoxPreference
               android:key="widget_rain_last_hour"
               android:title="@string/rain_last_hour"
+              android:defaultValue="false" />
+      <CheckBoxPreference
+              android:key="widget_wind_speed"
+              android:title="@string/wind_speed"
+              android:defaultValue="false" />
+      <CheckBoxPreference
+              android:key="widget_wind_gust"
+              android:title="@string/wind_gust"
               android:defaultValue="false" />
       <CheckBoxPreference
               android:key="widget_current_radiation"
               android:title="@string/current_radiation"
               android:defaultValue="false" />
       <CheckBoxPreference
-              android:key="widget_total_radiation"
-              android:title="@string/todays_radiation"
-              android:defaultValue="false" />
-      <CheckBoxPreference
               android:key="widget_humidity"
               android:title="@string/humidity"
+              android:defaultValue="true" />
+      <CheckBoxPreference
+              android:key="widget_pressure"
+              android:title="@string/barometer"
               android:defaultValue="false" />
     </PreferenceScreen>
+    <ListPreference
+            android:key="widget_font_size"
+            android:title="@string/widget_font_size_title"
+            android:summary="@string/widget_font_size_summary"
+            android:defaultValue="M"
+            android:entries="@array/widget_font_size_entries"
+            android:entryValues="@array/widget_font_size_values"/>
 
   </PreferenceCategory>
   <PreferenceCategory

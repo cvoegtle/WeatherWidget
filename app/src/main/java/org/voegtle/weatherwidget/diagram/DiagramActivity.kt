@@ -7,19 +7,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.preference.PreferenceManager // Import für Theme-Logik
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity // Geändert
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.google.android.material.appbar.MaterialToolbar
 import org.voegtle.weatherwidget.R
-// import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
 import org.voegtle.weatherwidget.databinding.ActivityDiagramsBinding
-import org.voegtle.weatherwidget.preferences.WeatherSettingsReader // Import für Theme-Logik
 import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.File
 import java.io.FileOutputStream
@@ -28,7 +25,7 @@ import java.io.OutputStream
 import java.util.Date
 
 
-abstract class DiagramActivity : AppCompatActivity() { // Basisklasse geändert
+abstract class DiagramActivity : AppCompatActivity() {
   protected var diagramIdList = ArrayList<DiagramEnum>()
 
   protected var pagerAdapter: DiagramFragmentPagerAdapter? = null

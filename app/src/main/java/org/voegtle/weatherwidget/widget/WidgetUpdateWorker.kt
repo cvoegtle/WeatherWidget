@@ -7,8 +7,8 @@ import androidx.work.WorkerParameters
 import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
-import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
+import org.voegtle.weatherwidget.preferences.ApplicationPreferences
+import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.util.ContextUtil
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.WeatherDataFetcher
@@ -16,15 +16,15 @@ import org.voegtle.weatherwidget.util.WeatherDataFetcher
 class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
 
-    private val configuration: ApplicationSettings
+    private val configuration: ApplicationPreferences
     private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(appContext))
     private val locationDataSetFactory = LocationDataSetFactory(applicationContext)
     private val locationSorter = LocationSorter(applicationContext)
 
     init {
         val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val weatherSettingsReader = WeatherSettingsReader(applicationContext.resources)
-        configuration = weatherSettingsReader.read(preferences)
+        val weatherPreferencesReader = WeatherPreferencesReader(applicationContext.resources)
+        configuration = weatherPreferencesReader.read(preferences)
     }
 
     override suspend fun doWork(): Result {
