@@ -21,5 +21,6 @@ class TemperatureWidget : BaseWeatherWidget() {
     @Composable
     override fun determineFontSize(locationDataSets: List<LocationDataSet>, widgetPreferences: WidgetPreferences): TextUnit = 17.sp
     override fun determineFontWeight(): FontWeight = FontWeight.Bold
-    override fun determineGap(): Dp = 1.dp
+    override fun determineGap(): Dp = 2.dp
+    override fun determinePadding(): Dp = 0.dp
 }

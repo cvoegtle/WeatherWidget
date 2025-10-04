@@ -107,7 +107,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                 .fillMaxWidth()
                 .clickable(onClick = actionStartActivity<WeatherActivity>())
                 .background(determineRowBackground(locationDataSet))
-                .padding(horizontal = 2.dp)
+                .padding(horizontal = 2.dp, vertical = determinePadding())
                 .cornerRadius(6.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -169,6 +169,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     abstract fun determineFontWeight(): FontWeight
 
     abstract fun determineGap(): Dp
+
+    abstract fun determinePadding(): Dp
 
     @Composable
     private fun determineRowBackground(locationDataSet: LocationDataSet): ColorProvider =

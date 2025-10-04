@@ -28,6 +28,6 @@ class WeatherDetailsWidget : BaseWeatherWidget() {
         return (DEFAULT_FONTSIZE + widgetPreferences.fontCorrectionFactor).sp
     }
     override fun determineFontWeight(): FontWeight = FontWeight.Normal
-    override fun determineGap(): Dp = 3.dp
-
+    override fun determineGap(): Dp = 2.dp
+    override fun determinePadding(): Dp = 1.dp
 }
