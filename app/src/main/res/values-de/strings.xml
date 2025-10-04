@@ -126,4 +126,13 @@
   <string name="forecast_button_description">Wettervorhersage</string>
   <string name="collapse_button_description">Statistik ausblenden</string>
   <string name="expand_button_description">Statistik einblenden</string>
+
+  <string name="widget_settings_title">Widget</string>
+  <string name="widget_font_size_title">Schriftgrösse</string>
+  <string name="widget_font_size_summary">Schriftgrösse im Wetter-Detail Widget</string>
+  <string name="preferences_widget">Widget konfigurieren</string>
+  <string name="widget_content">Angezeigte Informationen</string>
+  <string name="current_radiation">Aktuelle Einstrahlung</string>
+  <string name="todays_radiation">Einstrahlung heute</string>
+
 </resources>

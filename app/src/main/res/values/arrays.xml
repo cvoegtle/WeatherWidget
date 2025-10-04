@@ -7,4 +7,21 @@
     <item name="rain">Regen</item>
     <item name="humidity">Luftfeuchtigkeit</item>
   </string-array>
+
+  <string-array name="widget_font_size_entries">
+    <item>sehr klein</item>
+    <item>klein</item>
+    <item>normal</item>
+    <item>groß</item>
+    <item>sehr groß</item>
+  </string-array>
+
+  <string-array name="widget_font_size_values">
+    <item>XS</item>
+    <item>S</item>
+    <item>M</item>
+    <item>L</item>
+    <item>XL</item>
+  </string-array>
+
 </resources>

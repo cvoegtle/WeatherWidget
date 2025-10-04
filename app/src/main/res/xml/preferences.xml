@@ -189,6 +189,47 @@
   </PreferenceCategory>
 
   <PreferenceCategory
+          android:title="@string/preferences_widget"
+          android:key="settings_privileges">
+    <ListPreference
+            android:key="widget_font_size"
+            android:title="@string/widget_font_size_title"
+            android:summary="@string/widget_font_size_summary"
+            android:defaultValue="M"
+            android:entries="@array/widget_font_size_entries"
+            android:entryValues="@array/widget_font_size_values"/>
+
+    <PreferenceScreen
+            android:title="@string/widget_content"
+            android:key="widget_content">
+      <CheckBoxPreference
+              android:key="widget_temperature"
+              android:title="@string/temperature"
+              android:defaultValue="true" />
+      <CheckBoxPreference
+              android:key="widget_rain"
+              android:title="@string/rain"
+              android:defaultValue="false" />
+      <CheckBoxPreference
+              android:key="widget_rain_last_hour"
+              android:title="@string/rain_last_hour"
+              android:defaultValue="false" />
+      <CheckBoxPreference
+              android:key="widget_current_radiation"
+              android:title="@string/current_radiation"
+              android:defaultValue="false" />
+      <CheckBoxPreference
+              android:key="widget_total_radiation"
+              android:title="@string/todays_radiation"
+              android:defaultValue="false" />
+      <CheckBoxPreference
+              android:key="widget_humidity"
+              android:title="@string/humidity"
+              android:defaultValue="false" />
+    </PreferenceScreen>
+
+  </PreferenceCategory>
+  <PreferenceCategory
           android:title="@string/privileges"
           android:key="settings_privileges">
     <EditTextPreference

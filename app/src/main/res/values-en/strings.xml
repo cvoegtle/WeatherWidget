@@ -128,4 +128,11 @@
   <string name="forecast_button_description">Weather forecast</string>
   <string name="collapse_button_description">Hide statistics</string>
   <string name="expand_button_description">Show statistics</string>
+  <string name="widget_settings_title">Widget</string>
+  <string name="widget_font_size_title">Fontsize</string>
+  <string name="widget_font_size_summary">Fontsize in weather widget</string>
+  <string name="preferences_widget">Configure widget</string>
+  <string name="widget_content">Content shown</string>
+  <string name="current_radiation">Current radiation</string>
+  <string name="todays_radiation">Total power</string>
 </resources>
