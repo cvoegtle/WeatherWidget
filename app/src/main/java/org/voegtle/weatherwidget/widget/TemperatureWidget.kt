@@ -23,4 +23,5 @@ class TemperatureWidget : BaseWeatherWidget() {
     override fun determineFontWeight(): FontWeight = FontWeight.Bold
     override fun determineGap(): Dp = 2.dp
     override fun determinePadding(): Dp = 0.dp
+    override fun isSettingsButtonVisible(): Boolean = false
 }

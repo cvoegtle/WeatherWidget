@@ -30,4 +30,6 @@ class WeatherDetailsWidget : BaseWeatherWidget() {
     override fun determineFontWeight(): FontWeight = FontWeight.Normal
     override fun determineGap(): Dp = 2.dp
     override fun determinePadding(): Dp = 1.dp
+
+    override fun isSettingsButtonVisible(): Boolean = true
 }

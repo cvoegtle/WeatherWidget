@@ -143,15 +143,21 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                     color = GlanceTheme.colors.onSurface,
                     fontSize = 11.sp
                 ),
-                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherPreferences>()),
+                modifier = GlanceModifier.clickable(
+                    onClick = if (isSettingsButtonVisible())
+                        actionStartActivity<WeatherPreferences>()
+                    else
+                        actionStartActivity<WeatherActivity>()
+                )
             )
-            Spacer(GlanceModifier.size(8.dp))
-            Image(
-                provider = ImageProvider(R.drawable.ic_settings),
-                contentDescription = "Einstellungen",
-                modifier = GlanceModifier.size(16.dp).clickable(onClick = actionStartActivity<WeatherPreferences>()),
-                colorFilter = determineSettingsColor()
-            )
+            if (isSettingsButtonVisible()) {
+                Spacer(GlanceModifier.size(8.dp))
+                Image(
+                    provider = ImageProvider(R.drawable.ic_settings),
+                    contentDescription = "Einstellungen",
+                    modifier = GlanceModifier.size(16.dp).clickable(onClick = actionStartActivity<WeatherPreferences>())
+                )
+            }
         }
     }
 
@@ -181,6 +187,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
 
     abstract fun determinePadding(): Dp
 
+    abstract fun isSettingsButtonVisible(): Boolean
+
     @Composable
     private fun determineRowBackground(locationDataSet: LocationDataSet): ColorProvider =
         when {
@@ -197,9 +205,6 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
             locationDataSet.weatherLocation.preferences.favorite -> ColorFilter.tint(GlanceTheme.colors.onPrimary)
             else -> ColorFilter.tint(GlanceTheme.colors.onSurface)
         }
-
-    @Composable
-    private fun determineSettingsColor(): ColorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface)
 
     @Composable
     private fun determineTextColor(locationDataSet: LocationDataSet): ColorProvider =
