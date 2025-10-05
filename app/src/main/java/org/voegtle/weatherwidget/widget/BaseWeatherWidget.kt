@@ -194,7 +194,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     private fun determineRowBackground(locationDataSet: LocationDataSet): ColorProvider =
         when {
             DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> GlanceTheme.colors.error
-            locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.primary
+            locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.surfaceVariant
             else -> GlanceTheme.colors.surface
         }
 
@@ -203,7 +203,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         when {
             DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> ColorFilter.tint(GlanceTheme.colors.onError)
             locationDataSet.weatherData.isRaining -> ColorFilter.tint(ColorProvider(Color.Blue, Color.Cyan))
-            locationDataSet.weatherLocation.preferences.favorite -> ColorFilter.tint(GlanceTheme.colors.onPrimary)
+            locationDataSet.weatherLocation.preferences.favorite -> ColorFilter.tint(GlanceTheme.colors.onSurfaceVariant)
             else -> ColorFilter.tint(GlanceTheme.colors.onSurface)
         }
     @Composable
@@ -213,7 +213,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     private fun determineTextColor(locationDataSet: LocationDataSet): ColorProvider =
         when {
             DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> GlanceTheme.colors.onError
-            locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.onPrimary
+            locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.onSurfaceVariant
             else -> GlanceTheme.colors.onSurface
         }
 
