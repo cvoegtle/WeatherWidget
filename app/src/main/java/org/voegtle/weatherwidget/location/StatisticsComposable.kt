@@ -1,5 +1,6 @@
 package org.voegtle.weatherwidget.location
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -58,10 +60,10 @@ fun StatisticsComposable(statistics: Statistics, color: Color) {
 @Composable
 fun StatisticsCaptionRow(kind: String, visibility: ColumnVisibility) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        val labelColumnWidth = calculateColumnWidth("Yesterday", visibility)
+        val labelColumnWidth = calculateLabelColumnWidth(visibility)
         Text(text = "", modifier = Modifier.width(labelColumnWidth))
 
-        val fixedColumnWidth = calculateColumnWidth("Regen", visibility)
+        val fixedColumnWidth = calculateDefaultColumnWidth(visibility)
         if (visibility.rain) {
             TextCaption(id = R.string.rain, modifier = Modifier.width(fixedColumnWidth))
         }
@@ -89,12 +91,12 @@ fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility
     ) {
         statisticsSet?.let { statisticsSet ->
             val formatter = DataFormatter()
-            val labelColumnWidth = calculateColumnWidth("Yesterday", visibility)
+            val labelColumnWidth = calculateLabelColumnWidth(visibility)
             TextCaption(
                 id = timeRange2TextId(statisticsSet.range), textAlign = TextAlign.Start,
                 modifier = Modifier.width(labelColumnWidth)
             )
-            val fixedColumnWidth = calculateColumnWidth("Regen", visibility)
+            val fixedColumnWidth = calculateDefaultColumnWidth(visibility)
             if (visibility.rain) {
                 TextContent(text = formatter.formatRain(statisticsSet.rain), modifier = Modifier.width(fixedColumnWidth))
             }
@@ -109,7 +111,7 @@ fun StatisticsContentRow(statisticsSet: StatisticsSet?, kind: String, visibility
                 )
             }
             if (visibility.solarRadiationMax) {
-                val maxPower = getMaxPowerText(kind, statisticsSet)
+                val maxPower = getMaxPowerText(statisticsSet)
                 TextContent(text = maxPower, modifier = Modifier.weight(WEIGHT_MAX_SUN))
             }
             if (visibility.kwh) {
@@ -131,11 +133,28 @@ fun TextContent(text: String, modifier: Modifier) {
 }
 
 @Composable
+private fun calculateDefaultColumnWidth(visibility: ColumnVisibility): Dp {
+    return  calculateColumnWidth(stringResource(R.string.rain), visibility)
+}
+
+@Composable
+private fun calculateLabelColumnWidth(visibility: ColumnVisibility): Dp {
+    return calculateColumnWidth(stringResource(R.string.yesterday), visibility)
+}
+
+@Composable
 fun calculateColumnWidth(text: String, visibility: ColumnVisibility): Dp {
     val textMeasurer = rememberTextMeasurer()
     val textLayoutResult = textMeasurer.measure(text = text,
         style = TextStyle(fontSize = MaterialTheme.typography.bodyLarge.fontSize, fontWeight = FontWeight.Bold))
     return with( LocalDensity.current) { textLayoutResult.size.width.toDp() + 5.dp + if (visibility.onlyBasicColumns()) 5.dp else 0.dp }
+}
+@Composable
+fun calculateColumnWidth(text: String): Dp {
+    val textMeasurer = rememberTextMeasurer()
+    val textLayoutResult = textMeasurer.measure(text = text,
+        style = TextStyle(fontSize = MaterialTheme.typography.bodyLarge.fontSize, fontWeight = FontWeight.Bold))
+    return with( LocalDensity.current) { textLayoutResult.size.width.toDp() + 5.dp }
 }
 
 private fun getTotalPowerText(kind: String, statisticsSet: StatisticsSet): String {
@@ -147,7 +166,7 @@ private fun getTotalPowerText(kind: String, statisticsSet: StatisticsSet): Strin
     return totalPower
 }
 
-private fun getMaxPowerText(kind: String, statisticsSet: StatisticsSet): String {
+private fun getMaxPowerText(statisticsSet: StatisticsSet): String {
     val formatter = DataFormatter()
     return formatter.formatWatt(statisticsSet.solarRadiationMax)
 }

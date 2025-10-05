@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assessment
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import org.voegtle.weatherwidget.R
@@ -173,7 +175,10 @@ fun DataRow(label: String, value: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
     ) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, modifier = Modifier.widthIn(min = 150.dp))
+        Text(text = label, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, modifier = Modifier.width(calculateMaxColumnWidth()))
         Text(text = value, style = MaterialTheme.typography.bodyMedium)
     }
 }
+
+@Composable
+private fun calculateMaxColumnWidth(): Dp = calculateColumnWidth(stringResource(R.string.solarradiation))
