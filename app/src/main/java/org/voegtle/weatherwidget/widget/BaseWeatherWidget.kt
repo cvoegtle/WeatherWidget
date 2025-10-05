@@ -195,7 +195,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         when {
             DateUtil.isOutdated(locationDataSet.weatherData.timestamp) -> GlanceTheme.colors.error
             locationDataSet.weatherLocation.preferences.favorite -> GlanceTheme.colors.primary
-            else -> GlanceTheme.colors.surfaceVariant
+            else -> GlanceTheme.colors.surface
         }
 
     @Composable
