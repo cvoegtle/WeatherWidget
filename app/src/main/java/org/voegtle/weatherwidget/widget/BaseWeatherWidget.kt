@@ -155,7 +155,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                 Image(
                     provider = ImageProvider(R.drawable.ic_settings),
                     contentDescription = "Einstellungen",
-                    modifier = GlanceModifier.size(16.dp).clickable(onClick = actionStartActivity<WeatherPreferences>())
+                    modifier = GlanceModifier.size(16.dp).clickable(onClick = actionStartActivity<WeatherPreferences>()),
+                    colorFilter = determineSettingsColor()
                 )
             }
         }
@@ -205,6 +206,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
             locationDataSet.weatherLocation.preferences.favorite -> ColorFilter.tint(GlanceTheme.colors.onPrimary)
             else -> ColorFilter.tint(GlanceTheme.colors.onSurface)
         }
+    @Composable
+    private fun determineSettingsColor(): ColorFilter = ColorFilter.tint(GlanceTheme.colors.onSurface)
 
     @Composable
     private fun determineTextColor(locationDataSet: LocationDataSet): ColorProvider =
