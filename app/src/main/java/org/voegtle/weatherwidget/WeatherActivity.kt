@@ -9,9 +9,21 @@ import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.BarChart
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -19,8 +31,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
+import org.voegtle.weatherwidget.cache.StateCache
+import org.voegtle.weatherwidget.cache.WeatherDataCache
 import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
 import org.voegtle.weatherwidget.diagram.BonnDiagramActivity
 import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity
@@ -32,8 +46,11 @@ import org.voegtle.weatherwidget.diagram.MobilDiagramActivity
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity
 import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
 import org.voegtle.weatherwidget.location.LocationContainer
+import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
+import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.UserLocationUpdater
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
 import org.voegtle.weatherwidget.preferences.ApplicationPreferences
@@ -42,23 +59,18 @@ import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
-import org.voegtle.weatherwidget.cache.StateCache
-import org.voegtle.weatherwidget.cache.WeatherDataCache
-import org.voegtle.weatherwidget.location.LocationDataSet
-import org.voegtle.weatherwidget.location.LocationDataSetFactory
-import org.voegtle.weatherwidget.location.LocationSorter
+import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
 import org.voegtle.weatherwidget.util.DateUtil
-import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticUpdateWorker
 import org.voegtle.weatherwidget.util.UserFeedback
+import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
 import java.util.Date
 
 class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var configuration: ApplicationPreferences? = null
 
-    private lateinit var binding: ActivityWeatherBinding
     private var locationOrderStore: LocationOrderStore? = null
 
     private var userLocationUpdater: UserLocationUpdater? = null
@@ -66,16 +78,10 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     private var weatherDataCache: WeatherDataCache? = null
     private var locationDataSetFactory: LocationDataSetFactory? = null
     private var locationSorter: LocationSorter? = null
-
+    val locationDataSets = MutableStateFlow<List<LocationDataSet>>(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityWeatherBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        val toolbar: com.google.android.material.appbar.MaterialToolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.app_name)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         readConfiguration(preferences)
@@ -87,6 +93,48 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         weatherDataCache = WeatherDataCache(this)
         locationDataSetFactory = LocationDataSetFactory(this)
         locationSorter = LocationSorter(this)
+
+        setContent {
+            WeatherApp(locationDataSets)
+        }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun WeatherApp(locationDataSets: MutableStateFlow<List<LocationDataSet>>) {
+        WeatherWidgetTheme {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(stringResource(id = R.string.app_name)) },
+                        actions = {
+                            IconButton(onClick = { updateAll(true) }) {
+                                Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.action_reload))
+                            }
+                            IconButton(onClick = { startActivity(Intent(this@WeatherActivity, MainDiagramActivity::class.java)) }) {
+                                Icon(Icons.Default.BarChart, contentDescription = stringResource(id = R.string.action_diagrams))
+                            }
+                            IconButton(onClick = {
+                                val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this@WeatherActivity)
+                                orderCriteriaDialog.show()
+                            }) {
+                                Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = stringResource(id = R.string.action_sort))
+                            }
+                            IconButton(onClick = { startActivity(Intent(this@WeatherActivity, WeatherPreferences::class.java)) }) {
+                                Icon(Icons.Default.Settings, contentDescription = "More")
+                            }
+                        }
+                    )
+                }
+            ) { padding ->
+                LocationContainer(locationDataSets,
+                    onDiagramClick = (::onDiagramClicked),
+                    onForecastClick = (::onForecastClicked),
+                    onExpandStateChanged = (::onExpandedClicked),
+                    onPullToRefresh = (::onPullToRefresh),
+                    onDataMiningButtonClick = (::onDataMiningButtonClick))
+            }
+        }
     }
 
     private fun readConfiguration(preferences: SharedPreferences) {
@@ -99,38 +147,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     override fun onResume() {
         super.onResume()
         updateAll(false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.weather_activity_menu, menu)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_reload -> {
-            updateAll(true)
-            true
-        }
-
-        R.id.action_diagrams -> {
-            startActivity(Intent(this, MainDiagramActivity::class.java))
-            true
-        }
-
-        R.id.action_sort -> {
-            val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this)
-            orderCriteriaDialog.show()
-            true
-        }
-
-        R.id.action_preferences -> {
-            startActivity(Intent(this, WeatherPreferences::class.java))
-            true
-        }
-
-        else -> false
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
@@ -159,7 +175,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             checkForPermissionsToRequest(Manifest.permission.POST_NOTIFICATIONS)?.let { missingPermissions.add(it) }
         }
 
-        if (!missingPermissions.isEmpty()) {
+        if (missingPermissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), 0)
         }
     }
@@ -189,11 +205,11 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     private fun isNotificationsPermitted(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-            return permissionCheck == PackageManager.PERMISSION_GRANTED
+            permissionCheck == PackageManager.PERMISSION_GRANTED
         } else {
-            return true
+            true
         }
     }
 
@@ -250,7 +266,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
                 val locationDataSets = locationDataSetFactory!!.assembleLocationDataSets(configuration!!.locations, it.weatherMap)
                 locationSorter!!.sort(locationDataSets)
 
-                updateLocations(locationDataSets)
+                this.locationDataSets.value = locationDataSets
                 updateWidgets(locationDataSets)
 
                 showUserToast(it, showToast)
@@ -268,17 +284,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         lifecycleScope.launch {
             updateWeatherWidgetState(applicationContext, locationDataSets)
         }
-    }
-
-    private fun updateLocations(locationDataSets: List<LocationDataSet>) {
-        val container = locationContainer()
-        val locationContainer = LocationContainer(applicationContext, container)
-        locationContainer.showWeatherData(locationDataSets,
-            onDiagramClick = (::onDiagramClicked),
-            onForecastClick = (::onForecastClicked),
-            onExpandStateChanged = (::onExpandedClicked),
-            onPullToRefresh = (::onPullToRefresh),
-            onDataMiningButtonClick = (::onDataMiningButtonClick))
     }
 
     private fun showUserToast(response: FetchAllResponse, showToast: Boolean) {
@@ -304,7 +309,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     private fun mapLocation2Intent(locationIdentifier: LocationIdentifier): Intent {
-        val intent = when (locationIdentifier) {
+        return when (locationIdentifier) {
             LocationIdentifier.Paderborn -> Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java)
             LocationIdentifier.BadLippspringe -> Intent(this@WeatherActivity, BaliDiagramActivity::class.java)
             LocationIdentifier.Bonn -> Intent(this@WeatherActivity, BonnDiagramActivity::class.java)
@@ -315,7 +320,6 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             LocationIdentifier.Shenzhen -> Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java)
             LocationIdentifier.Mobil -> Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
         }
-        return intent
     }
 
     private fun onForecastClicked(forecastUrl: Uri) {
@@ -349,7 +353,4 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         )
         startActivity(browserIntent)
     }
-
-    private fun locationContainer() = binding.locationContainer
-
 }
