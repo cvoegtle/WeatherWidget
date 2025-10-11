@@ -21,7 +21,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
@@ -29,8 +28,8 @@ import org.voegtle.weatherwidget.data.WeatherData
 data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, var statistics: Statistics?)
 
 @Composable
-fun LocationContainer(
-    locationDataSets: MutableStateFlow<List<LocationDataSet>>,
+fun LocationContainer(modifier: Modifier,
+    locationDataSets: List<LocationDataSet>,
     onDiagramClick: (LocationIdentifier) -> Unit = {},
     onForecastClick: (Uri) -> Unit = {},
     onExpandStateChanged: (LocationIdentifier, Boolean) -> Unit = { _, _ -> },
@@ -53,9 +52,9 @@ fun LocationContainer(
 
     LazyColumn(
         state = lazyListState,
-        modifier = Modifier.nestedScroll(nestedScrollConnection)
+        modifier = modifier.nestedScroll(nestedScrollConnection)
     ) {
-        items(items = locationDataSets.value) { dataSet ->
+        items(items = locationDataSets) { dataSet ->
             LocationComposable(
                 dataSet,
                 onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged

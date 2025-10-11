@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.core.net.toUri
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.WeatherData
@@ -181,4 +182,6 @@ fun DataRow(label: String, value: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun calculateMaxColumnWidth(): Dp = calculateColumnWidth(stringResource(R.string.solarradiation))
+private fun calculateMaxColumnWidth(): Dp =
+    max(calculateColumnWidth(stringResource(R.string.solarradiation)),
+        calculateColumnWidth(stringResource(R.string.power_production)))

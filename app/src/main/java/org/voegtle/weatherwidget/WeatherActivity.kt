@@ -11,6 +11,13 @@ import android.preference.PreferenceManager
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material.icons.filled.BarChart
@@ -19,13 +26,19 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
@@ -82,6 +95,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         readConfiguration(preferences)
@@ -95,44 +109,33 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         locationSorter = LocationSorter(this)
 
         setContent {
-            WeatherApp(locationDataSets)
+            val locations by locationDataSets.collectAsState()
+            WeatherApp(locations)
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun WeatherApp(locationDataSets: MutableStateFlow<List<LocationDataSet>>) {
+    fun WeatherApp(locationDataSets: List<LocationDataSet>) {
         WeatherWidgetTheme {
             Scaffold(
                 topBar = {
-                    TopAppBar(
-                        title = { Text(stringResource(id = R.string.app_name)) },
-                        actions = {
-                            IconButton(onClick = { updateAll(true) }) {
-                                Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.action_reload))
-                            }
-                            IconButton(onClick = { startActivity(Intent(this@WeatherActivity, MainDiagramActivity::class.java)) }) {
-                                Icon(Icons.Default.BarChart, contentDescription = stringResource(id = R.string.action_diagrams))
-                            }
-                            IconButton(onClick = {
-                                val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this@WeatherActivity)
-                                orderCriteriaDialog.show()
-                            }) {
-                                Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = stringResource(id = R.string.action_sort))
-                            }
-                            IconButton(onClick = { startActivity(Intent(this@WeatherActivity, WeatherPreferences::class.java)) }) {
-                                Icon(Icons.Default.Settings, contentDescription = "More")
-                            }
-                        }
+                    WeatherTopAppBar(
+                        onReloadClicked = (::onReloadClicked),
+                        onDiagramClicked = (::onDiagramClicked),
+                        onReorderClicked = (::onReorderClicked),
+                        onPreferencesClicked = (::onPreferencesClicked)
                     )
                 }
             ) { padding ->
-                LocationContainer(locationDataSets,
+                LocationContainer(
+                    modifier = Modifier.padding(padding),
+                    locationDataSets = locationDataSets,
                     onDiagramClick = (::onDiagramClicked),
                     onForecastClick = (::onForecastClicked),
                     onExpandStateChanged = (::onExpandedClicked),
                     onPullToRefresh = (::onPullToRefresh),
-                    onDataMiningButtonClick = (::onDataMiningButtonClick))
+                    onDataMiningButtonClick = (::onDataMiningButtonClick)
+                )
             }
         }
     }
@@ -299,16 +302,16 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
 
-    private fun onDiagramClicked(locationIdentifier: LocationIdentifier) {
+    private fun onDiagramClicked(locationIdentifier: LocationIdentifier?) {
         navigateToDiagramActivity(locationIdentifier)
     }
 
-    private fun navigateToDiagramActivity(locationIdentifier: LocationIdentifier) {
+    private fun navigateToDiagramActivity(locationIdentifier: LocationIdentifier?) {
         val intent = mapLocation2Intent(locationIdentifier)
         startActivity(intent)
     }
 
-    private fun mapLocation2Intent(locationIdentifier: LocationIdentifier): Intent {
+    private fun mapLocation2Intent(locationIdentifier: LocationIdentifier?): Intent {
         return when (locationIdentifier) {
             LocationIdentifier.Paderborn -> Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java)
             LocationIdentifier.BadLippspringe -> Intent(this@WeatherActivity, BaliDiagramActivity::class.java)
@@ -319,12 +322,18 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             LocationIdentifier.Magdeburg -> Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java)
             LocationIdentifier.Shenzhen -> Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java)
             LocationIdentifier.Mobil -> Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
+            else -> Intent(this, MainDiagramActivity::class.java)
         }
     }
 
     private fun onForecastClicked(forecastUrl: Uri) {
         val browserIntent = Intent(Intent.ACTION_VIEW, forecastUrl)
         startActivity(browserIntent)
+    }
+
+    private fun onPreferencesClicked() {
+        val onPreferencesIntent = Intent(this, WeatherPreferences::class.java)
+        startActivity(onPreferencesIntent)
     }
 
     private fun onExpandedClicked(locationIdentifier: LocationIdentifier, isExpanded: Boolean) {
@@ -346,11 +355,22 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         }
     }
 
+    private fun onReloadClicked() {
+        updateAll(true)
+    }
+
+    private fun onReorderClicked() {
+        val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this)
+        orderCriteriaDialog.show()
+    }
+
     private fun onDataMiningButtonClick() {
         val browserIntent = Intent(
             Intent.ACTION_VIEW, Uri.parse(
-                "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing")
+                "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"
+            )
         )
         startActivity(browserIntent)
     }
 }
+

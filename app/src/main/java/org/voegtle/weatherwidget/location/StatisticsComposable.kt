@@ -134,7 +134,7 @@ fun TextContent(text: String, modifier: Modifier) {
 
 @Composable
 private fun calculateDefaultColumnWidth(visibility: ColumnVisibility): Dp {
-    return  calculateColumnWidth(stringResource(R.string.rain), visibility)
+    return  calculateColumnWidth("Regen", visibility)
 }
 
 @Composable
