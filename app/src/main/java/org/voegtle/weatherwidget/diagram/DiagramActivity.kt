@@ -281,7 +281,7 @@ abstract class DiagramActivity : AppCompatActivity() {
                         + ".org.voegtle.weatherwidget.diagram.DiagramProvider", it
             )
             share.putExtra(Intent.EXTRA_STREAM, imageUri)
-            startActivity(Intent.createChooser(share, "Wetterwolke Diagramm teilen"))
+            startActivity(Intent.createChooser(share, getString(R.string.action_share)))
         }
         return false
     }
