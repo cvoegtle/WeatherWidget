@@ -16,8 +16,14 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.VectorConverter
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -32,11 +38,9 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -47,7 +51,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -89,6 +96,7 @@ abstract class DiagramActivity : AppCompatActivity() {
         val pagerState = rememberPagerState(initialPage = selectedPage.value, pageCount = { diagramIdList.size })
         val coroutineScope = rememberCoroutineScope()
         var menuExpanded by remember { mutableStateOf(false) }
+        var pagerUserScrollEnabled by remember { mutableStateOf(true) }
 
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { page ->
@@ -142,17 +150,20 @@ abstract class DiagramActivity : AppCompatActivity() {
         ) { innerPadding ->
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                userScrollEnabled = pagerUserScrollEnabled
             ) { page ->
                 val diagramId = diagramIdList[page]
                 val updateCount = diagramUpdateState[diagramId] ?: 0
-                DiagramPage(diagramId, updateCount)
+                DiagramPage(diagramId, updateCount) {
+                    pagerUserScrollEnabled = it
+                }
             }
         }
     }
 
     @Composable
-    fun DiagramPage(diagramId: DiagramEnum, updateCount: Int) {
+    fun DiagramPage(diagramId: DiagramEnum, updateCount: Int, onUserScrollEnabledChange: (Boolean) -> Unit) {
         var diagram by remember { mutableStateOf<Diagram?>(null) }
         val coroutineScope = rememberCoroutineScope()
 
@@ -167,11 +178,10 @@ abstract class DiagramActivity : AppCompatActivity() {
         }
 
         if (diagram != null) {
-            Image(
+            ZoomableImage(
                 bitmap = drawableToBitmap(diagram!!.image).asImageBitmap(),
                 contentDescription = diagramId.toString(),
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Fit
+                onUserScrollEnabledChange = onUserScrollEnabledChange
             )
         } else {
             Image(
@@ -182,6 +192,76 @@ abstract class DiagramActivity : AppCompatActivity() {
             )
         }
     }
+
+    @OptIn(ExperimentalFoundationApi::class)
+    @Composable
+    fun ZoomableImage(
+        bitmap: androidx.compose.ui.graphics.ImageBitmap,
+        contentDescription: String,
+        modifier: Modifier = Modifier,
+        onUserScrollEnabledChange: (Boolean) -> Unit
+    ) {
+        val scope = rememberCoroutineScope()
+
+        val scale = remember { Animatable(1f) }
+        val offset = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
+
+        LaunchedEffect(scale.value) {
+            onUserScrollEnabledChange(scale.value == 1f)
+        }
+
+        BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+            val transformableState = rememberTransformableState { zoomChange, offsetChange, _ ->
+                scope.launch {
+                    scale.snapTo((scale.value * zoomChange).coerceIn(1f, 3f))
+
+                    if (scale.value > 1f) {
+                        val maxOffsetX = (constraints.maxWidth * (scale.value - 1)) / 2f
+                        val maxOffsetY = (constraints.maxHeight * (scale.value - 1)) / 2f
+                        val newOffset = offset.value + offsetChange
+                        offset.snapTo(
+                            Offset(
+                                x = newOffset.x.coerceIn(-maxOffsetX, maxOffsetX),
+                                y = newOffset.y.coerceIn(-maxOffsetY, maxOffsetY)
+                            )
+                        )
+                    } else {
+                        offset.snapTo(Offset.Zero)
+                    }
+                }
+            }
+
+            Image(
+                bitmap = bitmap,
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .pointerInput(Unit) {
+                        detectTapGestures(
+                            onDoubleTap = {
+                                scope.launch {
+                                    if (scale.value > 1f) {
+                                        scale.animateTo(1f)
+                                        offset.animateTo(Offset.Zero)
+                                    } else {
+                                        scale.animateTo(2f)
+                                    }
+                                }
+                            }
+                        )
+                    }
+                    .graphicsLayer(
+                        scaleX = scale.value,
+                        scaleY = scale.value,
+                        translationX = offset.value.x,
+                        translationY = offset.value.y
+                    )
+                    .transformable(state = transformableState),
+                contentScale = ContentScale.Fit,
+            )
+        }
+    }
+
 
     private suspend fun updateDiagram(diagramId: DiagramEnum, force: Boolean) {
         val diagramManager = DiagramManager(this)
@@ -237,7 +317,10 @@ abstract class DiagramActivity : AppCompatActivity() {
 
         values.put(MediaStore.MediaColumns.DISPLAY_NAME, "Wetter Diagramm")
         values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
-        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS + File.separator + "WetterWolke")
+        values.put(
+            MediaStore.MediaColumns.RELATIVE_PATH,
+            Environment.DIRECTORY_DOWNLOADS + File.separator + "WetterWolke"
+        )
 
         val uri = contentResolver.insert(MediaStore.Files.getContentUri("external"), values)
         val outputStream = contentResolver.openOutputStream(uri!!)
@@ -294,7 +377,8 @@ abstract class DiagramActivity : AppCompatActivity() {
     }
 
     private val wetterWolkeDirectory: File
-        get() = File(this.applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString() + File.separator + "WetterWolke")
+        get() = File(this.applicationContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+            .toString() + File.separator + "WetterWolke")
 
     private fun clearImages() {
         val wetterWolkeDir = wetterWolkeDirectory
@@ -311,7 +395,8 @@ abstract class DiagramActivity : AppCompatActivity() {
             val image = drawableToBitmap(diagram.image)
             val baos = ByteArrayOutputStream()
             image.compress(Bitmap.CompressFormat.PNG, 100, baos)
-            val filename: String = "$wetterWolkeDirectory${File.separator}${Date().time}-${diagramEnum.filename}"
+            val filename: String =
+                "$wetterWolkeDirectory${File.separator}${Date().time}-${diagramEnum.filename}"
             val f = File(filename)
             try {
                 f.createNewFile()
@@ -344,7 +429,8 @@ abstract class DiagramActivity : AppCompatActivity() {
             return drawable.bitmap
         }
 
-        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap =
+            Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
@@ -352,11 +438,19 @@ abstract class DiagramActivity : AppCompatActivity() {
     }
 
     private fun requestStoragePermission(diagramId: Int) {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), diagramId)
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+            diagramId
+        )
     }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         // Changed diagramId to requestCode to match super signature
         if (grantResults.isNotEmpty()) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
