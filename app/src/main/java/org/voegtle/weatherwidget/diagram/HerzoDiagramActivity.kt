@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.diagram
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 
@@ -17,18 +16,14 @@ class HerzoDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.herzo_lastyear)
   }
 
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    val inflater = menuInflater
-    inflater.inflate(R.menu.herzo_diagram_activity_menu, menu)
-    return super.onCreateOptionsMenu(menu)
+  override fun getMenu(): List<Pair<Int, () -> Unit>> {
+    return listOf(
+      Pair(R.string.action_rain) { updatePage(0) },
+      Pair(R.string.action_wind) { updatePage(1) },
+      Pair(R.string.action_30_days) { updatePage(2) },
+      Pair(R.string.action_last_year) { updatePage(3) }
+    )
   }
 
-  override fun onCustomItemSelected(item: MenuItem): Boolean =
-      when (item.itemId) {
-        R.id.action_herzo_rain -> updateViewPager(0)
-        R.id.action_herzo_wind -> updateViewPager(1)
-        R.id.action_herzo_30days -> updateViewPager(2)
-        R.id.action_herzo_last_year -> updateViewPager(3)
-        else -> false
-      }
+  override fun onCustomItemSelected(item: MenuItem): Boolean = false
 }

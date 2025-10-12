@@ -1,8 +1,6 @@
 package org.voegtle.weatherwidget.diagram
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.util.StringUtil
@@ -24,16 +22,12 @@ class MobilDiagramActivity : DiagramActivity() {
     }
   }
 
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    val inflater = menuInflater
-    inflater.inflate(R.menu.mobil_diagram_activity_menu, menu)
-    return super.onCreateOptionsMenu(menu)
+  override fun getMenu(): List<Pair<Int, () -> Unit>> {
+    return listOf(
+      Pair(R.string.action_7_days) { updatePage(0) },
+      Pair(R.string.action_instant_freiburg) { updatePage(1) }
+    )
   }
 
-  override fun onCustomItemSelected(item: MenuItem): Boolean =
-      when (item.itemId) {
-        R.id.action_instant_7days -> updateViewPager(0)
-        R.id.action_instant_freiburg -> updateViewPager(1)
-        else -> false
-      }
+  override fun onCustomItemSelected(item: MenuItem): Boolean = false
 }

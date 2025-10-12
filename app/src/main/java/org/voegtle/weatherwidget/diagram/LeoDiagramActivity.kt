@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.diagram
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 
@@ -21,22 +20,18 @@ class LeoDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.leo_lastyear)
   }
 
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    val inflater = menuInflater
-    inflater.inflate(R.menu.leo_diagram_activity_menu, menu)
-    return super.onCreateOptionsMenu(menu)
+  override fun getMenu(): List<Pair<Int, () -> Unit>> {
+    return listOf(
+      Pair(R.string.action_rain) { updatePage(0) },
+      Pair(R.string.action_wind) { updatePage(1) },
+      Pair(R.string.action_barometer) { updatePage(2) },
+      Pair(R.string.action_solar) { updatePage(3) },
+      Pair(R.string.action_solar_daily) { updatePage(4) },
+      Pair(R.string.action_solar_monthly) { updatePage(5) },
+      Pair(R.string.action_30_days) { updatePage(6) },
+      Pair(R.string.action_last_year) { updatePage(7) }
+    )
   }
 
-  override fun onCustomItemSelected(item: MenuItem): Boolean =
-      when (item.itemId) {
-        R.id.action_leo_rain -> updateViewPager(0)
-        R.id.action_leo_wind -> updateViewPager(1)
-        R.id.action_leo_barometer -> updateViewPager(2)
-        R.id.action_leo_solar -> updateViewPager(3)
-        R.id.action_solar_daily -> updateViewPager(4)
-        R.id.action_solar_monthly -> updateViewPager(5)
-        R.id.action_leo_30days -> updateViewPager(6)
-        R.id.action_leo_last_year -> updateViewPager(7)
-        else -> false
-      }
+  override fun onCustomItemSelected(item: MenuItem): Boolean = false
 }

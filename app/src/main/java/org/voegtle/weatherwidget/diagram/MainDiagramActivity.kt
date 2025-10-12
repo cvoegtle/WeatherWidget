@@ -1,7 +1,6 @@
 package org.voegtle.weatherwidget.diagram
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 
@@ -21,23 +20,19 @@ class MainDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.winterdays2023)
   }
 
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    val inflater = menuInflater
-    inflater.inflate(R.menu.diagram_activity_menu, menu)
-    return super.onCreateOptionsMenu(menu)
+  override fun getMenu(): List<Pair<Int, () -> Unit>> {
+    return listOf(
+      Pair(R.string.action_7_days) { updatePage(0) },
+      Pair(R.string.action_7_days_owl) { updatePage(1) },
+      Pair(R.string.action_family_weather) { updatePage(2) },
+      Pair(R.string.action_7_days_average) { updatePage(3) },
+      Pair(R.string.action_rain) { updatePage(4) },
+      Pair(R.string.action_summer_days) { updatePage(5) },
+      Pair(R.string.action_summer_days2024) { updatePage(6) },
+      Pair(R.string.action_winter_days) { updatePage(7) },
+      Pair(R.string.action_winter_days2023) { updatePage(8) }
+    )
   }
 
-  override fun onCustomItemSelected(item: MenuItem): Boolean =
-      when (item.itemId) {
-        R.id.action_7_days -> updateViewPager(0)
-        R.id.action_7_days_owl -> updateViewPager(1)
-        R.id.action_family_weather -> updateViewPager(2)
-        R.id.action_7_days_average -> updateViewPager(3)
-        R.id.action_rain -> updateViewPager(4)
-        R.id.action_summerdays -> updateViewPager(5)
-        R.id.action_summerdays2024 -> updateViewPager(6)
-        R.id.action_winterdays -> updateViewPager(7)
-        R.id.action_winterdays2023 -> updateViewPager(8)
-        else -> false
-      }
+  override fun onCustomItemSelected(item: MenuItem): Boolean = false
 }

@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
+import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Settings
@@ -29,7 +30,7 @@ fun WeatherTopAppBar(
                 Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.action_reload))
             }
             IconButton(onClick = { onDiagramClicked(null) }) {
-                Icon(Icons.Default.BarChart, contentDescription = stringResource(id = R.string.action_diagrams))
+                Icon(Icons.Filled.Assessment, contentDescription = stringResource(id = R.string.action_diagrams))
             }
             IconButton(onClick = { onReorderClicked() }) {
                 Icon(Icons.AutoMirrored.Filled.Sort, contentDescription = stringResource(id = R.string.action_sort))
