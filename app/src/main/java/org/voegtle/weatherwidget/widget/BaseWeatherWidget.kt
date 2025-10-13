@@ -1,6 +1,9 @@
 package org.voegtle.weatherwidget.widget
 
 import android.content.Context
+import android.os.Build
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -15,6 +18,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
 import androidx.glance.Image
 import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
 import androidx.glance.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
@@ -27,6 +31,7 @@ import androidx.glance.appwidget.provideContent
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.background
 import androidx.glance.color.ColorProvider
+import androidx.glance.color.ColorProviders
 import androidx.glance.currentState
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -37,6 +42,7 @@ import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
+import androidx.glance.material3.ColorProviders
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
@@ -45,10 +51,12 @@ import com.google.gson.Gson
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.preferences.AppTheme
 import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.preferences.WidgetPreferences
+import org.voegtle.weatherwidget.ui.theme.WeatherGlanceTheme
 import org.voegtle.weatherwidget.util.DateUtil
 
 private const val WIDGET_DATA_KEY = "weather_lines"
@@ -67,7 +75,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         val locationDataSets = loadDataSetsFromPreferences()
         val fontSize = determineFontSize(locationDataSets, applicationPreferences.widgetPreferences)
 
-        GlanceTheme {
+        WeatherGlanceTheme(applicationPreferences.appTheme) {
             Scaffold(
                 backgroundColor = GlanceTheme.colors.surface,
                 modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>()).padding(top = 4.dp)

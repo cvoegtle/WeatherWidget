@@ -12,6 +12,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.glance.GlanceTheme
+import androidx.glance.material3.ColorProviders
 import org.voegtle.weatherwidget.preferences.AppTheme
 
 // Erstelle das lightColorScheme mit den Werten aus Color.kt
@@ -78,4 +80,30 @@ fun WeatherWidgetTheme(
         typography = Typography,
         content = content
     )
+}
+
+@Composable
+fun WeatherGlanceTheme(
+    appTheme: AppTheme,
+    content: @Composable () -> Unit
+) {
+    // 1. Prüfen, ob Dynamic Color (Material You) unterstützt wird (API 31+)
+    val supportsDynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    // 2. Das Farbschema festlegen
+    val colorScheme = when {
+        supportsDynamicColor && appTheme == AppTheme.LIGHT -> {
+            ColorProviders(dynamicLightColorScheme(androidx.glance.LocalContext.current))
+        }
+        supportsDynamicColor && appTheme == AppTheme.DARK -> {
+            ColorProviders(dynamicDarkColorScheme(androidx.glance.LocalContext.current))
+        }
+        else -> {
+            GlanceTheme.colors
+        }
+    }
+
+    GlanceTheme(colors = colorScheme) {
+        content()
+    }
 }
