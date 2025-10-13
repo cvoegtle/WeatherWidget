@@ -78,9 +78,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        readConfiguration(preferences)
-        preferences.registerOnSharedPreferenceChangeListener(this)
+        readConfiguration()
+        registerConfigurationChangeListener()
 
         locationOrderStore = LocationOrderStore(this.applicationContext)
         userLocationUpdater = UserLocationUpdater(this)
@@ -95,9 +94,14 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         }
     }
 
+    private fun registerConfigurationChangeListener() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
     @Composable
     fun WeatherApp(locationDataSets: List<LocationDataSet>) {
-        WeatherWidgetTheme {
+        WeatherWidgetTheme (appTheme = configuration!!.appTheme){
             Scaffold(
                 topBar = {
                     WeatherTopAppBar(
@@ -121,9 +125,9 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         }
     }
 
-    private fun readConfiguration(preferences: SharedPreferences) {
+    private fun readConfiguration() {
         val weatherPreferencesReader = WeatherPreferencesReader(this.applicationContext)
-        configuration = weatherPreferencesReader.read(preferences)
+        configuration = weatherPreferencesReader.read()
         requestPermissions()
         enableNotificationsIfPermitted()
     }
@@ -134,7 +138,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
-        readConfiguration(preferences)
+        readConfiguration()
         updateAll(true)
     }
 

@@ -22,9 +22,8 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     private val locationSorter = LocationSorter(applicationContext)
 
     init {
-        val preferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        val weatherPreferencesReader = WeatherPreferencesReader(applicationContext.resources)
-        configuration = weatherPreferencesReader.read(preferences)
+        val weatherPreferencesReader = WeatherPreferencesReader(applicationContext)
+        configuration = weatherPreferencesReader.read()
     }
 
     override suspend fun doWork(): Result {

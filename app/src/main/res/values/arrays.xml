@@ -8,6 +8,18 @@
     <item name="humidity">Luftfeuchtigkeit</item>
   </string-array>
 
+  <string-array name="app_theme_entries">
+    <item>System</item>
+    <item>Hell</item>
+    <item>Dunkel</item>
+  </string-array>
+
+  <string-array name="app_theme_values">
+    <item>system</item>
+    <item>light</item>
+    <item>dark</item>
+  </string-array>
+
   <string-array name="widget_font_size_entries">
     <item>sehr klein</item>
     <item>klein</item>

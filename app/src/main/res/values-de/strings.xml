@@ -136,4 +136,6 @@
   <string name="widget_max_values_title">Maximalanzahl Messwerte</string>
   <string name="widget_max_values_summary">Anzeige auf diese Anzahl Werte begrenzen</string>
   <string name="widget_content_summary">Festlegen welche und wieviele Messwerte angezeigt werden</string>
+  <string name="app_theme">Farbschema</string>
+  <string name="app_theme_summary">Farbschema der Wetterwolke festlegen</string>
 </resources>

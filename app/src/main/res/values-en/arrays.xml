@@ -8,6 +8,13 @@
     <item name="humidity">Humidity</item>
   </string-array>
 
+  <string-array name="app_theme_entries">
+    <item>System</item>
+    <item>Light</item>
+    <item>Dark</item>
+  </string-array>
+
+
   <string-array name="widget_font_size_entries">
     <item>very small</item>
     <item>small</item>

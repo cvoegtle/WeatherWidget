@@ -41,11 +41,11 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import androidx.preference.PreferenceManager
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
 import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.preferences.WidgetPreferences
@@ -63,9 +63,9 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
 
     @Composable
     private fun Content(context: Context) {
-        val widgetPreferences = readPreferences(context)
+        val applicationPreferences = readPreferences(context)
         val locationDataSets = loadDataSetsFromPreferences()
-        val fontSize = determineFontSize(locationDataSets, widgetPreferences)
+        val fontSize = determineFontSize(locationDataSets, applicationPreferences.widgetPreferences)
 
         GlanceTheme {
             Scaffold(
@@ -102,7 +102,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
 
     @Composable
     private fun WeatherRow(locationDataSet: LocationDataSet, fontSize: TextUnit, context: Context) {
-        val widgetPreferences = readPreferences(context)
+        val widgetPreferences = readPreferences(context).widgetPreferences
         Row(
             modifier = GlanceModifier
                 .fillMaxWidth()
@@ -217,10 +217,8 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
             else -> GlanceTheme.colors.onSurface
         }
 
-    protected fun readPreferences(context: Context): WidgetPreferences {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(context)
-        val (_, widgetPreferences, _) = WeatherPreferencesReader(context.resources).read(preferences)
-        return widgetPreferences
+    protected fun readPreferences(context: Context): ApplicationPreferences {
+        return WeatherPreferencesReader(context).read()
     }
 
 }

@@ -3,29 +3,28 @@ package org.voegtle.weatherwidget.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
+import android.preference.PreferenceManager
 import org.voegtle.weatherwidget.location.LocationFactory
 import org.voegtle.weatherwidget.location.WeatherLocation
 
 class WeatherPreferencesReader {
 
-  private val resources: Resources
+  private val context: Context
 
   constructor(context: Context) {
-    this.resources = context.resources
+    this.context = context
   }
 
-  constructor(resources: Resources) {
-    this.resources = resources
-  }
-
-  fun read(preferences: SharedPreferences): ApplicationPreferences {
-    return ApplicationPreferences(locations = readLocations(preferences),
+  fun read(): ApplicationPreferences {
+      val preferences = PreferenceManager.getDefaultSharedPreferences(context)
+      return ApplicationPreferences(locations = readLocations(preferences),
+                                  appTheme = readAppTheme(preferences),
                                 widgetPreferences = readWidgetPreferences(preferences),
                                secret = readString(preferences, "secret"))
   }
 
   private fun readLocations(preferences: SharedPreferences): List<WeatherLocation> {
-    val locations = LocationFactory.buildWeatherLocations(resources)
+    val locations = LocationFactory.buildWeatherLocations(context.resources)
     for (location in locations) {
       val visibleInWidgetByDefault = location.isVisibleInWidgetByDefault
       val visibleInAppByDefault = location.isVisibleInAppByDefault
@@ -37,6 +36,15 @@ class WeatherPreferencesReader {
     }
     return locations
   }
+
+    private fun readAppTheme(preferences: SharedPreferences): AppTheme {
+        val stringValue = readString(preferences, "app_theme")
+        return when (stringValue) {
+            "light" -> AppTheme.LIGHT
+            "dark" -> AppTheme.DARK
+            else -> AppTheme.SYSTEM
+        }
+    }
 
   private fun readWidgetPreferences(preferences: SharedPreferences): WidgetPreferences {
     return WidgetPreferences(fontCorrectionFactor = readFontCorrectionFactor(preferences),

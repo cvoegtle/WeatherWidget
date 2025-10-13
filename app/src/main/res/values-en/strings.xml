@@ -137,5 +137,8 @@
   <string name="widget_max_values_title">Number of values shown</string>
   <string name="widget_max_values_summary">Restrict number of values shown at a time</string>
   <string name="widget_content_summary">Define the values shown and how many at a time</string>
+  <string name="app_theme">Color theme</string>
+  <string name="app_theme_summary">Color theme of Wetter Wolke</string>
+
 
 </resources>
