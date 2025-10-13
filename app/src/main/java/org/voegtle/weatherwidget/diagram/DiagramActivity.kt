@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
@@ -63,6 +64,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.R
+import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
 import org.voegtle.weatherwidget.util.UserFeedback
 import java.io.ByteArrayOutputStream
@@ -80,11 +82,12 @@ abstract class DiagramActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val configuration = WeatherPreferencesReader(this).read()
         val diagramCache = DiagramCache(this)
         selectedPage.value = diagramCache.readCurrentDiagram(this.javaClass.name)
 
         setContent {
-            WeatherWidgetTheme {
+            WeatherWidgetTheme (appTheme = configuration.appTheme){
                 DiagramScreen()
             }
         }
@@ -96,7 +99,6 @@ abstract class DiagramActivity : AppCompatActivity() {
         val pagerState = rememberPagerState(initialPage = selectedPage.value, pageCount = { diagramIdList.size })
         val coroutineScope = rememberCoroutineScope()
         var menuExpanded by remember { mutableStateOf(false) }
-        var pagerUserScrollEnabled by remember { mutableStateOf(true) }
 
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { page ->
@@ -151,19 +153,17 @@ abstract class DiagramActivity : AppCompatActivity() {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.padding(innerPadding),
-                userScrollEnabled = pagerUserScrollEnabled
+                userScrollEnabled = true
             ) { page ->
                 val diagramId = diagramIdList[page]
                 val updateCount = diagramUpdateState[diagramId] ?: 0
-                DiagramPage(diagramId, updateCount) {
-                    pagerUserScrollEnabled = it
-                }
+                DiagramPage(diagramId, updateCount)
             }
         }
     }
 
     @Composable
-    fun DiagramPage(diagramId: DiagramEnum, updateCount: Int, onUserScrollEnabledChange: (Boolean) -> Unit) {
+    fun DiagramPage(diagramId: DiagramEnum, updateCount: Int) {
         var diagram by remember { mutableStateOf<Diagram?>(null) }
         val coroutineScope = rememberCoroutineScope()
 
@@ -181,7 +181,6 @@ abstract class DiagramActivity : AppCompatActivity() {
             ZoomableImage(
                 bitmap = drawableToBitmap(diagram!!.image).asImageBitmap(),
                 contentDescription = diagramId.toString(),
-                onUserScrollEnabledChange = onUserScrollEnabledChange
             )
         } else {
             Image(
@@ -199,16 +198,11 @@ abstract class DiagramActivity : AppCompatActivity() {
         bitmap: androidx.compose.ui.graphics.ImageBitmap,
         contentDescription: String,
         modifier: Modifier = Modifier,
-        onUserScrollEnabledChange: (Boolean) -> Unit
     ) {
         val scope = rememberCoroutineScope()
 
         val scale = remember { Animatable(1f) }
         val offset = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
-
-        LaunchedEffect(scale.value) {
-            onUserScrollEnabledChange(scale.value == 1f)
-        }
 
         BoxWithConstraints(modifier = modifier.fillMaxSize()) {
             val transformableState = rememberTransformableState { zoomChange, offsetChange, _ ->
@@ -248,6 +242,7 @@ abstract class DiagramActivity : AppCompatActivity() {
                                     }
                                 }
                             }
+
                         )
                     }
                     .graphicsLayer(
@@ -256,7 +251,10 @@ abstract class DiagramActivity : AppCompatActivity() {
                         translationX = offset.value.x,
                         translationY = offset.value.y
                     )
-                    .transformable(state = transformableState),
+                    .transformable(
+                        state = transformableState,
+                        canPan = { scale.value > 1f }
+                    ),
                 contentScale = ContentScale.Fit,
             )
         }
