@@ -11,7 +11,6 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.preference.PreferenceManager
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
@@ -30,7 +29,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Share
@@ -119,13 +118,15 @@ abstract class DiagramActivity : AppCompatActivity() {
                     title = { Text(getCaption()) },
                     navigationIcon = {
                         IconButton(onClick = { onBackPressedDispatcher.onBackPressed() }) {
-                            Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
                     actions = {
                         IconButton(onClick = {
+                            val currentDiagram = diagramIdList[pagerState.currentPage]
+                            clearImage(currentDiagram)
                             coroutineScope.launch {
-                                updateDiagram(diagramIdList[pagerState.currentPage], true)
+                                updateDiagram(currentDiagram, true)
                             }
                         }) {
                             Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.action_reload))
@@ -170,14 +171,14 @@ abstract class DiagramActivity : AppCompatActivity() {
         LaunchedEffect(diagramId, updateCount) {
             val diagramCache = DiagramCache(this@DiagramActivity)
             diagram = diagramCache.read(diagramId)
-            if (diagram == null) {
+            if (diagram == null || diagram!!.isOld()) {
                 coroutineScope.launch {
                     updateDiagram(diagramId, false)
                 }
             }
         }
 
-        if (diagram != null) {
+        if (diagram != null && !diagram!!.isOld()) {
             ZoomableImage(
                 bitmap = drawableToBitmap(diagram!!.image).asImageBitmap(),
                 contentDescription = diagramId.toString(),
@@ -264,9 +265,18 @@ abstract class DiagramActivity : AppCompatActivity() {
     private suspend fun updateDiagram(diagramId: DiagramEnum, force: Boolean) {
         val diagramManager = DiagramManager(this)
         diagramManager.updateDiagram(diagramId, force)
-        diagramUpdateState[diagramId] = (diagramUpdateState[diagramId] ?: 0) + 1
+        incrementUpdateState(diagramId)
     }
 
+    fun clearImage(currentDiagram: DiagramEnum) {
+        val diagramCache = DiagramCache(this)
+        diagramCache.clear(currentDiagram)
+        incrementUpdateState(currentDiagram)
+    }
+
+    private fun incrementUpdateState(diagramId: DiagramEnum) {
+        diagramUpdateState[diagramId] = (diagramUpdateState[diagramId] ?: 0) + 1
+    }
 
     protected open fun getCaption() = getString(R.string.action_diagrams)
 
