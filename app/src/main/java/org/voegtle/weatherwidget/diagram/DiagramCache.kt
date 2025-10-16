@@ -31,7 +31,12 @@ internal class DiagramCache(private val context: Context) {
 
     fun read(diagramId: DiagramEnum): Diagram? {
         val age = diagramPreferences.getLong(getAgeKey(diagramId), -1)
-        return if (age > 0) readInternal(diagramId, age) else null
+        try {
+           return if (age > 0) readInternal(diagramId, age) else null
+        } catch (ex: IOException) {
+            clear(diagramId)
+            return null
+        }
     }
 
     fun clear(diagramId: DiagramEnum) {
