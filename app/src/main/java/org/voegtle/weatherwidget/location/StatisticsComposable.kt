@@ -1,12 +1,10 @@
 package org.voegtle.weatherwidget.location
 
-import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -14,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -23,7 +21,6 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.times
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
@@ -46,13 +43,16 @@ private const val WEIGHT_KWH = 1.0f
 @Composable
 fun StatisticsComposable(statistics: Statistics, color: Color) {
     val visibility = detectVisibleColumns(statistics)
-    Surface(color = color) {
-        Column(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
-            StatisticsCaptionRow(statistics.kind, visibility)
-            StatisticsContentRow(statistics[Statistics.TimeRange.today], statistics.kind, visibility)
-            StatisticsContentRow(statistics[Statistics.TimeRange.yesterday], statistics.kind, visibility)
-            StatisticsContentRow(statistics[Statistics.TimeRange.last7days], statistics.kind, visibility)
-            StatisticsContentRow(statistics[Statistics.TimeRange.last30days], statistics.kind, visibility)
+    val dataColumnsWidth = calculateDataColumnWidth(visibility)
+    Surface(color = color, modifier = Modifier.fillMaxWidth()) {
+        Row() {
+            Column(modifier = Modifier.fillMaxWidth(dataColumnsWidth).padding(4.dp)) {
+                StatisticsCaptionRow(statistics.kind, visibility)
+                StatisticsContentRow(statistics[Statistics.TimeRange.today], statistics.kind, visibility)
+                StatisticsContentRow(statistics[Statistics.TimeRange.yesterday], statistics.kind, visibility)
+                StatisticsContentRow(statistics[Statistics.TimeRange.last7days], statistics.kind, visibility)
+                StatisticsContentRow(statistics[Statistics.TimeRange.last30days], statistics.kind, visibility)
+            }
         }
     }
 }
@@ -135,6 +135,16 @@ fun TextContent(text: String, modifier: Modifier) {
 @Composable
 private fun calculateDefaultColumnWidth(visibility: ColumnVisibility): Dp {
     return  calculateColumnWidth("Regen", visibility)
+}
+
+private const val maxNumberOfDefaultColumns = 9
+
+@Composable
+private fun calculateDataColumnWidth(visibility: ColumnVisibility): Float {
+    val defaultColumnWidth = calculateDefaultColumnWidth(visibility)
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val maxUseFullWidth = defaultColumnWidth* maxNumberOfDefaultColumns
+    return if (screenWidth > maxUseFullWidth) maxUseFullWidth/screenWidth else 1.0f
 }
 
 @Composable
