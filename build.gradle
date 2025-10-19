@@ -41,7 +41,7 @@ allprojects {
 subprojects {
     tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "21"
             // Use experimental APIs
             freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn']
         }
