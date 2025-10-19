@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -91,7 +92,7 @@ fun LocationCaption(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(30.dp)
+                .heightIn(min = 30.dp, max = 68.dp)
                 .padding(start = 4.dp),
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
         ) {
@@ -99,7 +100,7 @@ fun LocationCaption(
                 text = caption,
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).padding(start = 2.dp, top = 2.dp, bottom = 2.dp)
             )
 
             IconButton(onClick = onDiagramClick, modifier = Modifier.size(30.dp)) {
