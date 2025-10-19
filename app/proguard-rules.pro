@@ -34,6 +34,4 @@
 }
 
 # Keep classes for Gson
--keep class org.voegtle.weatherwidget.data.** { *; }
--keep class org.voegtle.weatherwidget.location.** { *; }
--keep class org.voegtle.weatherwidget.util.FetchAllResponse { *; }
+-keep class org.voegtle.weatherwidget.** { *; }
