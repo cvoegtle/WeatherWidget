@@ -61,6 +61,7 @@ import org.voegtle.weatherwidget.util.UserFeedback
 import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
 import java.util.Date
+import androidx.core.net.toUri
 
 class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var configuration: ApplicationPreferences? = null
@@ -351,9 +352,8 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     private fun onDataMiningButtonClick() {
         val browserIntent = Intent(
-            Intent.ACTION_VIEW, Uri.parse(
-                "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"
-            )
+            Intent.ACTION_VIEW,
+            "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing".toUri()
         )
         startActivity(browserIntent)
     }

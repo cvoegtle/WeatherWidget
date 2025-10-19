@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -61,6 +62,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
@@ -97,7 +99,6 @@ abstract class DiagramActivity : AppCompatActivity() {
     fun DiagramScreen() {
         val pagerState = rememberPagerState(initialPage = selectedPage.value, pageCount = { diagramIdList.size })
         val coroutineScope = rememberCoroutineScope()
-        var menuExpanded by remember { mutableStateOf(false) }
 
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { page ->
@@ -114,41 +115,16 @@ abstract class DiagramActivity : AppCompatActivity() {
 
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(getCaption()) },
-                    navigationIcon = {
-                        IconButton(onClick = { onBackPressedDispatcher.onBackPressed() }) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                DiagramTopBar(getCaption(), getMenu(),
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
+                    onRefresh = {
+                        val currentDiagram = diagramIdList[pagerState.currentPage]
+                        clearImage(currentDiagram)
+                        coroutineScope.launch {
+                            updateDiagram(currentDiagram, true)
                         }
                     },
-                    actions = {
-                        IconButton(onClick = {
-                            val currentDiagram = diagramIdList[pagerState.currentPage]
-                            clearImage(currentDiagram)
-                            coroutineScope.launch {
-                                updateDiagram(currentDiagram, true)
-                            }
-                        }) {
-                            Icon(Icons.Default.Refresh, contentDescription = stringResource(id = R.string.action_reload))
-                        }
-                        IconButton(onClick = { shareCurrentImage(pagerState.currentPage) }) {
-                            Icon(Icons.Default.Share, contentDescription = stringResource(id = R.string.action_share))
-                        }
-                        IconButton(onClick = { menuExpanded = true }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More")
-                        }
-                        DropdownMenu(
-                            expanded = menuExpanded,
-                            onDismissRequest = { menuExpanded = false }
-                        ) {
-                            getMenu().forEach { (titleRes, action) ->
-                                DropdownMenuItem(text = { Text(stringResource(id = titleRes)) }, onClick = {
-                                    action()
-                                    menuExpanded = false
-                                })
-                            }
-                        }
-                    })
+                    onShare = { shareCurrentImage(pagerState.currentPage) })
             }
         ) { innerPadding ->
             HorizontalPager(
@@ -475,3 +451,4 @@ abstract class DiagramActivity : AppCompatActivity() {
     protected abstract val placeHolderId: Int
 
 }
+

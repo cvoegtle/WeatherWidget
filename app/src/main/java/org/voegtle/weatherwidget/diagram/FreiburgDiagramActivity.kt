@@ -13,6 +13,7 @@ class FreiburgDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.freiburg_2days)
     addDiagram(DiagramEnum.freiburg_wind)
     addDiagram(DiagramEnum.freiburg_sun)
+    addDiagram(DiagramEnum.freiburg_barometer)
     addDiagram(DiagramEnum.freiburg_30days)
     addDiagram(DiagramEnum.freiburg_lastyear)
     addDiagram(DiagramEnum.freiburg_year)
@@ -23,9 +24,10 @@ class FreiburgDiagramActivity : DiagramActivity() {
       Pair(R.string.action_rain) { updatePage(0) },
       Pair(R.string.action_wind) { updatePage(1) },
       Pair(R.string.action_sun) { updatePage(2) },
-      Pair(R.string.action_30_days) { updatePage(3) },
-      Pair(R.string.action_last_year) { updatePage(4) },
-      Pair(R.string.action_year) { updatePage(5) }
+      Pair(R.string.action_barometer) { updatePage(3) },
+      Pair(R.string.action_30_days) { updatePage(4) },
+      Pair(R.string.action_last_year) { updatePage(5) },
+      Pair(R.string.action_year) { updatePage(6) }
     )
   }
 

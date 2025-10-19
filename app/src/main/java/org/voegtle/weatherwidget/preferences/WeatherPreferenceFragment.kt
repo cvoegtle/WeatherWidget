@@ -12,9 +12,6 @@ class WeatherPreferenceFragment : PreferenceFragmentCompat(), PreferenceFragment
     private val PLACEHOLDER_VERSION = "{v}"
     private val PLACEHOLDER_BUILD = "{b}"
 
-    // Du hast VERSION_INFO_KEY als "version" definiert.
-    // Der Key für deinen konfigurierbaren Screen ist "screen_stationen" aus der XML.
-    // Dieser wird in onPreferenceStartScreen relevant.
     private val VERSION_INFO_KEY = "version"
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -55,7 +52,7 @@ class WeatherPreferenceFragment : PreferenceFragmentCompat(), PreferenceFragment
     ): Boolean {
         val fragment: Fragment = WeatherPreferenceFragment()
         val args = Bundle()
-        args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, screen.key)
+        args.putString(ARG_PREFERENCE_ROOT, screen.key)
         fragment.arguments = args
 
         parentFragmentManager.beginTransaction()

@@ -4,28 +4,20 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import org.voegtle.weatherwidget.preferences.OrderCriteria
+import androidx.core.content.edit
 
 class LocationOrderStore(context: Context) {
   private val LOCATION_STORE = "LOCATION_STORE"
-  private val INDEX_OF = "INDEX_OF_"
   private val ORDER_CRITERIA = "ORDER_CRITERIA"
   private val LATITUDE = "LATITUDE"
   private val LONGITUDE = "LONGITUDE"
 
   private val locationStore = context.getSharedPreferences(LOCATION_STORE, Context.MODE_PRIVATE)
 
-  fun readIndexOf(viewId: Int) = locationStore.getInt(INDEX_OF + viewId, 1000)
-
-   fun writeIndexOf(viewId: Int, index: Int) {
-    val editor = locationStore.edit()
-    editor.putInt(INDEX_OF + viewId, index)
-    editor.apply()
-  }
-
   fun writeOrderCriteria(orderCriteria: OrderCriteria) {
-    val editor = locationStore.edit()
-    editor.putString(ORDER_CRITERIA, orderCriteria.toString())
-    editor.apply()
+      locationStore.edit {
+          putString(ORDER_CRITERIA, orderCriteria.toString())
+      }
   }
 
   fun readOrderCriteria(): OrderCriteria {
@@ -34,10 +26,10 @@ class LocationOrderStore(context: Context) {
   }
 
   fun writePosition(userPosition: Position) {
-    val editor = locationStore.edit()
-    editor.putFloat(LATITUDE, userPosition.latitude)
-    editor.putFloat(LONGITUDE, userPosition.longitude)
-    editor.apply()
+      locationStore.edit {
+          putFloat(LATITUDE, userPosition.latitude)
+          putFloat(LONGITUDE, userPosition.longitude)
+      }
   }
 
   /**

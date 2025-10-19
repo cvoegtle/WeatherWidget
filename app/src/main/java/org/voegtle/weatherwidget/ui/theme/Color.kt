@@ -30,9 +30,3 @@ val md_theme_light_inverseOnSurface = Color(0xFFF4EFF4)
 val md_theme_light_inverseSurface = Color(0xFF313033)
 val md_theme_light_inversePrimary = Color(0xFFD0BCFF)
 
-// Definiere hier auch die Farben für dein dunkles Theme.
-// Diese Werte sind Beispiele und sollten durch deine tatsächlichen Dark-Theme-Farben ersetzt werden.
-val md_theme_dark_primary = Color(0xFFD0BCFF)
-val md_theme_dark_onPrimary = Color(0xFF381E72)
-val md_theme_dark_primaryContainer = Color(0xFF4F378B)
-// ... und so weiter für alle Farben des dunklen Themes.

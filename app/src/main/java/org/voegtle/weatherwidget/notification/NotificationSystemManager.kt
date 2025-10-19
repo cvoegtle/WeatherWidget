@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.WeatherData
@@ -124,7 +125,7 @@ class NotificationSystemManager(private val context: Context, private val config
     }
 
 
-    @TargetApi(26)
+    @RequiresApi(26)
     private fun setupNotificationChannel() {
         // The id of the channel.
         val name = res.getString(R.string.channel_name)
