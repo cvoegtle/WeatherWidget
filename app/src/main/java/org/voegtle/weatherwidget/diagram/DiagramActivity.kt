@@ -108,7 +108,7 @@ abstract class DiagramActivity : AppCompatActivity() {
 
         LaunchedEffect(selectedPage.value) {
             if (pagerState.currentPage != selectedPage.value) {
-                pagerState.animateScrollToPage(selectedPage.value)
+                pagerState.scrollToPage(selectedPage.value)
             }
         }
 
@@ -451,4 +451,3 @@ abstract class DiagramActivity : AppCompatActivity() {
     protected abstract val placeHolderId: Int
 
 }
-
