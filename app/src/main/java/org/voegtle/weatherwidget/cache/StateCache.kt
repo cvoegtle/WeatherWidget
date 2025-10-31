@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import java.util.Date
+import androidx.core.content.edit
 
 class StateCache(context: Context) {
   private val STATE_CACHE = "STATE"
@@ -24,11 +25,11 @@ class StateCache(context: Context) {
   }
 
   fun save(state: State) {
-    val editor = statePreferences.edit()
-    editor.putLong(getKey(STATE_AGE, state.id), state.age?.time ?: -1)
-    editor.putBoolean(getKey(STATE, state.id), state.isExpanded)
-    editor.putString(getKey(STATISTICS, state.id), state.statistics)
-    editor.apply()
+      statePreferences.edit {
+          putLong(getKey(STATE_AGE, state.id), state.age?.time ?: -1)
+          putBoolean(getKey(STATE, state.id), state.isExpanded)
+          putString(getKey(STATISTICS, state.id), state.statistics)
+      }
   }
 
   private fun getKey(prefix: String, id: LocationIdentifier) = prefix + id

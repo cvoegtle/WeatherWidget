@@ -144,11 +144,13 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     private var timeOfLastUpdate: Date = DateUtil.yesterday
+    private var updateTaskRunning: Boolean = false
     fun updateAll(showToast: Boolean) {
         if (DateUtil.isMinimumTimeSinceLastUpdate(timeOfLastUpdate)) {
             timeOfLastUpdate = Date()
-            updateWeather(showToast)
-            updateStatistics(false)
+            updateTaskRunning = true
+            updateWeather({ if (updateTaskRunning) updateTaskRunning = false else updateActivity(showToast) })
+            updateStatistics({ if (updateTaskRunning) updateTaskRunning = false else updateActivity(showToast) })
         }
     }
 
@@ -217,7 +219,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         updateAll(false)
     }
 
-    fun updateWeather(showToast: Boolean) {
+    fun updateWeather(onWorkFinished: (() -> Unit)) {
         userLocationUpdater!!.updateLocation()
 
         val weatherDataUpdateRequest = OneTimeWorkRequestBuilder<WeatherDataUpdateWorker>().addTag(WeatherDataUpdateWorker.WEATHER_DATA).build()
@@ -227,13 +229,13 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
         val observer = Observer<WorkInfo?>() { latestWorkInfo ->
             if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
-                updateActivity(showToast)
+                onWorkFinished()
             }
         }
         workInfoByIdLiveData.observe(this, observer)
     }
 
-    fun updateStatistics(showToast: Boolean) {
+    fun updateStatistics(onWorkFinished: (() -> Unit)) {
         val statisticsUpdateRequest = OneTimeWorkRequestBuilder<StatisticUpdateWorker>().addTag(StatisticUpdateWorker.STATISTIC_DATA).build()
         val workManager = WorkManager.getInstance(applicationContext)
         workManager.enqueue(statisticsUpdateRequest)
@@ -241,7 +243,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
         val observer = Observer<WorkInfo?>() { latestWorkInfo ->
             if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
-                updateActivity(showToast)
+                onWorkFinished()
             }
         }
         workInfoByIdLiveData.observe(this, observer)
@@ -329,7 +331,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         stateCache!!.save(state)
 
         if (isExpanded) {
-            updateStatistics(false)
+            updateStatistics({updateActivity(false)})
         } else {
             updateActivity(false)
         }
@@ -358,4 +360,3 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         startActivity(browserIntent)
     }
 }
-
