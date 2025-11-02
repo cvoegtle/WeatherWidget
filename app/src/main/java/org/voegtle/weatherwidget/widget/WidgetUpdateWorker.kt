@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import org.voegtle.weatherwidget.cache.WeatherDataCache
+import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
@@ -20,6 +22,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     private val weatherDataFetcher = WeatherDataFetcher(ContextUtil.getBuildNumber(appContext))
     private val locationDataSetFactory = LocationDataSetFactory(applicationContext)
     private val locationSorter = LocationSorter(applicationContext)
+    private val weatherDataCache = WeatherDataCache(applicationContext)
 
     init {
         val weatherPreferencesReader = WeatherPreferencesReader(applicationContext)
@@ -30,16 +33,12 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
         try {
             val response = fetchWeatherDataFromServer()
             if (response.valid) {
-                // Update the Glance widget state
-                val locationDataSets = locationDataSetFactory.assembleLocationDataSets(configuration.locations, response.weatherMap)
-                locationSorter.sort(locationDataSets)
+                updatedCache(response)
 
+                val locationDataSets = convertToSortedLocationDataSets(response)
                 updateWeatherWidgetState(applicationContext, locationDataSets)
-
-                // Update notifications (optional, but good to keep)
                 updateNotification(response)
             } else {
-                // Optionally, you could update the widget to show an error state
                 Log.e(WidgetUpdateWorker::class.java.toString(), "Failed to fetch weather data in background")
             }
         } catch (th: Throwable) {
@@ -48,6 +47,16 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
         }
 
         return Result.success()
+    }
+
+    private fun updatedCache(response: FetchAllResponse) {
+        weatherDataCache.write(response)
+    }
+
+    private fun convertToSortedLocationDataSets(response: FetchAllResponse): List<LocationDataSet> {
+        val locationDataSets = locationDataSetFactory.assembleLocationDataSets(configuration.locations, response.weatherMap)
+        locationSorter.sort(locationDataSets)
+        return locationDataSets
     }
 
     private fun fetchWeatherDataFromServer(): FetchAllResponse {

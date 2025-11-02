@@ -14,7 +14,7 @@ class WeatherDataUpdateWorker(appContext: Context, workerParams: WorkerParameter
 
   override fun doWork(): Result {
     val weatherData = fetchWeatherData()
-    weatherDataCache.write(Gson().toJson(weatherData))
+    weatherDataCache.write(weatherData)
     return Result.success()
   }
 

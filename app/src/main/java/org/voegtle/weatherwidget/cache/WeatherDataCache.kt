@@ -21,9 +21,9 @@ class WeatherDataCache(context: Context) {
         }
     }
 
-    fun write(weatherData: String) {
+    fun write(weatherData: FetchAllResponse) {
         weatherDataPreferences.edit {
-            putString(LATEST, weatherData)
+            putString(LATEST, Gson().toJson(weatherData))
         }
     }
 
