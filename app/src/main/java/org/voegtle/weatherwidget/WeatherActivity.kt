@@ -135,6 +135,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     override fun onResume() {
         super.onResume()
+        updateActivity(false)
         updateAll(false)
     }
 
