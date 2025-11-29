@@ -27,24 +27,13 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,11 +47,10 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import kotlinx.coroutines.CoroutineScope
+import androidx.core.graphics.createBitmap
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
@@ -78,14 +66,14 @@ import java.util.Date
 
 abstract class DiagramActivity : AppCompatActivity() {
     protected var diagramIdList = ArrayList<DiagramEnum>()
-    private val selectedPage = mutableStateOf(0)
+    private val selectedPage = mutableIntStateOf(0)
     private val diagramUpdateState = mutableStateMapOf<DiagramEnum, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val configuration = WeatherPreferencesReader(this).read()
         val diagramCache = DiagramCache(this)
-        selectedPage.value = diagramCache.readCurrentDiagram(this.javaClass.name)
+        selectedPage.intValue = diagramCache.readCurrentDiagram(this.javaClass.name)
 
         setContent {
             WeatherWidgetTheme (appTheme = configuration.appTheme){
@@ -97,18 +85,18 @@ abstract class DiagramActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
     @Composable
     fun DiagramScreen() {
-        val pagerState = rememberPagerState(initialPage = selectedPage.value, pageCount = { diagramIdList.size })
+        val pagerState = rememberPagerState(initialPage = selectedPage.intValue, pageCount = { diagramIdList.size })
         val coroutineScope = rememberCoroutineScope()
 
         LaunchedEffect(pagerState) {
             snapshotFlow { pagerState.currentPage }.collect { page ->
-                selectedPage.value = page
+                selectedPage.intValue = page
             }
         }
 
-        LaunchedEffect(selectedPage.value) {
-            if (pagerState.currentPage != selectedPage.value) {
-                pagerState.scrollToPage(selectedPage.value)
+        LaunchedEffect(selectedPage.intValue) {
+            if (pagerState.currentPage != selectedPage.intValue) {
+                pagerState.scrollToPage(selectedPage.intValue)
             }
         }
 
@@ -413,8 +401,7 @@ abstract class DiagramActivity : AppCompatActivity() {
             return drawable.bitmap
         }
 
-        val bitmap =
-            Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)

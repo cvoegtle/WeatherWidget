@@ -17,7 +17,7 @@ class MainDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.summerdays)
     addDiagram(DiagramEnum.summerdays2024)
     addDiagram(DiagramEnum.winterdays)
-    addDiagram(DiagramEnum.winterdays2023)
+    addDiagram(DiagramEnum.winterdays2024)
   }
 
   override fun getMenu(): List<Pair<Int, () -> Unit>> {
@@ -30,7 +30,7 @@ class MainDiagramActivity : DiagramActivity() {
       Pair(R.string.action_summer_days) { updatePage(5) },
       Pair(R.string.action_summer_days2024) { updatePage(6) },
       Pair(R.string.action_winter_days) { updatePage(7) },
-      Pair(R.string.action_winter_days2023) { updatePage(8) }
+      Pair(R.string.action_winter_days2024) { updatePage(8) }
     )
   }
 

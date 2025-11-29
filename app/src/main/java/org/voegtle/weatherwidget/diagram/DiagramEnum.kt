@@ -5,8 +5,8 @@ enum class DiagramEnum(val url: String) {
     average7days("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1780492499&format=image"),
     summerdays("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1457711726&format=image"),
     summerdays2024("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1147986908&format=image"),
-    winterdays("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1688397000&format=image"),
-    winterdays2023("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1676388768&format=image"),
+    winterdays("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=9566125&format=image"),
+    winterdays2024("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1688397000&format=image"),
     rain("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=477091892&format=image"),
     pb_bali_leo("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=738029596&format=image"),
 
@@ -40,6 +40,8 @@ enum class DiagramEnum(val url: String) {
     bali_lastyear("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=583402693&format=image"),
 
     mobil_7days("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1380559031&format=image"),
+    mobil_wind("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1116320937&format=image"),
+    mobil_30days("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1042389001&format=image"),
     mobil_freiburg("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1683337276&format=image"),
 
     leo_30days("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1610295076&format=image"),

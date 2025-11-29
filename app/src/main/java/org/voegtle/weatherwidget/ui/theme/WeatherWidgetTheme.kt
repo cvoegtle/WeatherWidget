@@ -16,7 +16,6 @@ import androidx.glance.GlanceTheme
 import androidx.glance.material3.ColorProviders
 import org.voegtle.weatherwidget.preferences.AppTheme
 
-// Erstelle das lightColorScheme mit den Werten aus Color.kt
 private val LightColorScheme = lightColorScheme(
     primary = md_theme_light_primary,
     onPrimary = md_theme_light_onPrimary,
