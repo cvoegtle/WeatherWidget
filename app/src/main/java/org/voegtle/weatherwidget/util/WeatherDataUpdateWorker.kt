@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.cache.WeatherDataCache
+import org.voegtle.weatherwidget.watch.WatchDataStore
 
 class WeatherDataUpdateWorker(appContext: Context, workerParams: WorkerParameters) : UpdateWorker(appContext, workerParams) {
   companion object {
@@ -11,11 +12,24 @@ class WeatherDataUpdateWorker(appContext: Context, workerParams: WorkerParameter
   }
 
   val weatherDataCache = WeatherDataCache(appContext)
+  val watchDataStore = WatchDataStore(appContext)
+
 
   override fun doWork(): Result {
     val weatherData = fetchWeatherData()
-    weatherDataCache.write(weatherData)
+    updateCache(weatherData)
+    updateWatch(weatherData)
     return Result.success()
+  }
+
+  private fun updateCache(weatherData: FetchAllResponse) {
+    weatherDataCache.write(weatherData)
+  }
+
+  private fun updateWatch(weatherData: FetchAllResponse) {
+    if (weatherData.valid) {
+      watchDataStore.sendWeatherData(weatherData.weatherMap)
+    }
   }
 
   private fun fetchWeatherData(): FetchAllResponse {

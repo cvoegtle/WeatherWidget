@@ -14,6 +14,7 @@ import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.util.ContextUtil
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.WeatherDataFetcher
+import org.voegtle.weatherwidget.watch.WatchDataStore
 
 class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
@@ -23,6 +24,8 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     private val locationDataSetFactory = LocationDataSetFactory(applicationContext)
     private val locationSorter = LocationSorter(applicationContext)
     private val weatherDataCache = WeatherDataCache(applicationContext)
+    private val watchDataStore = WatchDataStore(applicationContext)
+
 
     init {
         val weatherPreferencesReader = WeatherPreferencesReader(applicationContext)
@@ -34,6 +37,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
             val response = fetchWeatherDataFromServer()
             if (response.valid) {
                 updatedCache(response)
+                updateWatch(response)
 
                 val locationDataSets = convertToSortedLocationDataSets(response)
                 updateWeatherWidgetState(applicationContext, locationDataSets)
@@ -51,6 +55,12 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
 
     private fun updatedCache(response: FetchAllResponse) {
         weatherDataCache.write(response)
+    }
+
+    private fun updateWatch(response: FetchAllResponse) {
+        if (response.valid) {
+            watchDataStore.sendWeatherData(response.weatherMap)
+        }
     }
 
     private fun convertToSortedLocationDataSets(response: FetchAllResponse): List<LocationDataSet> {
