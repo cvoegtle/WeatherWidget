@@ -21,17 +21,17 @@ class WatchDataStore(private val context: Context) {
     }
 
     private fun pushWeatherData(weatherMap: HashMap<LocationIdentifier, WeatherData>) {
-        weatherMap.forEach { weatherData ->
-            val gson = Gson()
-            val putDataMapReq = PutDataMapRequest.create(WEATHER_DATA_PATH)
-            val weatherDataJson = gson.toJson(weatherData.value)
-            putDataMapReq.dataMap.putString(weatherData.key.id, weatherDataJson)
-            val putDataReq = putDataMapReq.asPutDataRequest().setUrgent()
-            Wearable.getDataClient(context).putDataItem(putDataReq).addOnSuccessListener {
-                Log.d(this::class.simpleName, "Sent weather data to Wear OS for ${weatherData.key.id}")
-            }.addOnFailureListener { e ->
-                Log.e(this::class.simpleName, "Failed to send weather data to Wear OS", e)
-            }
+        val gson = Gson()
+        val putDataMapReq = PutDataMapRequest.create(WEATHER_DATA_PATH)
+        for ((key, value) in weatherMap) {
+            val weatherDataJson = gson.toJson(value)
+            putDataMapReq.dataMap.putString(key.id, weatherDataJson)
+        }
+        val putDataReq = putDataMapReq.asPutDataRequest().setUrgent()
+        Wearable.getDataClient(context).putDataItem(putDataReq).addOnSuccessListener {
+            Log.d(this::class.simpleName, "Sent weather data to Wear OS")
+        }.addOnFailureListener { e ->
+            Log.e(this::class.simpleName, "Failed to send weather data to Wear OS", e)
         }
     }
 }

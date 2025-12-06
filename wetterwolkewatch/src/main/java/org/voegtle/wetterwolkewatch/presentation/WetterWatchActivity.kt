@@ -1,4 +1,3 @@
-
 package org.voegtle.wetterwolkewatch.presentation
 
 import android.net.Uri
@@ -89,7 +88,9 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
             .build()
 
         dataClient.getDataItems(uri).addOnSuccessListener { dataItemBuffer ->
-            dataItemBuffer.firstOrNull()?.let { updateWeatherData(it) }
+            dataItemBuffer.forEach { dataItem ->
+                updateWeatherData(dataItem)
+            }
             dataItemBuffer.release()
         }.addOnFailureListener { e ->
             Log.e(TAG, "Failed to fetch data items", e)
@@ -100,10 +101,22 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
     private fun updateWeatherData(dataItem: DataItem) {
         try {
             val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
-            val json = dataMap.getString(LocationIdentifier.Paderborn.id)
+            var key = LocationIdentifier.Paderborn.id
+            var json = dataMap.getString(key)
+
+            if (json == null) {
+                dataMap.keySet().firstOrNull()?.let { fallbackKey ->
+                    key = fallbackKey
+                    json = dataMap.getString(fallbackKey)
+                    Log.d(TAG, "Paderborn not found, falling back to $fallbackKey")
+                }
+            }
+
             if (json != null) {
                 weatherData = gson.fromJson(json, WeatherData::class.java)
-                Log.d(TAG, "Updated weather data: $weatherData")
+                Log.d(TAG, "Updated weather data for $key: $weatherData")
+            } else {
+                Log.w(TAG, "No weather data found in DataItem.")
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to deserialize weather data", e)

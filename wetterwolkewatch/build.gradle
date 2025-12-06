@@ -10,8 +10,17 @@ android {
         version = release(36)
     }
 
+    signingConfigs {
+        cvoegtle {
+            storeFile file("/Users/cv/Google_Developer/cvoegtle.signing.jks")
+            storePassword "insecure"
+            keyAlias 'cvoegtle'
+            keyPassword "insecure"
+        }
+    }
+
     defaultConfig {
-        applicationId "org.voegtle.wetterwolkewatch"
+        applicationId "org.voegtle.weatherwidget"
         minSdk 30
         targetSdk 36
         versionCode 1
@@ -22,7 +31,11 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.cvoegtle
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.cvoegtle
         }
     }
     compileOptions {
