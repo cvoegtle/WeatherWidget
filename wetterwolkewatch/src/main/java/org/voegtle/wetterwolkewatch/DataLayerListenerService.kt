@@ -5,6 +5,8 @@ import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.WearableListenerService
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.WeatherData
 
 private const val WEATHER_DATA_PATH = "/weather-data"
@@ -14,16 +16,15 @@ class DataLayerListenerService : WearableListenerService() {
     override fun onDataChanged(dataEvents: DataEventBuffer) {
         Log.d("DataLayerListener", "onDataChanged: $dataEvents")
         for (event in dataEvents) {
+            val dataItem = event.dataItem
             if (event.type == com.google.android.gms.wearable.DataEvent.TYPE_CHANGED &&
-                event.dataItem.uri.path == WEATHER_DATA_PATH
+                dataItem.uri.path == WEATHER_DATA_PATH
             ) {
-                val dataMap = DataMapItem.fromDataItem(event.dataItem).dataMap
-                val gson = Gson()
-                for (key in dataMap.keySet()) {
-                    val weatherDataJson = dataMap.getString(key)
-                    val weatherData = gson.fromJson(weatherDataJson, WeatherData::class.java)
-                    // TODO: Process the received weather data
-                    Log.d("DataLayerListener", "Received weather data for $key: $weatherData")
+                val data: ByteArray? = dataItem.data
+                data?.let {
+                    val json = it.toString(Charsets.UTF_8)
+                    val listType = object : TypeToken<List<LocationDataSet>>() {}.type
+                    val locationDataSets: List<LocationDataSet> = Gson().fromJson(json, listType)
                 }
             }
         }

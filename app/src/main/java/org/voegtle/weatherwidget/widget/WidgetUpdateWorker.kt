@@ -24,12 +24,13 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     private val locationDataSetFactory = LocationDataSetFactory(applicationContext)
     private val locationSorter = LocationSorter(applicationContext)
     private val weatherDataCache = WeatherDataCache(applicationContext)
-    private val watchDataStore = WatchDataStore(applicationContext)
+    private val watchDataStore: WatchDataStore
 
 
     init {
         val weatherPreferencesReader = WeatherPreferencesReader(applicationContext)
         configuration = weatherPreferencesReader.read()
+        watchDataStore = WatchDataStore(applicationContext, configuration)
     }
 
     override suspend fun doWork(): Result {

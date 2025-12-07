@@ -21,10 +21,10 @@ import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataItem
-import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.Gson
-import org.voegtle.weatherwidget.data.WeatherData
+import com.google.gson.reflect.TypeToken
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.wetterwolkewatch.WeatherScreen
 
 private const val WEATHER_DATA_PATH = "/weather-data"
@@ -32,7 +32,7 @@ private const val WEATHER_DATA_PATH = "/weather-data"
 @OptIn(ExperimentalPagerApi::class)
 class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListener {
 
-    private var weatherDataList by mutableStateOf<List<WeatherData>>(emptyList())
+    private var locationDataSetList by mutableStateOf<List<LocationDataSet>>(emptyList())
     private val dataClient by lazy { Wearable.getDataClient(this) }
     private val gson = Gson()
     private val TAG = this::class.simpleName
@@ -43,9 +43,9 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
 
         setContent {
             MaterialTheme {
-                if (weatherDataList.isNotEmpty()) {
-                    HorizontalPager(count = weatherDataList.size) { page ->
-                        WeatherScreen(weatherData = weatherDataList[page])
+                if (locationDataSetList.isNotEmpty()) {
+                    HorizontalPager(count = locationDataSetList.size) { page ->
+                        WeatherScreen(weatherData = locationDataSetList[page].weatherData)
                     }
                 } else {
                     Column(
@@ -100,20 +100,10 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
 
     private fun updateWeatherData(dataItem: DataItem) {
         try {
-            val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
-            val newWeatherDataList = mutableListOf<WeatherData>()
-            for (key in dataMap.keySet()) {
-                val json = dataMap.getString(key)
-                if (json != null) {
-                    val weatherData = gson.fromJson(json, WeatherData::class.java)
-                    newWeatherDataList.add(weatherData)
-                    Log.d(TAG, "Updated weather data for $key: $weatherData")
-                }
-            }
-            weatherDataList = newWeatherDataList
-
-            if (newWeatherDataList.isEmpty()) {
-                Log.w(TAG, "No weather data found in DataItem.")
+            dataItem.data?.let {
+                val json = it.toString(Charsets.UTF_8)
+                val listType = object : TypeToken<List<LocationDataSet>>() {}.type
+                locationDataSetList = gson.fromJson(json, listType)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to deserialize weather data", e)
