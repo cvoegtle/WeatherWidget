@@ -1,6 +1,9 @@
 package org.voegtle.wetterwolkewatch.presentation
 
-import android.net.Uri
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -13,30 +16,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.android.gms.wearable.DataClient
-import com.google.android.gms.wearable.DataEvent
-import com.google.android.gms.wearable.DataEventBuffer
-import com.google.android.gms.wearable.DataItem
-import com.google.android.gms.wearable.Wearable
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.voegtle.weatherwidget.data.LocationDataSet
+import org.voegtle.wetterwolkewatch.ACTION_DATA_UPDATED
+import org.voegtle.wetterwolkewatch.WEATHER_DATA_FILE
 import org.voegtle.wetterwolkewatch.WeatherScreen
+import java.io.File
 
-private const val WEATHER_DATA_PATH = "/weather-data"
 
 @OptIn(ExperimentalPagerApi::class)
-class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListener {
+class WetterWatchActivity : ComponentActivity() {
 
     private var locationDataSetList by mutableStateOf<List<LocationDataSet>>(emptyList())
-    private val dataClient by lazy { Wearable.getDataClient(this) }
     private val gson = Gson()
     private val TAG = this::class.simpleName
 
+    private val dataUpdateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == ACTION_DATA_UPDATED) {
+                readDataFromFile()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,51 +69,26 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
 
     override fun onResume() {
         super.onResume()
-        dataClient.addListener(this)
-        fetchData()
+        readDataFromFile()
+        val filter = IntentFilter(ACTION_DATA_UPDATED)
+        LocalBroadcastManager.getInstance(this).registerReceiver(dataUpdateReceiver, filter)
     }
 
     override fun onPause() {
         super.onPause()
-        dataClient.removeListener(this)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(dataUpdateReceiver)
     }
 
-    override fun onDataChanged(dataEvents: DataEventBuffer) {
-        Log.d(TAG, "onDataChanged: $dataEvents")
-        dataEvents
-            .filter { it.type == DataEvent.TYPE_CHANGED && it.dataItem.uri.path == WEATHER_DATA_PATH }
-            .forEach { event ->
-                updateWeatherData(event.dataItem)
-            }
-    }
-
-    private fun fetchData() {
-        val uri = Uri.Builder()
-            .scheme("wear")
-            .authority("*")
-            .path(WEATHER_DATA_PATH)
-            .build()
-
-        dataClient.getDataItems(uri).addOnSuccessListener { dataItemBuffer ->
-            dataItemBuffer.forEach { dataItem ->
-                updateWeatherData(dataItem)
-            }
-            dataItemBuffer.release()
-        }.addOnFailureListener { e ->
-            Log.e(TAG, "Failed to fetch data items", e)
-        }
-    }
-
-
-    private fun updateWeatherData(dataItem: DataItem) {
-        try {
-            dataItem.data?.let {
-                val json = it.toString(Charsets.UTF_8)
+    private fun readDataFromFile() {
+        val file = File(filesDir, WEATHER_DATA_FILE)
+        if (file.exists()) {
+            try {
+                val json = file.readText()
                 val listType = object : TypeToken<List<LocationDataSet>>() {}.type
                 locationDataSetList = gson.fromJson(json, listType)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to deserialize weather data", e)
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to deserialize weather data", e)
         }
     }
 }
