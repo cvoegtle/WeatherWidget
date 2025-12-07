@@ -2,7 +2,6 @@ package org.voegtle.weatherwidget.notification
 
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -116,7 +115,7 @@ class NotificationSystemManager(private val context: Context, private val config
         }
 
         weatherData.solarradiation?.let {
-            if (weatherData.rainToday == null && weatherData.solarradiation > 0.0) {
+            if (weatherData.rainToday == null && it > 0.0) {
                 weatherText.append(", ${dataFormatter.formatSolarradiation(it)}")
             }
         }

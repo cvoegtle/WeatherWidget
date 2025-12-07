@@ -22,19 +22,16 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import org.voegtle.weatherwidget.R
-import org.voegtle.weatherwidget.data.Statistics
-import org.voegtle.weatherwidget.data.WeatherData
-
-data class LocationDataSet(val weatherLocation: WeatherLocation, var caption: String, val weatherData: WeatherData, var statistics: Statistics?)
+import org.voegtle.weatherwidget.data.LocationDataSet
 
 @Composable
 fun LocationContainer(modifier: Modifier,
-    locationDataSets: List<LocationDataSet>,
-    onDiagramClick: (LocationIdentifier) -> Unit = {},
-    onForecastClick: (Uri) -> Unit = {},
-    onExpandStateChanged: (LocationIdentifier, Boolean) -> Unit = { _, _ -> },
-    onPullToRefresh: (Float) -> Unit = {},
-    onDataMiningButtonClick: () -> Unit = {}
+                      locationDataSets: List<LocationDataSet>,
+                      onDiagramClick: (LocationIdentifier) -> Unit = {},
+                      onForecastClick: (Uri) -> Unit = {},
+                      onExpandStateChanged: (LocationIdentifier, Boolean) -> Unit = { _, _ -> },
+                      onPullToRefresh: (Float) -> Unit = {},
+                      onDataMiningButtonClick: () -> Unit = {}
 ) {
     val lazyListState = rememberLazyListState()
     val nestedScrollConnection = remember {

@@ -6,7 +6,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.text.FontWeight
-import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.preferences.WidgetPreferences
 import org.voegtle.weatherwidget.util.DataFormatter
 

@@ -14,6 +14,7 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.Position
 import java.util.Date
+import org.voegtle.weatherwidget.util.DataFormatter
 
 @Composable
 fun WeatherScreen(weatherData: WeatherData) {
@@ -22,14 +23,28 @@ fun WeatherScreen(weatherData: WeatherData) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        val formatter = DataFormatter()
         Text(
-            text = "${"%.1f".format(weatherData.temperature)}°C",
-            style = MaterialTheme.typography.displayMedium
+            text = weatherData.location_short,
+            style = MaterialTheme.typography.displayLarge
         )
         Text(
-            text = "Luftfeuchtigkeit: ${"%.1f".format(weatherData.humidity)}%",
+            text = "${formatter.formatTemperature(weatherData.temperature)} / ${formatter.formatHumidity(weatherData.humidity)}",
             style = MaterialTheme.typography.bodyLarge
         )
+        weatherData.rainToday?.let {
+            val rainText = "Regen: ${formatter.formatRain(weatherData.rainToday)}" + if (weatherData.rain != null) formatter.formatRain(weatherData.rain) else ""
+            Text(
+                text = rainText ,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
+        weatherData.barometer?.let {
+            Text(
+                text = formatter.formatBarometer(it),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
 }
 

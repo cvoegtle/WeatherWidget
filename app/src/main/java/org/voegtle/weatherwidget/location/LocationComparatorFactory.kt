@@ -1,6 +1,6 @@
 package org.voegtle.weatherwidget.location
 
-import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.util.DateUtil
 import java.util.Collections

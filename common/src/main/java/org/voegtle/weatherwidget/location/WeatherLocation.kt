@@ -1,9 +1,7 @@
 package org.voegtle.weatherwidget.location
 
 import android.net.Uri
-import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.LocationPreferences
-import androidx.core.net.toUri
 
 data class WeatherLocation(val key: LocationIdentifier,
                            var name: String,

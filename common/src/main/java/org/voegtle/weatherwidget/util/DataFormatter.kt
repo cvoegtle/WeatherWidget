@@ -1,7 +1,7 @@
 package org.voegtle.weatherwidget.util
 
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.preferences.WidgetPreferences
 import java.text.DecimalFormat
 import java.text.NumberFormat
@@ -79,6 +79,7 @@ class DataFormatter {
   }
 
   fun formatTemperature(temperature: Float?): String = if (temperature != null) numberFormat.format(temperature) + "°C" else ""
+  fun formatHumidity(humidity: Float?): String = if (humidity != null) formatPercent(humidity) else ""
 
   fun formatKwh(kwh: Float?): String = if (kwh != null) numberFormat.format(kwh) + "kWh" else ""
   fun formatKwhShort(kwh: Float?): String = if (kwh != null) numberFormatShort.format(kwh) + "kWh" else ""

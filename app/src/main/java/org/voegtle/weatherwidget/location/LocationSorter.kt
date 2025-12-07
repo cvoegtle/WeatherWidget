@@ -1,7 +1,7 @@
 package org.voegtle.weatherwidget.location
 
 import android.content.Context
-import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.data.LocationDataSet
 import java.util.Collections
 
 class LocationSorter(context: Context) {

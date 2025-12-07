@@ -2,9 +2,9 @@ package org.voegtle.weatherwidget.cache
 
 import android.content.Context
 import android.content.SharedPreferences
-import org.voegtle.weatherwidget.location.LocationIdentifier
 import java.util.Date
 import androidx.core.content.edit
+import org.voegtle.weatherwidget.location.LocationIdentifier
 
 class StateCache(context: Context) {
   private val STATE_CACHE = "STATE"

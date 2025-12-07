@@ -14,7 +14,7 @@ data class Statistics(val id: LocationIdentifier, val kind: String) {
     }
   }
 
-  private val statistics = HashMap<Statistics.TimeRange, StatisticsSet>()
+  private val statistics = HashMap<TimeRange, StatisticsSet>()
 
   fun add(set: StatisticsSet) {
     statistics.put(set.range, set)

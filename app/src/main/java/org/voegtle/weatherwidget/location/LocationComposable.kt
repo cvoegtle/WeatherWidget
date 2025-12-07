@@ -4,12 +4,10 @@ import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assessment
 import androidx.compose.material.icons.filled.ExpandLess
@@ -31,15 +29,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
 import androidx.core.net.toUri
 import org.voegtle.weatherwidget.R
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.DateUtil
 
 @Composable
 fun LocationComposable(locationDataSet: LocationDataSet,
-    onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = { _ -> },
-    onForecastClick: (forecastUrl: Uri) -> Unit = {},
-    onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }
+                       onDiagramClick: (locationIdentifier: LocationIdentifier) -> Unit = { _ -> },
+                       onForecastClick: (forecastUrl: Uri) -> Unit = {},
+                       onExpandStateChanged: (locationIdentifier: LocationIdentifier, isExpanded: Boolean) -> Unit = { _, _ -> }
 ) {
     Card {
         Column {

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import org.voegtle.weatherwidget.cache.WeatherDataCache
-import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.notification.NotificationSystemManager

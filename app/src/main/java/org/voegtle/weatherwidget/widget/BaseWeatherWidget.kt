@@ -44,7 +44,7 @@ import androidx.glance.unit.ColorProvider
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.WeatherActivity
-import org.voegtle.weatherwidget.location.LocationDataSet
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader

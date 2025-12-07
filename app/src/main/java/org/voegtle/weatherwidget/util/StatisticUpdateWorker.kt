@@ -3,9 +3,9 @@ package org.voegtle.weatherwidget.util
 import android.content.Context
 import androidx.work.WorkerParameters
 import org.voegtle.weatherwidget.data.Statistics
-import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.cache.State
 import org.voegtle.weatherwidget.cache.StateCache
+import org.voegtle.weatherwidget.location.LocationIdentifier
 import java.util.Date
 
 class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters) : UpdateWorker(appContext, workerParams) {

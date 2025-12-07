@@ -2,6 +2,7 @@ package org.voegtle.weatherwidget.location
 
 import android.content.Context
 import org.voegtle.weatherwidget.cache.StateCache
+import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.OrderCriteria

@@ -40,9 +40,7 @@ import org.voegtle.weatherwidget.diagram.MobilDiagramActivity
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity
 import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
 import org.voegtle.weatherwidget.location.LocationContainer
-import org.voegtle.weatherwidget.location.LocationDataSet
 import org.voegtle.weatherwidget.location.LocationDataSetFactory
-import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationOrderStore
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.UserLocationUpdater
@@ -54,7 +52,6 @@ import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
 import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
-import org.voegtle.weatherwidget.util.DateUtil
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.StatisticUpdateWorker
 import org.voegtle.weatherwidget.util.UserFeedback
@@ -62,6 +59,9 @@ import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
 import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
 import java.util.Date
 import androidx.core.net.toUri
+import org.voegtle.weatherwidget.data.LocationDataSet
+import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.util.DateUtil
 
 class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private var configuration: ApplicationPreferences? = null
