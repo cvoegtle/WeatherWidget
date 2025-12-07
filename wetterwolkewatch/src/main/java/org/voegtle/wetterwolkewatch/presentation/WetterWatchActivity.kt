@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEvent
 import com.google.android.gms.wearable.DataEventBuffer
@@ -23,14 +25,14 @@ import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.Wearable
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.wetterwolkewatch.WeatherScreen
 
 private const val WEATHER_DATA_PATH = "/weather-data"
 
+@OptIn(ExperimentalPagerApi::class)
 class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListener {
 
-    private var weatherData by mutableStateOf<WeatherData?>(null)
+    private var weatherDataList by mutableStateOf<List<WeatherData>>(emptyList())
     private val dataClient by lazy { Wearable.getDataClient(this) }
     private val gson = Gson()
     private val TAG = this::class.simpleName
@@ -41,9 +43,10 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
 
         setContent {
             MaterialTheme {
-                val data = weatherData
-                if (data != null) {
-                    WeatherScreen(weatherData = data)
+                if (weatherDataList.isNotEmpty()) {
+                    HorizontalPager(count = weatherDataList.size) { page ->
+                        WeatherScreen(weatherData = weatherDataList[page])
+                    }
                 } else {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -98,21 +101,18 @@ class WetterWatchActivity : ComponentActivity(), DataClient.OnDataChangedListene
     private fun updateWeatherData(dataItem: DataItem) {
         try {
             val dataMap = DataMapItem.fromDataItem(dataItem).dataMap
-            var key = LocationIdentifier.Paderborn.id
-            var json = dataMap.getString(key)
-
-            if (json == null) {
-                dataMap.keySet().firstOrNull()?.let { fallbackKey ->
-                    key = fallbackKey
-                    json = dataMap.getString(fallbackKey)
-                    Log.d(TAG, "Paderborn not found, falling back to $fallbackKey")
+            val newWeatherDataList = mutableListOf<WeatherData>()
+            for (key in dataMap.keySet()) {
+                val json = dataMap.getString(key)
+                if (json != null) {
+                    val weatherData = gson.fromJson(json, WeatherData::class.java)
+                    newWeatherDataList.add(weatherData)
+                    Log.d(TAG, "Updated weather data for $key: $weatherData")
                 }
             }
+            weatherDataList = newWeatherDataList
 
-            if (json != null) {
-                weatherData = gson.fromJson(json, WeatherData::class.java)
-                Log.d(TAG, "Updated weather data for $key: $weatherData")
-            } else {
+            if (newWeatherDataList.isEmpty()) {
                 Log.w(TAG, "No weather data found in DataItem.")
             }
         } catch (e: Exception) {
