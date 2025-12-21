@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        android:versionCode="3308"
+        android:versionCode="3343"
           android:versionName="2">
   
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -125,6 +125,18 @@
               android:name="android.support.FILE_PROVIDER_PATHS"
               android:resource="@xml/diagram_paths"/>
     </provider>
+
+    <service
+        android:name=".watch.WatchMessageListenerService"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+            <data
+                android:host="*"
+                android:pathPrefix="/refresh-data"
+                android:scheme="wear" />
+        </intent-filter>
+    </service>
 
   </application>
 

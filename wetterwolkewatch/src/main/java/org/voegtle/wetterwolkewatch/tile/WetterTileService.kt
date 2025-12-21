@@ -2,6 +2,7 @@ package org.voegtle.wetterwolkewatch.tile
 
 import android.content.Context
 import android.util.Log
+import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
@@ -9,6 +10,7 @@ import androidx.wear.protolayout.LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER
 import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
+import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.Colors
 import androidx.wear.protolayout.material.Text
@@ -16,16 +18,20 @@ import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
+import com.google.android.gms.wearable.Wearable
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.tasks.await
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.util.DataFormatter
+import org.voegtle.wetterwolkewatch.R
 import org.voegtle.wetterwolkewatch.WEATHER_DATA_FILE
 import java.io.File
 
-private const val RESOURCES_VERSION = "0"
+private const val RESOURCES_VERSION = "1"
+private const val REFRESH_ACTION = "refresh"
 
 
 @OptIn(ExperimentalHorologistApi::class)
@@ -40,6 +46,9 @@ class WetterTileService : SuspendingTileService() {
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
+        if (requestParams.currentState.lastClickableId == REFRESH_ACTION) {
+            requestDataUpdate()
+        }
         val locationDataSet = readDataFromFile().firstOrNull()
         return tile(this, requestParams, locationDataSet)
     }
@@ -59,11 +68,38 @@ class WetterTileService : SuspendingTileService() {
             emptyList()
         }
     }
+
+    private suspend fun requestDataUpdate() {
+        try {
+            val nodes = Wearable.getNodeClient(this).connectedNodes.await()
+            nodes.forEach { node ->
+                Wearable.getMessageClient(this).sendMessage(
+                    node.id,
+                    "/refresh-data",
+                    ByteArray(0)
+                ).apply {
+                    addOnSuccessListener { Log.d(TAG, "Request sent to ${node.displayName}") }
+                    addOnFailureListener { Log.e(TAG, "Failed to send request to ${node.displayName}", it) }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to request data update", e)
+        }
+    }
 }
 
 private fun resources(): ResourceBuilders.Resources {
     return ResourceBuilders.Resources.Builder()
         .setVersion(RESOURCES_VERSION)
+        .addIdToImageMapping(
+            "refresh_icon", ResourceBuilders.ImageResource.Builder()
+                .setAndroidResourceByResId(
+                    ResourceBuilders.AndroidImageResourceByResId.Builder()
+                        .setResourceId(R.drawable.ic_refresh)
+                        .build()
+                )
+                .build()
+        )
         .build()
 }
 
@@ -95,6 +131,13 @@ private fun weatherTileLayout(
     requestParams: RequestBuilders.TileRequest,
     locationDataSet: LocationDataSet?
 ): LayoutElementBuilders.LayoutElement {
+    val refreshButton = Button.Builder(context, ModifiersBuilders.Clickable.Builder()
+        .setId(REFRESH_ACTION)
+        .setOnClick(ActionBuilders.LoadAction.Builder().build())
+        .build())
+        .setIconContent("refresh_icon")
+        .build()
+
     return PrimaryLayout.Builder(requestParams.deviceConfiguration)
         .setResponsiveContentInsetEnabled(true)
         .setContent(
@@ -134,5 +177,5 @@ private fun weatherTileLayout(
                     .setPrimaryLabelContent("Warte auf Daten...")
                     .build()
             }
-        ).build()
+        ).setPrimaryChipContent(refreshButton).build()
 }
