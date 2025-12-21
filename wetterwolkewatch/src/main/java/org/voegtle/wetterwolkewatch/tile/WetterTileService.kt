@@ -3,9 +3,13 @@ package org.voegtle.wetterwolkewatch.tile
 import android.content.Context
 import android.util.Log
 import androidx.wear.protolayout.ColorBuilders.argb
+import androidx.wear.protolayout.DimensionBuilders
 import androidx.wear.protolayout.LayoutElementBuilders
+import androidx.wear.protolayout.LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER
+import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
+import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.Colors
 import androidx.wear.protolayout.material.Text
 import androidx.wear.protolayout.material.Typography
@@ -23,6 +27,7 @@ import java.io.File
 
 private const val RESOURCES_VERSION = "0"
 
+
 @OptIn(ExperimentalHorologistApi::class)
 class WetterTileService : SuspendingTileService() {
     private val gson = Gson()
@@ -30,7 +35,7 @@ class WetterTileService : SuspendingTileService() {
 
     override suspend fun resourcesRequest(
         requestParams: RequestBuilders.ResourcesRequest
-    ) = resources(requestParams)
+    ) = resources()
 
     override suspend fun tileRequest(
         requestParams: RequestBuilders.TileRequest
@@ -56,9 +61,7 @@ class WetterTileService : SuspendingTileService() {
     }
 }
 
-private fun resources(
-    requestParams: RequestBuilders.ResourcesRequest
-): ResourceBuilders.Resources {
+private fun resources(): ResourceBuilders.Resources {
     return ResourceBuilders.Resources.Builder()
         .setVersion(RESOURCES_VERSION)
         .build()
@@ -99,24 +102,36 @@ private fun weatherTileLayout(
                 val formatter = DataFormatter()
                 val weatherData = locationDataSet.weatherData
                 val temperature = weatherData.temperature
+                val rainFormatted = weatherData.rainToday?.let { rainToday -> formatter.formatRain(rainToday) + weatherData.rain?.let { rain -> " / " + formatter.formatRain(rain) }} ?: ""
+                val barometerFormatted = weatherData.barometer?.let { " " + formatter.formatBarometer(it) } ?: ""
+                val weatherFormatted = "${formatter.formatTemperature(temperature)} / ${formatter.formatHumidity(weatherData.humidity)}"
                 LayoutElementBuilders.Column.Builder()
                     .addContent(
-                        Text.Builder(context, locationDataSet.caption)
+                        Text.Builder(context,
+                            "${locationDataSet.weatherData.location_short} - ${weatherData.localtime}")
                             .setTypography(Typography.TYPOGRAPHY_CAPTION1)
                             .setColor(argb(Colors.DEFAULT.onSurface))
                             .build()
                     )
                     .addContent(
-                        Text.Builder(context, "${formatter.formatTemperature(temperature)} / ${formatter.formatHumidity(weatherData.humidity)}")
-                            .setTypography(Typography.TYPOGRAPHY_CAPTION1)
-                            .setColor(argb(Colors.DEFAULT.onSurface))
+                        LayoutElementBuilders.Spacer.Builder()
+                            .setHeight(DimensionBuilders.dp(10f))
+                            .build()
+                    )
+                    .addContent(
+                        Chip.Builder(context,
+                            ModifiersBuilders.Clickable.Builder().build(),
+                            requestParams.deviceConfiguration)
+                            .setHorizontalAlignment(HORIZONTAL_ALIGN_CENTER)
+                            .setPrimaryLabelContent( weatherFormatted)
+                            .setSecondaryLabelContent(rainFormatted + barometerFormatted)
                             .build()
                     )
                     .build()
             } else {
-                Text.Builder(context, "Warte auf Daten...")
-                    .setTypography(Typography.TYPOGRAPHY_CAPTION1)
-                    .setColor(argb(Colors.DEFAULT.onSurface))
+                Chip.Builder(context, ModifiersBuilders.Clickable.Builder().build(), requestParams.deviceConfiguration)
+                    .setHorizontalAlignment(HORIZONTAL_ALIGN_CENTER)
+                    .setPrimaryLabelContent("Warte auf Daten...")
                     .build()
             }
         ).build()
