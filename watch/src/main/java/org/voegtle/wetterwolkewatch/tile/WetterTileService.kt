@@ -145,7 +145,7 @@ private fun weatherTileLayout(
                 val formatter = DataFormatter()
                 val weatherData = locationDataSet.weatherData
                 val temperature = weatherData.temperature
-                val rainFormatted = weatherData.rainToday?.let { rainToday -> formatter.formatRain(rainToday) + weatherData.rain?.let { rain -> " / " + formatter.formatRain(rain) }} ?: ""
+                val rainFormatted = weatherData.rainToday?.let { rainToday -> formatter.formatRain(rainToday) + if (weatherData.rain != null) { " / " + formatter.formatRain(weatherData.rain) } else "" } ?: ""
                 val barometerFormatted = weatherData.barometer?.let { " " + formatter.formatBarometer(it) } ?: ""
                 val weatherFormatted = "${formatter.formatTemperature(temperature)} / ${formatter.formatHumidity(weatherData.humidity)}"
                 LayoutElementBuilders.Column.Builder()

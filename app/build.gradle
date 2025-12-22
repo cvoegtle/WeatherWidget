@@ -58,7 +58,7 @@ android {
 
 dependencies {
     implementation project(':common')
-    wearApp project(':wetterwolkewatch')
+    wearApp project(':watch')
     implementation 'com.google.android.gms:play-services-wearable:19.0.0'
     implementation 'androidx.activity:activity-compose:1.12.2'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
