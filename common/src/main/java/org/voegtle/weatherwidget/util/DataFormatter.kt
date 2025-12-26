@@ -79,6 +79,7 @@ class DataFormatter {
   }
 
   fun formatTemperature(temperature: Float?): String = if (temperature != null) numberFormat.format(temperature) + "°C" else ""
+  fun formatTemperatureShort(temperature: Float?): String = if (temperature != null) numberFormat.format(temperature) + "°" else ""
   fun formatHumidity(humidity: Float?): String = if (humidity != null) formatPercent(humidity) else ""
 
   fun formatKwh(kwh: Float?): String = if (kwh != null) numberFormat.format(kwh) + "kWh" else ""

@@ -7,6 +7,7 @@ import androidx.wear.compose.material.MaterialTheme
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.Position
+import org.voegtle.wetterwolkewatch.ui.WeatherScreen
 import java.util.Date
 
 class MainActivity : ComponentActivity() {

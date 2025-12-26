@@ -21,14 +21,11 @@ import androidx.wear.tiles.TileBuilders
 import com.google.android.gms.wearable.Wearable
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
-import org.voegtle.wetterwolkewatch.WEATHER_DATA_FILE
-import java.io.File
+import org.voegtle.wetterwolkewatch.io.WatchDataStore
 
 private const val RESOURCES_VERSION = "1"
 private const val REFRESH_ACTION = "refresh"
@@ -36,7 +33,6 @@ private const val REFRESH_ACTION = "refresh"
 
 @OptIn(ExperimentalHorologistApi::class)
 class WetterTileService : SuspendingTileService() {
-    private val gson = Gson()
     private val TAG = this::class.simpleName
 
     override suspend fun resourcesRequest(
@@ -49,25 +45,10 @@ class WetterTileService : SuspendingTileService() {
         if (requestParams.currentState.lastClickableId == REFRESH_ACTION) {
             requestDataUpdate()
         }
-        val locationDataSet = readDataFromFile().firstOrNull()
+        val locationDataSet = WatchDataStore(this).readDataFromFile().firstOrNull()
         return tile(this, requestParams, locationDataSet)
     }
 
-    private fun readDataFromFile(): List<LocationDataSet> {
-        val file = File(filesDir, WEATHER_DATA_FILE)
-        return if (file.exists()) {
-            try {
-                val json = file.readText()
-                val listType = object : TypeToken<List<LocationDataSet>>() {}.type
-                gson.fromJson(json, listType)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to deserialize weather data", e)
-                emptyList()
-            }
-        } else {
-            emptyList()
-        }
-    }
 
     private suspend fun requestDataUpdate() {
         try {

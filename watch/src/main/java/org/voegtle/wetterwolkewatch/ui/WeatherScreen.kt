@@ -1,4 +1,4 @@
-package org.voegtle.wetterwolkewatch
+package org.voegtle.wetterwolkewatch.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

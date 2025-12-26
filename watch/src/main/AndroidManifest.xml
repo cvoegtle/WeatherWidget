@@ -20,7 +20,7 @@
             android:label="@string/complication_label"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
       <intent-filter>
-        <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+        <action android:name="androidx.wear.watchface.complications.datasource.action.DataSourceUpdate" />
       </intent-filter>
 
       <meta-data
@@ -70,7 +70,6 @@
     <activity
             android:name=".presentation.WetterWatchActivity"
             android:exported="true"
-            android:taskAffinity=""
             android:theme="@style/WetterWatchActivityTheme.Starting">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
