@@ -25,6 +25,7 @@ import kotlinx.coroutines.tasks.await
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
+import org.voegtle.wetterwolkewatch.io.AppMessenger
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
 
 private const val RESOURCES_VERSION = "1"
@@ -43,30 +44,13 @@ class WetterTileService : SuspendingTileService() {
         requestParams: RequestBuilders.TileRequest
     ): TileBuilders.Tile {
         if (requestParams.currentState.lastClickableId == REFRESH_ACTION) {
-            requestDataUpdate()
+            AppMessenger(this).requestDataUpdate()
         }
         val locationDataSet = WatchDataStore(this).readDataFromFile().firstOrNull()
         return tile(this, requestParams, locationDataSet)
     }
 
 
-    private suspend fun requestDataUpdate() {
-        try {
-            val nodes = Wearable.getNodeClient(this).connectedNodes.await()
-            nodes.forEach { node ->
-                Wearable.getMessageClient(this).sendMessage(
-                    node.id,
-                    "/refresh-data",
-                    ByteArray(0)
-                ).apply {
-                    addOnSuccessListener { Log.d(TAG, "Request sent to ${node.displayName}") }
-                    addOnFailureListener { Log.e(TAG, "Failed to send request to ${node.displayName}", it) }
-                }
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to request data update", e)
-        }
-    }
 }
 
 private fun resources(): ResourceBuilders.Resources {
