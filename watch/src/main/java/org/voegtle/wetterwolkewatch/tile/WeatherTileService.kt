@@ -1,7 +1,6 @@
 package org.voegtle.wetterwolkewatch.tile
 
 import android.content.Context
-import android.util.Log
 import androidx.wear.protolayout.ActionBuilders
 import androidx.wear.protolayout.ColorBuilders.argb
 import androidx.wear.protolayout.DimensionBuilders
@@ -10,18 +9,16 @@ import androidx.wear.protolayout.LayoutElementBuilders.HORIZONTAL_ALIGN_CENTER
 import androidx.wear.protolayout.ModifiersBuilders
 import androidx.wear.protolayout.ResourceBuilders
 import androidx.wear.protolayout.TimelineBuilders
-import androidx.wear.protolayout.material.Button
 import androidx.wear.protolayout.material.Chip
 import androidx.wear.protolayout.material.Colors
+import androidx.wear.protolayout.material.CompactChip
 import androidx.wear.protolayout.material.Text
 import androidx.wear.protolayout.material.Typography
 import androidx.wear.protolayout.material.layouts.PrimaryLayout
 import androidx.wear.tiles.RequestBuilders
 import androidx.wear.tiles.TileBuilders
-import com.google.android.gms.wearable.Wearable
 import com.google.android.horologist.annotations.ExperimentalHorologistApi
 import com.google.android.horologist.tiles.SuspendingTileService
-import kotlinx.coroutines.tasks.await
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
@@ -33,9 +30,7 @@ private const val REFRESH_ACTION = "refresh"
 
 
 @OptIn(ExperimentalHorologistApi::class)
-class WetterTileService : SuspendingTileService() {
-    private val TAG = this::class.simpleName
-
+class WeatherTileService : SuspendingTileService() {
     override suspend fun resourcesRequest(
         requestParams: RequestBuilders.ResourcesRequest
     ) = resources()
@@ -96,10 +91,10 @@ private fun weatherTileLayout(
     requestParams: RequestBuilders.TileRequest,
     locationDataSet: LocationDataSet?
 ): LayoutElementBuilders.LayoutElement {
-    val refreshButton = Button.Builder(context, ModifiersBuilders.Clickable.Builder()
+    val refreshButton = CompactChip.Builder(context, context.getString(R.string.update), ModifiersBuilders.Clickable.Builder()
         .setId(REFRESH_ACTION)
         .setOnClick(ActionBuilders.LoadAction.Builder().build())
-        .build())
+        .build(), requestParams.deviceConfiguration)
         .setIconContent("refresh_icon")
         .build()
 
@@ -139,7 +134,7 @@ private fun weatherTileLayout(
             } else {
                 Chip.Builder(context, ModifiersBuilders.Clickable.Builder().build(), requestParams.deviceConfiguration)
                     .setHorizontalAlignment(HORIZONTAL_ALIGN_CENTER)
-                    .setPrimaryLabelContent("Warte auf Daten...")
+                    .setPrimaryLabelContent(context.getString(R.string.waiting_for_data))
                     .build()
             }
         ).setPrimaryChipContent(refreshButton).build()

@@ -31,7 +31,7 @@
               android:value="0" />
     </service>
     <service
-            android:name=".tile.WetterTileService"
+            android:name=".tile.WeatherTileService"
             android:exported="true"
             android:label="@string/tile_label"
             android:permission="com.google.android.wearable.permission.BIND_TILE_PROVIDER">

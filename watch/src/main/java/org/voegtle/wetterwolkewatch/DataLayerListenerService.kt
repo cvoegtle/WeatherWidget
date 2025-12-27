@@ -10,7 +10,7 @@ import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.WearableListenerService
 import org.voegtle.wetterwolkewatch.complication.WetterComplicationService
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
-import org.voegtle.wetterwolkewatch.tile.WetterTileService
+import org.voegtle.wetterwolkewatch.tile.WeatherTileService
 
 private const val WEATHER_DATA_PATH = "/weather-data"
 const val ACTION_DATA_UPDATED = "org.voegtle.wetterwolkewatch.DATA_UPDATED"
@@ -42,7 +42,7 @@ class DataLayerListenerService : WearableListenerService() {
     }
 
     private fun informTileAboutUpdatedData() {
-        TileService.getUpdater(this).requestUpdate(WetterTileService::class.java)
+        TileService.getUpdater(this).requestUpdate(WeatherTileService::class.java)
     }
 
     private fun informComplicationAboutUpdatedData() {
