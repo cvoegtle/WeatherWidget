@@ -27,6 +27,7 @@ import org.voegtle.wetterwolkewatch.io.WatchDataStore
 
 private const val RESOURCES_VERSION = "1"
 private const val REFRESH_ACTION = "refresh"
+private const val LAUNCH_ACTION = "launch"
 
 
 @OptIn(ExperimentalHorologistApi::class)
@@ -91,27 +92,17 @@ private fun weatherTileLayout(
     requestParams: RequestBuilders.TileRequest,
     locationDataSet: LocationDataSet?
 ): LayoutElementBuilders.LayoutElement {
-    val refreshButton = CompactChip.Builder(context, context.getString(R.string.update), ModifiersBuilders.Clickable.Builder()
-        .setId(REFRESH_ACTION)
-        .setOnClick(ActionBuilders.LoadAction.Builder().build())
-        .build(), requestParams.deviceConfiguration)
-        .setIconContent("refresh_icon")
-        .build()
+    val refreshButton = buildRefreshButton(context, requestParams)
+    val launchAppOnClick = buildLaunchAppHandler(context.packageName)
 
     return PrimaryLayout.Builder(requestParams.deviceConfiguration)
         .setResponsiveContentInsetEnabled(true)
         .setContent(
             if (locationDataSet != null) {
-                val formatter = DataFormatter()
-                val weatherData = locationDataSet.weatherData
-                val temperature = weatherData.temperature
-                val rainFormatted = weatherData.rainToday?.let { rainToday -> formatter.formatRain(rainToday) + if (weatherData.rain != null) { " / " + formatter.formatRain(weatherData.rain) } else "" } ?: ""
-                val barometerFormatted = weatherData.barometer?.let { " " + formatter.formatBarometer(it) } ?: ""
-                val weatherFormatted = "${formatter.formatTemperature(temperature)} / ${formatter.formatHumidity(weatherData.humidity)}"
                 LayoutElementBuilders.Column.Builder()
                     .addContent(
                         Text.Builder(context,
-                            "${locationDataSet.weatherData.location_short} - ${weatherData.localtime}")
+                            combineLocationAndTime(locationDataSet))
                             .setTypography(Typography.TYPOGRAPHY_CAPTION1)
                             .setColor(argb(Colors.DEFAULT.onSurface))
                             .build()
@@ -123,19 +114,63 @@ private fun weatherTileLayout(
                     )
                     .addContent(
                         Chip.Builder(context,
-                            ModifiersBuilders.Clickable.Builder().build(),
+                            launchAppOnClick,
                             requestParams.deviceConfiguration)
                             .setHorizontalAlignment(HORIZONTAL_ALIGN_CENTER)
-                            .setPrimaryLabelContent( weatherFormatted)
-                            .setSecondaryLabelContent(rainFormatted + barometerFormatted)
+                            .setPrimaryLabelContent( combineTemperatureAndHumidity(locationDataSet))
+                            .setSecondaryLabelContent(combineRainAndBarometer(locationDataSet))
                             .build()
                     )
                     .build()
             } else {
-                Chip.Builder(context, ModifiersBuilders.Clickable.Builder().build(), requestParams.deviceConfiguration)
+                Chip.Builder(context, launchAppOnClick, requestParams.deviceConfiguration)
                     .setHorizontalAlignment(HORIZONTAL_ALIGN_CENTER)
                     .setPrimaryLabelContent(context.getString(R.string.waiting_for_data))
                     .build()
             }
         ).setPrimaryChipContent(refreshButton).build()
 }
+
+private fun combineLocationAndTime(locationDataSet: LocationDataSet): String =
+    "${locationDataSet.weatherData.location_short} - ${locationDataSet.weatherData.localtime}"
+
+private fun combineTemperatureAndHumidity(locationDataSet: LocationDataSet): String {
+    val formatter = DataFormatter()
+    val weatherData = locationDataSet.weatherData
+    val temperature = weatherData.temperature
+    return "${formatter.formatTemperature(temperature)} / ${formatter.formatHumidity(weatherData.humidity)}"
+}
+
+private fun combineRainAndBarometer(locationDataSet: LocationDataSet): String {
+    val formatter = DataFormatter()
+    val weatherData = locationDataSet.weatherData
+    val rainFormatted = weatherData.rainToday?.let { rainToday -> formatter.formatRain(rainToday) + if (weatherData.rain != null) { " / " + formatter.formatRain(weatherData.rain) } else "" } ?: ""
+    val barometerFormatted = weatherData.barometer?.let { " " + formatter.formatBarometer(it) } ?: ""
+    return rainFormatted + barometerFormatted
+}
+
+private fun buildRefreshButton(
+    context: Context,
+    requestParams: RequestBuilders.TileRequest
+): CompactChip = CompactChip.Builder(
+    context, context.getString(R.string.update), ModifiersBuilders.Clickable.Builder()
+        .setId(REFRESH_ACTION)
+        .setOnClick(ActionBuilders.LoadAction.Builder().build())
+        .build(), requestParams.deviceConfiguration
+)
+    .setIconContent("refresh_icon")
+    .build()
+
+fun buildLaunchAppHandler(packageName: String): ModifiersBuilders.Clickable = ModifiersBuilders.Clickable.Builder()
+    .setId(LAUNCH_ACTION)
+    .setOnClick(
+        ActionBuilders.LaunchAction.Builder()
+            .setAndroidActivity(
+                ActionBuilders.AndroidActivity.Builder()
+                    .setPackageName(packageName)
+                    .setClassName("org.voegtle.wetterwolkewatch.presentation.WetterWatchActivity")
+                    .build()
+            )
+            .build()
+    )
+    .build()
