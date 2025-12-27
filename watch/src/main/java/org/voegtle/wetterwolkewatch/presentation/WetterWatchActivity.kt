@@ -18,10 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.wear.compose.foundation.pager.HorizontalPager
+import androidx.wear.compose.foundation.pager.rememberPagerState
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.wetterwolkewatch.ACTION_DATA_UPDATED
@@ -31,7 +31,6 @@ import org.voegtle.wetterwolkewatch.io.WatchDataStore
 import org.voegtle.wetterwolkewatch.ui.WeatherScreen
 
 
-@OptIn(ExperimentalPagerApi::class)
 class WetterWatchActivity : ComponentActivity() {
 
     private var locationDataSetList by mutableStateOf<List<LocationDataSet>>(emptyList())
@@ -52,8 +51,11 @@ class WetterWatchActivity : ComponentActivity() {
         setContent {
             MaterialTheme {
                 if (locationDataSetList.isNotEmpty()) {
-                    HorizontalPager(count = locationDataSetList.size) { page ->
-                        WeatherScreen(weatherData = locationDataSetList[page].weatherData)
+                    val pageCount = locationDataSetList.size
+                    val pagerState = rememberPagerState(initialPage = pageCount * 1000) { Int.MAX_VALUE }
+                    HorizontalPager(state = pagerState) { page ->
+                        val actualPage = page % pageCount
+                        WeatherScreen(weatherData = locationDataSetList[actualPage].weatherData)
                     }
                 } else {
                     Column(

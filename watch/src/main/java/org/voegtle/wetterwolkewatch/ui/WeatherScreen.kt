@@ -1,11 +1,13 @@
 package org.voegtle.wetterwolkewatch.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,34 +28,42 @@ fun WeatherScreen(weatherData: WeatherData) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surfaceContainer, CircleShape)
+                .padding(18.dp),
+            contentAlignment = Alignment.Center
         ) {
-            val formatter = DataFormatter()
-            Text(
-                text = weatherData.location_short,
-                style = MaterialTheme.typography.displayLarge
-            )
-            Text(
-                text = "${formatter.formatTemperature(weatherData.temperature)} / ${formatter.formatHumidity(weatherData.humidity)}",
-                style = MaterialTheme.typography.bodyLarge
-            )
-            weatherData.rainToday?.let {
-                val rainText = stringResource(R.string.rain_label) +formatter.formatRain(weatherData.rainToday) + if (weatherData.rain != null) " / ${formatter.formatRain(weatherData.rain)}" else ""
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val formatter = DataFormatter()
                 Text(
-                    text = rainText,
+                    text = weatherData.location_short,
+                    style = MaterialTheme.typography.displayLarge
+                )
+                Text(
+                    text = "${formatter.formatTemperature(weatherData.temperature)} / ${formatter.formatHumidity(weatherData.humidity)}",
                     style = MaterialTheme.typography.bodyLarge
                 )
-            }
-            weatherData.barometer?.let {
-                Text(
-                    text = formatter.formatBarometer(it),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                weatherData.rainToday?.let {
+                    val rainText =
+                        stringResource(R.string.rain_label) + formatter.formatRain(weatherData.rainToday) + if (weatherData.rain != null) " / ${formatter.formatRain(weatherData.rain)}" else ""
+                    Text(
+                        text = rainText,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                weatherData.barometer?.let {
+                    Text(
+                        text = formatter.formatBarometer(it),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         }
         Text(
