@@ -9,8 +9,8 @@ buildscript {
         targetSdkVersion = 36
 
         // App dependencies
-        gradleVersion = '8.13.0'
-        kotlinVersion = '2.2.20'
+        gradleVersion = '8.13.2'
+        kotlinVersion = '2.2.21'
         preferencesVersion = '1.2.1'
     }
 
@@ -25,6 +25,11 @@ buildscript {
     }
 }
 
+plugins {
+    id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version "$kotlinVersion" apply false
+}
+
 allprojects {
     repositories {
         google()
@@ -35,7 +40,7 @@ allprojects {
 subprojects {
     tasks.withType(KotlinCompile).configureEach {
         kotlinOptions {
-            jvmTarget = "17"
+            jvmTarget = "21"
             // Use experimental APIs
             freeCompilerArgs += ['-Xopt-in=kotlin.RequiresOptIn']
         }

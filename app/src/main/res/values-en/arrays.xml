@@ -1,31 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string-array name="fontSize">
-    <item name="10">S</item>
-    <item name="11">M (standard)</item>
-    <item name="12">L</item>
-    <item name="13">XL</item>
-    <item name="14">XXL</item>
-    <item name="16">XXXL</item>
-  </string-array>
-  <string-array name="fontSizeValues">
-    <item name="10">10</item>
-    <item name="11">11</item>
-    <item name="12">12</item>
-    <item name="13">13</item>
-    <item name="14">14</item>
-    <item name="16">16</item>
-  </string-array>
-
-  <string-array name="colorScheme">
-    <item name="dark">Midnight black</item>
-    <item name="light">Light</item>
-  </string-array>
-  <string-array name="colorSchemeValues">
-    <item name="dark">dark</item>
-    <item name="light">light</item>
-  </string-array>
-
   <string-array name="orderCriteria">
     <item name="default">Standard (fix)</item>
     <item name="location">Location</item>
@@ -33,4 +7,31 @@
     <item name="rain">Rain</item>
     <item name="humidity">Humidity</item>
   </string-array>
+
+  <string-array name="app_theme_entries">
+    <item>System</item>
+    <item>Light</item>
+    <item>Dark</item>
+  </string-array>
+
+
+  <string-array name="widget_font_size_entries">
+    <item>very small</item>
+    <item>small</item>
+    <item>medium</item>
+    <item>large</item>
+    <item>extra large</item>
+  </string-array>
+
+  <string-array name="widget_max_values_entries">
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+    <item>5</item>
+    <item>6</item>
+    <item>7</item>
+    <item>8</item>
+  </string-array>
+
 </resources>

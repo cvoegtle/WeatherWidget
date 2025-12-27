@@ -1,12 +1,16 @@
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
+}
 
 android {
-    compileSdk 36
+    compileSdk rootProject.ext.compileSdkVersion
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     signingConfigs {
@@ -27,24 +31,21 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             signingConfig signingConfigs.cvoegtle
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
             jniDebuggable true
             minifyEnabled false
             signingConfig signingConfigs.cvoegtle
-            zipAlignEnabled true
             versionNameSuffix '-debug'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     packagingOptions {
         resources {
@@ -56,17 +57,33 @@ android {
 }
 
 dependencies {
+    implementation project(':common')
+    wearApp project(':watch')
+    implementation 'com.google.android.gms:play-services-wearable:19.0.0'
+    implementation 'androidx.activity:activity-compose:1.12.2'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion"
     implementation 'com.google.code.gson:gson:2.13.2'
     implementation "androidx.preference:preference-ktx:$rootProject.preferencesVersion"
-    implementation 'androidx.work:work-runtime-ktx:2.10.4'
+    implementation 'androidx.work:work-runtime-ktx:2.11.0'
     implementation "com.google.android.material:material:1.13.0"
+
+    // Compose BOM (Bill of Materials)
+    implementation platform('androidx.compose:compose-bom:2025.12.01')
+    implementation 'androidx.compose.ui:ui'
+    implementation 'androidx.compose.material3:material3'
+    implementation 'androidx.compose.ui:ui-tooling-preview'
+    implementation 'androidx.compose.material:material-icons-extended'
+    debugImplementation 'androidx.compose.ui:ui-tooling:1.10.0'// Für die Icons
+
+    // Glance App Widgets
+    implementation "androidx.glance:glance-appwidget:1.1.1"
+    implementation "androidx.glance:glance-material3:1.1.1"
 }
 
 import java.util.regex.Pattern
 
-task increaseVersionCode(type: Sync) {
+tasks.register('increaseVersionCode', Sync) {
     def manifestFile = file("src/main/AndroidManifest.xml")
     def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
     def manifestText = manifestFile.getText()

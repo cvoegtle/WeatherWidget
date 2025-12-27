@@ -4,29 +4,31 @@ import android.Manifest
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowInsets
-import androidx.appcompat.app.AppCompatActivity // Import geändert/hinzugefügt
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.gson.Gson
-// import org.voegtle.weatherwidget.base.ThemedActivity // Entfernt
-import org.voegtle.weatherwidget.base.UpdatingScrollView
-import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.databinding.ActivityWeatherBinding
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import org.voegtle.weatherwidget.cache.StateCache
+import org.voegtle.weatherwidget.cache.WeatherDataCache
 import org.voegtle.weatherwidget.diagram.BaliDiagramActivity
 import org.voegtle.weatherwidget.diagram.BonnDiagramActivity
 import org.voegtle.weatherwidget.diagram.FreiburgDiagramActivity
@@ -38,240 +40,119 @@ import org.voegtle.weatherwidget.diagram.MobilDiagramActivity
 import org.voegtle.weatherwidget.diagram.PaderbornDiagramActivity
 import org.voegtle.weatherwidget.diagram.ShenzhenDiagramActivity
 import org.voegtle.weatherwidget.location.LocationContainer
-import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationOrderStore
-import org.voegtle.weatherwidget.location.LocationView
+import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.UserLocationUpdater
-import org.voegtle.weatherwidget.location.WeatherLocation
 import org.voegtle.weatherwidget.notification.NotificationSystemManager
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
-import org.voegtle.weatherwidget.preferences.ColorScheme
+import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.preferences.NotificationSettings
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.preferences.OrderCriteriaDialogBuilder
 import org.voegtle.weatherwidget.preferences.WeatherPreferences
-import org.voegtle.weatherwidget.preferences.WeatherSettingsReader
-import org.voegtle.weatherwidget.util.ActivityUpdateWorker
-import org.voegtle.weatherwidget.util.ColorUtil
-import org.voegtle.weatherwidget.util.DataFormatter
+import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
+import org.voegtle.weatherwidget.ui.theme.WeatherWidgetTheme
 import org.voegtle.weatherwidget.util.FetchAllResponse
-import org.voegtle.weatherwidget.util.StatisticsUpdater
+import org.voegtle.weatherwidget.util.StatisticUpdateWorker
 import org.voegtle.weatherwidget.util.UserFeedback
-import org.voegtle.weatherwidget.widget.ScreenPainterFactory
+import org.voegtle.weatherwidget.util.WeatherDataUpdateWorker
+import org.voegtle.weatherwidget.widget.updateWeatherWidgetState
+import java.util.Date
+import androidx.core.net.toUri
+import org.voegtle.weatherwidget.data.LocationDataSet
+import org.voegtle.weatherwidget.location.LocationIdentifier
+import org.voegtle.weatherwidget.util.DateUtil
 
-class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener { // Basisklasse geändert
-    private var statisticsUpdater: StatisticsUpdater? = null
-    private var configuration: ApplicationSettings? = null
+class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+    private var configuration: ApplicationPreferences? = null
 
-    private lateinit var binding: ActivityWeatherBinding
     private var locationOrderStore: LocationOrderStore? = null
-    private val formatter = DataFormatter()
 
-    // wird benötigt um die Daten asynchron zu aktualisieren
-    private var workInfo: LiveData<MutableList<WorkInfo?>>? = null
     private var userLocationUpdater: UserLocationUpdater? = null
-
-    // Aus ThemedActivity übernommen
-    var colorScheme = ColorScheme.dark
-
-    // Aus ThemedActivity übernommen
-    private fun configureTheme() {
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
-        val configuration = weatherSettingsReader.read(preferences)
-        this.colorScheme = configuration.colorScheme
-        setTheme(colorScheme.theme)
-    }
-
+    private var stateCache: StateCache? = null
+    private var weatherDataCache: WeatherDataCache? = null
+    private var locationDataSetFactory: LocationDataSetFactory? = null
+    private var locationSorter: LocationSorter? = null
+    val locationDataSets = MutableStateFlow<List<LocationDataSet>>(emptyList())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        configureTheme() // Theme-Logik vor super.onCreate() aufrufen
         super.onCreate(savedInstanceState)
-        binding = ActivityWeatherBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val toolbar: com.google.android.material.appbar.MaterialToolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.app_name)
-
-        binding.buttonGoogleDocs.setOnClickListener {
-            val browserIntent = Intent(
-                Intent.ACTION_VIEW, Uri.parse(
-                    "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing"
-                )
-            )
-            startActivity(browserIntent)
-        }
-
-        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-        readConfiguration(preferences) // Dies wird das colorScheme erneut setzen, was ok ist.
-        preferences.registerOnSharedPreferenceChangeListener(this)
+        readConfiguration()
+        registerConfigurationChangeListener()
 
         locationOrderStore = LocationOrderStore(this.applicationContext)
-        statisticsUpdater = StatisticsUpdater(this)
         userLocationUpdater = UserLocationUpdater(this)
+        stateCache = StateCache(this)
+        weatherDataCache = WeatherDataCache(this)
+        locationDataSetFactory = LocationDataSetFactory(this)
+        locationSorter = LocationSorter(this)
 
-        setupLocations()
-        configureLocationSymbolColor() // Nutzt das colorScheme Property
-
-        binding.scrollView.register(object : UpdatingScrollView.Updater {
-            override fun update() {
-                updateWeatherOnce(true)
-            }
-        })
+        setContent {
+            val locations by locationDataSets.collectAsState()
+            WeatherApp(locations)
+        }
     }
 
-    override fun startActivity(intent: Intent?) {
-        super.startActivity(intent)
+    private fun registerConfigurationChangeListener() {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        preferences.registerOnSharedPreferenceChangeListener(this)
     }
 
-    private fun setupLocations() {
-        configuration?.let {
-            it.locations.forEach { location ->
-                addClickHandler(location)
-                updateVisibility(location)
-                updateState(location)
-                updateTextSize(location, it.appTextSize)
+    @Composable
+    fun WeatherApp(locationDataSets: List<LocationDataSet>) {
+        WeatherWidgetTheme (appTheme = configuration!!.appTheme){
+            Scaffold(
+                topBar = {
+                    WeatherTopAppBar(
+                        onReloadClicked = (::onReloadClicked),
+                        onDiagramClicked = (::onDiagramClicked),
+                        onReorderClicked = (::onReorderClicked),
+                        onPreferencesClicked = (::onPreferencesClicked)
+                    )
+                }
+            ) { padding ->
+                LocationContainer(
+                    modifier = Modifier.padding(padding),
+                    locationDataSets = locationDataSets,
+                    onDiagramClick = (::onDiagramClicked),
+                    onForecastClick = (::onForecastClicked),
+                    onExpandStateChanged = (::onExpandedClicked),
+                    onPullToRefresh = (::onPullToRefresh),
+                    onDataMiningButtonClick = (::onDataMiningButtonClick)
+                )
             }
         }
     }
 
-    private fun readConfiguration(preferences: SharedPreferences) {
-        val weatherSettingsReader = WeatherSettingsReader(this.applicationContext)
-        configuration = weatherSettingsReader.read(preferences)
-        // Das colorScheme hier zu aktualisieren ist gut, da es in onSharedPreferenceChanged aufgerufen wird
-        this.colorScheme = configuration!!.colorScheme 
+    private fun readConfiguration() {
+        val weatherPreferencesReader = WeatherPreferencesReader(this.applicationContext)
+        configuration = weatherPreferencesReader.read()
         requestPermissions()
         enableNotificationsIfPermitted()
     }
 
-    private fun addClickHandler(location: WeatherLocation) {
-        val locationView: LocationView = findViewById(location.weatherViewId)
-        locationView.setOnClickListener {
-            if (locationView.isExpanded) {
-                statisticsUpdater!!.updateStatistics(locationView, location)
-            } else {
-                statisticsUpdater!!.clearState(locationView)
-            }
-        }
-
-        locationView.diagramListener = View.OnClickListener { view ->
-            when (view.id) {
-                R.id.weather_paderborn -> startActivity(Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java))
-                R.id.weather_bali -> startActivity(Intent(this@WeatherActivity, BaliDiagramActivity::class.java))
-                R.id.weather_bonn -> startActivity(Intent(this@WeatherActivity, BonnDiagramActivity::class.java))
-                R.id.weather_freiburg -> startActivity(Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java))
-                R.id.weather_leo -> startActivity(Intent(this@WeatherActivity, LeoDiagramActivity::class.java))
-                R.id.weather_herzogenaurach -> startActivity(Intent(this@WeatherActivity, HerzoDiagramActivity::class.java))
-                R.id.weather_magdeburg -> startActivity(Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java))
-                R.id.weather_shenzhen -> startActivity(Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java))
-                R.id.weather_mobil -> {
-                    val intent = Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
-                    val mobileLocation = configuration!!.findLocation(LocationIdentifier.Mobil)
-                    if (mobileLocation != null) {
-                        intent.putExtra(MobilDiagramActivity::class.java.name, mobileLocation.name)
-                    }
-                    startActivity(intent)
-                }
-            }
-        }
-
-        locationView.forecastListener = View.OnClickListener {
-            val browserIntent = Intent(Intent.ACTION_VIEW, location.forecastUrl)
-            startActivity(browserIntent)
-        }
-    }
-
-    private fun updateStatistics() {
-        val updateCandidates = HashMap<LocationView, WeatherLocation>()
-        configuration?.let {
-            it.locations.forEach { location ->
-                val locationView: LocationView = findViewById(location.weatherViewId)
-                if (locationView.isExpanded) {
-                    updateCandidates.put(locationView, location)
-                }
-            }
-        }
-        statisticsUpdater?.updateStatistics(updateCandidates, false)
-    }
-
-    private fun updateVisibility(location: WeatherLocation) {
-        val show = location.preferences.showInApp
-        updateVisibility(location.weatherViewId, show)
-    }
-
-    private fun updateVisibility(viewId: Int, isVisible: Boolean) {
-        val view: View = findViewById(viewId)
-        view.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
-
-    private fun updateTextSize(location: WeatherLocation, textSize: Int) {
-        if (location.preferences.showInApp) {
-            val view: LocationView = findViewById(location.weatherViewId)
-            view.setTextSize(textSize)
-        }
-    }
-
-    private fun configureLocationSymbolColor() {
-        // Dunkle Symbole wenn der Hintergrund hell ist
-        val darkSymbols = colorScheme == ColorScheme.light
-        configuration?.let {
-            it.locations.forEach {
-                val view: LocationView = findViewById(it.weatherViewId)
-                view.configureSymbols(darkSymbols)
-            }
-        }
-
-    }
-
-    private fun updateState(location: WeatherLocation) {
-        val locationView: LocationView = findViewById(location.weatherViewId)
-        statisticsUpdater!!.setupStatistics(locationView)
-    }
-
     override fun onResume() {
         super.onResume()
-        updateStatistics()
-        updateWeatherOnce(false)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.weather_activity_menu, menu)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
-        R.id.action_reload -> {
-            updateWeatherOnce(true)
-            true
-        }
-
-        R.id.action_diagrams -> {
-            startActivity(Intent(this, MainDiagramActivity::class.java))
-            true
-        }
-
-        R.id.action_sort -> {
-            val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this)
-            orderCriteriaDialog.show()
-            true
-        }
-
-        R.id.action_perferences -> {
-            startActivity(Intent(this, WeatherPreferences::class.java))
-            true
-        }
-
-        else -> false
+        updateActivity(false)
+        updateAll(false)
     }
 
     override fun onSharedPreferenceChanged(preferences: SharedPreferences, s: String?) {
-        readConfiguration(preferences) // Dies wird das colorScheme aktualisieren
-        setupLocations()
-        configureLocationSymbolColor() // Und die Symbolfarben neu setzen
-        updateWeatherOnce(true)
+        readConfiguration()
+        updateAll(true)
+    }
+
+    private var timeOfLastUpdate: Date = DateUtil.yesterday
+    private var updateTaskRunning: Boolean = false
+    fun updateAll(showToast: Boolean) {
+        if (DateUtil.isMinimumTimeSinceLastUpdate(timeOfLastUpdate)) {
+            timeOfLastUpdate = Date()
+            updateTaskRunning = true
+            updateWeather({ if (updateTaskRunning) updateTaskRunning = false else updateActivity(showToast) })
+            updateStatistics({ if (updateTaskRunning) updateTaskRunning = false else updateActivity(showToast) })
+        }
     }
 
     fun requestPermissions() {
@@ -286,7 +167,7 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
             checkForPermissionsToRequest(Manifest.permission.POST_NOTIFICATIONS)?.let { missingPermissions.add(it) }
         }
 
-        if (!missingPermissions.isEmpty()) {
+        if (missingPermissions.isNotEmpty()) {
             ActivityCompat.requestPermissions(this, missingPermissions.toTypedArray(), 0)
         }
     }
@@ -316,11 +197,11 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
     }
 
     private fun isNotificationsPermitted(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-            return permissionCheck == PackageManager.PERMISSION_GRANTED
+            permissionCheck == PackageManager.PERMISSION_GRANTED
         } else {
-            return true
+            true
         }
     }
 
@@ -336,40 +217,53 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
         UserFeedback(this).showMessage(R.string.message_location_permission_required, true)
         val locationOrderStore = LocationOrderStore(applicationContext)
         locationOrderStore.writeOrderCriteria(OrderCriteria.default)
-        updateWeatherOnce(false)
+        updateAll(false)
     }
 
-    fun updateWeatherOnce(showToast: Boolean) {
+    fun updateWeather(onWorkFinished: (() -> Unit)) {
         userLocationUpdater!!.updateLocation()
 
-        val activityUpdateRequest = OneTimeWorkRequestBuilder<ActivityUpdateWorker>().addTag(ActivityUpdateWorker.WEATHER_DATA).build()
+        val weatherDataUpdateRequest = OneTimeWorkRequestBuilder<WeatherDataUpdateWorker>().addTag(WeatherDataUpdateWorker.WEATHER_DATA).build()
         val workManager = WorkManager.getInstance(applicationContext)
-        workManager.enqueue(activityUpdateRequest)
-        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(activityUpdateRequest.id)
+        workManager.enqueue(weatherDataUpdateRequest)
+        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(weatherDataUpdateRequest.id)
 
         val observer = Observer<WorkInfo?>() { latestWorkInfo ->
             if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
-                val weatherDataJson = latestWorkInfo.outputData.getString(ActivityUpdateWorker.WEATHER_DATA)
-                val weatherData = Gson().fromJson(weatherDataJson, FetchAllResponse::class.java)
-                updateActivity(weatherData, showToast)
+                onWorkFinished()
             }
         }
         workInfoByIdLiveData.observe(this, observer)
     }
 
-    private fun updateActivity(weatherData: FetchAllResponse, showToast: Boolean) {
+    fun updateStatistics(onWorkFinished: (() -> Unit)) {
+        val statisticsUpdateRequest = OneTimeWorkRequestBuilder<StatisticUpdateWorker>().addTag(StatisticUpdateWorker.STATISTIC_DATA).build()
+        val workManager = WorkManager.getInstance(applicationContext)
+        workManager.enqueue(statisticsUpdateRequest)
+        val workInfoByIdLiveData = workManager.getWorkInfoByIdLiveData(statisticsUpdateRequest.id)
+
+        val observer = Observer<WorkInfo?>() { latestWorkInfo ->
+            if (latestWorkInfo != null && latestWorkInfo.state.isFinished) {
+                onWorkFinished()
+            }
+        }
+        workInfoByIdLiveData.observe(this, observer)
+
+    }
+
+    private fun updateActivity(showToast: Boolean) {
         try {
-            refreshLocationData(weatherData.weatherMap)
-            updateViewData(weatherData.weatherMap)
-            sortViews(weatherData.weatherMap)
-            updateWidgets(weatherData.weatherMap)
+            val weatherData = weatherDataCache!!.read()
+            weatherData?.let {
+                val locationDataSets = locationDataSetFactory!!.assembleLocationDataSets(configuration!!.locations, it.weatherMap)
+                locationSorter!!.sort(locationDataSets)
 
-            UserFeedback(applicationContext).showMessage(
-                if (weatherData.valid) R.string.message_data_updated else R.string.message_data_update_failed, showToast
-            )
+                this.locationDataSets.value = locationDataSets
+                updateWidgets(locationDataSets)
 
-            val notificationManager = NotificationSystemManager(applicationContext, configuration!!)
-            notificationManager.updateNotification(weatherData)
+                showUserToast(it, showToast)
+                updateNotification(it)
+            }
         } catch (th: Throwable) {
             UserFeedback(applicationContext).showMessage(R.string.message_data_update_failed, true)
             Log.e(WeatherActivity::class.java.toString(), "Failed to update View", th)
@@ -377,74 +271,93 @@ class WeatherActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenc
 
     }
 
-    private fun refreshLocationData(data: java.util.HashMap<LocationIdentifier, WeatherData>) {
-        configuration!!.locations.forEach { location ->
-            data[location.key]?.let {
-                location.refresh(it)
-            }
+    private fun updateWidgets(locationDataSets: List<LocationDataSet>) {
+        // Neue Logik, um das Glance-Widget zu aktualisieren
+        lifecycleScope.launch {
+            updateWeatherWidgetState(applicationContext, locationDataSets)
         }
     }
 
-    private fun updateViewData(data: HashMap<LocationIdentifier, WeatherData>) {
-        configuration!!.locations.forEach { location ->
-            data[location.key]?.let {
-                updateWeatherLocation(location, location.name, it)
-            }
+    private fun showUserToast(response: FetchAllResponse, showToast: Boolean) {
+        UserFeedback(applicationContext).showMessage(
+            if (response.valid) R.string.message_data_updated else R.string.message_data_update_failed,
+            showToast
+        )
+    }
+
+    private fun updateNotification(fetchAllResponse: FetchAllResponse) {
+        val notificationManager = NotificationSystemManager(applicationContext, configuration!!)
+        notificationManager.updateNotification(fetchAllResponse)
+    }
+
+
+    private fun onDiagramClicked(locationIdentifier: LocationIdentifier?) {
+        navigateToDiagramActivity(locationIdentifier)
+    }
+
+    private fun navigateToDiagramActivity(locationIdentifier: LocationIdentifier?) {
+        val intent = mapLocation2Intent(locationIdentifier)
+        startActivity(intent)
+    }
+
+    private fun mapLocation2Intent(locationIdentifier: LocationIdentifier?): Intent {
+        return when (locationIdentifier) {
+            LocationIdentifier.Paderborn -> Intent(this@WeatherActivity, PaderbornDiagramActivity::class.java)
+            LocationIdentifier.BadLippspringe -> Intent(this@WeatherActivity, BaliDiagramActivity::class.java)
+            LocationIdentifier.Bonn -> Intent(this@WeatherActivity, BonnDiagramActivity::class.java)
+            LocationIdentifier.Freiburg -> Intent(this@WeatherActivity, FreiburgDiagramActivity::class.java)
+            LocationIdentifier.Leopoldshoehe -> Intent(this@WeatherActivity, LeoDiagramActivity::class.java)
+            LocationIdentifier.Herzogenaurach -> Intent(this@WeatherActivity, HerzoDiagramActivity::class.java)
+            LocationIdentifier.Magdeburg -> Intent(this@WeatherActivity, MagdeburgDiagramActivity::class.java)
+            LocationIdentifier.Shenzhen -> Intent(this@WeatherActivity, ShenzhenDiagramActivity::class.java)
+            LocationIdentifier.Mobil -> Intent(this@WeatherActivity, MobilDiagramActivity::class.java)
+            else -> Intent(this, MainDiagramActivity::class.java)
         }
     }
 
-    private fun updateWeatherLocation(location: WeatherLocation, locationName: String, data: WeatherData) {
-        val contentView: LocationView = findViewById(location.weatherViewId)
-
-        val favorite = location.preferences.favorite
-        highlightFavorite(contentView, favorite)
-
-
-        val colorScheme = configuration!!.colorScheme
-        val color = ColorUtil.byAge(colorScheme, data.timestamp)
-        val caption = getCaption(locationName, data)
-
-        updateView(contentView, caption, data, color)
+    private fun onForecastClicked(forecastUrl: Uri) {
+        val browserIntent = Intent(Intent.ACTION_VIEW, forecastUrl)
+        startActivity(browserIntent)
     }
 
-    private fun highlightFavorite(contentView: LocationView, favorite: Boolean) {
-        contentView.setBackgroundColor(if (favorite) ColorUtil.favorite() else Color.TRANSPARENT)
+    private fun onPreferencesClicked() {
+        val onPreferencesIntent = Intent(this, WeatherPreferences::class.java)
+        startActivity(onPreferencesIntent)
     }
 
+    private fun onExpandedClicked(locationIdentifier: LocationIdentifier, isExpanded: Boolean) {
+        val state = stateCache!!.read(locationIdentifier)
+        state.isExpanded = isExpanded
+        state.makeOutdated()
+        stateCache!!.save(state)
 
-    private fun getCaption(locationName: String, data: WeatherData): String {
-        var caption = "$locationName - ${data.localtime}"
-
-        if (locationOrderStore!!.readOrderCriteria() == OrderCriteria.location) {
-            val userPosition = locationOrderStore!!.readPosition()
-            val distance = userPosition.distanceTo(data.position)
-            caption += " - ${formatter.formatDistance(distance.toFloat())}"
-        }
-
-        return caption
-    }
-
-    private fun updateView(view: LocationView, caption: String, data: WeatherData, color: Int) {
-        view.setCaption(caption)
-        view.setData(data)
-        view.setTextColor(color)
-    }
-
-    private fun updateWidgets(data: HashMap<LocationIdentifier, WeatherData>) {
-        val factory = ScreenPainterFactory(this, configuration!!)
-        val screenPainters = factory.createScreenPainters()
-        for (screenPainter in screenPainters) {
-            screenPainter.updateWidgetData(data)
-            screenPainter.showDataIsValid()
+        if (isExpanded) {
+            updateStatistics({updateActivity(false)})
+        } else {
+            updateActivity(false)
         }
     }
 
-    private fun sortViews(data: HashMap<LocationIdentifier, WeatherData>) {
-        val container = locationContainer()
-        val locationContainer = LocationContainer(applicationContext, container, configuration!!)
-        locationContainer.updateLocationOrder(data)
+    private fun onPullToRefresh(overscrollAmount: Float) {
+        if (overscrollAmount > 40) {
+            updateAll(true)
+        }
     }
 
-    private fun locationContainer() = binding.locationContainer
+    private fun onReloadClicked() {
+        updateAll(true)
+    }
 
+    private fun onReorderClicked() {
+        val orderCriteriaDialog = OrderCriteriaDialogBuilder.createOrderCriteriaDialog(this)
+        orderCriteriaDialog.show()
+    }
+
+    private fun onDataMiningButtonClick() {
+        val browserIntent = Intent(
+            Intent.ACTION_VIEW,
+            "https://docs.google.com/spreadsheets/d/1ahkm9SDTqjYcsLgKIH5yjmqlAh6dKxgfIrZA5Dt9L3o/edit?usp=sharing".toUri()
+        )
+        startActivity(browserIntent)
+    }
 }

@@ -2,7 +2,6 @@ package org.voegtle.weatherwidget.notification
 
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -11,13 +10,15 @@ import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import org.voegtle.weatherwidget.R
 import org.voegtle.weatherwidget.data.WeatherData
+import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.location.WeatherLocation
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 import org.voegtle.weatherwidget.system.IntentFactory
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.DateUtil
@@ -25,12 +26,14 @@ import org.voegtle.weatherwidget.util.FetchAllResponse
 import kotlin.math.max
 
 
-class NotificationSystemManager(private val context: Context, private val configuration: ApplicationSettings) {
+class NotificationSystemManager(private val context: Context, private val configuration: ApplicationPreferences) {
     private val INFO_ID = 2
     private val CHANNEL_ID = "wetterwolke"
 
     private val res: Resources = context.resources
     private val locationSorter = LocationSorter(context)
+    private val locationDataSetFactory = LocationDataSetFactory(context)
+
     private val notificationManager: NotificationManager = context.getSystemService(
         Context.NOTIFICATION_SERVICE
     ) as NotificationManager
@@ -92,10 +95,11 @@ class NotificationSystemManager(private val context: Context, private val config
 
         val weatherText = StringBuilder()
 
-        val sortedData = locationSorter.sort(relevantData)
-        sortedData.forEach { weatherData ->
-            val location = configuration.findLocation(weatherData.location)
-            location?.let { currentLocation -> describeLocation(weatherText, currentLocation, weatherData) }
+        val relevantDataSets = locationDataSetFactory.assembleLocationDataSets(configuration.locations, relevantData)
+        locationSorter.sort(relevantDataSets)
+        relevantDataSets.forEach { dataSet ->
+            val location = configuration.findLocation(dataSet.weatherData.location)
+            location?.let { currentLocation -> describeLocation(weatherText, currentLocation, dataSet.weatherData) }
         }
 
         return weatherText.substring(0, max(weatherText.length - 3, 0))
@@ -111,7 +115,7 @@ class NotificationSystemManager(private val context: Context, private val config
         }
 
         weatherData.solarradiation?.let {
-            if (weatherData.rainToday == null && weatherData.solarradiation > 0.0) {
+            if (weatherData.rainToday == null && it > 0.0) {
                 weatherText.append(", ${dataFormatter.formatSolarradiation(it)}")
             }
         }
@@ -120,7 +124,7 @@ class NotificationSystemManager(private val context: Context, private val config
     }
 
 
-    @TargetApi(26)
+    @RequiresApi(26)
     private fun setupNotificationChannel() {
         // The id of the channel.
         val name = res.getString(R.string.channel_name)

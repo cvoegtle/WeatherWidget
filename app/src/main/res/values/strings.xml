@@ -2,11 +2,8 @@
 <resources>
 
   <string name="app_name">Wetter Wolke</string>
-  <string name="app_name_large">1. Wetter Wolke XL</string>
-  <string name="app_name_small">2. Wetter Wolke kompakt</string>
-  <string name="app_name_freiburg">3. Freiburger Temperatur</string>
-  <string name="app_name_paderborn">4. Paderborner Temperatur</string>
-  <string name="app_name_bonn">5. Bonner Temperatur</string>
+  <string name="app_name_weatherdetails">Wetter Details</string>
+  <string name="app_name_temperature">Temperatur</string>
   <string name="city_paderborn" translatable="false">PB</string>
   <string name="city_paderborn20" translatable="false">PB2</string>
   <string name="city_freiburg" translatable="false">FR</string>
@@ -62,7 +59,7 @@
   <string name="intervall_changed">Update-Intervall:</string>
   <string name="update_deaktiviert">Widget wird nicht automatisch aktualisiert</string>
   <string name="action_winter_days">Wintertage</string>
-  <string name="action_winter_days2023">Wintertage 2023/24</string>
+  <string name="action_winter_days2024">Wintertage 2024/25</string>
   <string name="privileges">Berechtigung</string>
   <string name="secret">Code-Wort</string>
   <string name="inside_temperature">Raumtemperatur:</string>
@@ -96,12 +93,11 @@
   <string name="action_wind">Wind</string>
   <string name="action_sun">Sonne</string>
   <string name="action_7_days_owl">OWL 7 Tage</string>
-  <string name="text_size">Schriftgröße festlegen</string>
   <string name="action_solar">Solarleistung</string>
   <string name="solar_output">Solarleistung</string>
   <string name="kwh">Ertrag</string>
   <string name="city_mobil" translatable="false">MO</string>
-  <string name="city_mobil_full">Mobil</string>
+  <string name="city_mobil_full">Freiburg Littenweiler</string>
   <string name="station_mobil">Mobile Wetterstation</string>
   <string name="city_herzo_full" translatable="false">Herzogenaurach</string>
   <string name="action_family_weather">Familienwetter</string>
@@ -138,7 +134,7 @@
   <string name="barometer">Luftdruck</string>
   <string name="solarradiation">Sonneneinstrahlung</string>
   <string name="uvindex">UV Index</string>
-  <string name="solar_caption">Max Sonne</string>
+  <string name="solar_caption">Max L/m²</string>
   <string name="solar_cummulated_caption">∑ Sonne</string>
   <string name="action_barometer">Luftdruck</string>
   <string name="power_production">Solar-Produktion</string>
@@ -149,4 +145,23 @@
   <string name="action_instant_freiburg">Littenweiler - Freiburg</string>
   <string name="action_bali_solar_daily">Tagesproduktion</string>
   <string name="action_bali_solar_monthly">Monatsproduktion</string>
+  <string name="last_hour">letzte Stunde</string>
+  <string name="diagram_button_description">Diagramem abrufen</string>
+  <string name="forecast_button_description">Wettervorhersage</string>
+  <string name="collapse_button_description">Statistik ausblenden</string>
+  <string name="expand_button_description">Statistik einblenden</string>
+  <string name="preferences_widget">Widget Einstellungen</string>
+  <string name="widget_content">Angezeigte Werte</string>
+  <string name="current_radiation">Schriftgröße für die detaillierte Anzeige</string>
+  <string name="todays_radiation">Kummulierte Einstrahlung</string>
+
+  <string name="widget_font_size_title">Schriftgröße</string>
+  <string name="widget_font_size_summary">Schriftgröße im Wetter-Detail Widget</string>
+
+  <string name="widget_max_values_title">Maximalanzahl Messwerte</string>
+  <string name="widget_max_values_summary">Anzeige auf diese Anzahl Werte begrenzen</string>
+  <string name="widget_content_summary">Festlegen welche und wieviele Messwerte angezeigt werden</string>
+  <string name="app_theme">Farbschema</string>
+  <string name="app_theme_summary">Farbschema der Wetterwolke festlegen</string>
+
 </resources>

@@ -28,11 +28,8 @@
   <string name="action_year">course of one year</string>
   <string name="app_author">by Christian Vögtle</string>
   <string name="app_details">Details of Wetter Wolke</string>
-  <string name="app_name_bonn">5. Temperature in Bonn</string>
-  <string name="app_name_freiburg">3. Temperature in Freiburg</string>
-  <string name="app_name_paderborn">4. Temperature in Paderborn</string>
-  <string name="app_name_small">2. Wetter Wolke compact</string>
-  <string name="city_mobil_full">Mobile</string>
+  <string name="app_name_temperature">Temperature</string>
+  <string name="city_mobil_full">Freiburg Littenweiler</string>
   <string name="configure_stations">Configure stations</string>
   <string name="data_mining">Open in Google Sheets</string>
   <string name="data_overdue">Weather data overdue</string>
@@ -87,7 +84,6 @@
   <string name="station_shenzhen">Weather station in Shenzhen</string>
   <string name="stations">Measurement station</string>
   <string name="temperature">Temperature</string>
-  <string name="text_size">Font size</string>
   <string name="theme">Color scheme</string>
   <string name="theme_summary">Force close app to activate the new color scheme</string>
   <string name="today">Today</string>
@@ -99,7 +95,7 @@
   <string name="wind_speed">Wind</string>
   <string name="yesterday">Yesterday</string>
   <string name="action_compare_md_with_pb_fr">Magdeburg - Paderborn - Freiburg</string>
-  <string name="app_name_large">1. Wetter Wolke XL</string>
+  <string name="app_name_weatherdetails">Weather details</string>
   <string name="message_location_permission_required">Ordering reset to standard (fix)</string>
   <string name="action_show_location">Assumed location</string>
   <string name="channel_name">Wetter Wolke</string>
@@ -111,12 +107,12 @@
   <string name="enable_notification">activate temperature notification</string>
   <string name="understood">understood</string>
   <string name="highlight">highlight</string>
-  <string name="action_winter_days2023">Winter days 2023/24</string>
+  <string name="action_winter_days2024">Winter days 2024/25</string>
   <string name="action_solarradiation">Solar radiation</string>
   <string name="barometer">Barometer</string>
   <string name="solarradiation">Solar radiation</string>
   <string name="uvindex">UV index</string>
-  <string name="solar_caption">Max Sun</string>
+  <string name="solar_caption">Max P/m²</string>
   <string name="solar_cummulated_caption">∑ Sun</string>
   <string name="action_barometer">Barometer</string>
   <string name="power_production">Power production</string>
@@ -127,4 +123,22 @@
   <string name="action_instant_freiburg">Littenweiler - Freiburg</string>
   <string name="action_bali_solar_daily">Daily production</string>
   <string name="action_bali_solar_monthly">Monthly production</string>
+  <string name="last_hour">last hour</string>
+  <string name="diagram_button_description">Show diagrams</string>
+  <string name="forecast_button_description">Weather forecast</string>
+  <string name="collapse_button_description">Hide statistics</string>
+  <string name="expand_button_description">Show statistics</string>
+  <string name="widget_font_size_title">Fontsize</string>
+  <string name="widget_font_size_summary">Fontsize in weather details</string>
+  <string name="preferences_widget">Configure widget</string>
+  <string name="widget_content">Content shown</string>
+  <string name="current_radiation">Current radiation</string>
+  <string name="todays_radiation">Total power</string>
+  <string name="widget_max_values_title">Number of values shown</string>
+  <string name="widget_max_values_summary">Restrict number of values shown at a time</string>
+  <string name="widget_content_summary">Define the values shown and how many at a time</string>
+  <string name="app_theme">Color theme</string>
+  <string name="app_theme_summary">Color theme of Wetter Wolke</string>
+
+
 </resources>

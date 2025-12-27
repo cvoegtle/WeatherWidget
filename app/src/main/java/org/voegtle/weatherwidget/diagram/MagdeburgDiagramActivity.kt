@@ -1,12 +1,12 @@
 package org.voegtle.weatherwidget.diagram
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import org.voegtle.weatherwidget.R
 
 class MagdeburgDiagramActivity : DiagramActivity() {
   override val placeHolderId: Int = R.drawable.station_magdeburg
+  override fun getCaption() = getString(R.string.city_magdeburg_full)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -18,20 +18,16 @@ class MagdeburgDiagramActivity : DiagramActivity() {
     addDiagram(DiagramEnum.magedburg_lastyear)
   }
 
-  override fun onCreateOptionsMenu(menu: Menu): Boolean {
-    val inflater = menuInflater
-    inflater.inflate(R.menu.magdeburg_diagram_activity_menu, menu)
-    return super.onCreateOptionsMenu(menu)
+  override fun getMenu(): List<Pair<Int, () -> Unit>> {
+    return listOf(
+      Pair(R.string.action_rain) { updatePage(0) },
+      Pair(R.string.action_wind) { updatePage(1) },
+      Pair(R.string.action_humidity) { updatePage(2) },
+      Pair(R.string.action_compare_md_with_pb_fr) { updatePage(3) },
+      Pair(R.string.action_30_days) { updatePage(4) },
+      Pair(R.string.action_last_year) { updatePage(5) }
+    )
   }
 
-  override fun onCustomItemSelected(item: MenuItem): Boolean =
-      when (item.itemId) {
-        R.id.action_magdeburg_rain -> updateViewPager(0)
-        R.id.action_magdeburg_wind -> updateViewPager(1)
-        R.id.action_magdeburg_humidity -> updateViewPager(2)
-        R.id.action_md_pb_fr -> updateViewPager(3)
-        R.id.action_md_30days -> updateViewPager(4)
-        R.id.action_md_last_year -> updateViewPager(5)
-        else -> false
-      }
+  override fun onCustomItemSelected(item: MenuItem): Boolean = false
 }

@@ -28,7 +28,10 @@
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
 
-# Most of volatile fields are updated with AFU and should not be mangled
+# Most ofvolatile fields are updated with AFU and should not be mangled
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }
+
+# Keep classes for Gson
+-keep class org.voegtle.weatherwidget.** { *; }

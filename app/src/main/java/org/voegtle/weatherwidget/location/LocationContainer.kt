@@ -1,56 +1,77 @@
 package org.voegtle.weatherwidget.location
 
-import android.content.Context
-import android.widget.LinearLayout
-import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.preferences.ApplicationSettings
+import android.net.Uri
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import org.voegtle.weatherwidget.R
+import org.voegtle.weatherwidget.data.LocationDataSet
 
-class LocationContainer(val context: Context, private val container: LinearLayout, configuration: ApplicationSettings) {
-
-  private val locationOrderStore = LocationOrderStore(context)
-  private val locations: List<WeatherLocation> = configuration.locations
-  private val locationSorter = LocationSorter(context)
-
-  fun updateLocationOrder(weatherData: HashMap<LocationIdentifier, WeatherData>) {
-    val sortedWeatherData = locationSorter.sort(weatherData)
-
-    for (i in sortedWeatherData.indices) {
-      val data = sortedWeatherData[i]
-      var view = container.getChildAt(i) as LocationView
-      if (!belongTogether(data, view)) {
-        view = moveViewToPosition(i, data)
-      }
-      manageViewPosition(view, i)
+@Composable
+fun LocationContainer(modifier: Modifier,
+                      locationDataSets: List<LocationDataSet>,
+                      onDiagramClick: (LocationIdentifier) -> Unit = {},
+                      onForecastClick: (Uri) -> Unit = {},
+                      onExpandStateChanged: (LocationIdentifier, Boolean) -> Unit = { _, _ -> },
+                      onPullToRefresh: (Float) -> Unit = {},
+                      onDataMiningButtonClick: () -> Unit = {}
+) {
+    val lazyListState = rememberLazyListState()
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(consumed: Offset, available: Offset, source: NestedScrollSource): Offset {
+                if (source == NestedScrollSource.UserInput) {
+                    if (available.y > 0) {
+                        onPullToRefresh(available.y)
+                    }
+                }
+                return Offset.Zero
+            }
+        }
     }
 
-  }
+    LazyColumn(
+        state = lazyListState,
+        modifier = modifier.nestedScroll(nestedScrollConnection)
+    ) {
+        items(items = locationDataSets) { dataSet ->
+            LocationComposable(
+                dataSet,
+                onDiagramClick = onDiagramClick, onForecastClick = onForecastClick, onExpandStateChanged = onExpandStateChanged
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+        }
 
-  private fun belongTogether(data: WeatherData, view: LocationView): Boolean {
-    val location = findLocation(data)
-    return location.weatherViewId == view.id
-  }
-
-  private fun moveViewToPosition(i: Int, data: WeatherData): LocationView {
-    val view = findLocationView(data)
-    container.removeView(view)
-    container.addView(view, i)
-    return view
-  }
-
-
-  private fun findLocationView(data: WeatherData): LocationView {
-    val location = findLocation(data)
-    return container.findViewById(location.weatherViewId)
-  }
-
-  private fun findLocation(data: WeatherData): WeatherLocation {
-    return locations.first { it.key == data.location }
-  }
-
-  private fun manageViewPosition(view: LocationView, position: Int) {
-    val oldPosition = locationOrderStore.readIndexOf(view.id)
-    locationOrderStore.writeIndexOf(view.id, position)
-    view.highlight(position < oldPosition)
-  }
-
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp, bottom = 16.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(onClick = {
+                    onDataMiningButtonClick()
+                }) {
+                    Text(text = stringResource(R.string.data_mining))
+                }
+            }
+        }
+    }
 }

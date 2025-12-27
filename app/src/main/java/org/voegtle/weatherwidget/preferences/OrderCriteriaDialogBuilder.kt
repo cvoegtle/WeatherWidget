@@ -20,7 +20,7 @@ object OrderCriteriaDialogBuilder {
         store(orderCriteria)
 
         activity.requestPermissions()
-        activity.updateWeatherOnce(true)
+        activity.updateAll(true)
 
         dialog.cancel()
       }
