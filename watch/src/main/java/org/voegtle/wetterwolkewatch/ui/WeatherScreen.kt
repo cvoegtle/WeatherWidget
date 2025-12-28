@@ -1,7 +1,6 @@
 package org.voegtle.wetterwolkewatch.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +24,7 @@ import org.voegtle.wetterwolkewatch.R
 import java.util.Date
 
 @Composable
-fun WeatherScreen(weatherData: WeatherData) {
+fun WeatherScreen(weatherData: WeatherData, page: Int) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -33,7 +33,7 @@ fun WeatherScreen(weatherData: WeatherData) {
     ) {
         Box(
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.surfaceContainer, CircleShape)
+                .background(backgroundColor(page), CircleShape)
                 .padding(18.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -43,18 +43,16 @@ fun WeatherScreen(weatherData: WeatherData) {
             ) {
                 val formatter = DataFormatter()
                 Text(
-                    text = weatherData.location_short,
-                    style = MaterialTheme.typography.displayLarge
+                    text = captionLocationShortcut(weatherData),
+                    style = MaterialTheme.typography.displayLarge,
                 )
                 Text(
-                    text = "${formatter.formatTemperature(weatherData.temperature)} / ${formatter.formatHumidity(weatherData.humidity)}",
+                    text = textTemperatureHumidityCombined(formatter, weatherData),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 weatherData.rainToday?.let {
-                    val rainText =
-                        stringResource(R.string.rain_label) + formatter.formatRain(weatherData.rainToday) + if (weatherData.rain != null) " / ${formatter.formatRain(weatherData.rain)}" else ""
                     Text(
-                        text = rainText,
+                        text = textRain(formatter, weatherData.rainToday, weatherData),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -75,6 +73,25 @@ fun WeatherScreen(weatherData: WeatherData) {
         )
     }
 }
+
+@Composable
+private fun backgroundColor(page: Int): Color =
+    if (page == 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer
+
+@Composable
+private fun textRain(
+    formatter: DataFormatter,
+    rainToday: Float?,
+    weatherData: WeatherData
+): String =
+    stringResource(R.string.rain_label) + formatter.formatRain(rainToday) + if (weatherData.rain != null) " / ${formatter.formatRain(weatherData.rain)}" else ""
+
+@Composable
+private fun textTemperatureHumidityCombined(formatter: DataFormatter, weatherData: WeatherData): String =
+    "${formatter.formatTemperature(weatherData.temperature)} / ${formatter.formatHumidity(weatherData.humidity)}"
+
+@Composable
+private fun captionLocationShortcut(weatherData: WeatherData): String = weatherData.location_short
 
 @Preview(showBackground = true)
 @Composable
@@ -105,6 +122,6 @@ fun WeatherScreenPreview() {
         forecast = null
     )
     MaterialTheme { // Eine Theme-Wrapper ist für die Vorschau erforderlich
-        WeatherScreen(weatherData = previewData)
+        WeatherScreen(weatherData = previewData, 0)
     }
 }
