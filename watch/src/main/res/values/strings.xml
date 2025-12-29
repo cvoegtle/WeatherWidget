@@ -5,7 +5,7 @@
     values-round/strings.xml for round devices.
     -->
   <string name="tile_label">Erste Wetterstation</string>
-  <string name="complication_label">Wetterwolke Temperatur</string>
+  <string name="complication_label">Temperatur</string>
   <string name="waiting_for_data">Warte auf Daten...</string>
   <string name="rain_label">"Regen: "</string>
   <string name="update">neu</string>
