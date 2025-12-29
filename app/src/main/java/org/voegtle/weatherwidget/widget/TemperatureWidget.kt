@@ -10,6 +10,8 @@ import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.preferences.WidgetPreferences
 import org.voegtle.weatherwidget.util.DataFormatter
 
+private const val DEFAULT_FONTSIZE = 14
+
 class TemperatureWidget : BaseWeatherWidget() {
 
     @Composable
@@ -19,7 +21,20 @@ class TemperatureWidget : BaseWeatherWidget() {
     ): String = DataFormatter().formatWidgetLine(locationDataSet)
 
     @Composable
-    override fun determineFontSize(locationDataSets: List<LocationDataSet>, widgetPreferences: WidgetPreferences): TextUnit = 17.sp
+    override fun determineFontSize(widgetPreferences: WidgetPreferences): TextUnit {
+        val correctionFactor: Int = widgetPreferences.fontCorrectionFactor
+        return (DEFAULT_FONTSIZE +
+                if (correctionFactor > 0) correctionFactor else 2*correctionFactor).sp
+    }
+
+    @Composable
+    override fun determineRainIndicatorSize(widgetPreferences: WidgetPreferences): Dp {
+        val correctionFactor: Int = widgetPreferences.fontCorrectionFactor
+
+        return (DEFAULT_FONTSIZE +
+                if (correctionFactor > 0) correctionFactor else (2.5*correctionFactor).toInt()).dp
+    }
+
     override fun determineFontWeight(): FontWeight = FontWeight.Bold
     override fun determineGap(): Dp = 2.dp
     override fun determinePadding(): Dp = 0.dp

@@ -66,12 +66,14 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     private fun Content(context: Context) {
         val applicationPreferences = readPreferences(context)
         val locationDataSets = loadDataSetsFromPreferences()
-        val fontSize = determineFontSize(locationDataSets, applicationPreferences.widgetPreferences)
+        val fontSize = determineFontSize(applicationPreferences.widgetPreferences)
 
         WeatherGlanceTheme(applicationPreferences.appTheme) {
             Scaffold(
                 backgroundColor = GlanceTheme.colors.surface,
-                modifier = GlanceModifier.clickable(onClick = actionStartActivity<WeatherActivity>()).padding(top = 4.dp)
+                modifier = GlanceModifier
+                    .clickable(onClick = actionStartActivity<WeatherActivity>())
+                    .padding(top = 4.dp, start = (-4).dp, end = (-4).dp)
             ) {
                 if (locationDataSets.isNotEmpty()) {
                     Column(modifier = GlanceModifier.fillMaxSize()) {
@@ -117,7 +119,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
                 provider = ImageProvider(R.drawable.ic_filled_circle),
                 contentDescription = "Regenindikator",
                 modifier = GlanceModifier
-                    .size(13.dp)
+                    .size(determineRainIndicatorSize(widgetPreferences))
                     .padding(top = 1.dp),
                 colorFilter = determineIconColor(locationDataSet)
             )
@@ -181,7 +183,10 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
     abstract fun assembleWeatherText(locationDataSet: LocationDataSet, widgetPreferences: WidgetPreferences): String
 
     @Composable
-    abstract fun determineFontSize(locationDataSets: List<LocationDataSet>, widgetPreferences: WidgetPreferences): TextUnit
+    abstract fun determineFontSize(widgetPreferences: WidgetPreferences): TextUnit
+
+    @Composable
+    abstract fun determineRainIndicatorSize(widgetPreferences: WidgetPreferences): Dp
 
     abstract fun determineFontWeight(): FontWeight
 

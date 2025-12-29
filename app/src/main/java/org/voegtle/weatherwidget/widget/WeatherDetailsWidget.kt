@@ -24,9 +24,15 @@ class WeatherDetailsWidget : BaseWeatherWidget() {
     }
 
     @Composable
-    override fun determineFontSize(locationDataSets: List<LocationDataSet>, widgetPreferences: WidgetPreferences): TextUnit {
+    override fun determineFontSize(widgetPreferences: WidgetPreferences): TextUnit {
         return (DEFAULT_FONTSIZE + widgetPreferences.fontCorrectionFactor).sp
     }
+
+    @Composable
+    override fun determineRainIndicatorSize(widgetPreferences: WidgetPreferences): Dp {
+        return (DEFAULT_FONTSIZE + widgetPreferences.fontCorrectionFactor).dp
+    }
+
     override fun determineFontWeight(): FontWeight = FontWeight.Normal
     override fun determineGap(): Dp = 2.dp
     override fun determinePadding(): Dp = 1.dp
