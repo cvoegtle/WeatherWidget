@@ -55,7 +55,7 @@ class WeatherWatchActivity : ComponentActivity() {
                     val pagerState = rememberPagerState(initialPage = pageCount * 1000) { Int.MAX_VALUE }
                     HorizontalPager(state = pagerState) { page ->
                         val actualPage = page % pageCount
-                        WeatherScreen(weatherData = locationDataSetList[actualPage].weatherData, page = actualPage)
+                        WeatherScreen(locationDataSet = locationDataSetList[actualPage], page = actualPage)
                     }
                 } else {
                     Column(
