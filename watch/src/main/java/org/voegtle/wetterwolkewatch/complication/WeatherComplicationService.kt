@@ -12,12 +12,12 @@ import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
-import org.voegtle.wetterwolkewatch.presentation.WetterWatchActivity
+import org.voegtle.wetterwolkewatch.presentation.WeatherWatchActivity
 
 /**
  * Skeleton for complication data source that returns short text.
  */
-class WetterComplicationService : SuspendingComplicationDataSourceService() {
+class WeatherComplicationService : SuspendingComplicationDataSourceService() {
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
         if (type != ComplicationType.SHORT_TEXT) {
@@ -51,7 +51,7 @@ class WetterComplicationService : SuspendingComplicationDataSourceService() {
             .build()
 
     private fun buildTapAction(): PendingIntent {
-        val intent = Intent(this, WetterWatchActivity::class.java)
+        val intent = Intent(this, WeatherWatchActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return PendingIntent.getActivity(
             this, 0, intent,

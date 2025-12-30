@@ -8,7 +8,7 @@ import androidx.wear.tiles.TileService
 import androidx.wear.watchface.complications.datasource.ComplicationDataSourceUpdateRequester
 import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.WearableListenerService
-import org.voegtle.wetterwolkewatch.complication.WetterComplicationService
+import org.voegtle.wetterwolkewatch.complication.WeatherComplicationService
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
 import org.voegtle.wetterwolkewatch.tile.WeatherTileService
 
@@ -51,7 +51,7 @@ class DataLayerListenerService : WearableListenerService() {
                 context = this,
                 complicationDataSourceComponent = ComponentName(
                     this,
-                    WetterComplicationService::class.java
+                    WeatherComplicationService::class.java
                 )
             )
         complicationDataSourceUpdateRequester.requestUpdateAll()

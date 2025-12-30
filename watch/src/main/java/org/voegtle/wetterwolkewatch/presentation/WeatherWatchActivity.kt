@@ -31,14 +31,14 @@ import org.voegtle.wetterwolkewatch.io.WatchDataStore
 import org.voegtle.wetterwolkewatch.ui.WeatherScreen
 
 
-class WetterWatchActivity : ComponentActivity() {
+class WeatherWatchActivity : ComponentActivity() {
 
     private var locationDataSetList by mutableStateOf<List<LocationDataSet>>(emptyList())
 
     private val dataUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_DATA_UPDATED) {
-                locationDataSetList = WatchDataStore(this@WetterWatchActivity).readDataFromFile()
+                locationDataSetList = WatchDataStore(this@WeatherWatchActivity).readDataFromFile()
             }
         }
     }
@@ -80,7 +80,7 @@ class WetterWatchActivity : ComponentActivity() {
 
     private fun requestUpdatedData() {
         lifecycleScope.launch {
-            AppMessenger(this@WetterWatchActivity).requestDataUpdate()
+            AppMessenger(this@WeatherWatchActivity).requestDataUpdate()
         }
     }
 

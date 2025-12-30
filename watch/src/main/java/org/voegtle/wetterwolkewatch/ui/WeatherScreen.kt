@@ -76,7 +76,7 @@ fun WeatherScreen(weatherData: WeatherData, page: Int) {
 
 @Composable
 private fun backgroundColor(page: Int): Color =
-    if (page == 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer
+    if (page == 0) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceContainer
 
 @Composable
 private fun textRain(

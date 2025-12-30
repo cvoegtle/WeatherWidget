@@ -15,20 +15,21 @@
           android:supportsRtl="true"
           android:theme="@android:style/Theme.DeviceDefault">
     <service
-            android:name=".complication.WetterComplicationService"
+            android:name=".complication.WeatherComplicationService"
             android:exported="true"
             android:label="@string/complication_label"
+            android:icon="@mipmap/ic_launcher"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
       <intent-filter>
-        <action android:name="androidx.wear.watchface.complications.datasource.action.DataSourceUpdate" />
+        <action android:name="androidx.wear.watchface.complications.datasource.action.WATCHFACE_COMPLICATION_UPDATE_REQUEST" />
       </intent-filter>
 
       <meta-data
-              android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-              android:value="SHORT_TEXT" />
+          android:name="androidx.wear.watchface.complications.datasource.SUPPORTED_TYPES"
+          android:value="SHORT_TEXT" />
       <meta-data
-              android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-              android:value="0" />
+          android:name="androidx.wear.watchface.complications.datasource.DEFAULT_COMPLICATION_UPDATE_PERIOD_SECONDS"
+          android:value="1800" />
     </service>
     <service
             android:name=".tile.WeatherTileService"
@@ -68,7 +69,7 @@
             android:value="true" />
 
     <activity
-            android:name=".presentation.WetterWatchActivity"
+            android:name=".presentation.WeatherWatchActivity"
             android:exported="true"
             android:theme="@style/WetterWatchActivityTheme.Starting">
       <intent-filter>
