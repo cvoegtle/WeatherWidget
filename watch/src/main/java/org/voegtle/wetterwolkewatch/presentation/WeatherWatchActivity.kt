@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.rememberPagerState
-import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.data.LocationDataSet
@@ -28,6 +27,7 @@ import org.voegtle.wetterwolkewatch.ACTION_DATA_UPDATED
 import org.voegtle.wetterwolkewatch.R
 import org.voegtle.wetterwolkewatch.io.AppMessenger
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
+import org.voegtle.wetterwolkewatch.presentation.theme.WeatherWidgetTheme
 import org.voegtle.wetterwolkewatch.ui.WeatherScreen
 
 
@@ -49,7 +49,7 @@ class WeatherWatchActivity : ComponentActivity() {
         locationDataSetList = WatchDataStore(this).readDataFromFile()
 
         setContent {
-            MaterialTheme {
+            WeatherWidgetTheme {
                 if (locationDataSetList.isNotEmpty()) {
                     val pageCount = locationDataSetList.size
                     val pagerState = rememberPagerState(initialPage = pageCount * 1000) { Int.MAX_VALUE }
