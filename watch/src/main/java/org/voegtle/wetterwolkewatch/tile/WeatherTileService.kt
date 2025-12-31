@@ -84,6 +84,7 @@ private fun tile(
     return TileBuilders.Tile.Builder()
         .setResourcesVersion(RESOURCES_VERSION)
         .setTileTimeline(singleTileTimeline)
+        .setFreshnessIntervalMillis(60 * 60 * 1000) // update every hour
         .build()
 }
 
@@ -168,7 +169,7 @@ fun buildLaunchAppHandler(packageName: String): ModifiersBuilders.Clickable = Mo
             .setAndroidActivity(
                 ActionBuilders.AndroidActivity.Builder()
                     .setPackageName(packageName)
-                    .setClassName("org.voegtle.wetterwolkewatch.presentation.WetterWatchActivity")
+                    .setClassName("org.voegtle.wetterwolkewatch.presentation.WeatherWatchActivity")
                     .build()
             )
             .build()
