@@ -14,16 +14,16 @@ import org.voegtle.wetterwolkewatch.R
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
 import org.voegtle.wetterwolkewatch.presentation.WeatherWatchActivity
 
-/**
- * Skeleton for complication data source that returns short text.
- */
 class WeatherComplicationService : SuspendingComplicationDataSourceService() {
 
     override fun getPreviewData(type: ComplicationType): ComplicationData? {
         if (type != ComplicationType.SHORT_TEXT) {
             return null
         }
-        return createComplicationData("-", this.getString(R.string.waiting_for_data))
+        return ShortTextComplicationData.Builder(
+            text = PlainComplicationText.Builder("22,5°").build(),
+            contentDescription = PlainComplicationText.Builder("22,5°C").build())
+            .build()
     }
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData {
