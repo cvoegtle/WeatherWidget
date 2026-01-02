@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,7 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.wear.compose.foundation.pager.HorizontalPager
-import androidx.wear.compose.foundation.pager.rememberPagerState
+import androidx.wear.compose.foundation.pager.PagerState
 import androidx.wear.compose.material3.Text
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.data.LocationDataSet
@@ -34,6 +36,7 @@ import org.voegtle.wetterwolkewatch.ui.WeatherScreen
 class WeatherWatchActivity : ComponentActivity() {
 
     private var locationDataSetList by mutableStateOf<List<LocationDataSet>>(emptyList())
+    private var resetPager by mutableIntStateOf(0)
 
     private val dataUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -52,9 +55,14 @@ class WeatherWatchActivity : ComponentActivity() {
             WeatherWidgetTheme {
                 if (locationDataSetList.isNotEmpty()) {
                     val pageCount = locationDataSetList.size
-                    val pagerState = rememberPagerState(initialPage = pageCount * 1000) { Int.MAX_VALUE }
+                    val pagerState = remember(resetPager) {
+                        PagerState(
+                            currentPage = Int.MAX_VALUE / 2,
+                            pageCount = { Int.MAX_VALUE }
+                        )
+                    }
                     HorizontalPager(state = pagerState) { page ->
-                        val actualPage = page % pageCount
+                        val actualPage = (page - Int.MAX_VALUE / 2).mod(pageCount)
                         WeatherScreen(locationDataSet = locationDataSetList[actualPage], page = actualPage)
                     }
                 } else {
@@ -76,6 +84,7 @@ class WeatherWatchActivity : ComponentActivity() {
         locationDataSetList = WatchDataStore(this).readDataFromFile()
         val filter = IntentFilter(ACTION_DATA_UPDATED)
         LocalBroadcastManager.getInstance(this).registerReceiver(dataUpdateReceiver, filter)
+        resetPager++
     }
 
     private fun requestUpdatedData() {
