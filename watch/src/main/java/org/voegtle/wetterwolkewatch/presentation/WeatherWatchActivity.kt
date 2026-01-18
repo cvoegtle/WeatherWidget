@@ -13,15 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.wear.compose.foundation.pager.HorizontalPager
-import androidx.wear.compose.foundation.pager.PagerState
 import androidx.wear.compose.material3.Text
 import kotlinx.coroutines.launch
 import org.voegtle.weatherwidget.data.LocationDataSet
@@ -30,7 +27,7 @@ import org.voegtle.wetterwolkewatch.R
 import org.voegtle.wetterwolkewatch.io.AppMessenger
 import org.voegtle.wetterwolkewatch.io.WatchDataStore
 import org.voegtle.wetterwolkewatch.presentation.theme.WeatherWidgetTheme
-import org.voegtle.wetterwolkewatch.ui.WeatherScreen
+import org.voegtle.wetterwolkewatch.ui.WeatherListScreen
 
 
 class WeatherWatchActivity : ComponentActivity() {
@@ -54,17 +51,7 @@ class WeatherWatchActivity : ComponentActivity() {
         setContent {
             WeatherWidgetTheme {
                 if (locationDataSetList.isNotEmpty()) {
-                    val pageCount = locationDataSetList.size
-                    val pagerState = remember(resetPager) {
-                        PagerState(
-                            currentPage = Int.MAX_VALUE / 2,
-                            pageCount = { Int.MAX_VALUE }
-                        )
-                    }
-                    HorizontalPager(state = pagerState) { page ->
-                        val actualPage = (page - Int.MAX_VALUE / 2).mod(pageCount)
-                        WeatherScreen(locationDataSet = locationDataSetList[actualPage], page = actualPage)
-                    }
+                    WeatherListScreen(locationDataSetList, resetPager)
                 } else {
                     Column(
                         modifier = Modifier.fillMaxSize(),

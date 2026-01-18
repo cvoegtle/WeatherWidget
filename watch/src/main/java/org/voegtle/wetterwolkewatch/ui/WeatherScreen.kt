@@ -10,24 +10,58 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.StarOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.foundation.pager.HorizontalPager
+import androidx.wear.compose.foundation.pager.PagerState
+import androidx.wear.compose.material.HorizontalPageIndicator
+import androidx.wear.compose.material.PageIndicatorState
+import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.WeatherData
-import org.voegtle.weatherwidget.location.LocationIdentifier
-import org.voegtle.weatherwidget.location.Position
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
-import java.util.Date
+
+@Composable
+fun WeatherListScreen(locationDataSetList: List<LocationDataSet>, resetPager: Int) {
+    val pageCount = locationDataSetList.size
+    val pagerState = remember(resetPager) {
+        PagerState(
+            currentPage = Int.MAX_VALUE / 2,
+            pageCount = { Int.MAX_VALUE }
+        )
+    }
+
+    Scaffold(
+        positionIndicator = {
+            HorizontalPageIndicator(
+                pageIndicatorState = remember(pagerState.currentPage, pagerState.currentPageOffsetFraction) {
+                    object : PageIndicatorState {
+                        override val pageCount: Int
+                            get() = pageCount
+                        override val selectedPage: Int
+                            get() = (pagerState.currentPage - Int.MAX_VALUE / 2).mod(pageCount)
+                        override val pageOffset: Float
+                            get() = pagerState.currentPageOffsetFraction
+                    }
+                }
+            )
+        }
+    ) {
+        HorizontalPager(state = pagerState) { page ->
+            val actualPage = (page - Int.MAX_VALUE / 2).mod(pageCount)
+            WeatherScreen(locationDataSet = locationDataSetList[actualPage], page = actualPage)
+        }
+    }
+}
 
 @Composable
 fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
@@ -38,6 +72,14 @@ fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
+        Text(
+            text = weatherData.localtime,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 8.dp)
+        )
+
         Box(
             modifier = Modifier
                 .background(backgroundColor(page), CircleShape)
@@ -81,13 +123,6 @@ fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
                 }
             }
         }
-        Text(
-            text = weatherData.localtime,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 8.dp)
-        )
     }
 }
 
