@@ -109,7 +109,7 @@ fun LocationCaption(
                 )
             }
 
-            IconButton(onClick = onForecastClick, modifier = Modifier.size(30.dp)) {
+            IconButton(onClick = onForecastClick, modifier = Modifier.size(30.dp).padding(start = 2.dp)) {
                 Icon(
                     imageVector = Icons.Filled.WbCloudy,
                     contentDescription = stringResource(R.string.forecast_button_description)
@@ -118,10 +118,10 @@ fun LocationCaption(
 
             IconButton(
                 onClick = { onExpandStateChanged(!isExpanded) },
-                modifier = Modifier.size(30.dp)
+                modifier = Modifier.size(30.dp).padding(start = 2.dp)
             ) {
                 Icon(
-                    imageVector = if (isExpanded) Icons.Filled.ExpandMore else Icons.Filled.ExpandLess,
+                    imageVector = if (isExpanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                     contentDescription = stringResource(if (isExpanded) R.string.collapse_button_description else R.string.expand_button_description)
                 )
             }
