@@ -3,8 +3,8 @@ package org.voegtle.weatherwidget.diagram
 enum class DiagramEnum(val url: String) {
     temperature7days("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=291472484&format=image"),
     average7days("https://wetterimages.appspot.com/weatherstation/image?sheet=2&oid=1780492499&format=image"),
-    summerdays("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1457711726&format=image"),
-    summerdays2024("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1147986908&format=image"),
+    summerdays("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1930952138&format=image"),
+    summerdays2025("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1457711726&format=image"),
     winterdays("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=9566125&format=image"),
     winterdays2024("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=1688397000&format=image"),
     rain("https://wetterimages.appspot.com/weatherstation/image?sheet=1&oid=477091892&format=image"),
