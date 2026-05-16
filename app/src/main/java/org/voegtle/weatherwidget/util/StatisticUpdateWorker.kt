@@ -6,7 +6,6 @@ import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.cache.State
 import org.voegtle.weatherwidget.cache.StateCache
 import org.voegtle.weatherwidget.location.LocationIdentifier
-import org.voegtle.weatherwidget.watch.WatchDataPusher
 import java.util.Date
 
 class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters) : UpdateWorker(appContext, workerParams) {
@@ -14,7 +13,6 @@ class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters)
         const val STATISTIC_DATA = "STATISTIC_DATA"
     }
     private val stateCache = StateCache(appContext)
-    private val watchDataPusher = WatchDataPusher(appContext, configuration)
 
     override fun doWork(): Result {
         val updateCandidates = configuration.locations.map { it.key }.toList()
@@ -22,7 +20,6 @@ class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters)
 
         val statistics = weatherDataFetcher.fetchStatisticsFromUrl(outdatedLocations)
         updateStateCache(statistics)
-        watchDataPusher.sendStatisticsData(statistics)
         return Result.success()
     }
 

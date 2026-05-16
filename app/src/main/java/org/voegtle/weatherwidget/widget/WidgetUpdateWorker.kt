@@ -14,7 +14,7 @@ import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.util.ContextUtil
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import org.voegtle.weatherwidget.util.WeatherDataFetcher
-import org.voegtle.weatherwidget.watch.WatchDataPusher
+import org.voegtle.weatherwidget.watch.WatchDataStore
 
 class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
@@ -24,13 +24,13 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
     private val locationDataSetFactory = LocationDataSetFactory(applicationContext)
     private val locationSorter = LocationSorter(applicationContext)
     private val weatherDataCache = WeatherDataCache(applicationContext)
-    private val watchDataPusher: WatchDataPusher
+    private val watchDataStore: WatchDataStore
 
 
     init {
         val weatherPreferencesReader = WeatherPreferencesReader(applicationContext)
         configuration = weatherPreferencesReader.read()
-        watchDataPusher = WatchDataPusher(applicationContext, configuration)
+        watchDataStore = WatchDataStore(applicationContext, configuration)
     }
 
     override suspend fun doWork(): Result {
@@ -60,7 +60,7 @@ class WidgetUpdateWorker(appContext: Context, workerParams: WorkerParameters) :
 
     private fun updateWatch(response: FetchAllResponse) {
         if (response.valid) {
-            watchDataPusher.sendWeatherData(response.weatherMap)
+            watchDataStore.sendWeatherData(response.weatherMap)
         }
     }
 

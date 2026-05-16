@@ -13,7 +13,6 @@ import org.voegtle.wetterwolkewatch.io.WatchDataStore
 import org.voegtle.wetterwolkewatch.tile.WeatherTileService
 
 private const val WEATHER_DATA_PATH = "/weather-data"
-private const val STATISTICS_DATA_PATH = "/statistics-data"
 const val ACTION_DATA_UPDATED = "org.voegtle.wetterwolkewatch.DATA_UPDATED"
 
 
@@ -23,21 +22,15 @@ class DataLayerListenerService : WearableListenerService() {
         Log.d("DataLayerListener", "onDataChanged: $dataEvents")
         for (event in dataEvents) {
             val dataItem = event.dataItem
-            if (event.type == com.google.android.gms.wearable.DataEvent.TYPE_CHANGED) {
-                if (dataItem.uri.path == WEATHER_DATA_PATH) {
-                    val data: ByteArray? = dataItem.data
-                    data?.let {
-                        WatchDataStore(this).writeLocationDataSets(it)
-                        informActivityAboutUpdatedData()
-                        informTileAboutUpdatedData()
-                        informComplicationAboutUpdatedData()
-                    }
-                } else if (dataItem.uri.path == STATISTICS_DATA_PATH) {
-                    val data: ByteArray? = dataItem.data
-                    data?.let {
-                        WatchDataStore(this).writeStatistics(it)
-                        informActivityAboutUpdatedData()
-                    }
+            if (event.type == com.google.android.gms.wearable.DataEvent.TYPE_CHANGED &&
+                dataItem.uri.path == WEATHER_DATA_PATH
+            ) {
+                val data: ByteArray? = dataItem.data
+                data?.let {
+                    WatchDataStore(this).writeLocationDataSets(it)
+                    informActivityAboutUpdatedData()
+                    informTileAboutUpdatedData()
+                    informComplicationAboutUpdatedData()
                 }
             }
         }
@@ -63,5 +56,6 @@ class DataLayerListenerService : WearableListenerService() {
             )
         complicationDataSourceUpdateRequester.requestUpdateAll()
     }
+
 
 }
