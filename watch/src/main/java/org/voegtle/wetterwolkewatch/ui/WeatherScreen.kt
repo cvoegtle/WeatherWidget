@@ -182,21 +182,31 @@ fun WeatherStatisticsScreen(locationDataSet: LocationDataSet, page: Int) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val formatter = DataFormatter()
-                Text(
-                    text = captionLocationShortcut(weatherData),
-                    style = MaterialTheme.typography.displayLarge,
-                )
-
                 if (todayStats != null) {
+                    Text(text= stringResource(R.string.today),
+                            style= MaterialTheme.typography.titleMedium)
+
                     todayStats.minTemperature?.let {
                         Text(
-                            text = "Min: ${formatter.formatTemperature(it)}",
+                            text = "T: ${formatter.formatTemperature(it)} - ${formatter.formatTemperature(todayStats.maxTemperature)}",
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
-                    todayStats.maxTemperature?.let {
+                    todayStats.rain?.let {
                         Text(
-                            text = "Max: ${formatter.formatTemperature(it)}",
+                            text = stringResource(R.string.rain_label) + " " + formatter.formatRain(it),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    todayStats.solarRadiationMax?.let {
+                        Text(
+                            text = stringResource(R.string.solar_max) + " " + formatter.formatSolarradiation(it),
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    todayStats.kwh?.let {
+                        Text(
+                            text = stringResource(R.string.total_solar) + " " + formatter.formatKwh(it),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }

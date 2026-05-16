@@ -10,4 +10,7 @@
   <string name="install_wetterwolke">Wetterwolke muss auf dem Telefon installiert sein.</string>
   <string name="rain_label">"Regen: "</string>
   <string name="update">neu</string>
+  <string name="today">Heute</string>
+  <string name="solar_max">S max:</string>
+  <string name="total_solar">∑ Sonne:</string>
 </resources>
