@@ -13,7 +13,7 @@ import org.voegtle.weatherwidget.preferences.ApplicationPreferences
 
 const val WEATHER_DATA_PATH = "/weather-data"
 
-class WatchDataStore(val context: Context, val configuration: ApplicationPreferences) {
+class WatchDataPusher(val context: Context, val configuration: ApplicationPreferences) {
     val locationDataSetFactory = LocationDataSetFactory(context)
 
     fun sendWeatherData(weatherMap: HashMap<LocationIdentifier, WeatherData>) {
