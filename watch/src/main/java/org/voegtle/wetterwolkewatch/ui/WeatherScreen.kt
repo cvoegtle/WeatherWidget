@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.pager.HorizontalPager
 import androidx.wear.compose.foundation.pager.PagerState
+import androidx.wear.compose.foundation.pager.VerticalPager
 import androidx.wear.compose.material.HorizontalPageIndicator
 import androidx.wear.compose.material.PageIndicatorState
 import androidx.wear.compose.material.Scaffold
@@ -26,6 +27,7 @@ import androidx.wear.compose.material3.Icon
 import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import org.voegtle.weatherwidget.data.LocationDataSet
+import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
@@ -65,6 +67,29 @@ fun WeatherListScreen(locationDataSetList: List<LocationDataSet>, resetPager: In
 
 @Composable
 fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
+    val statistics = locationDataSet.statistics
+
+    if (statistics != null) {
+        val verticalPagerState = remember {
+            PagerState(
+                currentPage = 0,
+                pageCount = { 2 }
+            )
+        }
+        VerticalPager(state = verticalPagerState) { verticalPage ->
+            if (verticalPage == 0) {
+                WeatherMainScreen(locationDataSet = locationDataSet, page = page)
+            } else {
+                WeatherStatisticsScreen(locationDataSet = locationDataSet, page = page)
+            }
+        }
+    } else {
+        WeatherMainScreen(locationDataSet = locationDataSet, page = page)
+    }
+}
+
+@Composable
+fun WeatherMainScreen(locationDataSet: LocationDataSet, page: Int) {
     val weatherData = locationDataSet.weatherData
     Box(
         modifier = Modifier
@@ -125,6 +150,67 @@ fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
         }
     }
 }
+
+@Composable
+fun WeatherStatisticsScreen(locationDataSet: LocationDataSet, page: Int) {
+    val weatherData = locationDataSet.weatherData
+    val statistics = locationDataSet.statistics ?: return
+    val todayStats = statistics[Statistics.TimeRange.today]
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = weatherData.localtime,
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 8.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .background(backgroundColor(page), CircleShape)
+                .padding(18.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val formatter = DataFormatter()
+                Text(
+                    text = captionLocationShortcut(weatherData),
+                    style = MaterialTheme.typography.displayLarge,
+                )
+
+                if (todayStats != null) {
+                    todayStats.minTemperature?.let {
+                        Text(
+                            text = "Min: ${formatter.formatTemperature(it)}",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                    todayStats.maxTemperature?.let {
+                        Text(
+                            text = "Max: ${formatter.formatTemperature(it)}",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
+                    }
+                } else {
+                    Text(
+                        text = "-",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+        }
+    }
+}
+
 
 @Composable
 private fun backgroundColor(page: Int): Color =
