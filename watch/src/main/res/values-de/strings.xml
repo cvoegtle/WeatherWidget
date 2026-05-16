@@ -13,4 +13,7 @@
   <string name="today">Heute</string>
   <string name="solar_max">S max:</string>
   <string name="total_solar">∑ Sonne:</string>
+  <string name="yesterday">Gestern</string>
+  <string name="week">Woche</string>
+  <string name="month">Monat</string>
 </resources>

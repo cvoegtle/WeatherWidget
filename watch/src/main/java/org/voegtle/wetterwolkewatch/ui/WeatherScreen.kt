@@ -1,12 +1,8 @@
 package org.voegtle.wetterwolkewatch.ui
 
+import android.R.attr.bottom
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -28,6 +24,7 @@ import androidx.wear.compose.material3.MaterialTheme
 import androidx.wear.compose.material3.Text
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.Statistics
+import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
@@ -65,6 +62,14 @@ fun WeatherListScreen(locationDataSetList: List<LocationDataSet>, resetPager: In
     }
 }
 
+private const val CURRENT_TODAY_YESTERDAY_WEEK = 5
+private const val CURRENT = 0
+private const val TODAY = 1
+private const val YESTERDAY = 2
+private const val WEEK = 3
+private const val MONTH = 4
+
+
 @Composable
 fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
     val statistics = locationDataSet.statistics
@@ -72,15 +77,17 @@ fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
     if (statistics != null) {
         val verticalPagerState = remember {
             PagerState(
-                currentPage = 0,
-                pageCount = { 2 }
+                currentPage = CURRENT,
+                pageCount = { CURRENT_TODAY_YESTERDAY_WEEK }
             )
         }
         VerticalPager(state = verticalPagerState) { verticalPage ->
-            if (verticalPage == 0) {
-                WeatherMainScreen(locationDataSet = locationDataSet, page = page)
-            } else {
-                WeatherStatisticsScreen(locationDataSet = locationDataSet, page = page)
+            when (verticalPage) {
+                CURRENT -> WeatherMainScreen(locationDataSet = locationDataSet, page = page)
+                TODAY -> WeatherStatisticsScreen(stringResource(R.string.today), statistics[Statistics.TimeRange.today]!!, page = page)
+                YESTERDAY -> WeatherStatisticsScreen(stringResource(R.string.yesterday), statistics[Statistics.TimeRange.yesterday]!!, page = page)
+                WEEK -> WeatherStatisticsScreen(stringResource(R.string.week), statistics[Statistics.TimeRange.last7days]!!, page = page)
+                MONTH -> WeatherStatisticsScreen(stringResource(R.string.month), statistics[Statistics.TimeRange.last30days]!!, page = page)
             }
         }
     } else {
@@ -152,10 +159,7 @@ fun WeatherMainScreen(locationDataSet: LocationDataSet, page: Int) {
 }
 
 @Composable
-fun WeatherStatisticsScreen(locationDataSet: LocationDataSet, page: Int) {
-    val weatherData = locationDataSet.weatherData
-    val statistics = locationDataSet.statistics ?: return
-    val todayStats = statistics[Statistics.TimeRange.today]
+fun WeatherStatisticsScreen(caption: String, stats: StatisticsSet, page: Int) {
 
     Box(
         modifier = Modifier
@@ -163,14 +167,6 @@ fun WeatherStatisticsScreen(locationDataSet: LocationDataSet, page: Int) {
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = weatherData.localtime,
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(top = 8.dp)
-        )
-
         Box(
             modifier = Modifier
                 .background(backgroundColor(page), CircleShape)
@@ -182,37 +178,33 @@ fun WeatherStatisticsScreen(locationDataSet: LocationDataSet, page: Int) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val formatter = DataFormatter()
-                if (todayStats != null) {
-                    Text(text= stringResource(R.string.today),
-                            style= MaterialTheme.typography.titleMedium)
+                Text(
+                    text = caption,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
 
-                    todayStats.minTemperature?.let {
-                        Text(
-                            text = "T: ${formatter.formatTemperature(it)} - ${formatter.formatTemperature(todayStats.maxTemperature)}",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    todayStats.rain?.let {
-                        Text(
-                            text = stringResource(R.string.rain_label) + " " + formatter.formatRain(it),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    todayStats.solarRadiationMax?.let {
-                        Text(
-                            text = stringResource(R.string.solar_max) + " " + formatter.formatSolarradiation(it),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                    todayStats.kwh?.let {
-                        Text(
-                            text = stringResource(R.string.total_solar) + " " + formatter.formatKwh(it),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
-                } else {
+                stats.minTemperature?.let {
                     Text(
-                        text = "-",
+                        text = "T: ${formatter.formatTemperature(it)} - ${formatter.formatTemperature(stats.maxTemperature)}",
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                stats.rain?.let {
+                    Text(
+                        text = stringResource(R.string.rain_label) + " " + formatter.formatRain(it),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                stats.solarRadiationMax?.let {
+                    Text(
+                        text = stringResource(R.string.solar_max) + " " + formatter.formatSolarradiation(it),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+                stats.kwh?.let {
+                    Text(
+                        text = stringResource(R.string.total_solar) + " " + formatter.formatKwh(it),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }
@@ -224,7 +216,7 @@ fun WeatherStatisticsScreen(locationDataSet: LocationDataSet, page: Int) {
 
 @Composable
 private fun backgroundColor(page: Int): Color =
-    if (page == 0) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer
+    if (page == CURRENT) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainer
 
 @Composable
 private fun textRain(

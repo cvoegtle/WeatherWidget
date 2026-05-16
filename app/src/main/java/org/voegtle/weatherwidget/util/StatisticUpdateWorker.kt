@@ -22,9 +22,11 @@ class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters)
         val updateCandidates = configuration.locations.map { it.key }.toList()
         val outdatedLocations = lookupOutdatedLocations(updateCandidates)
 
-        val statistics = weatherDataFetcher.fetchStatisticsFromUrl(outdatedLocations)
-        updateStateCache(statistics)
-        updateWatch()
+        if (outdatedLocations.isNotEmpty()) {
+            val statistics = weatherDataFetcher.fetchStatisticsFromUrl(outdatedLocations)
+            updateStateCache(statistics)
+            updateWatch()
+        }
         return Result.success()
     }
 
