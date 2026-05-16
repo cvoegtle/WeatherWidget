@@ -7,13 +7,13 @@ import com.google.gson.reflect.TypeToken
 import org.voegtle.weatherwidget.data.LocationDataSet
 import java.io.File
 
-const val WEATHER_DATA_FILE = "weather-data.json"
+const val WEATHER_DATA_FILE = "location-data.json"
 
 class WatchDataStore(val context: Context) {
     private val gson = Gson()
     private val TAG = this::class.simpleName
 
-    fun readDataFromFile(): List<LocationDataSet> {
+    fun readLocationDataSets(): List<LocationDataSet> {
         val file = File(context.filesDir, WEATHER_DATA_FILE)
         return if (file.exists()) {
             try {
@@ -29,7 +29,7 @@ class WatchDataStore(val context: Context) {
         }
     }
 
-    fun writeData(jsonByteArray: ByteArray) {
+    fun writeLocationDataSets(jsonByteArray: ByteArray) {
         val json = jsonByteArray.toString(Charsets.UTF_8)
         val file = File(context.filesDir, WEATHER_DATA_FILE)
         file.writeText(json)

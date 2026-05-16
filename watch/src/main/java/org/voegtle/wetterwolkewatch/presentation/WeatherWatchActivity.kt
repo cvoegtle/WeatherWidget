@@ -40,7 +40,7 @@ class WeatherWatchActivity : ComponentActivity() {
     private val dataUpdateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             if (intent?.action == ACTION_DATA_UPDATED) {
-                locationDataSetList = WatchDataStore(this@WeatherWatchActivity).readDataFromFile()
+                locationDataSetList = WatchDataStore(this@WeatherWatchActivity).readLocationDataSets()
             }
         }
     }
@@ -48,7 +48,7 @@ class WeatherWatchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestUpdatedData()
-        locationDataSetList = WatchDataStore(this).readDataFromFile()
+        locationDataSetList = WatchDataStore(this).readLocationDataSets()
 
         setContent {
             WeatherWidgetTheme {
@@ -77,7 +77,7 @@ class WeatherWatchActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         requestUpdatedData()
-        locationDataSetList = WatchDataStore(this).readDataFromFile()
+        locationDataSetList = WatchDataStore(this).readLocationDataSets()
         val filter = IntentFilter(ACTION_DATA_UPDATED)
         LocalBroadcastManager.getInstance(this).registerReceiver(dataUpdateReceiver, filter)
         resetPager++

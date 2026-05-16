@@ -42,7 +42,7 @@ class WeatherTileService : SuspendingTileService() {
         if (requestParams.currentState.lastClickableId == REFRESH_ACTION) {
             AppMessenger(this).requestDataUpdate()
         }
-        val locationDataSet = WatchDataStore(this).readDataFromFile().firstOrNull()
+        val locationDataSet = WatchDataStore(this).readLocationDataSets().firstOrNull()
         return tile(this, requestParams, locationDataSet)
     }
 

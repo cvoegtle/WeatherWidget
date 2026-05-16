@@ -27,7 +27,7 @@ class WeatherComplicationService : SuspendingComplicationDataSourceService() {
     }
 
     override suspend fun onComplicationRequest(request: ComplicationRequest): ComplicationData {
-        val locationDataSet = WatchDataStore(this).readDataFromFile().firstOrNull()
+        val locationDataSet = WatchDataStore(this).readLocationDataSets().firstOrNull()
         return createComplicationData(locationDataSet)
 
         }

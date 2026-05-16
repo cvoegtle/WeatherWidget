@@ -27,7 +27,7 @@ class DataLayerListenerService : WearableListenerService() {
             ) {
                 val data: ByteArray? = dataItem.data
                 data?.let {
-                    WatchDataStore(this).writeData(it)
+                    WatchDataStore(this).writeLocationDataSets(it)
                     informActivityAboutUpdatedData()
                     informTileAboutUpdatedData()
                     informComplicationAboutUpdatedData()
