@@ -1,6 +1,5 @@
 package org.voegtle.wetterwolkewatch.ui
 
-import android.R.attr.bottom
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.foundation.pager.HorizontalPager
@@ -28,6 +28,8 @@ import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.wetterwolkewatch.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun WeatherListScreen(locationDataSetList: List<LocationDataSet>, resetPager: Int) {
@@ -84,10 +86,33 @@ fun WeatherScreen(locationDataSet: LocationDataSet, page: Int) {
         VerticalPager(state = verticalPagerState) { verticalPage ->
             when (verticalPage) {
                 CURRENT -> WeatherMainScreen(locationDataSet = locationDataSet, page = page)
-                TODAY -> WeatherStatisticsScreen(stringResource(R.string.today), statistics[Statistics.TimeRange.today]!!, page = page)
-                YESTERDAY -> WeatherStatisticsScreen(stringResource(R.string.yesterday), statistics[Statistics.TimeRange.yesterday]!!, page = page)
-                WEEK -> WeatherStatisticsScreen(stringResource(R.string.week), statistics[Statistics.TimeRange.last7days]!!, page = page)
-                MONTH -> WeatherStatisticsScreen(stringResource(R.string.month), statistics[Statistics.TimeRange.last30days]!!, page = page)
+                TODAY -> WeatherStatisticsScreen(
+                    stringResource(R.string.today),
+                    statistics.receiveTime,
+                    statistics[Statistics.TimeRange.today]!!,
+                    page = page
+                )
+
+                YESTERDAY -> WeatherStatisticsScreen(
+                    stringResource(R.string.yesterday),
+                    statistics.receiveTime,
+                    statistics[Statistics.TimeRange.yesterday]!!,
+                    page = page
+                )
+
+                WEEK -> WeatherStatisticsScreen(
+                    stringResource(R.string.week),
+                    statistics.receiveTime,
+                    statistics[Statistics.TimeRange.last7days]!!,
+                    page = page
+                )
+
+                MONTH -> WeatherStatisticsScreen(
+                    stringResource(R.string.month),
+                    statistics.receiveTime,
+                    statistics[Statistics.TimeRange.last30days]!!,
+                    page = page
+                )
             }
         }
     } else {
@@ -159,7 +184,7 @@ fun WeatherMainScreen(locationDataSet: LocationDataSet, page: Int) {
 }
 
 @Composable
-fun WeatherStatisticsScreen(caption: String, stats: StatisticsSet, page: Int) {
+fun WeatherStatisticsScreen(caption: String, timestamp: Date?, stats: StatisticsSet, page: Int) {
 
     Box(
         modifier = Modifier
@@ -167,6 +192,14 @@ fun WeatherStatisticsScreen(caption: String, stats: StatisticsSet, page: Int) {
             .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
+        Text(
+            text = formatTime(timestamp),
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .padding(top = 8.dp)
+        )
+
         Box(
             modifier = Modifier
                 .background(backgroundColor(page), CircleShape)
@@ -212,6 +245,13 @@ fun WeatherStatisticsScreen(caption: String, stats: StatisticsSet, page: Int) {
         }
     }
 }
+
+@Composable
+private fun formatTime(timestamp: Date?): String =
+    if (timestamp == null)
+        "-:-"
+    else
+        SimpleDateFormat("HH:mm", LocalLocale.current.platformLocale).format(timestamp)
 
 
 @Composable

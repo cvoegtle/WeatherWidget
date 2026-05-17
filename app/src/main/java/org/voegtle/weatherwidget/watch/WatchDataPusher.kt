@@ -10,6 +10,7 @@ import org.voegtle.weatherwidget.location.LocationDataSetFactory
 import org.voegtle.weatherwidget.location.LocationIdentifier
 import org.voegtle.weatherwidget.location.LocationSorter
 import org.voegtle.weatherwidget.preferences.ApplicationPreferences
+import org.voegtle.weatherwidget.util.MyGson
 
 const val WEATHER_DATA_PATH = "/weather-data"
 
@@ -30,7 +31,7 @@ class WatchDataPusher(val context: Context, val configuration: ApplicationPrefer
         LocationSorter(context).sort(locationDataSets)
 
         val putDataRequest = PutDataRequest.create(WEATHER_DATA_PATH)
-        val locationDataJson = Gson().toJson(locationDataSets)
+        val locationDataJson = MyGson().toJson(locationDataSets)
         putDataRequest.data = locationDataJson.toByteArray(Charsets.UTF_8)
         putDataRequest.setUrgent()
         Wearable.getDataClient(context).putDataItem(putDataRequest).addOnSuccessListener {

@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.google.gson.Gson
 import org.voegtle.weatherwidget.util.FetchAllResponse
 import androidx.core.content.edit
+import org.voegtle.weatherwidget.util.MyGson
 
 class WeatherDataCache(context: Context) {
     private val WEATHERDATA_CACHE = "WEATHERDATA"
@@ -17,13 +18,13 @@ class WeatherDataCache(context: Context) {
         return if (weatherDataJson == null) {
             null
         } else {
-            Gson().fromJson(weatherDataJson, FetchAllResponse::class.java)
+            MyGson().fromJson(weatherDataJson, FetchAllResponse::class.java)
         }
     }
 
     fun write(weatherData: FetchAllResponse) {
         weatherDataPreferences.edit {
-            putString(LATEST, Gson().toJson(weatherData))
+            putString(LATEST, MyGson().toJson(weatherData))
         }
     }
 

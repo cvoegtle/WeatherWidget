@@ -7,6 +7,7 @@ import org.voegtle.weatherwidget.data.Statistics
 import org.voegtle.weatherwidget.data.StatisticsSet
 import org.voegtle.weatherwidget.data.WeatherJSONObject
 import org.voegtle.weatherwidget.location.LocationIdentifier
+import java.util.Date
 
 object JsonTranslator {
 
@@ -37,20 +38,12 @@ object JsonTranslator {
     return statisticsMap
   }
 
-  internal fun toSingleStatistics(jsonStr: String): Statistics? {
-    if (jsonStr.isEmpty()) {
-      return null
-    }
-    val json = JSONObject(jsonStr)
-    return toStatistics(json)
-  }
-
   private fun toStatistics(jsonStatistics: JSONObject): Statistics? {
     val locationIdentifier = LocationIdentifier.getByString(jsonStatistics.getString("id"))
     if (locationIdentifier == null) {
       return null
     }
-    val result = Statistics(id = locationIdentifier, kind = jsonStatistics.optString("kind"))
+    val result = Statistics(id = locationIdentifier, kind = jsonStatistics.optString("kind"), Date())
     val jsonStats = jsonStatistics.getJSONArray("stats")
     for (i in 0 until jsonStats.length()) {
       val statisticsSet = toStatisticsSet(jsonStats.get(i) as JSONObject)

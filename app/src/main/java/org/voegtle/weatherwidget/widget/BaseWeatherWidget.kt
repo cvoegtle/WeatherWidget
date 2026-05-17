@@ -51,6 +51,7 @@ import org.voegtle.weatherwidget.preferences.WeatherPreferencesReader
 import org.voegtle.weatherwidget.preferences.WidgetPreferences
 import org.voegtle.weatherwidget.ui.theme.WeatherGlanceTheme
 import org.voegtle.weatherwidget.util.DateUtil
+import org.voegtle.weatherwidget.util.MyGson
 
 private const val WIDGET_DATA_KEY = "weather_lines"
 
@@ -100,7 +101,7 @@ abstract class BaseWeatherWidget : GlanceAppWidget() {
         return if (jsonLocationDataSets == null)
             emptyList()
         else
-            Gson().fromJson(jsonLocationDataSets, Array<LocationDataSet>::class.java).toList()
+            MyGson().fromJson(jsonLocationDataSets, Array<LocationDataSet>::class.java).toList()
     }
 
     @Composable
@@ -241,7 +242,7 @@ suspend fun <T : GlanceAppWidget> updateWeatherWidgetState(context: Context, loc
     val glanceIds = glanceManager.getGlanceIds(provider)
     glanceIds.forEach { glanceId ->
         updateAppWidgetState(context, glanceId) { prefs ->
-            val jsonLocationDataSets = Gson().toJson(widgetRelevantLocationDataSets)
+            val jsonLocationDataSets = MyGson().toJson(widgetRelevantLocationDataSets)
             val key = stringPreferencesKey(WIDGET_DATA_KEY)
             prefs[key] = jsonLocationDataSets
         }

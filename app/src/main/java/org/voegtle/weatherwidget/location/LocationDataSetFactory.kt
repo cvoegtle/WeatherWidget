@@ -1,6 +1,7 @@
 package org.voegtle.weatherwidget.location
 
 import android.content.Context
+import org.voegtle.weatherwidget.cache.State
 import org.voegtle.weatherwidget.cache.StateCache
 import org.voegtle.weatherwidget.data.LocationDataSet
 import org.voegtle.weatherwidget.data.Statistics
@@ -8,6 +9,7 @@ import org.voegtle.weatherwidget.data.WeatherData
 import org.voegtle.weatherwidget.preferences.OrderCriteria
 import org.voegtle.weatherwidget.util.DataFormatter
 import org.voegtle.weatherwidget.util.JsonTranslator
+import org.voegtle.weatherwidget.util.MyGson
 
 class LocationDataSetFactory(context: Context) {
     private val stateCache = StateCache(context)
@@ -35,7 +37,12 @@ class LocationDataSetFactory(context: Context) {
 
     private fun lookupStatistics(locationIdentifier: LocationIdentifier): Statistics? {
             val state = stateCache.read(locationIdentifier)
-            return if (state.isExpanded) JsonTranslator.toSingleStatistics(state.statistics) else null
+            return if (state.isExpanded) convertToStatistics(state) else null
+    }
+
+    private fun convertToStatistics(state: State): Statistics? {
+        val statistics = MyGson().fromJson(state.statistics, Statistics::class.java)
+        return if (statistics != null && statistics.id != null) statistics else null
     }
 
     private fun appendTimeAndDistance(locationName: String, data: WeatherData): String {

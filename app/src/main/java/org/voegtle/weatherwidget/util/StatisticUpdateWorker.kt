@@ -51,7 +51,7 @@ class StatisticUpdateWorker(appContext: Context, workerParams: WorkerParameters)
 
     private fun updateStateCache(statistics: Collection<Statistics>) {
         for (statistic in statistics) {
-            val state = State(statistic.id, true, Date(), JsonTranslator.toString(statistic))
+            val state = State(statistic.id, true, Date(), MyGson().toJson(statistic))
             stateCache.save(state)
         }
     }

@@ -5,12 +5,13 @@ import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import org.voegtle.weatherwidget.data.LocationDataSet
+import org.voegtle.weatherwidget.util.MyGson
 import java.io.File
 
 const val WEATHER_DATA_FILE = "location-data.json"
 
 class WatchDataStore(val context: Context) {
-    private val gson = Gson()
+    private val gson = MyGson()
     private val TAG = this::class.simpleName
 
     fun readLocationDataSets(): List<LocationDataSet> {

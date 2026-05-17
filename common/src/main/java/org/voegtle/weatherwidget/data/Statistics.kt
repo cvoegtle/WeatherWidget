@@ -1,8 +1,9 @@
 package org.voegtle.weatherwidget.data
 
 import org.voegtle.weatherwidget.location.LocationIdentifier
+import java.util.Date
 
-data class Statistics(val id: LocationIdentifier, val kind: String) {
+data class Statistics(val id: LocationIdentifier, val kind: String, val receiveTime: Date?) {
 
   enum class TimeRange {
     lastHour, today, yesterday, last7days, last30days;
