@@ -17,7 +17,7 @@ object DateUtil {
       return cal.time
     }
 
-  val oneHouerBefore: Date
+  val oneHourBefore: Date
     get() {
       val cal = Calendar.getInstance(Locale.GERMANY)
       cal.add(Calendar.HOUR, -1)
